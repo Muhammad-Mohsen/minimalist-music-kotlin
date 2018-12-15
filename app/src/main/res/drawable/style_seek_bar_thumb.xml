@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:color="@color/colorSecondary"
+	>
+
+	<item>
+		<shape xmlns:android="http://schemas.android.com/apk/res/android">
+			<solid android:color="@color/colorSecondary" />
+			<size
+				android:width="15dp"
+				android:height="5dp"
+				/>
+		</shape>
+	</item>
+
+</selector>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	>
+
+	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+		android:id="@+id/buttonCrumb"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/buttonPaddingSmall"
+		app:fillColor="@color/colorPrimary"
+		app:rippleColor="@color/colorPrimaryDark"
+		app:cornerRadius="@dimen/cornerRadiusSmall"
+		>
+
+		<TextView
+			android:id="@+id/textViewCrumb"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/textLarge"
+			android:textColor="@color/colorOnPrimary"
+			tools:text="Directory"
+			/>
+
+	</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/breadcrumbSeparator"
+		android:padding="@dimen/buttonPaddingSmall"
+		android:textColor="@color/colorOnPrimary"
+		android:textSize="@dimen/textLarge"
+		/>
+
+</LinearLayout>

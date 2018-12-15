@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginStart="48dp"
+	android:layout_marginEnd="48dp"
+	android:layout_marginBottom="@dimen/spacingMediumLarge"
+	android:paddingTop="@dimen/spacingMedium"
+	android:paddingBottom="@dimen/spacingMedium"
+	android:paddingStart="24dp"
+	android:paddingEnd="24dp"
+	android:orientation="vertical"
+	android:elevation="@dimen/elevationMedium"
+	app:elevation="@dimen/elevationMedium"
+	app:cornerRadius="60dp"
+	app:fillColor="@color/colorBackgroundWhite"
+	>
+
+	<!--track title-->
+	<TextView
+		android:id="@+id/textViewTitle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/spacingSmall"
+		android:textColor="@color/colorOnBackgroundDark"
+		android:textSize="@dimen/textLarge"
+		android:textStyle="bold"
+		android:textAlignment="center"
+		android:maxLines="1"
+		android:ellipsize="end"
+		android:text="@string/minimalistMusicPlayer"
+		tools:text="Song title"
+		/>
+
+	<!--album/artist-->
+	<TextView
+		android:id="@+id/textViewSubtitle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@color/colorOnBackground"
+		android:textSize="@dimen/textSmall"
+		android:textAlignment="center"
+		android:maxLines="1"
+		android:ellipsize="end"
+		android:text="@string/welcomeMessage"
+		tools:text="Song Album (Song Artist)"
+		/>
+
+</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>

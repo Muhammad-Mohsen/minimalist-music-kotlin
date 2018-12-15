@@ -1,0 +1,37 @@
+<resources>
+
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimary</item>
+		<item name="colorAccent">@color/colorSecondary</item>
+
+		<item name="android:background">@color/colorTransparent</item>
+
+		<item name="android:statusBarColor">@color/colorPrimaryDark</item>
+		<item name="android:navigationBarColor">@color/colorBackground</item>
+		<item name="android:textColorPrimary">@color/colorOnBackgroundDark</item>
+
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
+
+	<!-- Splash screen theme -->
+	<style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+		<item name="android:windowBackground">@drawable/splash</item>
+	</style>
+
+	<!-- Scrollbar style for the explorer recycler view -->
+	<style name="scrollbarStyle">
+		<item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+		<item name="android:scrollbarStyle">outsideOverlay</item>
+		<item name="android:scrollbars">vertical</item>
+		<item name="android:fadeScrollbars">true</item>
+		<item name="android:scrollbarThumbVertical">@drawable/style_scrollbar_thumb</item>
+		<item name="android:scrollbarSize">4dp</item>
+		<item name="android:scrollbarFadeDuration">800</item>
+		<item name="android:scrollbarDefaultDelayBeforeFade">500</item>
+	</style>
+
+</resources>

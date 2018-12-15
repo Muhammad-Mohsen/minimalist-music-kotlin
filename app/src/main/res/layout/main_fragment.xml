@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:background="@drawable/background_app"
+	>
+
+	<!--Header-->
+	<com.google.android.material.appbar.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorTransparent"
+		android:elevation="0dp"
+		app:elevation="0dp"
+		>
+
+		<!--Breadcrumb bar-->
+		<include layout="@layout/breadcrumb_bar" />
+
+		<!--Track title and info-->
+		<include layout="@layout/media_information" />
+
+	</com.google.android.material.appbar.AppBarLayout>
+
+	<!--Explorer-->
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/recyclerViewExplorer"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"
+		android:scrollbars="vertical"
+		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+		style="@style/scrollbarStyle"
+		tools:listitem="@layout/explorer_list_item"
+		/>
+
+	<!--Controls-->
+	<include layout="@layout/media_controls" />
+
+</LinearLayout>

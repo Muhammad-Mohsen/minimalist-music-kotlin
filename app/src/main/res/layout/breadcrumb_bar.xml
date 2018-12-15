@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/breadcrumbs"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginEnd="@dimen/spacingLarge"
+	android:padding="@dimen/spacingSmall"
+	android:gravity="center_vertical"
+	android:orientation="horizontal"
+	app:fillColor="@color/colorTransparent"
+	>
+
+	<!--back button-->
+	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+		android:id="@+id/buttonBack"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:cornerRadius="50dp"
+		app:fillColor="@color/colorPrimary"
+		app:rippleColor="@color/colorPrimaryDark"
+		>
+
+		<ImageView
+			android:id="@+id/imageButtonBack"
+			android:layout_width="45dp"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/spacingMedium"
+			android:adjustViewBounds="true"
+			android:scaleType="fitCenter"
+			android:src="@drawable/anim_back_root"
+			android:tint="@color/colorOnPrimary"
+			android:contentDescription="@string/descriptionButtonRepeat"
+			/>
+
+	</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/recyclerViewBreadcrumbs"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:layout_gravity="center_vertical"
+		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+		android:orientation="horizontal"
+		tools:listitem="@layout/breadcrumb_bar_item"
+		/>
+
+</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>

@@ -1,0 +1,29 @@
+<resources>
+
+	<dimen name="activityHorizontalMargin">16dp</dimen>
+	<dimen name="activityVerticalMargin">16dp</dimen>
+
+	<dimen name="spacingLarge">16dp</dimen>
+	<dimen name="spacingMediumLarge">12dp</dimen>
+	<dimen name="spacingMedium">8dp</dimen>
+	<dimen name="spacingSmall">4dp</dimen>
+
+	<dimen name="seekHeight">18dp</dimen>
+
+	<dimen name="textSmall">10sp</dimen>
+	<dimen name="textMedium">12sp</dimen>
+	<dimen name="textLarge">16sp</dimen>
+	<dimen name="textHuge">20sp</dimen>
+
+	<dimen name="screenMargin">20dp</dimen>
+	<dimen name="buttonPaddingLarge">8dp</dimen>
+	<dimen name="buttonPaddingSmall">4dp</dimen>
+
+	<dimen name="imageButtonSize">40dp</dimen>
+	<dimen name="imageButtonContainerSize">55dp</dimen>
+
+	<dimen name="cornerRadiusSmall">3dp</dimen>
+
+	<dimen name="elevationMedium">3dp</dimen>
+
+</resources>

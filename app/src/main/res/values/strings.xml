@@ -1,0 +1,35 @@
+<resources>
+
+	<string name="appName">Minimalist</string>
+	<string name="minimalistMusicPlayer">Minimalist Music Player</string>
+
+	<string name="actionSettings">Settings</string>
+
+	<string name="welcomeMessage">Welcome!</string>
+
+
+	<!--explorer_list_item::imageView content description-->
+	<string name="descriptionButtonRepeat">Repeat button</string>
+	<string name="descriptionButtonPrevious">Previous button</string>
+	<string name="descriptionButtonPlayPause">Play/Pause button</string>
+	<string name="descriptionButtonNext">Next button</string>
+	<string name="descriptionButtonShuffle">Shuffle button</string>
+
+	<string name="descriptionRecyclerItemTypeTrack">track</string>
+	<string name="descriptionRecyclerItemTypeDirectory">directory</string>
+
+	<string name="blankTimestamp">--:--</string>
+	<string name="trackAlbumArtist">%1$s (%2$s)</string>
+
+	<plurals name="trackCount">
+		<item quantity="one">%1$s track</item>
+		<item quantity="other">%1$s tracks</item>
+	</plurals>
+
+	<string name="loadingMetadata">Loading metadata&#8230;</string> <!--That's an ellipsis-->
+	<string name="unknown">Unknown</string>
+	<string name="breadcrumbSeparator">/</string>
+	<string name="permissionMessage">Storage Permission is required in order to play music explorerFiles</string>
+	<string name="grantPermission">Grant Permission</string> <!-- other symbols to try out: ›> -->
+
+</resources>

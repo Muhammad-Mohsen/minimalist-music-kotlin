@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!--Background-->
+	<color name="colorBackground">#EEE</color>
+	<color name="colorBackgroundWhite">#FFF</color>
+
+	<!--Primary-->
+	<color name="colorPrimary">#344955</color>
+	<color name="colorPrimaryDark">#232F34</color>
+
+	<!--Secondary-->
+	<color name="colorSecondary">#F9AA33</color>
+	<color name="colorSecondaryDark">#ef6c00</color>
+
+	<!--On's-->
+	<color name="colorOnPrimary">#FFF</color>
+	<color name="colorOnSecondary">#232F34</color>
+	<color name="colorOnBackground">#333</color>
+	<color name="colorOnBackgroundDark">#111</color>
+
+	<!--Transparent-->
+	<color name="colorTransparent">#0FFF</color>
+
+	<!--Gradient-->
+	<color name="colorGradientStart">#CC00ABC5</color>
+	<color name="colorGradientCenter">#CC161138</color>
+	<color name="colorGradientEnd">#CC161138</color>
+
+</resources>

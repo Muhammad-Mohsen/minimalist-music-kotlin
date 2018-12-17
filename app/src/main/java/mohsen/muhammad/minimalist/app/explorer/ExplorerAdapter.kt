@@ -1,10 +1,12 @@
 package mohsen.muhammad.minimalist.app.explorer
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.explorer_list_item.view.*
@@ -20,7 +22,8 @@ import java.io.File
  * Adapter class for the explorer RecyclerView
  */
 
-class ExplorerAdapter(explorerFiles: ArrayList<ExplorerFile>, private val interactionListener: OnListItemInteractionListener<File>) : RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder>() {
+class ExplorerAdapter(explorerFiles: ArrayList<ExplorerFile>, private val interactionListener: OnListItemInteractionListener<File>)
+	: RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder>() {
 
     // ArrayList has to be copied in order to separate the cache reference from the Adapter's data set reference
     // otherwise, whatever cached list that was used to initialize the adapter will be changed whenever the data set is changed
@@ -39,6 +42,15 @@ class ExplorerAdapter(explorerFiles: ArrayList<ExplorerFile>, private val intera
 
 		val file = files[position]
 		with(holder) {
+
+			val resources = itemView.context.resources
+			val topMargin = if (position == 0) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80f, resources.displayMetrics) else 0f
+
+			val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+			params.setMargins(0, topMargin.toInt(), 0, 0)
+
+			itemView.layoutParams = params
+
 			icon.setImageResource(if (file.isDirectory) R.mipmap.ic_directory else R.mipmap.ic_track)
 			title.text = file.name
 

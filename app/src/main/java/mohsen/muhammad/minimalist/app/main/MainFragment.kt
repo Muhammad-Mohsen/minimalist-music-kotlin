@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.main_fragment.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.breadcrumb.BreadcrumbManager
 import mohsen.muhammad.minimalist.app.explorer.ExplorerManager
+import mohsen.muhammad.minimalist.core.FileHelper
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
 import mohsen.muhammad.minimalist.data.Prefs
 import mohsen.muhammad.minimalist.data.Type
@@ -46,7 +47,7 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 					val currentDirectory = Prefs.getSavedCurrentDirectory(requireContext())
 					Prefs.currentDirectory = currentDirectory
 
-					breadcrumbManager = BreadcrumbManager(recyclerViewBreadcrumbs, imageButtonBack, this@MainFragment, currentDirectory)
+					breadcrumbManager = BreadcrumbManager(recyclerViewBreadcrumbs, buttonBack, this@MainFragment, currentDirectory)
 					breadcrumbManager?.initialize()
 
 					explorerManager = ExplorerManager(recyclerViewExplorer, this@MainFragment, currentDirectory)
@@ -54,7 +55,8 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 
 					// back button click listener
 					buttonBack.setOnClickListener {
-						onListItemClick(Prefs.currentDirectory.parentFile, Type.CRUMB)
+						if (Prefs.currentDirectory.absolutePath != FileHelper.ROOT)
+							onListItemClick(Prefs.currentDirectory.parentFile, Type.CRUMB)
 					}
 				}
 
@@ -67,6 +69,14 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 				}
 
 			}).check()
+	}
+
+	fun onBackPressed(): Boolean {
+		return if (Prefs.currentDirectory.absolutePath == FileHelper.ROOT) false
+		else {
+			onListItemClick(Prefs.currentDirectory.parentFile, Type.CRUMB)
+			true
+		}
 	}
 
 	override fun onListItemClick(data: File?, source: Int) {

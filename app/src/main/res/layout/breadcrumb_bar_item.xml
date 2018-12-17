@@ -12,8 +12,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="@dimen/buttonPaddingSmall"
-		app:fillColor="@color/colorPrimary"
-		app:rippleColor="@color/colorPrimaryDark"
+		app:fillColor="@color/colorBackgroundWhite"
+		app:rippleColor="@color/colorOnBackground"
 		app:cornerRadius="@dimen/cornerRadiusSmall"
 		>
 
@@ -22,7 +22,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="@dimen/textLarge"
-			android:textColor="@color/colorOnPrimary"
+			android:textColor="@color/colorOnBackground"
 			tools:text="Directory"
 			/>
 
@@ -33,7 +33,7 @@
 		android:layout_height="wrap_content"
 		android:text="@string/breadcrumbSeparator"
 		android:padding="@dimen/buttonPaddingSmall"
-		android:textColor="@color/colorOnPrimary"
+		android:textColor="@color/colorOnBackground"
 		android:textSize="@dimen/textLarge"
 		/>
 

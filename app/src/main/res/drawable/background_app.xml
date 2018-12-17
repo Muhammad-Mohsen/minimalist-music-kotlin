@@ -6,12 +6,12 @@
 			<!--Background-->
 			<item>
 				<shape android:shape="rectangle">
-					<solid android:color="@color/colorPrimary"/>
+					<solid android:color="@color/colorBackgroundWhite"/>
 				</shape>
 			</item>
 
 			<!--Mask-->
-			<item android:top="82dp" android:bottom="0dp">
+			<item android:top="78dp" android:bottom="0dp">
 				<shape android:shape="rectangle">
 					<solid android:color="@color/colorBackground"/>
 				</shape>

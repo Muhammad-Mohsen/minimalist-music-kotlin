@@ -3,8 +3,10 @@ package mohsen.muhammad.minimalist.core
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import mohsen.muhammad.minimalist.R
 
 /**
  * Created by muhammad.mohsen on 11/4/2018.
@@ -21,6 +23,15 @@ class ExtendedLinearLayout @JvmOverloads constructor(context: Context, attribute
 
 class ExtendedFrameLayout @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0)
 	: FrameLayout(context, attributes, defStyleAttr) {
+
+	init {
+		setRoundedBackground(attributes)
+		applyPaddingAttr(attributes)
+	}
+}
+
+class ExtendedImageButton @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_AppCompat_ImageButton)
+	: ImageButton(context, attributes, defStyleAttr) {
 
 	init {
 		setRoundedBackground(attributes)

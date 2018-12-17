@@ -5,7 +5,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/breadcrumbs"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="@dimen/heightBreadcrumbBar"
 	android:layout_marginEnd="@dimen/spacingLarge"
 	android:padding="@dimen/spacingSmall"
 	android:gravity="center_vertical"
@@ -14,28 +14,19 @@
 	>
 
 	<!--back button-->
-	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonBack"
-		android:layout_width="wrap_content"
+		android:layout_width="40dp"
 		android:layout_height="wrap_content"
+		android:padding="7dp"
+		android:adjustViewBounds="true"
+		android:scaleType="fitCenter"
+		android:src="@drawable/anim_back_root"
+		android:tint="@color/colorOnBackground"
 		app:cornerRadius="50dp"
-		app:fillColor="@color/colorPrimary"
+		app:fillColor="@color/colorBackgroundWhite"
 		app:rippleColor="@color/colorPrimaryDark"
-		>
-
-		<ImageView
-			android:id="@+id/imageButtonBack"
-			android:layout_width="45dp"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/spacingMedium"
-			android:adjustViewBounds="true"
-			android:scaleType="fitCenter"
-			android:src="@drawable/anim_back_root"
-			android:tint="@color/colorOnPrimary"
-			android:contentDescription="@string/descriptionButtonRepeat"
-			/>
-
-	</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>
+		/>
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/recyclerViewBreadcrumbs"

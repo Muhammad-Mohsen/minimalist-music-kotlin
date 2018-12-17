@@ -6,16 +6,16 @@
 	<color name="colorBackgroundWhite">#FFF</color>
 
 	<!--Primary-->
-	<color name="colorPrimary">#344955</color>
-	<color name="colorPrimaryDark">#232F34</color>
+	<color name="colorPrimary">#393939</color>
+	<color name="colorPrimaryDark">#1a1a1a</color>
 
 	<!--Secondary-->
-	<color name="colorSecondary">#F9AA33</color>
-	<color name="colorSecondaryDark">#ef6c00</color>
+	<color name="colorSecondary">#393939</color>
+	<color name="colorSecondaryDark">#393939</color>
 
 	<!--On's-->
 	<color name="colorOnPrimary">#FFF</color>
-	<color name="colorOnSecondary">#232F34</color>
+	<color name="colorOnSecondary">#FFF</color>
 	<color name="colorOnBackground">#333</color>
 	<color name="colorOnBackgroundDark">#111</color>
 

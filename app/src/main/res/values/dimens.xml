@@ -1,14 +1,15 @@
 <resources>
 
-	<dimen name="activityHorizontalMargin">16dp</dimen>
-	<dimen name="activityVerticalMargin">16dp</dimen>
+	<dimen name="heightBreadcrumbBar">50dp</dimen>
+	<dimen name="heightMediaInfoBar">55dp</dimen>
+	<dimen name="heightSeekBar">18dp</dimen>
 
+	<dimen name="spacingExtraExtraLarge">32dp</dimen>
+	<dimen name="spacingExtraLarge">24dp</dimen>
 	<dimen name="spacingLarge">16dp</dimen>
 	<dimen name="spacingMediumLarge">12dp</dimen>
 	<dimen name="spacingMedium">8dp</dimen>
 	<dimen name="spacingSmall">4dp</dimen>
-
-	<dimen name="seekHeight">18dp</dimen>
 
 	<dimen name="textSmall">10sp</dimen>
 	<dimen name="textMedium">12sp</dimen>
@@ -24,6 +25,7 @@
 
 	<dimen name="cornerRadiusSmall">3dp</dimen>
 
+	<dimen name="elevationLarge">5dp</dimen>
 	<dimen name="elevationMedium">3dp</dimen>
 
 </resources>

@@ -4,7 +4,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="@dimen/heightMediaInfoBar"
 	android:layout_marginStart="48dp"
 	android:layout_marginEnd="48dp"
 	android:layout_marginBottom="@dimen/spacingMediumLarge"
@@ -14,9 +14,9 @@
 	android:paddingEnd="24dp"
 	android:orientation="vertical"
 	android:elevation="@dimen/elevationMedium"
-	app:elevation="@dimen/elevationMedium"
 	app:cornerRadius="60dp"
 	app:fillColor="@color/colorBackgroundWhite"
+	tools:elevation="0dp"
 	>
 
 	<!--track title-->

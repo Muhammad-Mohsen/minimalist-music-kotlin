@@ -6,8 +6,8 @@
 
 	<item>
 		<shape>
-			<solid android:color="@color/colorSecondary" />
-			<size android:width="4dp" android:height="12dp"/>
+			<solid android:color="@color/colorOnPrimary" />
+			<size android:width="2dp" android:height="12dp"/>
 		</shape>
 	</item>
 

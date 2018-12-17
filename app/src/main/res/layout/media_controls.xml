@@ -8,124 +8,71 @@
 	>
 
 	<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="28dp"
-		android:layout_marginStart="@dimen/spacingMediumLarge"
-		android:layout_marginEnd="@dimen/spacingMediumLarge"
-		android:layout_marginBottom="@dimen/spacingMedium"
+		android:paddingTop="@dimen/spacingMediumLarge"
+		android:paddingBottom="@dimen/spacingMediumLarge"
 		android:orientation="vertical"
 		android:elevation="@dimen/elevationMedium"
-		app:cornerRadius="@dimen/cornerRadiusSmall"
-		app:fillColor="@color/colorBackgroundWhite"
+		app:fillColor="@color/colorPrimaryDark"
 		tools:elevation="0dp"
 		>
 
-		<!--Buttons-->
-		<LinearLayout
-			android:layout_width="match_parent"
+		<include
+			layout="@layout/media_information"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/spacingMedium"
-			android:gravity="center"
-			android:orientation="horizontal"
-			>
-
-			<mohsen.muhammad.minimalist.core.ExtendedImageButton
-				android:id="@+id/imageButtonRepeat"
-				android:layout_width="0dp"
-				android:layout_height="@dimen/imageButtonSize"
-				android:layout_weight="1"
-				android:padding="@dimen/spacingMedium"
-				android:background="@color/colorBackgroundWhite"
-				android:adjustViewBounds="true"
-				android:scaleType="fitCenter"
-				android:src="@drawable/repeat000"
-				android:contentDescription="@string/descriptionButtonRepeat"
-				app:fillColor="@color/colorBackgroundWhite"
-				app:cornerRadius="@dimen/cornerRadiusSmall"
-				/>
-
-			<mohsen.muhammad.minimalist.core.ExtendedImageButton
-				android:id="@+id/imageButtonPrevious"
-				android:layout_width="0dp"
-				android:layout_height="@dimen/imageButtonSize"
-				android:layout_weight="1"
-				android:padding="@dimen/spacingMedium"
-				android:background="@color/colorBackgroundWhite"
-				android:scaleType="fitCenter"
-				android:src="@drawable/next000"
-				android:tint="@color/colorOnBackgroundDark"
-				android:rotation="180"
-				android:contentDescription="@string/descriptionButtonPrevious"
-				app:fillColor="@color/colorBackgroundWhite"
-				app:cornerRadius="@dimen/cornerRadiusSmall"
-				/>
-
-			<View
-				android:layout_width="0dp"
-				android:layout_height="2dp"
-				android:layout_weight="1.5"
-				/>
-
-			<mohsen.muhammad.minimalist.core.ExtendedImageButton
-				android:id="@+id/imageButtonNext"
-				android:layout_width="0dp"
-				android:layout_height="@dimen/imageButtonSize"
-				android:layout_weight="1"
-				android:padding="@dimen/spacingMedium"
-				android:background="@color/colorBackgroundWhite"
-				android:tint="@color/colorOnBackgroundDark"
-				android:adjustViewBounds="true"
-				android:contentDescription="@string/descriptionButtonNext"
-				android:scaleType="fitCenter"
-				android:src="@drawable/next000"
-				app:fillColor="@color/colorBackgroundWhite"
-				app:cornerRadius="@dimen/cornerRadiusSmall"
-				/>
-
-			<mohsen.muhammad.minimalist.core.ExtendedImageButton
-				android:id="@+id/imageButtonShuffle"
-				android:layout_width="0dp"
-				android:layout_height="@dimen/imageButtonSize"
-				android:layout_weight="1"
-				android:padding="@dimen/spacingMedium"
-				android:background="@color/colorBackgroundWhite"
-				android:adjustViewBounds="true"
-				android:scaleType="fitCenter"
-				android:src="@drawable/shuffle000"
-				android:contentDescription="@string/descriptionButtonShuffle"
-				app:fillColor="@color/colorBackgroundWhite"
-				app:cornerRadius="@dimen/cornerRadiusSmall"
-				/>
-
-		</LinearLayout>
-
-		<!--Seek Text-->
-		<TextView
-			android:id="@+id/textViewSeek"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="-10dp"
-			android:textSize="@dimen/textMedium"
-			android:textColor="@color/colorOnBackgroundDark"
-			android:textAlignment="center"
-			android:text="@string/blankTimestamp"
-			tools:text="02:35 / 4:08"
+			android:layout_marginStart="@dimen/spacingLarge"
 			/>
 
 		<SeekBar
 			android:id="@+id/seekBar"
 			android:layout_width="match_parent"
-			android:layout_height="5dp"
-			android:layout_margin="@dimen/spacingMediumLarge"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/spacingMedium"
 			android:max="100"
 			android:progress="50"
-			android:thumb="@drawable/style_seek_bar_thumb"
 			android:progressDrawable="@drawable/style_seek_bar_progress"
+			android:thumb="@drawable/style_seek_bar_thumb"
 			/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/spacingLarge"
+			android:layout_marginEnd="@dimen/spacingLarge"
+			android:orientation="horizontal"
+			>
+
+			<!--Seek Text-->
+			<TextView
+				android:id="@+id/textViewSeek"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:textSize="@dimen/textMedium"
+				android:textColor="@color/colorOnPrimary"
+				android:textStyle="bold"
+				android:textAlignment="viewStart"
+				android:text="@string/blankTimestamp"
+				tools:text="02:35"
+				/>
+
+			<!--Seek Text-->
+			<TextView
+				android:id="@+id/textViewDuration"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:textSize="@dimen/textMedium"
+				android:textColor="@color/colorOnSecondary"
+				android:textAlignment="viewEnd"
+				android:text="@string/blankTimestamp"
+				tools:text="4:08"
+				/>
+
+		</LinearLayout>
 
 	</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
 
@@ -133,13 +80,14 @@
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:layout_width="@dimen/imageButtonContainerSize"
 		android:layout_height="@dimen/imageButtonContainerSize"
-		android:layout_gravity= "center_horizontal"
+		android:layout_marginEnd="@dimen/spacingMediumLarge"
+		android:layout_gravity="end"
 		android:padding="@dimen/spacingMediumLarge"
-		android:tint="@color/colorOnPrimary"
+		android:tint="@color/colorPrimary"
 		android:scaleType="fitCenter"
 		android:src="@drawable/play000"
 		android:elevation="@dimen/elevationLarge"
-		app:fillColor="@color/colorSecondary"
+		app:fillColor="@color/colorOnPrimary"
 		app:cornerRadius="40dp"
 		tools:elevation="0dp"
 		/>

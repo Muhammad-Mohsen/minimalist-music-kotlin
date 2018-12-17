@@ -15,7 +15,7 @@
 
 	<!--On's-->
 	<color name="colorOnPrimary">#FFF</color>
-	<color name="colorOnSecondary">#FFF</color>
+	<color name="colorOnSecondary">#BBB</color>
 	<color name="colorOnBackground">#333</color>
 	<color name="colorOnBackgroundDark">#111</color>
 

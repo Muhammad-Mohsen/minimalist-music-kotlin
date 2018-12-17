@@ -9,22 +9,8 @@
 	android:background="@drawable/background_app"
 	>
 
-	<!--Header-->
-	<com.google.android.material.appbar.AppBarLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/colorTransparent"
-		android:elevation="0dp"
-		app:elevation="0dp"
-		>
-
-		<!--Breadcrumb bar-->
-		<include layout="@layout/breadcrumb_bar" />
-
-		<!--Track title and info-->
-		<include layout="@layout/media_information" />
-
-	</com.google.android.material.appbar.AppBarLayout>
+	<!--Breadcrumb bar-->
+	<include layout="@layout/breadcrumb_bar" />
 
 	<!--Explorer-->
 	<androidx.recyclerview.widget.RecyclerView

@@ -7,7 +7,7 @@
 		>
 
 		<shape android:shape="rectangle" >
-			<solid android:color="@color/colorBackground" />
+			<solid android:color="@color/colorSecondary" />
 			<size android:height="2dp" />
 		</shape>
 
@@ -20,8 +20,8 @@
 
 		<clip>
 			<shape android:shape="rectangle" >
-				<solid android:color="@color/colorSecondary" />
-				<size android:height="4dp" />
+				<solid android:color="@color/colorOnPrimary" />
+				<size android:height="2dp" />
 			</shape>
 		</clip>
 

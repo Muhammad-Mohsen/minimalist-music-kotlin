@@ -13,63 +13,105 @@ import android.os.IBinder
  */
 
 class PlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
-    MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener, AudioManager.OnAudioFocusChangeListener {
+	MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener, AudioManager.OnAudioFocusChangeListener {
 
-    private var mPlayer: MediaPlayer? = null
+	private var player: MediaPlayer? = null
+	private var playlist: Playlist? = null
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        // initialize the media player
-        initializeMediaPlayer()
+	// API
+	fun playPause(play: Boolean) {
+		if (play) player?.start()
+		else player?.pause()
+	}
 
-        return super.onStartCommand(intent, flags, startId)
-    }
+	fun playTrack(path: String) {
 
-    override fun onDestroy() {
-        // destroy the Player instance
-    }
+		// update playlist
+		playlist = Playlist(path)
+		playlist?.setTrack(path, true)
 
-    fun playPause(play: Boolean) {
-        if (play)
-            mPlayer!!.start()
-        else
-            mPlayer!!.pause()
-    }
+		// play the track
+		player?.setDataSource(path)
+		player?.prepareAsync()
 
-    override fun onAudioFocusChange(focusChange: Int) {
+		// TODO inform UI
+	}
 
-    }
+	// updates the attributes (shuffle/repeat mode) of the playlist
+	fun updatePlaylistAttr() {
 
-    override fun onCompletion(mp: MediaPlayer) {
-        // TODO ask the PlaybackManager to play the next track
-    }
+	}
 
-    override fun onError(mp: MediaPlayer, what: Int, extra: Int): Boolean {
-        return false
-    }
+	fun updateSeek() {
 
-    override fun onPrepared(mp: MediaPlayer) {
-        // TODO start playing?
-    }
+	}
 
-    override fun onSeekComplete(mp: MediaPlayer) {
-        // TODO don't know yet!
-    }
+	// events
+	override fun onAudioFocusChange(focusChange: Int) {
+		if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+			player?.pause()
 
-    private fun initializeMediaPlayer() {
-        mPlayer = MediaPlayer()
+			// TODO inform UI
+		}
+	}
 
-        //Set up MediaPlayer event listeners
-        mPlayer!!.setOnCompletionListener(this)
-        mPlayer!!.setOnErrorListener(this)
-        mPlayer!!.setOnPreparedListener(this)
-        mPlayer!!.setOnSeekCompleteListener(this)
+	override fun onCompletion(mp: MediaPlayer) {
+		val nextTrack = playlist?.getNextTrack(true)
+		if (nextTrack != null) {
+			player?.setDataSource(nextTrack)
+			player?.prepareAsync()
+		}
 
-        //Reset so that the MediaPlayer is not pointing to another data source
-        mPlayer!!.reset()
-    }
+		// TODO inform UI
+	}
 
-    // override is mandated by the framework
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+	override fun onError(mp: MediaPlayer, what: Int, extra: Int): Boolean {
+		return false
+	}
+
+	override fun onPrepared(mp: MediaPlayer) {
+		player?.start()
+	}
+
+	override fun onSeekComplete(mp: MediaPlayer) {
+		// TODO don't know yet!
+	}
+
+	private fun initializeMediaPlayer() {
+		player = MediaPlayer()
+
+		//Set up MediaPlayer event listeners
+		player?.setOnCompletionListener(this)
+		player?.setOnErrorListener(this)
+		player?.setOnPreparedListener(this)
+		player?.setOnSeekCompleteListener(this)
+	}
+
+	// life cycle
+	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+		// initialize the media player
+		initializeMediaPlayer()
+
+		// register the service instance
+		registerSelf(this)
+
+		return super.onStartCommand(intent, flags, startId)
+	}
+	override fun onDestroy() {
+		player?.release() // destroy the Player instance
+	}
+
+	// override is mandated by the framework
+	override fun onBind(intent: Intent): IBinder? { return null }
+
+	companion object {
+
+		// Oh, look! It's accessible!
+		// TODO make this an interface reference and it'll be a lot prettier
+		var instance: PlayerService? = null
+
+		private fun registerSelf(serviceInstance: PlayerService) {
+			instance = serviceInstance
+		}
+	}
 }

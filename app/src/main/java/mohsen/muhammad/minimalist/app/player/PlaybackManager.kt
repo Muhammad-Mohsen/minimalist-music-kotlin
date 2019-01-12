@@ -1,7 +1,7 @@
 package mohsen.muhammad.minimalist.app.player
 
-import mohsen.muhammad.minimalist.data.files.ExplorerFile
 import mohsen.muhammad.minimalist.app.main.MainFragment
+import mohsen.muhammad.minimalist.data.files.ExplorerFile
 
 
 /**
@@ -13,22 +13,22 @@ import mohsen.muhammad.minimalist.app.main.MainFragment
 
 object PlaybackManager {
 
-    var playerService: PlayerService? = null
-        private set
+	var playerService: PlayerService? = null
+		private set
 
-        var mainFragment: MainFragment? = null
+	var mainFragment: MainFragment? = null
 
-    fun setPlaybackService(service: PlayerService) {
-        playerService = service
-    }
+	fun setPlaybackService(service: PlayerService) {
+		playerService = service
+	}
 
-    // when the play/pause button is clicked
-    fun playPause(play: Boolean) {
-        playerService!!.playPause(play)
-    }
+	// when the play/pause button is clicked
+	fun playPause(play: Boolean) {
+		playerService!!.playPause(play)
+	}
 
-    fun startPlay(track: ExplorerFile) {
+	fun startPlay(track: ExplorerFile) {
 
-    }
+	}
 
 }

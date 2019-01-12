@@ -2,10 +2,9 @@
 
 	<!-- Base application theme. -->
 	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-		<!-- Customize your theme here. -->
-		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimary</item>
-		<item name="colorAccent">@color/colorSecondary</item>
+		<item name="colorPrimary">@color/colorBackground</item>
+		<item name="colorPrimaryDark">@color/colorBackground</item>
+		<item name="colorAccent">@color/colorPrimaryDark</item>
 
 		<item name="android:background">@color/colorTransparent</item>
 
@@ -22,6 +21,8 @@
 	<!-- Splash screen theme -->
 	<style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:windowBackground">@drawable/splash</item>
+		<item name="android:statusBarColor">@color/colorOnBackgroundDark</item>
+		<item name="android:navigationBarColor">@color/colorOnBackgroundDark</item>
 	</style>
 
 	<!-- Scrollbar style for the explorer recycler view -->

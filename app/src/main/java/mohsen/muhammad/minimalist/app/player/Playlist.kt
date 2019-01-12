@@ -1,5 +1,6 @@
 package mohsen.muhammad.minimalist.app.player
 
+import mohsen.muhammad.minimalist.data.RepeatMode
 import java.util.concurrent.ThreadLocalRandom
 
 /**
@@ -9,96 +10,85 @@ import java.util.concurrent.ThreadLocalRandom
 
 class Playlist {
 
-    private var mIndex: Int = 0
-    private val mStart: Int // starting index - to try and do circular playlist
+	private val trackList: ArrayList<String>
 
-    var isShuffle: Boolean = false
-        private set
-    var repeatMode: RepeatMode? = null
-        private set
+	private var index: Int = 0
+	private var start: Int = 0 // starting index - to try and do circular playlist
 
-    var playlistItems: ArrayList<String>? = null
+	// attributes
+	private var isShuffle: Boolean = false
+	private var repeatMode: Int = RepeatMode.NONE
 
-    // first, check the shuffle state
-    // nextInt max is exclusive.
-    // then, if we're not at the first track of the playlist, decrement by one!
-    // otherwise, rotate the index to the end of the list
-    val previousItem: String?
-        get() {
-            if (playlistItems == null)
-                return null
+	constructor(items: ArrayList<String>) {
+		trackList = items
+	}
 
-            val playlistSize = playlistItems!!.size
-            when {
-                isShuffle -> mIndex = ThreadLocalRandom.current().nextInt(0, playlistSize)
-                mIndex > 0 -> mIndex--
-                else -> mIndex = playlistSize - 1
-            }
+	constructor(trackPath: String) {
+		trackList = ArrayList() // TODO get base path + get tracks in the base path
+	}
 
-            return null
-        }
+	// first, check the shuffle state
+	// then, if we're not at the first track of the playlist, decrement by one!
+	// otherwise, rotate the index to the end of the list
+	fun getPreviousTrack(): String? {
+		when {
+			isShuffle -> index = ThreadLocalRandom.current().nextInt(0, trackList.size) // nextInt is exclusive.
+			index > 0 -> index--
+			else -> index = trackList.size - 1
+		}
 
-    init {
-        mIndex = 0
-        mStart = 0
+		return null
+	}
 
-        isShuffle = false
-    }
+	// the onComplete param indicates whether we're requesting the next track upon completion of playing the current track,
+	// or by clicking the "Next" button
+	fun getNextTrack(onComplete: Boolean): String? {
 
-    fun toggleShuffle() {
-        isShuffle = !isShuffle
-    }
+		// first, check the shuffle state
+		if (isShuffle)
+			index = ThreadLocalRandom.current().nextInt(0, trackList.size) // nextInt is exclusive.
 
-    fun updateRepeatMode() {
-        when (repeatMode) {
-            Playlist.RepeatMode.NONE -> repeatMode = RepeatMode.REPEAT
+		else if (index < trackList.size - 1 && repeatMode != RepeatMode.ONE)
+			index++
 
-            Playlist.RepeatMode.REPEAT -> repeatMode = RepeatMode.ONE
+		else if (repeatMode == RepeatMode.REPEAT)
+			index = 0
 
-            Playlist.RepeatMode.ONE -> repeatMode = RepeatMode.NONE
-        }
-    }
+		// if we hit the end, and we're not repeating, we look into the onComplete argument:
+		// if it is true, meaning that we're looking for the next track after finishing playing the current one, we'll stop.
+		// otherwise, it means that the user clicked the Next button, so, we'll return the first track index.
+		// if we did hit the end, and we're repeating, go back to the start.
+		// next up, if we're yet to hit the end of the playlist AND we're not repeating the same track, simply increment the index.
+		else if (repeatMode == RepeatMode.NONE) {
+			index = if (onComplete) -1 else 0
+		}
 
-    // the onComplete param indicates whether we're requesting the next track upon completion of playing the current track,
-    // or by clicking the "Next" button
-    fun getNextItem(onComplete: Boolean): String? {
-        // first things first, check that the playlist is initialized
-        if (playlistItems == null)
-            return null
+		// finally, if the index isn't invalid, we return the track.
+		return if (index != -1) trackList[index] else null
 
-        val playlistSize = playlistItems!!.size
+	}
 
-        // first, check the shuffle state
-        if (isShuffle)
-            mIndex = ThreadLocalRandom.current().nextInt(0, playlistSize) // nextInt max is exclusive.
-        else if (mIndex < playlistSize - 1 && repeatMode != RepeatMode.ONE)
-            mIndex++
-        else if (repeatMode == RepeatMode.REPEAT)
-            mIndex = 0
-        else if (repeatMode == RepeatMode.NONE) {
-            mIndex = if (onComplete)
-                -1
-            else
-                0
-        }// if we hit the end, and we're not repeating, we look into the onComplete argument:
-        // if it is true, meaning that we're looking for the next track after finishing playing the current one, we'll stop.
-        // otherwise, it means that the user clicked the Next button, so, we'll return the first track index.
-        // if we did hit the end, and we're repeating, go back to the start.
-        // next up, if we're yet to hit the end of the playlist AND we're not repeating the same track, simply increment the index.
+	fun getTrackByIndex(index: Int): String? {
+		return if (index < trackList.size) trackList[index] else null
+	}
 
-        // finally, if the index isn't invalid, we return the track.
-        return if (mIndex != -1) playlistItems!![mIndex] else null
+	// sets the index of the current track - isStart indicates whether the current track should be treated as the starting index in the current playlist
+	fun setTrack(currentTrackPath: String, isStart: Boolean = true) {
+		index = trackList.indexOf(currentTrackPath)
 
-    }
+		if (isStart)
+			start = index
+	}
 
-    fun getItem(index: Int): String? {
-        return if (index < playlistItems!!.size) playlistItems!![index] else null
+	fun toggleShuffle() {
+		isShuffle = !isShuffle
+	}
 
-    }
-
-    enum class RepeatMode {
-        NONE,
-        ONE,
-        REPEAT
-    }
+	fun cycleRepeatMode() {
+		when (repeatMode) {
+			RepeatMode.NONE -> repeatMode = RepeatMode.REPEAT
+			RepeatMode.REPEAT -> repeatMode = RepeatMode.ONE
+			RepeatMode.ONE -> repeatMode = RepeatMode.NONE
+		}
+	}
 }

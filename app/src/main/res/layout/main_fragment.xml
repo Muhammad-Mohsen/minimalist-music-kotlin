@@ -31,4 +31,12 @@
 		android:layout_gravity="bottom"
 		/>
 
+	<!--Permission denied layout-->
+	<include
+		android:id="@+id/layoutPermission"
+		layout="@layout/permission_request"
+		android:visibility="gone"
+		tools:visibility="gone"
+		/>
+
 </FrameLayout>

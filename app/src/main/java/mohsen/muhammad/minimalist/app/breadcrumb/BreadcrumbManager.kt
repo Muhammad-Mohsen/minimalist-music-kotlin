@@ -7,6 +7,8 @@ import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.FileHelper
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
 import mohsen.muhammad.minimalist.core.animateDrawable
+import mohsen.muhammad.minimalist.data.Prefs
+import mohsen.muhammad.minimalist.data.Type
 import java.io.File
 
 
@@ -15,7 +17,12 @@ import java.io.File
  * Controls layout properties (scroll position, back button) for the breadcrumb bar layout
  */
 
-class BreadcrumbManager(private val recyclerViewBreadcrumb: RecyclerView, private val buttonBack: ImageView, private val interactionHandler: OnListItemInteractionListener<File>, private val currentDirectory: File) {
+class BreadcrumbManager(
+	private val recyclerViewBreadcrumb: RecyclerView,
+	private val buttonBack: ImageView,
+	private val interactionHandler: OnListItemInteractionListener<File>,
+	private val currentDirectory: File
+) {
 
 	private val breadcrumbAdapter: BreadcrumbAdapter
 		get() = recyclerViewBreadcrumb.adapter as BreadcrumbAdapter
@@ -47,6 +54,13 @@ class BreadcrumbManager(private val recyclerViewBreadcrumb: RecyclerView, privat
 
 		// scroll to end
 		recyclerViewBreadcrumb.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
+
+		// back button click listener
+		buttonBack.setOnClickListener {
+			val dir = Prefs.getCurrentDirectory(buttonBack.context)
+			if (dir.absolutePath != FileHelper.ROOT)
+				interactionHandler.onListItemClick(dir.parentFile, Type.CRUMB)
+		}
 	}
 
     fun onDirectoryChange(currentDirectory: File) {

@@ -11,7 +11,7 @@
 		android:id="@+id/buttonCrumb"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:padding="@dimen/buttonPaddingSmall"
+		android:padding="@dimen/spacingSmall"
 		app:fillColor="@color/colorBackgroundWhite"
 		app:rippleColor="@color/colorOnBackground"
 		app:cornerRadius="@dimen/cornerRadiusSmall"
@@ -32,7 +32,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/breadcrumbSeparator"
-		android:padding="@dimen/buttonPaddingSmall"
+		android:padding="@dimen/spacingSmall"
 		android:textColor="@color/colorOnBackground"
 		android:textSize="@dimen/textLarge"
 		/>

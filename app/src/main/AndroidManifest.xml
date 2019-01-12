@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	package="mohsen.muhammad.minimalist"
 	>
 
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 	<application
+		android:name=".app.MinimalistApplication"
 		android:allowBackup="false"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/appName"
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
-		android:theme="@style/AppTheme"
+		android:theme="@style/SplashTheme"
+		tools:replace="android:allowBackup,android:label"
 		>
+
 		<activity android:name="mohsen.muhammad.minimalist.app.main.MainActivity">
 
 			<intent-filter>
@@ -26,6 +30,13 @@
 			</intent-filter>
 
 		</activity>
+
+		<service
+			android:name=".app.player.PlayerService"
+			android:stopWithTask="true"
+			android:exported="false"
+			/>
+
 	</application>
 
 </manifest>

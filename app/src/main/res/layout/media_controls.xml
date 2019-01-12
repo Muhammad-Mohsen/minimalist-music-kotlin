@@ -3,6 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/controls"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	>
@@ -78,6 +79,7 @@
 
 	<!--Play/Pause-->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonPlayPause"
 		android:layout_width="@dimen/imageButtonContainerSize"
 		android:layout_height="@dimen/imageButtonContainerSize"
 		android:layout_marginEnd="@dimen/spacingMediumLarge"
@@ -85,7 +87,7 @@
 		android:padding="@dimen/spacingMediumLarge"
 		android:tint="@color/colorPrimary"
 		android:scaleType="fitCenter"
-		android:src="@drawable/play000"
+		android:src="@drawable/anim_play_pause"
 		android:elevation="@dimen/elevationLarge"
 		app:fillColor="@color/colorOnPrimary"
 		app:cornerRadius="40dp"

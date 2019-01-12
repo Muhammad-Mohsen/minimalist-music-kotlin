@@ -5,71 +5,88 @@
 	>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back016"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back016"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back015"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back015"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back014"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back014"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back013"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back013"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back012"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back012"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back011"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back011"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back010"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back010"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back009"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back009"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back008"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back008"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back007"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back007"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back006"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back006"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back005"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back005"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back004"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back004"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back003"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back003"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back002"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back002"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back001"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back001"
+		/>
 
 	<item
-		android:duration="30"
-		android:drawable="@drawable/root_back000"/>
+		android:duration="20"
+		android:drawable="@drawable/root_back000"
+		/>
 
 </animation-list>

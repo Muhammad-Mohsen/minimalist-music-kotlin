@@ -12,7 +12,7 @@
 	android:orientation="horizontal"
 	android:elevation="@dimen/elevationMedium"
 	app:fillColor="@color/colorBackgroundWhite"
-	app:cornerRadius="6dp"
+	app:cornerRadius="25dp"
 	tools:elevation="0dp"
 	>
 

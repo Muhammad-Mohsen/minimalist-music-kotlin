@@ -20,4 +20,10 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 
+	override fun onBackPressed() {
+		// call onBackPressed on the MainFragment...if it fails, call the super
+		if ((supportFragmentManager.fragments.last() as? MainFragment)?.onBackPressed() == false)
+			super.onBackPressed()
+	}
+
 }

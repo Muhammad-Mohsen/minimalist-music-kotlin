@@ -18,3 +18,15 @@ object SelectionState {
 	const val PLAYLIST = 2
 	const val PLAYING = 3
 }
+
+object RepeatMode {
+	const val NONE = 0
+	const val ONE = 1
+	const val REPEAT = 2
+}
+
+object PlaylistFlag {
+	const val CYCLE_SHUFFLE = 2
+	const val CYCLE_REPEAT = 4
+	const val DIRECTORY = 8
+}

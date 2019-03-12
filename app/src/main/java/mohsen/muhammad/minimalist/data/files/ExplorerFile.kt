@@ -1,7 +1,6 @@
 package mohsen.muhammad.minimalist.data.files
 
-import mohsen.muhammad.minimalist.core.EMPTY
-import mohsen.muhammad.minimalist.data.SelectionState
+import mohsen.muhammad.minimalist.core.ext.EMPTY
 import java.io.File
 
 
@@ -19,6 +18,4 @@ class ExplorerFile(pathname: String) : File(pathname) {
 	var duration: String = String.EMPTY
 
 	var trackCount: Int = 0
-
-	var selectionState: Int = SelectionState.NONE
 }

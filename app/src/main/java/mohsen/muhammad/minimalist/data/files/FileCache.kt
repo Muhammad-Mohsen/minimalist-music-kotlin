@@ -1,6 +1,5 @@
 package mohsen.muhammad.minimalist.data.files
 
-import mohsen.muhammad.minimalist.core.FileHelper
 import java.io.File
 
 /**
@@ -33,5 +32,4 @@ object FileCache {
 
         return files
     }
-
 }

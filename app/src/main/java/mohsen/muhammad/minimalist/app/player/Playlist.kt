@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 class Playlist {
 
-	private val trackList: ArrayList<String>
+	private var trackList: ArrayList<String>
 
 	private var index: Int = 0
 	private var start: Int = 0 // starting index - to try and do circular playlist
@@ -19,11 +19,15 @@ class Playlist {
 	private var isShuffle: Boolean = false
 	private var repeatMode: Int = RepeatMode.NONE
 
-	constructor(items: ArrayList<String>) {
+	init {
+		trackList = ArrayList()
+	}
+
+	fun updateItems(items: ArrayList<String>) {
 		trackList = items
 	}
 
-	constructor(trackPath: String) {
+	fun updateItems(trackPath: String) {
 		trackList = ArrayList() // TODO get base path + get tracks in the base path
 	}
 
@@ -83,7 +87,6 @@ class Playlist {
 	fun toggleShuffle() {
 		isShuffle = !isShuffle
 	}
-
 	fun cycleRepeatMode() {
 		when (repeatMode) {
 			RepeatMode.NONE -> repeatMode = RepeatMode.REPEAT

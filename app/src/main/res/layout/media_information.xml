@@ -7,7 +7,7 @@
 	android:layout_height="wrap_content"
 	android:layout_marginBottom="@dimen/spacingMediumLarge"
 	android:orientation="vertical"
-	app:fillColor="@color/colorPrimaryDark"
+	app:fillColor="@color/colorOnBackgroundDark"
 	tools:elevation="0dp"
 	>
 

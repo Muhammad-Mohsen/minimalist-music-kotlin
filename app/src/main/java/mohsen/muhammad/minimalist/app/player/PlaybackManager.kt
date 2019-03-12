@@ -11,6 +11,7 @@ import mohsen.muhammad.minimalist.data.files.ExplorerFile
  * initialize, terminate methods cannot used here as the service and the fragment aren't necessarily created/destroyed together.
  */
 
+@Deprecated("EventBus-like architecture is now used")
 object PlaybackManager {
 
 	var playerService: PlayerService? = null
@@ -23,12 +24,8 @@ object PlaybackManager {
 	}
 
 	// when the play/pause button is clicked
-	fun playPause(play: Boolean) {
-		playerService!!.playPause(play)
-	}
+	fun playPause(play: Boolean) {}
 
-	fun startPlay(track: ExplorerFile) {
-
-	}
+	fun startPlay(track: ExplorerFile) {}
 
 }

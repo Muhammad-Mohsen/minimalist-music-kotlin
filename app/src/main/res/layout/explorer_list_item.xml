@@ -1,81 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
+<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:padding="@dimen/spacingSmall"
-	android:orientation="horizontal"
-	android:gravity="center"
 	app:fillColor="@color/colorBackground"
 	>
 
-	<!--icon-->
-	<ImageView
-		android:id="@+id/imageViewIcon"
-		android:layout_width="40dp"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/spacingSmall"
-		android:contentDescription="@string/descriptionRecyclerItemTypeTrack"
-		android:src="@mipmap/ic_track"
-		android:tint="@color/colorOnBackgroundDark"
+	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+		android:id="@+id/frameLayoutSelected"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="6dp"
+		android:visibility="gone"
+		app:cornerRadius="@dimen/cornerRadiusSmall"
+		app:fillColor="@color/colorOnSecondary"
 		/>
 
-	<!--track name, album, artist-->
 	<LinearLayout
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_weight="1"
-		android:layout_marginEnd="@dimen/spacingLarge"
-		android:orientation="vertical"
+		android:gravity="center"
+		android:padding="@dimen/spacingSmall"
+		android:orientation="horizontal"
 		>
 
-		<!--Title-->
-		<TextView
-			android:id="@+id/textViewTitle"
-			android:layout_width="match_parent"
+		<!--icon-->
+		<ImageView
+			android:id="@+id/imageViewIcon"
+			android:layout_width="40dp"
 			android:layout_height="wrap_content"
-			android:maxLines="1"
-			android:ellipsize="end"
-			android:textSize="@dimen/textLarge"
-			android:textColor="@color/colorOnBackgroundDark"
-			tools:text="Track Title"
+			android:layout_marginEnd="@dimen/spacingSmall"
+			android:contentDescription="@string/descriptionRecyclerItemTypeTrack"
+			android:src="@mipmap/ic_track"
+			android:tint="@color/colorOnBackgroundDark"
 			/>
 
-		<!--Subtitle/Duration - Hidden-->
+		<!--track name, album, artist-->
 		<LinearLayout
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:visibility="gone"
+			android:layout_weight="1"
+			android:layout_marginEnd="@dimen/spacingLarge"
+			android:orientation="vertical"
 			>
 
+			<!--Title-->
 			<TextView
-				android:id="@+id/textViewSubtitle"
-				android:layout_width="0dp"
-				android:layout_weight="1"
+				android:id="@+id/textViewTitle"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:maxLines="1"
 				android:ellipsize="end"
-				android:textSize="@dimen/textSmall"
-				android:textColor="@color/colorOnBackground"
-				tools:text="Artist"
+				android:textSize="@dimen/textLarge"
+				android:textColor="@color/colorOnBackgroundDark"
+				tools:text="Track Title"
 				/>
 
-			<!--track duration-->
-			<TextView
-				android:id="@+id/textViewDuration"
-				android:layout_width="wrap_content"
+			<!--Subtitle/Duration - Hidden-->
+			<LinearLayout
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="20dp"
-				android:textSize="@dimen/textSmall"
-				android:textColor="@color/colorOnBackground"
-				tools:text="00:00"
-				/>
+				android:orientation="horizontal"
+				android:visibility="gone"
+				>
+
+				<TextView
+					android:id="@+id/textViewSubtitle"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:layout_height="wrap_content"
+					android:maxLines="1"
+					android:ellipsize="end"
+					android:textSize="@dimen/textSmall"
+					android:textColor="@color/colorOnBackground"
+					tools:text="Artist"
+					/>
+
+				<!--track duration-->
+				<TextView
+					android:id="@+id/textViewDuration"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="20dp"
+					android:textSize="@dimen/textSmall"
+					android:textColor="@color/colorOnBackground"
+					tools:text="00:00"
+					/>
+
+			</LinearLayout>
 
 		</LinearLayout>
 
 	</LinearLayout>
 
-</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
+</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>

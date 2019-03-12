@@ -4,11 +4,11 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import mohsen.muhammad.minimalist.R
-import mohsen.muhammad.minimalist.core.FileHelper
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
-import mohsen.muhammad.minimalist.core.animateDrawable
+import mohsen.muhammad.minimalist.core.ext.animateDrawable
 import mohsen.muhammad.minimalist.data.Prefs
-import mohsen.muhammad.minimalist.data.Type
+import mohsen.muhammad.minimalist.data.ItemType
+import mohsen.muhammad.minimalist.data.files.FileHelper
 import java.io.File
 
 
@@ -20,14 +20,15 @@ import java.io.File
 class BreadcrumbManager(
 	private val recyclerViewBreadcrumb: RecyclerView,
 	private val buttonBack: ImageView,
-	private val interactionHandler: OnListItemInteractionListener<File>,
-	private val currentDirectory: File
+	private val interactionHandler: OnListItemInteractionListener<File>
 ) {
 
 	private val breadcrumbAdapter: BreadcrumbAdapter
 		get() = recyclerViewBreadcrumb.adapter as BreadcrumbAdapter
 
 	fun initialize() {
+
+		val currentDirectory = Prefs.getCurrentDirectory(recyclerViewBreadcrumb.context)
 
 		val breadcrumbAdapter = BreadcrumbAdapter(currentDirectory, interactionHandler)
 		recyclerViewBreadcrumb.adapter = breadcrumbAdapter
@@ -59,7 +60,7 @@ class BreadcrumbManager(
 		buttonBack.setOnClickListener {
 			val dir = Prefs.getCurrentDirectory(buttonBack.context)
 			if (dir.absolutePath != FileHelper.ROOT)
-				interactionHandler.onListItemClick(dir.parentFile, Type.CRUMB)
+				interactionHandler.onListItemClick(dir.parentFile, ItemType.CRUMB)
 		}
 	}
 

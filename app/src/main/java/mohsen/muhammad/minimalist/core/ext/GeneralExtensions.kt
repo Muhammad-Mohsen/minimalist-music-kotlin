@@ -1,4 +1,4 @@
-package mohsen.muhammad.minimalist.core
+package mohsen.muhammad.minimalist.core.ext
 
 /**
  * Created by muhammad.mohsen on 11/4/2018.

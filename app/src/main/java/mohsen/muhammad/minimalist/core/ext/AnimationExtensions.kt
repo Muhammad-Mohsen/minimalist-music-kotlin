@@ -1,4 +1,4 @@
-package mohsen.muhammad.minimalist.core
+package mohsen.muhammad.minimalist.core.ext
 
 import android.graphics.drawable.AnimationDrawable
 import android.widget.ImageView

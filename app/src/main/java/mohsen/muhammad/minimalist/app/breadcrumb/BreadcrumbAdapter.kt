@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.breadcrumb_bar_item.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
-import mohsen.muhammad.minimalist.data.Type
+import mohsen.muhammad.minimalist.data.ItemType
 import java.io.File
 import java.util.*
 
@@ -38,7 +38,7 @@ class BreadcrumbAdapter(file: File, private val interactionListener: OnListItemI
 			crumbText.text = file.name
 
 			crumbButton.setOnClickListener {
-				interactionListener.onListItemClick(file, Type.CRUMB)
+				interactionListener.onListItemClick(file, ItemType.CRUMB)
 			}
 		}
 	}

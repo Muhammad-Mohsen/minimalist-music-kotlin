@@ -1,8 +1,8 @@
 package mohsen.muhammad.minimalist.data
 
 import android.content.Context
-import mohsen.muhammad.minimalist.core.EMPTY
-import mohsen.muhammad.minimalist.core.FileHelper
+import mohsen.muhammad.minimalist.core.ext.EMPTY
+import mohsen.muhammad.minimalist.data.files.FileHelper
 import java.io.File
 
 
@@ -12,24 +12,22 @@ import java.io.File
  * it's also responsible for persisting those variables (in shared preferences)
  */
 object Prefs {
-	private const val MINIMALIST_SHARED_PREFERENCE = "Minimalist"
+	private const val MINIMALIST_SHARED_PREFERENCES = "Minimalist"
 
-	private const val DIRECTORY_SHARED_PREFERENCE = "CurrentDirectory"
-
-	private const val TRACK_SHARED_PREFERENCE = "CurrentTrack"
-	private const val PLAYLIST_SHARED_PREFERENCE = "Playlist"
+	private const val DIRECTORY_PREFERENCE = "CurrentDirectory"
+	private const val TRACK_PREFERENCE = "CurrentTrack"
+	private const val PLAYLIST_PREFERENCE = "Playlist"
 	//
 	// current directory
 	//
 	fun setCurrentDirectory(context: Context, directory: File) {
-		context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCE, Context.MODE_PRIVATE).edit()
-			.putString(DIRECTORY_SHARED_PREFERENCE, directory.absolutePath)
+		context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit()
+			.putString(DIRECTORY_PREFERENCE, directory.absolutePath)
 			.apply()
 	}
-
 	fun getCurrentDirectory(context: Context): File {
-		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCE, Context.MODE_PRIVATE)
-		val savedPath = sharedPreferences.getString(DIRECTORY_SHARED_PREFERENCE, String.EMPTY)
+		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+		val savedPath = sharedPreferences.getString(DIRECTORY_PREFERENCE, String.EMPTY)
 
 		if (savedPath != String.EMPTY) {
 			val savedFile = File(savedPath)
@@ -44,36 +42,25 @@ object Prefs {
 	//
 	// current track
 	//
-	var currentTrack: String? = null
-
-	fun getSavedCurrentTrack(context: Context): String? {
-		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCE, Context.MODE_PRIVATE)
-		val savedCurrentTrack = sharedPreferences.getString(
-			TRACK_SHARED_PREFERENCE,
-			String.EMPTY
-		)
-
-		return if (savedCurrentTrack != String.EMPTY) savedCurrentTrack else null
-
+	fun setCurrentTrack(context: Context, trackPath: String) {
+		context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE).edit()
+			.putString(TRACK_PREFERENCE, trackPath)
+			.apply()
 	}
-
-	fun saveCurrentTrack(context: Context, currentTrack: String) {
-		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCE, Context.MODE_PRIVATE)
-		val editor = sharedPreferences.edit()
-
-		editor.putString(TRACK_SHARED_PREFERENCE, currentTrack)
-		editor.apply()
+	fun getCurrentTrack(context: Context): String {
+		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+		return sharedPreferences.getString(TRACK_PREFERENCE, String.EMPTY) ?: String.EMPTY
 	}
 	//
 	// playlist
 	//
 	// we may need to store the playlist into SQLite. We'll see.
-	fun getSavedPlaylistItems(context: Context): ArrayList<String> {
-		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCE, Context.MODE_PRIVATE)
+	fun getPlaylist(context: Context): ArrayList<String> {
+		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
 		// get a semi colon-separated string
 		val savedPlaylist = sharedPreferences.getString(
-			PLAYLIST_SHARED_PREFERENCE,
+			PLAYLIST_PREFERENCE,
 			String.EMPTY
 		) ?: String.EMPTY
 
@@ -82,9 +69,8 @@ object Prefs {
 		playlistItems.addAll(savedPlaylist.split(";").takeLastWhile { it.isNotBlank() })
 		return playlistItems
 	}
-
 	fun savePlaylist(context: Context, playlist: ArrayList<String>) {
-		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCE, Context.MODE_PRIVATE)
+		val sharedPreferences = context.getSharedPreferences(MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
 		val editor = sharedPreferences.edit()
 
 		val serialized = StringBuilder()
@@ -94,7 +80,7 @@ object Prefs {
 				.append(";")
 		}
 
-		editor.putString(TRACK_SHARED_PREFERENCE, serialized.toString())
+		editor.putString(TRACK_PREFERENCE, serialized.toString())
 		editor.apply()
 	}
 }

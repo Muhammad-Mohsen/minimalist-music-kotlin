@@ -1,11 +1,10 @@
-package mohsen.muhammad.minimalist.core
+package mohsen.muhammad.minimalist.core.ext
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
@@ -48,33 +47,11 @@ fun View.setRoundedBackground(attributes: AttributeSet?) {
 	}
 }
 
-fun View.setViewStroke(widthDp: Int, @ColorInt color: Int) {
-	// convert the given width (which should be in dp) to pixels
-	val widthPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, widthDp.toFloat(), resources.displayMetrics).toInt()
-
-	val backgroundShape = (background as LayerDrawable).findDrawableByLayerId(R.id.roundedCardShape) as GradientDrawable
-	backgroundShape.setStroke(widthPx, color)
-}
-
-fun View.setViewRippleColor(@ColorInt rippleColor: Int) {
-	(background as RippleDrawable).setColor(ColorStateList(
-		arrayOf(intArrayOf()),
-		intArrayOf(rippleColor)
-	))
-}
-
-fun View.setViewFillColor(@ColorInt fillColor: Int) {
-	val backgroundShape = (background as LayerDrawable).findDrawableByLayerId(R.id.roundedCardShape) as GradientDrawable
-	backgroundShape.setDrawableFillColor(fillColor)
-}
-
 /**
  * Applies the ExtendedView attribute set on the specified view.
  * Note that the R.drawable.background_teardrop_card background HAS to be set on the view before calling this function
  */
 fun View.applyExtendedViewAttr(attributes: AttributeSet) {
-
-	val displayMetrics = resources.displayMetrics
 	val backgroundShape = (background as LayerDrawable).findDrawableByLayerId(R.id.roundedCardShape) as GradientDrawable
 
 	val roundedViewAttrs = context.obtainStyledAttributes(attributes, R.styleable.ExtendedView)
@@ -120,10 +97,10 @@ fun View.applyCornerAttr(attributes: AttributeSet) {
 
 	val cornerAttrs = context.obtainStyledAttributes(attributes, R.styleable.ExtendedView)
 
-	var cornerTopLeft: Float
-	var cornerTopRight: Float
-	var cornerBottomLeft: Float
-	var cornerBottomRight: Float
+	val cornerTopLeft: Float
+	val cornerTopRight: Float
+	val cornerBottomLeft: Float
+	val cornerBottomRight: Float
 
 	// if the cornerRadius attribute exists, use that instead of going through all corners
 	if (cornerAttrs.hasValue(R.styleable.ExtendedView_cornerRadius)) {
@@ -139,17 +116,6 @@ fun View.applyCornerAttr(attributes: AttributeSet) {
 		cornerTopRight = cornerAttrs.getDimension(R.styleable.ExtendedView_cornerRadiusTopRight, 0F)
 		cornerBottomLeft = cornerAttrs.getDimension(R.styleable.ExtendedView_cornerRadiusBottomLeft, 0F)
 		cornerBottomRight = cornerAttrs.getDimension(R.styleable.ExtendedView_cornerRadiusBottomRight, 0F)
-	}
-
-	// flip the corners for RTL
-	if (isRtl()) {
-		var temp = cornerTopLeft
-		cornerTopLeft = cornerTopRight
-		cornerTopRight = temp
-
-		temp = cornerBottomLeft
-		cornerBottomLeft = cornerBottomRight
-		cornerBottomRight = temp
 	}
 
 	// corners
@@ -172,39 +138,27 @@ fun View.applyPaddingAttr(attributes: AttributeSet?) {
 
 	val paddingAttrTypedArray = context.obtainStyledAttributes(attributes, R.styleable.androidAttributes)
 
-	var paddingLeft: Int
+	val paddingLeft: Int
 	val paddingTop: Int
-	var paddingRight: Int
+	val paddingRight: Int
 	val paddingBottom: Int
 
 	if (paddingAttrTypedArray.hasValue(R.styleable.androidAttributes_android_padding)) {
 		val padding = paddingAttrTypedArray.getDimensionPixelSize(R.styleable.androidAttributes_android_padding, 0)
+
 		paddingLeft = padding
 		paddingTop = padding
 		paddingRight = padding
 		paddingBottom = padding
 
 	} else {
-
 		paddingLeft = paddingAttrTypedArray.getDimensionPixelSize(R.styleable.androidAttributes_android_paddingStart, 0)
 		paddingTop = paddingAttrTypedArray.getDimensionPixelSize(R.styleable.androidAttributes_android_paddingTop, 0)
 		paddingRight = paddingAttrTypedArray.getDimensionPixelSize(R.styleable.androidAttributes_android_paddingEnd, 0)
 		paddingBottom = paddingAttrTypedArray.getDimensionPixelSize(R.styleable.androidAttributes_android_paddingBottom, 0)
-
-		// switch the left/right padding values for RTL
-		if (isRtl()) {
-			val temp = paddingLeft
-			paddingLeft = paddingRight
-			paddingRight = temp
-		}
-
 	}
 
 	setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
 
 	paddingAttrTypedArray.recycle()
-}
-
-private fun View.isRtl(): Boolean {
-	return false
 }

@@ -1,9 +1,11 @@
 package mohsen.muhammad.minimalist.app.explorer
 
+import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
+import mohsen.muhammad.minimalist.data.Prefs
 import mohsen.muhammad.minimalist.data.files.FileCache
 import java.io.File
 
@@ -17,7 +19,6 @@ import java.io.File
 class ExplorerManager(
 	private val recyclerViewExplorer: RecyclerView,
 	private val interactionHandler: OnListItemInteractionListener<File>,
-	private val currentDirectory: File,
 	private val linearLayoutPermission: LinearLayout? = null,
 	private val linearLayoutEmptyDir: LinearLayout? = null
 ) {
@@ -26,25 +27,39 @@ class ExplorerManager(
         get() = recyclerViewExplorer.adapter as ExplorerAdapter
 
 	fun initialize() {
-		val explorerAdapter = ExplorerAdapter(FileCache.getExplorerFilesByDirectory(currentDirectory), interactionHandler)
+
+		val currentDirectory = Prefs.getCurrentDirectory(recyclerViewExplorer.context)
+		val selectedTrack = Prefs.getCurrentTrack(recyclerViewExplorer.context)
+
+		val explorerAdapter = ExplorerAdapter(FileCache.getExplorerFilesByDirectory(currentDirectory), selectedTrack, interactionHandler)
 		recyclerViewExplorer.adapter = explorerAdapter
 		recyclerViewExplorer.itemAnimator = SlideInLeftAnimator()
 	}
 
     // called when the current directory is changed
     fun onDirectoryChange(dir: File) {
-        explorerAdapter.update(FileCache.getExplorerFilesByDirectory(dir))
+	    val files = FileCache.getExplorerFilesByDirectory(dir)
+
+	    if (files.isNotEmpty()) {
+			toggleEmptyDirLayout(false)
+		    explorerAdapter.update(files)
+
+	    } else {
+		    toggleEmptyDirLayout(true)
+	    }
     }
 
-    // called when the current track changes (playback completes, or another track is selected)
-    // if the directory was changed between track changes, the oldPosition will be -1 (check is made in PlaybackManager)
-    fun onCurrentTrackChange(newPosition: Int, oldPosition: Int) {
-        explorerAdapter.updateCurrentItem(newPosition, oldPosition)
-    }
+	fun onSelectionChange(path: String) {
+		val context = recyclerViewExplorer.context
 
-    // called when the current playlist is changed
-    // if the directory was changed between playlist changes, the oldPositionList will be an empty list (check is made in PlaybackManager)
-    fun onPlaylistChange(newPositionList: List<Int>, oldPositionList: List<Int>) {
-        explorerAdapter.updatePlaylist(newPositionList, oldPositionList)
-    }
+		val oldSelection = Prefs.getCurrentTrack(context)
+		Prefs.setCurrentTrack(context, path)
+
+		explorerAdapter.updateSelection(path, oldSelection)
+	}
+
+	private fun toggleEmptyDirLayout(show: Boolean) {
+		recyclerViewExplorer.visibility = if (show) View.GONE else View.VISIBLE
+		linearLayoutEmptyDir?.visibility = if (show) View.VISIBLE else View.GONE
+	}
 }

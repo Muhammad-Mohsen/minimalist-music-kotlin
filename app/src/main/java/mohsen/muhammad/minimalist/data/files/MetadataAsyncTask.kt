@@ -1,8 +1,7 @@
 package mohsen.muhammad.minimalist.data.files
 
 import android.os.AsyncTask
-import mohsen.muhammad.minimalist.core.EMPTY
-import mohsen.muhammad.minimalist.core.FileHelper
+import mohsen.muhammad.minimalist.core.ext.EMPTY
 
 
 /**

@@ -16,13 +16,13 @@
 		android:paddingBottom="@dimen/spacingMediumLarge"
 		android:orientation="vertical"
 		android:elevation="@dimen/elevationMedium"
-		app:fillColor="@color/colorPrimaryDark"
+		app:fillColor="@color/colorOnBackgroundDark"
 		tools:elevation="0dp"
 		>
 
 		<include
 			layout="@layout/media_information"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/spacingLarge"
 			/>
@@ -33,7 +33,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/spacingMedium"
 			android:max="100"
-			android:progress="50"
+			android:progress="0"
 			android:progressDrawable="@drawable/style_seek_bar_progress"
 			android:thumb="@drawable/style_seek_bar_thumb"
 			/>
@@ -68,7 +68,7 @@
 				android:layout_weight="1"
 				android:textSize="@dimen/textMedium"
 				android:textColor="@color/colorOnSecondary"
-				android:textAlignment="viewEnd"
+				android:gravity="end"
 				android:text="@string/blankTimestamp"
 				tools:text="4:08"
 				/>

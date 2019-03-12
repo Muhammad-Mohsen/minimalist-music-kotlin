@@ -20,15 +20,14 @@ import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.breadcrumb.BreadcrumbManager
 import mohsen.muhammad.minimalist.app.explorer.ExplorerManager
 import mohsen.muhammad.minimalist.app.player.PlayerControlsManager
-import mohsen.muhammad.minimalist.app.player.PlayerService
-import mohsen.muhammad.minimalist.core.FileHelper
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
-import mohsen.muhammad.minimalist.data.Prefs
-import mohsen.muhammad.minimalist.data.Type
+import mohsen.muhammad.minimalist.core.evt.EventBus
+import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.data.files.FileHelper
 import java.io.File
 
 
-class MainFragment : Fragment(), OnListItemInteractionListener<File> {
+class MainFragment : Fragment(), OnListItemInteractionListener<File>, EventBus.Subscriber {
 
 	private var breadcrumbManager: BreadcrumbManager? = null
 	private var explorerManager: ExplorerManager? = null
@@ -53,14 +52,14 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 
 					togglePermissionLayout(false) // hide permission layout
 
-					val currentDirectory = Prefs.getCurrentDirectory(requireContext())
+					EventBus.subscribe(this@MainFragment)
 
 					// breadcrumbs
-					breadcrumbManager = BreadcrumbManager(recyclerViewBreadcrumbs, buttonBack, this@MainFragment, currentDirectory)
+					breadcrumbManager = BreadcrumbManager(recyclerViewBreadcrumbs, buttonBack, this@MainFragment)
 					breadcrumbManager?.initialize()
 
 					// explorer
-					explorerManager = ExplorerManager(recyclerViewExplorer, this@MainFragment, currentDirectory)
+					explorerManager = ExplorerManager(recyclerViewExplorer, this@MainFragment)
 					explorerManager?.initialize()
 
 					// controls
@@ -89,7 +88,7 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 
 		return if (currentDirectory.absolutePath == FileHelper.ROOT) false
 		else {
-			onListItemClick(currentDirectory.parentFile, Type.CRUMB)
+			onListItemClick(currentDirectory.parentFile, ItemType.CRUMB)
 			true
 		}
 	}
@@ -99,7 +98,7 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 
 		val currentDirectory = Prefs.getCurrentDirectory(requireContext())
 
-		if (source == Type.CRUMB || source == Type.DIRECTORY) { // breadcrumb, and directory item clicks
+		if (source == ItemType.CRUMB || source == ItemType.DIRECTORY) { // breadcrumb, and directory item clicks
 
 			if (data.absolutePath == currentDirectory.absolutePath) return // clicking the same directory should do nothing
 
@@ -109,12 +108,17 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 			explorerManager?.onDirectoryChange(data) // repopulate the recycler views
 
 		} else { // track item clicks
-			PlayerService.instance?.playTrack(data.absolutePath)
+			EventBus.send(PlaybackEvent(PlaybackEventSource.EXPLORER, PlaybackEventType.PLAY_ITEM, data.absolutePath))
+			explorerManager?.onSelectionChange(data.absolutePath)
 		}
 	}
 
 	override fun onListItemLongClick(data: File?, source: Int) {
 		// eventually
+	}
+
+	override fun receive(data: EventBus.EventData) {
+		// TODO
 	}
 
 	private fun togglePermissionLayout(show: Boolean) {

@@ -35,7 +35,4 @@ dependencies {
 
     // recycler view animators
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
-
-    // wave view (added tools:replace to manifest to prevent build errors!)
-    implementation 'me.itangqi.waveloadingview:library:0.3.5'
 }

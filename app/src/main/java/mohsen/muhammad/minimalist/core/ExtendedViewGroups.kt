@@ -8,6 +8,8 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import mohsen.muhammad.minimalist.R
+import mohsen.muhammad.minimalist.core.ext.applyPaddingAttr
+import mohsen.muhammad.minimalist.core.ext.setRoundedBackground
 
 /**
  * Created by muhammad.mohsen on 11/4/2018.
@@ -48,7 +50,6 @@ class ExtendedButton @JvmOverloads constructor(context: Context, attributes: Att
 		applyPaddingAttr(attributes)
 	}
 }
-
 
 class ExtendedConstraintLayout @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0)
 	: ConstraintLayout(context, attributes, defStyleAttr) {

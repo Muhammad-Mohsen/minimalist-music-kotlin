@@ -5,6 +5,16 @@ import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.IBinder
+import mohsen.muhammad.minimalist.core.evt.EventBus
+import mohsen.muhammad.minimalist.core.ext.initialize
+import mohsen.muhammad.minimalist.core.ext.playPause
+import mohsen.muhammad.minimalist.core.ext.readablePosition
+import mohsen.muhammad.minimalist.data.PlaybackEvent
+import mohsen.muhammad.minimalist.data.PlaybackEventSource
+import mohsen.muhammad.minimalist.data.PlaybackEventType
+import mohsen.muhammad.minimalist.data.files.FileHelper
+import java.io.File
+import java.util.*
 
 
 /**
@@ -12,106 +22,136 @@ import android.os.IBinder
  * Background service that's actually responsible for playing the music
  */
 
-class PlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
-	MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener, AudioManager.OnAudioFocusChangeListener {
+class PlayerService : Service(),
+	EventBus.Subscriber,
+	MediaPlayer.OnCompletionListener,
+	AudioManager.OnAudioFocusChangeListener
+{
+
+	private val eventSource = PlaybackEventSource.SERVICE
 
 	private var player: MediaPlayer? = null
 	private var playlist: Playlist? = null
 
-	// API
-	fun playPause(play: Boolean) {
-		if (play) player?.start()
-		else player?.pause()
-	}
+	private var timer: Timer? = null // a timer to update the seek
 
-	fun playTrack(path: String) {
-
+	// playback
+	private fun initializeTrack(path: String, updatePlaylist: Boolean = true) {
 		// update playlist
-		playlist = Playlist(path)
+		if (updatePlaylist) playlist?.updateItems(path)
+
 		playlist?.setTrack(path, true)
 
-		// play the track
-		player?.setDataSource(path)
-		player?.prepareAsync()
+		// initialize the track
+		player?.initialize(path)
+	}
+	private fun playTrack(path: String) {
+		initializeTrack(path)
+		player?.start()
 
-		// TODO inform UI
+		sendSeekUpdates()
 	}
 
-	// updates the attributes (shuffle/repeat mode) of the playlist
-	fun updatePlaylistAttr() {
-
+	private fun playPause(play: Boolean) {
+		player?.playPause(play)
+		sendSeekUpdates(play)
 	}
 
-	fun updateSeek() {
+	// seek
+	private fun updateSeek(mils: Int) {
+		player?.seekTo(mils)
 
+		// val isPlaying = player?.isPlaying ?: false
+		// sendSeekUpdates(isPlaying)
+	}
+	private fun sendSeekUpdates(toggleDispatch: Boolean = true) {
+		timer?.cancel()
+
+		if (!toggleDispatch) return
+
+		timer = Timer()
+		timer?.scheduleAtFixedRate(object : TimerTask() {
+			override fun run() {
+				val position = player?.currentPosition.toString()
+				val readablePosition = player?.readablePosition.toString()
+
+				EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.UPDATE_SEEK, "$position;$readablePosition"))
+			}
+
+		}, 0L, 1000L)
 	}
 
-	// events
+	// metadata
+	private fun getMetadata(path: String): String {
+		val metadataHelper = FileHelper(File(path))
+		return "${metadataHelper.title};${metadataHelper.album};${metadataHelper.artist};${metadataHelper.duration};${player?.duration}"
+	}
+	private fun sendMetadata(path: String) {
+		val metadata = getMetadata(path)
+		EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.UPDATE_METADATA, metadata))
+	}
+
+	// pause playback on audio focus loss
 	override fun onAudioFocusChange(focusChange: Int) {
-		if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+		if (focusChange != AudioManager.AUDIOFOCUS_GAIN) {
 			player?.pause()
-
-			// TODO inform UI
+			EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.PAUSE))
 		}
 	}
 
+	// on play complete
 	override fun onCompletion(mp: MediaPlayer) {
 		val nextTrack = playlist?.getNextTrack(true)
+		
 		if (nextTrack != null) {
-			player?.setDataSource(nextTrack)
-			player?.prepareAsync()
+			playTrack(nextTrack)
+			EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.PLAY_ITEM, nextTrack))
+		
+		} else {
+			EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.PAUSE))
 		}
-
-		// TODO inform UI
 	}
 
-	override fun onError(mp: MediaPlayer, what: Int, extra: Int): Boolean {
-		return false
-	}
-
-	override fun onPrepared(mp: MediaPlayer) {
-		player?.start()
-	}
-
-	override fun onSeekComplete(mp: MediaPlayer) {
-		// TODO don't know yet!
-	}
-
-	private fun initializeMediaPlayer() {
-		player = MediaPlayer()
-
-		//Set up MediaPlayer event listeners
-		player?.setOnCompletionListener(this)
-		player?.setOnErrorListener(this)
-		player?.setOnPreparedListener(this)
-		player?.setOnSeekCompleteListener(this)
+	// from the event bus
+	override fun receive(data: EventBus.EventData) {
+		if (data is PlaybackEvent && data.source != eventSource) { // if we're not the source
+			when (data.type) {
+				PlaybackEventType.PLAY_ITEM -> {
+					playTrack(data.extras)
+					sendMetadata(data.extras)
+				}
+				PlaybackEventType.PLAY -> playPause(true)
+				PlaybackEventType.PAUSE -> playPause(false)
+				PlaybackEventType.UPDATE_SEEK -> updateSeek(data.extras.toInt())
+				PlaybackEventType.CYCLE_REPEAT -> playlist?.cycleRepeatMode()
+				PlaybackEventType.CYCLE_SHUFFLE -> playlist?.toggleShuffle()
+			}
+		}
 	}
 
 	// life cycle
 	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+
 		// initialize the media player
-		initializeMediaPlayer()
+		player = MediaPlayer()
+
+		//Set up MediaPlayer event listeners
+		player?.setOnCompletionListener(this)
+
+
+		// initialize the playlist
+		playlist = Playlist()
 
 		// register the service instance
-		registerSelf(this)
+		EventBus.subscribe(this)
 
 		return super.onStartCommand(intent, flags, startId)
 	}
 	override fun onDestroy() {
 		player?.release() // destroy the Player instance
+		EventBus.unsubscribe(this)
 	}
 
 	// override is mandated by the framework
 	override fun onBind(intent: Intent): IBinder? { return null }
-
-	companion object {
-
-		// Oh, look! It's accessible!
-		// TODO make this an interface reference and it'll be a lot prettier
-		var instance: PlayerService? = null
-
-		private fun registerSelf(serviceInstance: PlayerService) {
-			instance = serviceInstance
-		}
-	}
 }

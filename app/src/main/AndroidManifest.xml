@@ -29,12 +29,6 @@
 
 		</activity>
 
-		<service
-			android:name=".app.player.PlayerService"
-			android:stopWithTask="true"
-			android:exported="false"
-			/>
-
 	</application>
 
 </manifest>

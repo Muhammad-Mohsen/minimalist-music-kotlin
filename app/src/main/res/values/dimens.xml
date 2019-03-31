@@ -4,6 +4,10 @@
 	<dimen name="heightMediaInfoBar">55dp</dimen>
 	<dimen name="heightSeekBar">18dp</dimen>
 	<dimen name="imageButtonContainerSize">55dp</dimen>
+	<dimen name="fabMarginedSize">75dp</dimen>
+
+	<dimen name="fabMenuExpandedBackgroundDiameter">375dp</dimen>
+	<dimen name="fabMenuExpandedRadius">150dp</dimen>
 
 	<dimen name="spacingSmall">4dp</dimen>
 	<dimen name="spacingMedium">8dp</dimen>

@@ -30,21 +30,21 @@ class ExplorerAdapter(
 
 ) : RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder>() {
 
-    // ArrayList has to be copied in order to separate the cache reference from the Adapter's data set reference
-    // otherwise, whatever cached list that was used to initialize the adapter will be changed whenever the data set is changed
-    private val files: ArrayList<ExplorerFile> = ArrayList(explorerFiles)
+	// ArrayList has to be copied in order to separate the cache reference from the Adapter's data set reference
+	// otherwise, whatever cached list that was used to initialize the adapter will be changed whenever the data set is changed
+	private val files: ArrayList<ExplorerFile> = ArrayList(explorerFiles)
 	private var selection: String = selectedTrackPath
 
 	override fun getItemCount(): Int {
 		return files.size
 	}
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExplorerViewHolder {
-        return ExplorerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.explorer_list_item, parent, false))
-    }
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExplorerViewHolder {
+		return ExplorerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.explorer_list_item, parent, false))
+	}
 
-    // binds the ViewHolder with the content
-    override fun onBindViewHolder(holder: ExplorerViewHolder, position: Int) {
+	// binds the ViewHolder with the content
+	override fun onBindViewHolder(holder: ExplorerViewHolder, position: Int) {
 
 		val file = files[position]
 		with(holder) {
@@ -64,34 +64,34 @@ class ExplorerAdapter(
 			selectionView.visibility = if (isSelected(file)) View.VISIBLE else View.GONE
 
 			// click listener
-		    val itemType = if (file.isDirectory) ItemType.DIRECTORY else ItemType.TRACK
-		    itemView.setOnClickListener {
-			    interactionListener.onListItemClick(file, itemType)
-		    }
-	    }
-    }
+			val itemType = if (file.isDirectory) ItemType.DIRECTORY else ItemType.TRACK
+			itemView.setOnClickListener {
+				interactionListener.onListItemClick(file, itemType)
+			}
+		}
+	}
 
 	// updates the entire list (animated)
-    internal fun update(files: ArrayList<ExplorerFile>) {
-        val initialSize = this.files.size
+	internal fun update(files: ArrayList<ExplorerFile>) {
+		val initialSize = this.files.size
 
-        this.files.retainAll(ArrayList()) // remove everything
-        notifyItemRangeRemoved(0, initialSize)
+		this.files.retainAll(ArrayList()) // remove everything
+		notifyItemRangeRemoved(0, initialSize)
 
-        for (file in files)
-            this.files.add(file)
+		for (file in files)
+			this.files.add(file)
 
-        notifyItemRangeInserted(0, this.files.size)
-    }
+		notifyItemRangeInserted(0, this.files.size)
+	}
 
 	// updates the selected item
 	internal fun updateSelection(newSelection: String, oldSelection: String) {
+		// update the selected path
+		selection = newSelection
+
 		// remove the old selection (if possible)
 		val oldSelectedPosition = getPositionByPath(oldSelection)
 		notifyItemChanged(oldSelectedPosition)
-
-		// update the selected path
-		selection = newSelection
 
 		// update the selection
 		val newSelectedPosition = getPositionByPath(newSelection)

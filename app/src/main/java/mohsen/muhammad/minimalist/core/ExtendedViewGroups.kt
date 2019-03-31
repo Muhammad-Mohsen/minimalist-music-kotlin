@@ -33,6 +33,15 @@ class ExtendedFrameLayout @JvmOverloads constructor(context: Context, attributes
 	}
 }
 
+class ExtendedConstraintLayout @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0)
+	: ConstraintLayout(context, attributes, defStyleAttr) {
+
+	init {
+		setRoundedBackground(attributes)
+		applyPaddingAttr(attributes)
+	}
+}
+
 class ExtendedImageButton @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_AppCompat_ImageButton)
 	: AppCompatImageButton(context, attributes, defStyleAttr) {
 
@@ -44,15 +53,6 @@ class ExtendedImageButton @JvmOverloads constructor(context: Context, attributes
 
 class ExtendedButton @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_AppCompat_Button)
 	: AppCompatButton(context, attributes, defStyleAttr) {
-
-	init {
-		setRoundedBackground(attributes)
-		applyPaddingAttr(attributes)
-	}
-}
-
-class ExtendedConstraintLayout @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0)
-	: ConstraintLayout(context, attributes, defStyleAttr) {
 
 	init {
 		setRoundedBackground(attributes)

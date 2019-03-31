@@ -21,6 +21,7 @@
 
 	<!--Transparent-->
 	<color name="colorTransparent">#0FFF</color>
+	<color name="colorOverlay">#7111</color>
 
 	<!--Gradient-->
 	<color name="colorGradientStart">#CC00ABC5</color>

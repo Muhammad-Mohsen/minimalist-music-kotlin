@@ -12,7 +12,7 @@ class Playlist {
 
 	private var trackList: ArrayList<String>
 
-	private var index: Int = 0
+	private var index: Int = 0 // current index
 	private var start: Int = 0 // starting index - to try and do circular playlist
 
 	// attributes
@@ -28,7 +28,7 @@ class Playlist {
 	}
 
 	fun updateItems(trackPath: String) {
-		trackList = ArrayList() // TODO get base path + get tracks in the base path
+		// TODO get base path + get tracks in the base path
 	}
 
 	// first, check the shuffle state

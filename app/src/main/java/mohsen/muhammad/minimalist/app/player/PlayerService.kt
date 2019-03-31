@@ -1,10 +1,7 @@
 package mohsen.muhammad.minimalist.app.player
 
-import android.app.Service
-import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.IBinder
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.initialize
 import mohsen.muhammad.minimalist.core.ext.playPause
@@ -22,13 +19,13 @@ import java.util.*
  * Background service that's actually responsible for playing the music
  */
 
-class PlayerService : Service(),
+object PlayerService :
 	EventBus.Subscriber,
 	MediaPlayer.OnCompletionListener,
 	AudioManager.OnAudioFocusChangeListener
 {
 
-	private val eventSource = PlaybackEventSource.SERVICE
+	private const val eventSource = PlaybackEventSource.SERVICE
 
 	private var player: MediaPlayer? = null
 	private var playlist: Playlist? = null
@@ -129,8 +126,8 @@ class PlayerService : Service(),
 		}
 	}
 
-	// life cycle
-	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+	// lifecycle
+	fun start() {
 
 		// initialize the media player
 		player = MediaPlayer()
@@ -144,14 +141,10 @@ class PlayerService : Service(),
 
 		// register the service instance
 		EventBus.subscribe(this)
-
-		return super.onStartCommand(intent, flags, startId)
 	}
-	override fun onDestroy() {
+
+	fun destroy() {
 		player?.release() // destroy the Player instance
 		EventBus.unsubscribe(this)
 	}
-
-	// override is mandated by the framework
-	override fun onBind(intent: Intent): IBinder? { return null }
 }

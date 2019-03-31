@@ -27,7 +27,7 @@ import mohsen.muhammad.minimalist.data.files.FileHelper
 import java.io.File
 
 
-class MainFragment : Fragment(), OnListItemInteractionListener<File>, EventBus.Subscriber {
+class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 
 	private var breadcrumbManager: BreadcrumbManager? = null
 	private var explorerManager: ExplorerManager? = null
@@ -51,8 +51,6 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File>, EventBus.S
 				override fun onPermissionGranted(response: PermissionGrantedResponse?) {
 
 					togglePermissionLayout(false) // hide permission layout
-
-					EventBus.subscribe(this@MainFragment)
 
 					// breadcrumbs
 					breadcrumbManager = BreadcrumbManager(recyclerViewBreadcrumbs, buttonBack, this@MainFragment)
@@ -115,10 +113,6 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File>, EventBus.S
 
 	override fun onListItemLongClick(data: File?, source: Int) {
 		// eventually
-	}
-
-	override fun receive(data: EventBus.EventData) {
-		// TODO
 	}
 
 	private fun togglePermissionLayout(show: Boolean) {

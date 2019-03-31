@@ -37,4 +37,25 @@
 		<item name="android:scrollbarDefaultDelayBeforeFade">500</item>
 	</style>
 
+	<!--FAB (Omni-Play/Pause) style-->
+	<style name="floatingButtonOmniStyle">
+		<item name="android:layout_width">@dimen/imageButtonContainerSize</item>
+		<item name="android:layout_height">@dimen/imageButtonContainerSize</item>
+		<item name="android:padding">@dimen/spacingMediumLarge</item>
+		<item name="android:tint">@color/colorPrimary</item>
+		<item name="android:scaleType">fitCenter</item>
+		<item name="android:elevation">@dimen/elevationLarge</item>
+		<item name="fillColor">@color/colorOnPrimary</item>
+		<item name="cornerRadius">40dp</item>
+	</style>
+
+	<!--Secondary FABs (repeat, shuffle, etc.) style-->
+	<style name="floatingButtonSecondaryStyle" parent="floatingButtonOmniStyle">
+		<item name="layout_constraintEnd_toEndOf">parent</item>
+		<item name="layout_constraintTop_toTopOf">parent</item>
+		<item name="layout_constraintCircle">@+id/buttonOmni</item>
+		<item name="layout_constraintCircleRadius">0dp</item>
+		<item name="android:outlineProvider">none</item>
+	</style>
+
 </resources>

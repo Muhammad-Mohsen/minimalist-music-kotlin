@@ -1,30 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/controls"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="match_parent"
+	android:clipChildren="false"
+	tools:layout_gravity="bottom"
 	>
 
+	<!--Panel-->
 	<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="28dp"
 		android:paddingTop="@dimen/spacingMediumLarge"
 		android:paddingBottom="@dimen/spacingMediumLarge"
 		android:orientation="vertical"
 		android:elevation="@dimen/elevationMedium"
 		app:fillColor="@color/colorOnBackgroundDark"
-		tools:elevation="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
 		>
 
-		<include
-			layout="@layout/media_information"
+		<!--track title-->
+		<TextView
+			android:id="@+id/textViewTitle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/spacingLarge"
+			android:layout_marginEnd="@dimen/fabMarginedSize"
+			android:layout_marginBottom="@dimen/spacingSmall"
+			android:textColor="@color/colorOnPrimary"
+			android:textSize="@dimen/textLarge"
+			android:maxLines="1"
+			android:ellipsize="end"
+			android:text="@string/minimalistMusicPlayer"
+			tools:text="Song title"
+			/>
+
+		<!--album/artist-->
+		<TextView
+			android:id="@+id/textViewSubtitle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/spacingLarge"
+			android:layout_marginEnd="@dimen/fabMarginedSize"
+			android:textColor="@color/colorOnSecondary"
+			android:textSize="@dimen/textSmall"
+			android:maxLines="1"
+			android:ellipsize="end"
+			android:text="@string/welcomeMessage"
+			tools:text="Song Album (Song Artist)"
 			/>
 
 		<SeekBar
@@ -77,21 +103,74 @@
 
 	</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
 
-	<!--Play/Pause-->
-	<mohsen.muhammad.minimalist.core.ExtendedImageButton
-		android:id="@+id/buttonPlayPause"
-		android:layout_width="@dimen/imageButtonContainerSize"
-		android:layout_height="@dimen/imageButtonContainerSize"
-		android:layout_marginEnd="@dimen/spacingMediumLarge"
-		android:layout_gravity="end"
-		android:padding="@dimen/spacingMediumLarge"
-		android:tint="@color/colorPrimary"
-		android:scaleType="fitCenter"
-		android:src="@drawable/anim_play_pause"
+	<!--Background-->
+	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+		android:id="@+id/fabMenuBackground"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_marginBottom="72dp"
 		android:elevation="@dimen/elevationLarge"
+		app:layout_constraintStart_toStartOf="@id/buttonOmni"
+		app:layout_constraintEnd_toEndOf="@id/buttonOmni"
+		app:layout_constraintTop_toTopOf="@id/buttonOmni"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:cornerRadius="200dp"
 		app:fillColor="@color/colorOnPrimary"
-		app:cornerRadius="40dp"
-		tools:elevation="0dp"
+		tools:layout_width="@dimen/fabMenuExpandedBackgroundDiameter"
+		tools:layout_height="@dimen/fabMenuExpandedBackgroundDiameter"
 		/>
 
-</FrameLayout>
+	<!--Next-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonNext"
+		android:src="@drawable/anim_next"
+		app:layout_constraintCircleAngle="0"
+		style="@style/floatingButtonSecondaryStyle"
+		tools:ignore="MissingConstraints"
+		tools:layout_constraintCircleRadius="@dimen/fabMenuExpandedRadius"
+		/>
+
+	<!--Repeat-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonRepeat"
+		android:src="@drawable/repeat000"
+		app:layout_constraintCircleAngle="325"
+		style="@style/floatingButtonSecondaryStyle"
+		tools:ignore="MissingConstraints"
+		tools:layout_constraintCircleRadius="@dimen/fabMenuExpandedRadius"
+		/>
+
+	<!--Shuffle-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonShuffle"
+		android:src="@drawable/shuffle000"
+		app:layout_constraintCircleAngle="290"
+		style="@style/floatingButtonSecondaryStyle"
+		tools:ignore="MissingConstraints"
+		tools:layout_constraintCircleRadius="@dimen/fabMenuExpandedRadius"
+		/>
+
+	<!--Previous-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonPrev"
+		android:src="@drawable/anim_next"
+		android:rotation="180"
+		app:layout_constraintCircleAngle="255"
+		style="@style/floatingButtonSecondaryStyle"
+		tools:ignore="MissingConstraints"
+		tools:layout_constraintCircleRadius="@dimen/fabMenuExpandedRadius"
+		/>
+
+	<!--Omni button-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonOmni"
+		android:layout_marginEnd="@dimen/spacingMediumLarge"
+		android:layout_marginBottom="72dp"
+		android:src="@drawable/anim_play_pause"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		style="@style/floatingButtonOmniStyle"
+		tools:layout_constraintCircleRadius="@dimen/fabMenuExpandedRadius"
+		/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

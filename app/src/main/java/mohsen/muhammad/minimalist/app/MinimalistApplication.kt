@@ -1,7 +1,6 @@
 package mohsen.muhammad.minimalist.app
 
 import android.app.Application
-import android.content.Intent
 import mohsen.muhammad.minimalist.app.player.PlayerService
 
 /**
@@ -12,8 +11,6 @@ class MinimalistApplication : Application() {
 
 	override fun onCreate() {
 		super.onCreate()
-
-		val playerIntent = Intent(applicationContext, PlayerService::class.java)
-		startService(playerIntent)
+		PlayerService.start()
 	}
 }

@@ -1,7 +1,7 @@
 package mohsen.muhammad.minimalist.app
 
 import android.app.Application
-import mohsen.muhammad.minimalist.app.player.PlayerService
+import mohsen.muhammad.minimalist.app.player.PlaybackManager
 
 /**
  * Created by muhammad.mohsen on 1/4/2019.
@@ -11,6 +11,6 @@ class MinimalistApplication : Application() {
 
 	override fun onCreate() {
 		super.onCreate()
-		PlayerService.start()
+		PlaybackManager.start(this)
 	}
 }

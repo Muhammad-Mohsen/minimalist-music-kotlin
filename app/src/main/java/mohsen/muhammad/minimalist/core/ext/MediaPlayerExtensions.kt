@@ -37,13 +37,21 @@ val MediaPlayer.readableDuration: String
 val MediaPlayer.readablePosition: String
 	get() = formatMillis(currentPosition.toLong())
 
+val MediaPlayer.isPlayingSafe: Boolean
+	get() {
+		return try {
+			isPlaying
+
+		} catch (e: Exception) {
+			false
+		}
+	}
+
 fun formatMillis(durationMillis: Long): String {
 	val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
 	val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis) % 60
 	val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis) % 60
 
-	return if (hours > 0)
-		String.format(Locale("US"), "%02d:%02d:%02d", hours, minutes, seconds)
-	else
-		String.format(Locale("US"), "%02d:%02d", minutes, seconds)
+	return if (hours > 0) String.format(Locale("US"), "%02d:%02d:%02d", hours, minutes, seconds)
+	else String.format(Locale("US"), "%02d:%02d", minutes, seconds)
 }

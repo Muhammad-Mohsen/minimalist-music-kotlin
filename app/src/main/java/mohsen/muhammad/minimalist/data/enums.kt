@@ -1,5 +1,7 @@
 package mohsen.muhammad.minimalist.data
 
+import android.view.ViewConfiguration
+
 /**
  * Created by muhammad.mohsen on 11/3/2018.
  */
@@ -50,4 +52,18 @@ object PlaybackEventSource {
 	const val EXPLORER = 1
 	const val CONTROLS = 2
 	const val SERVICE = 3
+}
+
+object FabMenu {
+	val DELAY = ViewConfiguration.getTapTimeout().toLong() * 2
+	const val DURATION = 200L
+
+	const val ANGLE_BRACKET_ARC =35F
+	const val ANGLE_OFFSET = 5F
+	const val GESTURE_MIN_DISTANCE = 230
+
+	const val BUTTON_NEXT = 0
+	const val BUTTON_REPEAT = 1
+	const val BUTTON_SHUFFLE = 2
+	const val BUTTON_PREV = 3
 }

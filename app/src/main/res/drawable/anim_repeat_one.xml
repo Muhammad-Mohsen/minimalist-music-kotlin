@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:oneshot="true"
+	>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone000"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone001"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone002"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone003"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone004"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone005"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone006"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone007"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone008"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone009"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone010"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone011"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone012"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone013"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeatone014"
+		/>
+
+	<item
+		android:duration="100"
+		android:drawable="@drawable/repeatone015"
+		/>
+
+</animation-list>

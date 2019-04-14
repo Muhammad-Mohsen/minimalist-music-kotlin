@@ -5,48 +5,43 @@
 	>
 
 	<item
-		android:duration="20"
+		android:duration="75"
 		android:drawable="@drawable/next000"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="75"
 		android:drawable="@drawable/next001"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="75"
 		android:drawable="@drawable/next002"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="75"
 		android:drawable="@drawable/next003"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="75"
 		android:drawable="@drawable/next004"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="75"
 		android:drawable="@drawable/next005"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="75"
 		android:drawable="@drawable/next006"
 		/>
 
 	<item
-		android:duration="20"
-		android:drawable="@drawable/next007"
-		/>
-
-	<item
-		android:duration="20"
-		android:drawable="@drawable/next000"
+		android:duration="75"
+		android:drawable="@drawable/next001"
 		/>
 
 </animation-list>

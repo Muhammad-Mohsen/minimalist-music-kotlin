@@ -8,6 +8,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.media_controls.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ext.animateDrawable
+import mohsen.muhammad.minimalist.core.ext.fadeIn
+import mohsen.muhammad.minimalist.core.ext.fadeOut
 import mohsen.muhammad.minimalist.data.FabMenu
 import mohsen.muhammad.minimalist.data.PlaybackEventType
 import kotlin.math.PI
@@ -25,24 +27,55 @@ internal fun PlayerControlsManager.togglePlayPauseUi(play: Boolean) {
 	controls?.buttonOmni?.animateDrawable(animId)
 }
 
-internal fun PlayerControlsManager.toggleSingleFabMenuButton(button: View?, show: Boolean) {
-	val params = button?.layoutParams as? ConstraintLayout.LayoutParams
+internal fun PlayerControlsManager.animateFabMenuButton(buttonIndex: Int) {
+	// make the overlay visible
+	controls?.fabButtonAnimationOverlay?.fadeIn(0L)
+
+	// do the animation
+	controls?.fabButtonAnimationOverlay?.animateDrawable(getButtonAnimationByIndex(buttonIndex)) {
+
+		// hide the overlay (after the animation completes)
+		controls?.fabButtonAnimationOverlay?.fadeOut(200L)
+	}
+}
+private fun getButtonAnimationByIndex(buttonIndex: Int): Int {
+	return when (buttonIndex) {
+		FabMenu.BUTTON_NEXT -> R.drawable.anim_next
+		FabMenu.BUTTON_REPEAT -> getRepeatButtonAnimation()
+		FabMenu.BUTTON_SHUFFLE -> getShuffleButtonAnimation()
+		else -> R.drawable.anim_next // FabMenu.BUTTON_PREV
+	}
+}
+
+// TODO do the actual implementation
+private fun getRepeatButtonAnimation(): Int {
+	return R.drawable.anim_repeat_active
+}
+
+private fun getShuffleButtonAnimation(): Int {
+	return R.drawable.anim_shuffle_active
+}
+
+internal fun PlayerControlsManager.toggleFabMenuButtonExpansion(show: Boolean, vararg buttons: View?) {
+	val paramsList = buttons.map { button -> button?.layoutParams as? ConstraintLayout.LayoutParams }
 
 	val expandedRadius = controls?.resources?.getDimension(R.dimen.fabMenuExpandedRadius)?.toInt() ?: 0
 
-	val currentRadius = params?.circleRadius ?: 0
+	val currentRadii = paramsList.map { params -> params?.circleRadius }
 	val finalRadius = if (show) expandedRadius else 0
 
-	if (currentRadius == finalRadius) return
+	if (currentRadii.isEmpty()) return
+	if (currentRadii.first() == finalRadius) return
 
-	// can't imagine that creating a value animator per button is ideal
-	ValueAnimator.ofInt(currentRadius, finalRadius).apply {
+	ValueAnimator.ofInt(currentRadii.first() ?: 0, finalRadius).apply {
 		duration = FabMenu.DURATION
 		interpolator = AccelerateDecelerateInterpolator()
 		start()
 		addUpdateListener {
-			params?.circleRadius = it.animatedValue as Int
-			button?.layoutParams = params
+			for ((i, params) in paramsList.withIndex()) {
+				params?.circleRadius = it.animatedValue as Int
+				buttons[i]?.layoutParams = params
+			}
 		}
 	}
 }
@@ -75,10 +108,6 @@ internal fun calculateFabGestureAngle(motionEvent: MotionEvent, view: View): Flo
 	val x2 = view.x + view.pivotX
 	val y2 = view.y + view.pivotY
 
-	return calculateFabGestureAngle(x1, y1, x2, y2)
-}
-
-private fun calculateFabGestureAngle(x1: Float, y1: Float, x2: Float, y2: Float): Float {
 	// the (x1, y1) is the DC shift (the location of the omni button)
 	// the shift is done so that the angle is calculated correctly (the screen origin is the top left)
 	val x = (x2 - x1).toDouble()
@@ -94,10 +123,6 @@ internal fun calculateFabGestureDistance(motionEvent: MotionEvent, view: View): 
 	val x2 = view.x + view.pivotX
 	val y2 = view.y + view.pivotY
 
-	return calculateFabGestureDistance(x1, y1, x2, y2)
-}
-
-private fun calculateFabGestureDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float {
 	val x = (x1 - x2).absoluteValue
 	val y = (y1 - y2).absoluteValue
 
@@ -115,10 +140,9 @@ internal fun PlayerControlsManager.toggleFabMenuButtonHighlight(buttonIndex: Int
 	controls?.buttonRepeat?.isPressed = false || buttonIndex == FabMenu.BUTTON_REPEAT
 	controls?.buttonShuffle?.isPressed = false || buttonIndex == FabMenu.BUTTON_SHUFFLE
 	controls?.buttonPrev?.isPressed = false || buttonIndex == FabMenu.BUTTON_PREV
-
 }
 
-internal val fabButtonEventMap = mapOf(
+internal val fabMenuButtonEventMap = mapOf(
 	FabMenu.BUTTON_NEXT to PlaybackEventType.PLAY_NEXT,
 	FabMenu.BUTTON_REPEAT to PlaybackEventType.CYCLE_REPEAT,
 	FabMenu.BUTTON_SHUFFLE to PlaybackEventType.CYCLE_SHUFFLE,

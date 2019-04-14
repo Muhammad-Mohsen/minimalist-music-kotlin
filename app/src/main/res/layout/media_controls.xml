@@ -135,7 +135,7 @@
 	<!--Repeat-->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonRepeat"
-		android:src="@drawable/repeat000"
+		android:src="@drawable/repeat015"
 		app:layout_constraintCircleAngle="321"
 		style="@style/floatingButtonSecondaryStyle"
 		tools:ignore="MissingConstraints"
@@ -145,7 +145,7 @@
 	<!--Shuffle-->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonShuffle"
-		android:src="@drawable/shuffle000"
+		android:src="@drawable/shuffle015"
 		app:layout_constraintCircleAngle="286"
 		style="@style/floatingButtonSecondaryStyle"
 		tools:ignore="MissingConstraints"
@@ -173,6 +173,20 @@
 		app:layout_constraintBottom_toBottomOf="parent"
 		style="@style/floatingButtonOmniStyle"
 		tools:layout_constraintCircleRadius="@dimen/fabMenuExpandedRadius"
+		/>
+
+	<!--fab overlay (for animations and whatnot)-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/fabButtonAnimationOverlay"
+		android:layout_marginBottom="72dp"
+		android:visibility="gone"
+		android:elevation="@dimen/elevationLarge"
+		android:outlineProvider="none"
+		app:layout_constraintStart_toStartOf="@id/buttonOmni"
+		app:layout_constraintEnd_toEndOf="@id/buttonOmni"
+		app:layout_constraintTop_toTopOf="@id/buttonOmni"
+		app:layout_constraintBottom_toBottomOf="parent"
+		style="@style/floatingButtonOmniStyle"
 		/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

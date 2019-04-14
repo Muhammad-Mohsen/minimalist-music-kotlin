@@ -32,4 +32,20 @@ object FileCache {
 
         return files
     }
+
+    fun getMediaPathsByPath(path: String): ArrayList<String> {
+        val parentDir = File(path).parentFile
+
+        var files = fileCache[parentDir.absolutePath]
+
+        // if not cached, or directory was modified more recently than the cache
+        if (files == null || parentDir.lastModified() > lastModifiedCache[path] ?: 0L) {
+            files = FileHelper.listFileModels(path)
+            fileCache[path] = files
+
+            lastModifiedCache[path] = parentDir.lastModified()
+        }
+
+        return ArrayList(files.filter { file -> !file.isDirectory }.map { file -> file.absolutePath })
+    }
 }

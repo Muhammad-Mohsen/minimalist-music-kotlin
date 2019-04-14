@@ -21,7 +21,7 @@ import java.util.*
  * Created by muhammad.mohsen on 11/3/2018.
  * The object that's actually responsible for playing the music
  * This was originally an Android Service which had the advantage of running on a background thread, so any expensive operation can be done directly.
- * As this is no longer the case, expensive operation (for example MediaPlayer#prepare, getMetadata) are called inside a handler
+ * As this is no longer the case, expensive operation (for example MediaPlayer#prepare, and getMetadata) are called inside a handler
  */
 
 object PlaybackManager :
@@ -53,7 +53,10 @@ object PlaybackManager :
 		// initialize the track
 		player.initialize(path)
 	}
-	private fun playTrack(path: String) {
+	private fun playTrack(path: String?) {
+
+		if (path == null) return
+
 		handler.post {
 			setTrack(path)
 
@@ -147,8 +150,12 @@ object PlaybackManager :
 				PlaybackEventType.PLAY -> playPause(true)
 				PlaybackEventType.PAUSE -> playPause(false)
 				PlaybackEventType.UPDATE_SEEK -> updateSeek(data.extras.toInt())
+
+				// playlist stuff
 				PlaybackEventType.CYCLE_REPEAT -> playlist.cycleRepeatMode()
 				PlaybackEventType.CYCLE_SHUFFLE -> playlist.toggleShuffle()
+				PlaybackEventType.PLAY_PREVIOUS -> playTrack(playlist.getPreviousTrack())
+				PlaybackEventType.PLAY_NEXT -> playTrack(playlist.getNextTrack(false))
 			}
 		}
 	}

@@ -38,7 +38,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 
 		// fab menu expansion animation runnable
 		gestureRunnable = Runnable {
-			toggleFabMenuButtons(true)
+			toggleFabMenuButtonExpansion(true, controls?.buttonNext, controls?.buttonRepeat, controls?.buttonPrev, controls?.buttonShuffle)
 			toggleFabMenuBackground(true)
 
 			controls?.buttonOmni?.isPressed = false
@@ -133,18 +133,11 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		EventBus.send(PlaybackEvent(PlaybackEventSource.CONTROLS, PlaybackEventType.UPDATE_SEEK, seek.toString()))
 	}
 
-	private fun toggleFabMenuButtons(expand: Boolean) {
-		toggleSingleFabMenuButton(controls?.buttonNext, expand)
-		toggleSingleFabMenuButton(controls?.buttonPrev, expand)
-		toggleSingleFabMenuButton(controls?.buttonRepeat, expand)
-		toggleSingleFabMenuButton(controls?.buttonShuffle, expand)
-	}
-
 	private fun onFabMenuButtonClick(angle: Float) {
 		val buttonIndex = getButtonByAngle(angle)
-		val eventType = fabButtonEventMap[buttonIndex]
+		val eventType = fabMenuButtonEventMap[buttonIndex]
 
-		// TODO animation
+		animateFabMenuButton(buttonIndex) // animate the button
 
 		if (eventType != null) EventBus.send(PlaybackEvent(PlaybackEventSource.CONTROLS, eventType))
 	}
@@ -153,7 +146,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		controls?.buttonOmni?.isPressed = false
 
 		handler.removeCallbacks(gestureRunnable) // remove the callback to show the fab menu if possible
-		toggleFabMenuButtons(false) // collapse the fab menu if visible
+		toggleFabMenuButtonExpansion(false, controls?.buttonNext, controls?.buttonRepeat, controls?.buttonPrev, controls?.buttonShuffle) // collapse the fab menu if visible
 		toggleFabMenuButtonHighlight()
 		toggleFabMenuBackground(false) // hide the overlay
 	}

@@ -1,6 +1,7 @@
 package mohsen.muhammad.minimalist.app.player
 
 import mohsen.muhammad.minimalist.data.RepeatMode
+import mohsen.muhammad.minimalist.data.files.FileCache
 import java.util.concurrent.ThreadLocalRandom
 
 /**
@@ -10,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 class Playlist {
 
-	private var trackList: ArrayList<String>
+	private val trackList: ArrayList<String> = ArrayList()
 
 	private var index: Int = 0 // current index
 	private var start: Int = 0 // starting index - to try and do circular playlist
@@ -19,16 +20,14 @@ class Playlist {
 	private var isShuffle: Boolean = false
 	private var repeatMode: Int = RepeatMode.NONE
 
-	init {
-		trackList = ArrayList()
-	}
-
 	fun updateItems(items: ArrayList<String>) {
-		trackList = items
+		trackList.clear()
+		trackList.addAll(items)
 	}
 
 	fun updateItems(trackPath: String) {
-		// TODO get base path + get tracks in the base path
+		trackList.clear()
+		trackList.addAll(FileCache.getMediaPathsByPath(trackPath))
 	}
 
 	// first, check the shuffle state

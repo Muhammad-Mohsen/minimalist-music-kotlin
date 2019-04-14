@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:oneshot="true"
+	>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle015"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle014"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle013"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle012"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle011"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle010"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle009"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle008"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle007"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle006"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle005"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle004"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle003"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle002"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle001"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/shuffle000"
+		/>
+
+</animation-list>

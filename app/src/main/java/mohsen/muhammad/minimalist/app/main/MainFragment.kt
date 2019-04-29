@@ -82,7 +82,7 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 	}
 
 	fun onBackPressed(): Boolean {
-		val currentDirectory = Prefs.getCurrentDirectory(requireContext())
+		val currentDirectory = State.currentDirectory
 
 		return if (currentDirectory.absolutePath == FileHelper.ROOT) false
 		else {
@@ -94,13 +94,13 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 	override fun onListItemClick(data: File?, source: Int) {
 		if (data == null) return
 
-		val currentDirectory = Prefs.getCurrentDirectory(requireContext())
+		val currentDirectory = State.currentDirectory
 
 		if (source == ItemType.CRUMB || source == ItemType.DIRECTORY) { // breadcrumb, and directory item clicks
 
 			if (data.absolutePath == currentDirectory.absolutePath) return // clicking the same directory should do nothing
 
-			Prefs.setCurrentDirectory(requireContext(), data)
+			State.currentDirectory = data
 
 			breadcrumbManager?.onDirectoryChange(data) // repopulate the breadcrumb bar
 			explorerManager?.onDirectoryChange(data) // repopulate the recycler views

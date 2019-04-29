@@ -23,9 +23,11 @@ object SelectionState {
 }
 
 object RepeatMode {
-	const val NONE = 0
-	const val ONE = 1
-	const val REPEAT = 2
+	const val INACTIVE = 0 // inactive
+	const val ACTIVE = 1 // active
+	const val REPEAT_ONE = 2 // repeat-one
+
+	val list = arrayOf(INACTIVE, ACTIVE, REPEAT_ONE)
 }
 
 // event types (used in the EventBus's PlaybackEvent)
@@ -43,8 +45,6 @@ object PlaybackEventType {
 	const val CYCLE_REPEAT = 21
 
 	const val UPDATE_METADATA = 30 // event to update the metadata (album|artist|total duration)
-
-	const val INIT = 40
 }
 
 // event source (used in the EventBus's PlaybackEvent)
@@ -52,6 +52,7 @@ object PlaybackEventSource {
 	const val EXPLORER = 1
 	const val CONTROLS = 2
 	const val SERVICE = 3
+	const val NOTIFICATION = 4
 }
 
 object FabMenu {

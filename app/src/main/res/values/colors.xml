@@ -7,6 +7,7 @@
 
 	<!--Primary-->
 	<color name="colorPrimary">#393939</color>
+	<color name="colorPrimaryLight">#BBB</color> <!--Used for inactive state of Repeat/Shuffle buttons-->
 	<color name="colorPrimaryDark">#1a1a1a</color>
 
 	<!--Secondary-->

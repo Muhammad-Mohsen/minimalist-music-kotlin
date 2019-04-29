@@ -28,5 +28,6 @@ object EventBus {
 		fun receive(data: EventData)
 	}
 
+	// event args base class
 	abstract class EventData
 }

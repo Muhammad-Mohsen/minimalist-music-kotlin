@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
 import mohsen.muhammad.minimalist.core.ext.animateDrawable
-import mohsen.muhammad.minimalist.data.Prefs
 import mohsen.muhammad.minimalist.data.ItemType
+import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.files.FileHelper
 import java.io.File
 
@@ -28,7 +28,7 @@ class BreadcrumbManager(
 
 	fun initialize() {
 
-		val currentDirectory = Prefs.getCurrentDirectory(recyclerViewBreadcrumb.context)
+		val currentDirectory = State.currentDirectory
 
 		val breadcrumbAdapter = BreadcrumbAdapter(currentDirectory, interactionHandler)
 		recyclerViewBreadcrumb.adapter = breadcrumbAdapter
@@ -58,7 +58,7 @@ class BreadcrumbManager(
 
 		// back button click listener
 		buttonBack.setOnClickListener {
-			val dir = Prefs.getCurrentDirectory(buttonBack.context)
+			val dir = State.currentDirectory
 			if (dir.absolutePath != FileHelper.ROOT)
 				interactionHandler.onListItemClick(dir.parentFile, ItemType.CRUMB)
 		}

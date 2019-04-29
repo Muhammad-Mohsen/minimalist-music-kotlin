@@ -85,8 +85,9 @@ class ExplorerAdapter(
 	}
 
 	// updates the selected item
-	internal fun updateSelection(newSelection: String, oldSelection: String) {
+	internal fun updateSelection(newSelection: String) {
 		// update the selected path
+		val oldSelection = selection
 		selection = newSelection
 
 		// remove the old selection (if possible)

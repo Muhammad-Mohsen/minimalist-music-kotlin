@@ -33,7 +33,7 @@ class MetadataAsyncTask : AsyncTask<ArrayList<ExplorerFile>, Void, ArrayList<Exp
         // call notifyItemRangeChanged if the current directory is the same, and the adapter is not null.
         var isOnCurrentDirectory = false
         // if (explorerFiles != null && explorerFiles.size > 0)
-            // isOnCurrentDirectory = Prefs.getCurrentDirectory(context).absolutePath == explorerFiles[0].parentFile.absolutePath
+            // isOnCurrentDirectory = State.getCurrentDirectory(context).absolutePath == explorerFiles[0].parentFile.absolutePath
 
         // val adapter = ExplorerManager.explorerAdapter
         // if (adapter != null && isOnCurrentDirectory) adapter.notifyDataSetChanged() // until I implement an item animator, there won't be change animations!

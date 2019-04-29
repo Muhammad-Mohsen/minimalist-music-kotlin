@@ -20,7 +20,11 @@ import kotlin.math.abs
 
 /**
  * Created by muhammad.mohsen on 12/23/2018.
+ * Manages the player controls section of the UI (omni button, current track, seek, etc.)
  */
+
+// to implement/fix
+// 4. refresh the UI onStart
 
 class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subscriber {
 
@@ -29,16 +33,18 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 	internal val controls: ConstraintLayout?
 		get() = controlsWeakRef.get()
 
+	// handler is used to kickoff a delayed runnable (gestureRunnable) to show the fab menu
 	private val handler = Handler()
 	private lateinit var gestureRunnable: Runnable
 
 	fun initialize() {
 
+		// event bus subscription
 		EventBus.subscribe(this)
 
 		// fab menu expansion animation runnable
 		gestureRunnable = Runnable {
-			toggleFabMenuButtonExpansion(true, controls?.buttonNext, controls?.buttonRepeat, controls?.buttonPrev, controls?.buttonShuffle)
+			toggleFabMenuButtonExpansion(true)
 			toggleFabMenuBackground(true)
 
 			controls?.buttonOmni?.isPressed = false
@@ -78,7 +84,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 					onTouchEnded()
 
 					if (eventTimeDelta < ViewConfiguration.getLongPressTimeout()) { // treat this as a normal click
-						togglePlayPauseUi(!PlaybackManager.isPlaying)
+						togglePlayPauseButton(!PlaybackManager.isPlaying)
 
 						// dispatch the event
 						val eventType = if (!PlaybackManager.isPlaying) PlaybackEventType.PLAY else PlaybackEventType.PAUSE
@@ -138,6 +144,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		val eventType = fabMenuButtonEventMap[buttonIndex]
 
 		animateFabMenuButton(buttonIndex) // animate the button
+		updateFabMenuUi(buttonIndex)
 
 		if (eventType != null) EventBus.send(PlaybackEvent(PlaybackEventSource.CONTROLS, eventType))
 	}
@@ -146,7 +153,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		controls?.buttonOmni?.isPressed = false
 
 		handler.removeCallbacks(gestureRunnable) // remove the callback to show the fab menu if possible
-		toggleFabMenuButtonExpansion(false, controls?.buttonNext, controls?.buttonRepeat, controls?.buttonPrev, controls?.buttonShuffle) // collapse the fab menu if visible
+		toggleFabMenuButtonExpansion(false) // collapse the fab menu if visible
 		toggleFabMenuButtonHighlight()
 		toggleFabMenuBackground(false) // hide the overlay
 	}
@@ -160,7 +167,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 			if (data.source == PlaybackEventSource.CONTROLS) return@post // not interested in events that were sent from here
 
 			when (data.type) {
-				PlaybackEventType.PLAY, PlaybackEventType.PLAY_ITEM -> togglePlayPauseUi(true) // show the pause icon
+				PlaybackEventType.PLAY, PlaybackEventType.PLAY_ITEM -> togglePlayPauseButton(true) // show the pause icon
 				PlaybackEventType.UPDATE_METADATA -> updateMetadata(data.extras)
 				PlaybackEventType.UPDATE_SEEK -> updateSeek(data.extras)
 			}

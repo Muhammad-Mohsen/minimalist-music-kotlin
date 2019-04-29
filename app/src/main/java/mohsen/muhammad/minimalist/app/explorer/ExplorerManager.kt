@@ -1,11 +1,17 @@
 package mohsen.muhammad.minimalist.app.explorer
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
-import mohsen.muhammad.minimalist.data.Prefs
+import mohsen.muhammad.minimalist.core.evt.EventBus
+import mohsen.muhammad.minimalist.data.PlaybackEvent
+import mohsen.muhammad.minimalist.data.PlaybackEventSource
+import mohsen.muhammad.minimalist.data.PlaybackEventType
+import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.files.FileCache
 import java.io.File
 
@@ -21,15 +27,17 @@ class ExplorerManager(
 	private val interactionHandler: OnListItemInteractionListener<File>,
 	private val linearLayoutPermission: LinearLayout? = null,
 	private val linearLayoutEmptyDir: LinearLayout? = null
-) {
+) : EventBus.Subscriber {
 
 	private val explorerAdapter: ExplorerAdapter
         get() = recyclerViewExplorer.adapter as ExplorerAdapter
 
 	fun initialize() {
 
-		val currentDirectory = Prefs.getCurrentDirectory(recyclerViewExplorer.context)
-		val selectedTrack = Prefs.getCurrentTrack(recyclerViewExplorer.context)
+		EventBus.subscribe(this)
+
+		val currentDirectory = State.currentDirectory
+		val selectedTrack = State.currentTrack
 
 		val explorerAdapter = ExplorerAdapter(FileCache.getExplorerFilesByDirectory(currentDirectory), selectedTrack, interactionHandler)
 		recyclerViewExplorer.adapter = explorerAdapter
@@ -50,16 +58,22 @@ class ExplorerManager(
     }
 
 	fun onSelectionChange(path: String) {
-		val context = recyclerViewExplorer.context
-
-		val oldSelection = Prefs.getCurrentTrack(context)
-		Prefs.setCurrentTrack(context, path)
-
-		explorerAdapter.updateSelection(path, oldSelection)
+		State.currentTrack = path
+		explorerAdapter.updateSelection(path)
 	}
 
 	private fun toggleEmptyDirLayout(show: Boolean) {
 		recyclerViewExplorer.visibility = if (show) View.GONE else View.VISIBLE
 		linearLayoutEmptyDir?.visibility = if (show) View.VISIBLE else View.GONE
+	}
+
+	override fun receive(data: EventBus.EventData) {
+		if (data is PlaybackEvent && data.source != PlaybackEventSource.EXPLORER) {
+			when (data.type) {
+				PlaybackEventType.UPDATE_METADATA -> Handler(Looper.getMainLooper()).post {
+					explorerAdapter.updateSelection(data.extras.split(";").last())
+				}
+			}
+		}
 	}
 }

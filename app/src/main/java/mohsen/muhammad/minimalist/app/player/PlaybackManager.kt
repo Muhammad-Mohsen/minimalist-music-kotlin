@@ -118,7 +118,7 @@ object PlaybackManager :
 	}
 	private fun getMetadata(path: String): String {
 		val metadataHelper = FileHelper(File(path))
-		return "${metadataHelper.title};${metadataHelper.album};${metadataHelper.artist};${metadataHelper.duration};${player.duration}"
+		return "${metadataHelper.title};${metadataHelper.album};${metadataHelper.artist};${metadataHelper.duration};${player.duration};$path"
 	}
 
 	// pause playback on audio focus loss

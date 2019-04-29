@@ -18,16 +18,16 @@ class Playlist {
 
 	// attributes
 	private var isShuffle: Boolean = false
-	private var repeatMode: Int = RepeatMode.NONE
-
-	fun updateItems(items: ArrayList<String>) {
-		trackList.clear()
-		trackList.addAll(items)
-	}
+	private var repeatMode: Int = RepeatMode.INACTIVE
 
 	fun updateItems(trackPath: String) {
+		val tracks = FileCache.getMediaPathsByPath(trackPath)
+		updateItems(tracks)
+	}
+
+	private fun updateItems(items: List<String>) {
 		trackList.clear()
-		trackList.addAll(FileCache.getMediaPathsByPath(trackPath))
+		trackList.addAll(items)
 	}
 
 	// first, check the shuffle state
@@ -40,7 +40,7 @@ class Playlist {
 			else -> index = trackList.size - 1
 		}
 
-		return null
+		return if (index != -1) trackList[index] else null
 	}
 
 	// the onComplete param indicates whether we're requesting the next track upon completion of playing the current track,
@@ -51,18 +51,18 @@ class Playlist {
 		if (isShuffle)
 			index = ThreadLocalRandom.current().nextInt(0, trackList.size) // nextInt is exclusive.
 
-		else if (index < trackList.size - 1 && repeatMode != RepeatMode.ONE)
+		// if we hit the end, and we're repeating, go back to the start.
+		// next up, if we're yet to hit the end of the playlist AND we're not repeating the same track, simply increment the index.
+		else if (index < trackList.size - 1 && repeatMode != RepeatMode.REPEAT_ONE)
 			index++
 
-		else if (repeatMode == RepeatMode.REPEAT)
+		else if (repeatMode == RepeatMode.ACTIVE)
 			index = 0
 
-		// if we hit the end, and we're not repeating, we look into the onComplete argument:
+		// if we did hit the end, and we're not repeating, we look into the onComplete argument:
 		// if it is true, meaning that we're looking for the next track after finishing playing the current one, we'll stop.
 		// otherwise, it means that the user clicked the Next button, so, we'll return the first track index.
-		// if we did hit the end, and we're repeating, go back to the start.
-		// next up, if we're yet to hit the end of the playlist AND we're not repeating the same track, simply increment the index.
-		else if (repeatMode == RepeatMode.NONE) {
+		else if (repeatMode == RepeatMode.INACTIVE) {
 			index = if (onComplete) -1 else 0
 		}
 
@@ -87,10 +87,6 @@ class Playlist {
 		isShuffle = !isShuffle
 	}
 	fun cycleRepeatMode() {
-		when (repeatMode) {
-			RepeatMode.NONE -> repeatMode = RepeatMode.REPEAT
-			RepeatMode.REPEAT -> repeatMode = RepeatMode.ONE
-			RepeatMode.ONE -> repeatMode = RepeatMode.NONE
-		}
+		repeatMode = RepeatMode.list[(repeatMode + 1) % RepeatMode.list.size]
 	}
 }

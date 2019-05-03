@@ -30,8 +30,8 @@ object RepeatMode {
 	val list = arrayOf(INACTIVE, ACTIVE, REPEAT_ONE)
 }
 
-// event types (used in the EventBus's PlaybackEvent)
-object PlaybackEventType {
+// event types (used in the EventBus's SystemEvent)
+object EventType {
 	const val PLAY_ITEM = 0
 	const val PLAY_NEXT = 1
 	const val PLAY_PREVIOUS = 2
@@ -39,20 +39,24 @@ object PlaybackEventType {
 	const val PLAY = 10
 	const val PAUSE = 11
 
-	const val UPDATE_SEEK = 12
+	const val SEEK_UPDATE = 12
 
 	const val CYCLE_SHUFFLE = 20
 	const val CYCLE_REPEAT = 21
 
-	const val UPDATE_METADATA = 30 // event to update the metadata (album|artist|total duration)
+	const val METADATA_UPDATE = 30 // event to update the metadata (album|artist|total duration)
+
+	const val DIR_CHANGE = 40
 }
 
-// event source (used in the EventBus's PlaybackEvent)
-object PlaybackEventSource {
+// event source (used in the EventBus's SystemEvent)
+object EventSource {
 	const val EXPLORER = 1
 	const val CONTROLS = 2
 	const val SERVICE = 3
 	const val NOTIFICATION = 4
+	const val BREADCRUMB = 5
+	const val FRAGMENT = 6
 }
 
 object FabMenu {

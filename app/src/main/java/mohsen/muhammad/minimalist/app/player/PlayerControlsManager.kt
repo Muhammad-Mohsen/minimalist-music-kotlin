@@ -11,10 +11,7 @@ import kotlinx.android.synthetic.main.media_controls.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.data.FabMenu
-import mohsen.muhammad.minimalist.data.PlaybackEvent
-import mohsen.muhammad.minimalist.data.PlaybackEventSource
-import mohsen.muhammad.minimalist.data.PlaybackEventType
+import mohsen.muhammad.minimalist.data.*
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -22,9 +19,6 @@ import kotlin.math.abs
  * Created by muhammad.mohsen on 12/23/2018.
  * Manages the player controls section of the UI (omni button, current track, seek, etc.)
  */
-
-// to implement/fix
-// 4. refresh the UI onStart
 
 class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subscriber {
 
@@ -87,8 +81,8 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 						togglePlayPauseButton(!PlaybackManager.isPlaying)
 
 						// dispatch the event
-						val eventType = if (!PlaybackManager.isPlaying) PlaybackEventType.PLAY else PlaybackEventType.PAUSE
-						EventBus.send(PlaybackEvent(PlaybackEventSource.CONTROLS, eventType))
+						val eventType = if (!PlaybackManager.isPlaying) EventType.PLAY else EventType.PAUSE
+						EventBus.send(SystemEvent(EventSource.CONTROLS, eventType))
 
 					} else {
 
@@ -118,35 +112,34 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		})
 	}
 
-	private fun updateMetadata(metadataString: String) {
-		val metadata = metadataString.split(";")
+	private fun updateMetadata() {
+		controls?.textViewTitle?.text = State.Track.title
+		controls?.textViewSubtitle?.text = controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist)
+		controls?.textViewDuration?.text = State.Track.readableDuration
 
-		controls?.textViewTitle?.text = metadata[0]
-		controls?.textViewSubtitle?.text = controls?.context?.getString(R.string.trackAlbumArtist, metadata[1], metadata[2])
-		controls?.textViewDuration?.text = metadata[3]
-
-		controls?.seekBar?. max = metadata[4].toInt()
+		controls?.seekBar?.max = State.Track.duration.toInt()
+		controls?.seekBar?.progress = State.Track.seek
+		controls?.textViewSeek?.text = State.Track.readableSeek
 	}
 
-	private fun updateSeek(progressData: String) {
-		val progress = progressData.split(";")
-
-		controls?.textViewSeek?.text = progress[1]
-		controls?.seekBar?.progress = progress[0].toInt()
+	private fun updateSeek() {
+		controls?.seekBar?.progress = State.Track.seek
+		controls?.textViewSeek?.text = State.Track.readableSeek
 	}
 
 	private fun sendSeek(seek: Int) {
-		EventBus.send(PlaybackEvent(PlaybackEventSource.CONTROLS, PlaybackEventType.UPDATE_SEEK, seek.toString()))
+		EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.SEEK_UPDATE, seek.toString()))
 	}
 
 	private fun onFabMenuButtonClick(angle: Float) {
 		val buttonIndex = getButtonByAngle(angle)
 		val eventType = fabMenuButtonEventMap[buttonIndex]
 
-		animateFabMenuButton(buttonIndex) // animate the button
-		updateFabMenuUi(buttonIndex)
+		animateFabMenuButton(buttonIndex) // animate the button (overlay animation)
+		updateFabMenuUi(buttonIndex) // updates the shuffle and repeat buttons to show the correct icons (when the menu is expanded)
 
-		if (eventType != null) EventBus.send(PlaybackEvent(PlaybackEventSource.CONTROLS, eventType))
+		if (eventType != null) EventBus.send(SystemEvent(EventSource.CONTROLS, eventType)) // dispatch the appropriate event
+		if (buttonIndex == FabMenu.BUTTON_PREV || buttonIndex == FabMenu.BUTTON_NEXT) togglePlayPauseButton(true) // for next/previous buttons, do the to_play animation (if paused)
 	}
 
 	private fun onTouchEnded() {
@@ -163,13 +156,13 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		// make sure we're running on main
 		Handler(Looper.getMainLooper()).post {
 
-			if (data !is PlaybackEvent) return@post // not interested in event types other then PlaybackEvent
-			if (data.source == PlaybackEventSource.CONTROLS) return@post // not interested in events that were sent from here
+			if (data !is SystemEvent) return@post // not interested in event types other then SystemEvent
+			if (data.source == EventSource.CONTROLS) return@post // not interested in events that were sent from here
 
 			when (data.type) {
-				PlaybackEventType.PLAY, PlaybackEventType.PLAY_ITEM -> togglePlayPauseButton(true) // show the pause icon
-				PlaybackEventType.UPDATE_METADATA -> updateMetadata(data.extras)
-				PlaybackEventType.UPDATE_SEEK -> updateSeek(data.extras)
+				EventType.PLAY, EventType.PLAY_ITEM -> togglePlayPauseButton(true) // show the pause icon
+				EventType.METADATA_UPDATE -> updateMetadata()
+				EventType.SEEK_UPDATE -> updateSeek()
 			}
 
 		}

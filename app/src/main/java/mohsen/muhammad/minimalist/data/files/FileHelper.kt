@@ -44,17 +44,15 @@ class FileHelper(private val file: File) {
 			return album
 		}
 
-	// format the duration string
-	val duration: String?
+	val duration: Long
 		get() {
-			var durationString: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-
-			if (durationString != null) {
-				durationString = formatMillis(durationString.toLong())
-			}
-
-			return durationString
+			val durationString: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+			return durationString?.toLong() ?: 0L
 		}
+
+	// format the duration string
+	val readableDuration: String?
+		get() = formatMillis(duration)
 
 	val trackCount: Int
 		get() {

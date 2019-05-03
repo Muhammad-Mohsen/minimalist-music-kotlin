@@ -7,7 +7,7 @@
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 	<application
-		android:name=".app.MinimalistApplication"
+		android:name=".app.main.MinimalistApplication"
 		android:allowBackup="false"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/appName"

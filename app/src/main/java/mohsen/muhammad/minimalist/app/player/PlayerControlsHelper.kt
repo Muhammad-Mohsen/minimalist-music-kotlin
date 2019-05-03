@@ -11,8 +11,8 @@ import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ext.animateDrawable
 import mohsen.muhammad.minimalist.core.ext.fadeIn
 import mohsen.muhammad.minimalist.core.ext.fadeOut
+import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.FabMenu
-import mohsen.muhammad.minimalist.data.PlaybackEventType
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.atan
@@ -21,6 +21,7 @@ import kotlin.math.hypot
 /**
  * Created by muhammad.mohsen on 3/30/2019.
  * extends PlayerControlsManager with functions that are mostly related to the FAB and FAB menu
+ * storing the UI state in tags may be problematic. So far, though, that hasn't proved to be the case
  */
 
 internal fun PlayerControlsManager.togglePlayPauseButton(play: Boolean) {
@@ -186,10 +187,10 @@ internal fun PlayerControlsManager.toggleFabMenuButtonHighlight(buttonIndex: Int
 }
 
 internal val fabMenuButtonEventMap = mapOf(
-	FabMenu.BUTTON_NEXT to PlaybackEventType.PLAY_NEXT,
-	FabMenu.BUTTON_REPEAT to PlaybackEventType.CYCLE_REPEAT,
-	FabMenu.BUTTON_SHUFFLE to PlaybackEventType.CYCLE_SHUFFLE,
-	FabMenu.BUTTON_PREV to PlaybackEventType.PLAY_PREVIOUS
+	FabMenu.BUTTON_NEXT to EventType.PLAY_NEXT,
+	FabMenu.BUTTON_REPEAT to EventType.CYCLE_REPEAT,
+	FabMenu.BUTTON_SHUFFLE to EventType.CYCLE_SHUFFLE,
+	FabMenu.BUTTON_PREV to EventType.PLAY_PREVIOUS
 )
 
 internal val repeatIcons = arrayOf(R.drawable.repeat015, R.drawable.repeat015, R.drawable.repeat_one015) // inactive, active, one

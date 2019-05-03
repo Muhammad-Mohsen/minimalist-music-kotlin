@@ -1,4 +1,4 @@
-package mohsen.muhammad.minimalist.app
+package mohsen.muhammad.minimalist.app.main
 
 import android.app.Application
 import mohsen.muhammad.minimalist.app.player.PlaybackManager

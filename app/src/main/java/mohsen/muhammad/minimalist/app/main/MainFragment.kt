@@ -20,18 +20,15 @@ import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.breadcrumb.BreadcrumbManager
 import mohsen.muhammad.minimalist.app.explorer.ExplorerManager
 import mohsen.muhammad.minimalist.app.player.PlayerControlsManager
-import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.data.EventSource
+import mohsen.muhammad.minimalist.data.EventType
+import mohsen.muhammad.minimalist.data.State
+import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.FileHelper
-import java.io.File
 
 
-class MainFragment : Fragment(), OnListItemInteractionListener<File> {
-
-	private var breadcrumbManager: BreadcrumbManager? = null
-	private var explorerManager: ExplorerManager? = null
-	private var playerControlsManager: PlayerControlsManager? = null
+class MainFragment : Fragment() {
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		return inflater.inflate(R.layout.main_fragment, container, false)
@@ -53,16 +50,19 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 					togglePermissionLayout(false) // hide permission layout
 
 					// breadcrumbs
-					breadcrumbManager = BreadcrumbManager(recyclerViewBreadcrumbs, buttonBack, this@MainFragment)
-					breadcrumbManager?.initialize()
+					val breadcrumbManager = BreadcrumbManager(recyclerViewBreadcrumbs, buttonBack)
+					breadcrumbManager.initialize()
 
 					// explorer
-					explorerManager = ExplorerManager(recyclerViewExplorer, this@MainFragment)
-					explorerManager?.initialize()
+					val explorerManager = ExplorerManager(recyclerViewExplorer)
+					explorerManager.initialize()
 
 					// controls
-					playerControlsManager = PlayerControlsManager(controls)
-					playerControlsManager?.initialize()
+					val playerControlsManager = PlayerControlsManager(controls)
+					playerControlsManager.initialize()
+
+					// after initializing everything, restore the state
+					if (State.Track.isInitialized) EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.METADATA_UPDATE))
 				}
 
 				override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
@@ -86,33 +86,12 @@ class MainFragment : Fragment(), OnListItemInteractionListener<File> {
 
 		return if (currentDirectory.absolutePath == FileHelper.ROOT) false
 		else {
-			onListItemClick(currentDirectory.parentFile, ItemType.CRUMB)
+			val parentDir = currentDirectory.parentFile
+			State.currentDirectory = parentDir
+			EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.DIR_CHANGE, parentDir.absolutePath))
+
 			true
 		}
-	}
-
-	override fun onListItemClick(data: File?, source: Int) {
-		if (data == null) return
-
-		val currentDirectory = State.currentDirectory
-
-		if (source == ItemType.CRUMB || source == ItemType.DIRECTORY) { // breadcrumb, and directory item clicks
-
-			if (data.absolutePath == currentDirectory.absolutePath) return // clicking the same directory should do nothing
-
-			State.currentDirectory = data
-
-			breadcrumbManager?.onDirectoryChange(data) // repopulate the breadcrumb bar
-			explorerManager?.onDirectoryChange(data) // repopulate the recycler views
-
-		} else { // track item clicks
-			EventBus.send(PlaybackEvent(PlaybackEventSource.EXPLORER, PlaybackEventType.PLAY_ITEM, data.absolutePath))
-			explorerManager?.onSelectionChange(data.absolutePath)
-		}
-	}
-
-	override fun onListItemLongClick(data: File?, source: Int) {
-		// eventually
 	}
 
 	private fun togglePermissionLayout(show: Boolean) {

@@ -57,7 +57,7 @@
 			android:id="@+id/seekBar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/spacingMedium"
+			android:layout_marginTop="@dimen/spacingMediumLarge"
 			android:max="100"
 			android:progress="0"
 			android:progressDrawable="@drawable/style_seek_bar_progress"
@@ -108,7 +108,7 @@
 		android:id="@+id/fabMenuBackground"
 		android:layout_width="@dimen/fabMenuExpandedBackgroundRadius"
 		android:layout_height="@dimen/fabMenuExpandedBackgroundRadius"
-		android:layout_marginBottom="72dp"
+		android:layout_marginBottom="76dp"
 		android:elevation="@dimen/elevationLarge"
 		android:scaleX=".1"
 		android:scaleY=".1"
@@ -168,8 +168,8 @@
 	<!--Omni button-->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonOmni"
-		android:layout_marginEnd="@dimen/spacingMediumLarge"
-		android:layout_marginBottom="72dp"
+		android:layout_marginEnd="@dimen/spacingLarge"
+		android:layout_marginBottom="76dp"
 		android:src="@drawable/anim_play_pause"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintBottom_toBottomOf="parent"
@@ -180,7 +180,7 @@
 	<!--fab overlay (for animations and whatnot)-->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/fabButtonAnimationOverlay"
-		android:layout_marginBottom="72dp"
+		android:layout_marginBottom="76dp"
 		android:visibility="gone"
 		android:elevation="@dimen/elevationLarge"
 		android:outlineProvider="none"

@@ -8,4 +8,4 @@ import mohsen.muhammad.minimalist.core.ext.EMPTY
  * event args for all playback events dispatched from different parts of the app.
  */
 
-class PlaybackEvent(val source: Int, val type: Int, val extras: String = String.EMPTY) : EventBus.EventData()
+class SystemEvent(val source: Int, val type: Int, val extras: String = String.EMPTY) : EventBus.EventData()

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.breadcrumb_bar_item.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
-import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
+import mohsen.muhammad.minimalist.core.OnListItemClickListener
 import mohsen.muhammad.minimalist.data.ItemType
 import java.io.File
 import java.util.*
@@ -19,7 +19,7 @@ import java.util.*
  */
 
 
-class BreadcrumbAdapter(file: File, private val interactionListener: OnListItemInteractionListener<File>) : RecyclerView.Adapter<BreadcrumbAdapter.CrumbViewHolder>() {
+class BreadcrumbAdapter(file: File, private val interactionListener: OnListItemClickListener<File>) : RecyclerView.Adapter<BreadcrumbAdapter.CrumbViewHolder>() {
 
 	private val crumbs: ArrayList<String> = ArrayList(file.absolutePath.split("/")).apply {
 		removeAt(0) // remove the empty crumb
@@ -77,7 +77,6 @@ class BreadcrumbAdapter(file: File, private val interactionListener: OnListItemI
 	}
 
 	class CrumbViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
 		val crumbText: TextView = itemView.textViewCrumb
 		val crumbButton: ExtendedFrameLayout = itemView.buttonCrumb
 	}

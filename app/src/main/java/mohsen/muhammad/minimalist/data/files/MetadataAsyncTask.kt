@@ -19,7 +19,7 @@ class MetadataAsyncTask : AsyncTask<ArrayList<ExplorerFile>, Void, ArrayList<Exp
             if (!model.isDirectory) {
                 model.artist = helper.artist
                 model.album = helper.album
-                model.duration = helper.duration ?: String.EMPTY
+                model.duration = helper.readableDuration ?: String.EMPTY
 
             } else {
                 model.trackCount = helper.trackCount
@@ -31,7 +31,7 @@ class MetadataAsyncTask : AsyncTask<ArrayList<ExplorerFile>, Void, ArrayList<Exp
 
     override fun onPostExecute(explorerFiles: ArrayList<ExplorerFile>?) {
         // call notifyItemRangeChanged if the current directory is the same, and the adapter is not null.
-        var isOnCurrentDirectory = false
+        // var isOnCurrentDirectory = false
         // if (explorerFiles != null && explorerFiles.size > 0)
             // isOnCurrentDirectory = State.getCurrentDirectory(context).absolutePath == explorerFiles[0].parentFile.absolutePath
 

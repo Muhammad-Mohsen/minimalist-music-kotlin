@@ -1,6 +1,9 @@
 package mohsen.muhammad.minimalist.app.player
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Handler
@@ -8,10 +11,10 @@ import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.initialize
 import mohsen.muhammad.minimalist.core.ext.isPlayingSafe
 import mohsen.muhammad.minimalist.core.ext.playPause
-import mohsen.muhammad.minimalist.core.ext.readablePosition
-import mohsen.muhammad.minimalist.data.PlaybackEvent
-import mohsen.muhammad.minimalist.data.PlaybackEventSource
-import mohsen.muhammad.minimalist.data.PlaybackEventType
+import mohsen.muhammad.minimalist.data.EventSource
+import mohsen.muhammad.minimalist.data.EventType
+import mohsen.muhammad.minimalist.data.State
+import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.FileHelper
 import java.io.File
 import java.util.*
@@ -21,16 +24,17 @@ import java.util.*
  * Created by muhammad.mohsen on 11/3/2018.
  * The object that's actually responsible for playing the music
  * This was originally an Android Service which had the advantage of running on a background thread, so any expensive operation can be done directly.
- * As this is no longer the case, expensive operation (for example MediaPlayer#prepare, and getMetadata) are called inside a handler
+ * As this is no longer the case, expensive operations (for example MediaPlayer#prepare, and updateMetadata) are called inside a handler
  */
 
 object PlaybackManager :
 	EventBus.Subscriber,
 	MediaPlayer.OnCompletionListener,
-	AudioManager.OnAudioFocusChangeListener
+	AudioManager.OnAudioFocusChangeListener, // audio focus loss
+	BroadcastReceiver() // headphone removal
 {
 
-	private const val eventSource = PlaybackEventSource.SERVICE
+	private const val eventSource = EventSource.SERVICE
 
 	private lateinit var player: MediaPlayer
 	private lateinit var playlist: Playlist
@@ -42,6 +46,31 @@ object PlaybackManager :
 
 	val isPlaying: Boolean
 		get() = player.isPlayingSafe
+
+	// called when the application starts
+	fun start(context: Context) {
+		player = MediaPlayer() // initialize the media player
+		player.setOnCompletionListener(this) //Set up MediaPlayer event listeners
+
+		playlist = Playlist() // initialize the playlist
+
+		EventBus.subscribe(this)
+
+		audioFocusHandler = AudioFocusHandler(this, context) // audio focus loss
+		context.registerReceiver(PlaybackManager, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) // headphone removal
+
+		handler = Handler()
+	}
+
+	// restores state (from the State object) from a previous session
+	private fun reinitialize() {
+		if (State.Track.path.isBlank()) return
+
+		handler.post {
+			setTrack(State.Track.path)
+			updateSeek(State.Track.seek)
+		}
+	}
 
 	// playback
 	private fun setTrack(path: String, updatePlaylist: Boolean = true) {
@@ -57,6 +86,8 @@ object PlaybackManager :
 
 		if (path == null) return
 
+		// the playback manager runs on the main thread
+		// so expensive operations are run on a background thread
 		handler.post {
 			setTrack(path)
 
@@ -65,7 +96,7 @@ object PlaybackManager :
 
 			player.start()
 
-			sendMetadata(path)
+			sendMetadataUpdate(path)
 			sendSeekUpdates()
 		}
 	}
@@ -101,31 +132,43 @@ object PlaybackManager :
 
 		}, 0L, 1000L)
 	}
-	// used to update the seek (used for when the playback is stopped but the user changed seek)
-	private fun sendSingleSeekUpdate() {
-		val position = player.currentPosition.toString()
-		val readablePosition = player.readablePosition
 
-		EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.UPDATE_SEEK, "$position;$readablePosition"))
+	// used to update the seek (used for when the playback is stopped but the user changes seek)
+	private fun sendSingleSeekUpdate() {
+		State.Track.seek = player.currentPosition
+		EventBus.send(SystemEvent(eventSource, EventType.SEEK_UPDATE))
 	}
 
 	// metadata
-	private fun sendMetadata(path: String) {
+	private fun sendMetadataUpdate(path: String) {
 		handler.post {
-			val metadata = getMetadata(path)
-			EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.UPDATE_METADATA, metadata))
+			updateMetadataState(path)
+			EventBus.send(SystemEvent(eventSource, EventType.METADATA_UPDATE))
 		}
 	}
-	private fun getMetadata(path: String): String {
+	private fun updateMetadataState(path: String) {
 		val metadataHelper = FileHelper(File(path))
-		return "${metadataHelper.title};${metadataHelper.album};${metadataHelper.artist};${metadataHelper.duration};${player.duration};$path"
+
+		State.Track.path = path // this is mostly redundant, but it's ok
+		State.Track.title = metadataHelper.title
+		State.Track.album = metadataHelper.album
+		State.Track.artist = metadataHelper.artist
+		State.Track.duration = metadataHelper.duration
 	}
 
 	// pause playback on audio focus loss
 	override fun onAudioFocusChange(focusChange: Int) {
 		if (focusChange != AudioManager.AUDIOFOCUS_GAIN) {
 			player.pause()
-			EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.PAUSE))
+			EventBus.send(SystemEvent(eventSource, EventType.PAUSE))
+		}
+	}
+
+	// becoming noisy receiver handler
+	override fun onReceive(context: Context, intent: Intent) {
+		if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+			player.pause()
+			EventBus.send(SystemEvent(eventSource, EventType.PAUSE))
 		}
 	}
 
@@ -135,46 +178,30 @@ object PlaybackManager :
 		
 		if (nextTrack != null) {
 			playTrack(nextTrack)
-			EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.PLAY_ITEM, nextTrack))
+			EventBus.send(SystemEvent(eventSource, EventType.PLAY_ITEM, nextTrack))
 		
 		} else {
-			EventBus.send(PlaybackEvent(eventSource, PlaybackEventType.PAUSE))
+			EventBus.send(SystemEvent(eventSource, EventType.PAUSE))
 		}
 	}
 
-	// from the event bus
+	// event bus handler
 	override fun receive(data: EventBus.EventData) {
-		if (data is PlaybackEvent && data.source != eventSource) { // if we're not the source
+		if (data is SystemEvent && data.source != eventSource) { // if we're not the source
 			when (data.type) {
-				PlaybackEventType.PLAY_ITEM -> playTrack(data.extras)
-				PlaybackEventType.PLAY -> playPause(true)
-				PlaybackEventType.PAUSE -> playPause(false)
-				PlaybackEventType.UPDATE_SEEK -> updateSeek(data.extras.toInt())
+				EventType.PLAY_ITEM -> playTrack(data.extras)
+				EventType.PLAY -> playPause(true)
+				EventType.PAUSE -> playPause(false)
+				EventType.SEEK_UPDATE -> updateSeek(data.extras.toInt())
 
 				// playlist stuff
-				PlaybackEventType.CYCLE_REPEAT -> playlist.cycleRepeatMode()
-				PlaybackEventType.CYCLE_SHUFFLE -> playlist.toggleShuffle()
-				PlaybackEventType.PLAY_PREVIOUS -> playTrack(playlist.getPreviousTrack())
-				PlaybackEventType.PLAY_NEXT -> playTrack(playlist.getNextTrack(false))
+				EventType.CYCLE_REPEAT -> playlist.cycleRepeatMode()
+				EventType.CYCLE_SHUFFLE -> playlist.toggleShuffle()
+				EventType.PLAY_PREVIOUS -> playTrack(playlist.getPreviousTrack())
+				EventType.PLAY_NEXT -> playTrack(playlist.getNextTrack(false))
+
+				EventType.METADATA_UPDATE -> reinitialize()
 			}
 		}
-	}
-
-	// lifecycle
-	fun start(context: Context) {
-		player = MediaPlayer() // initialize the media player
-		player.setOnCompletionListener(this) //Set up MediaPlayer event listeners
-
-		playlist = Playlist() // initialize the playlist
-
-		EventBus.subscribe(this) // register the service instance
-
-		handler = Handler()
-
-		audioFocusHandler = AudioFocusHandler(this, context)
-	}
-	fun destroy() {
-		player.release() // destroy the Player instance
-		EventBus.unsubscribe(this)
 	}
 }

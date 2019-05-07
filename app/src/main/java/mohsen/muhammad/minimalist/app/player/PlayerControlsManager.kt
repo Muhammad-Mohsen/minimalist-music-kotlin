@@ -113,8 +113,8 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 	}
 
 	private fun updateMetadata() {
-		controls?.textViewTitle?.text = State.Track.title
-		controls?.textViewSubtitle?.text = controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist)
+		controls?.textViewTitle?.setText(State.Track.title)
+		controls?.textViewSubtitle?.setText(controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
 		controls?.textViewDuration?.text = State.Track.readableDuration
 
 		controls?.seekBar?.max = State.Track.duration.toInt()
@@ -163,6 +163,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 				EventType.PLAY, EventType.PLAY_ITEM -> togglePlayPauseButton(true) // show the pause icon
 				EventType.METADATA_UPDATE -> updateMetadata()
 				EventType.SEEK_UPDATE -> updateSeek()
+				EventType.PAUSE -> togglePlayPauseButton(false)
 			}
 
 		}

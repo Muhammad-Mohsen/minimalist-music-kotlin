@@ -21,8 +21,8 @@ object State {
 	private lateinit var context: Context // holds the application context...don't worry
 	private lateinit var sharedPreferences: SharedPreferences
 
-	fun initialize(app: Context) {
-		context = app
+	fun initialize(applicationContext: Context) {
+		context = applicationContext
 		sharedPreferences = context.getSharedPreferences(Key.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
 	}
 

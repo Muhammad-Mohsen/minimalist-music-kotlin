@@ -1,6 +1,5 @@
-package mohsen.muhammad.minimalist.app.player
+package mohsen.muhammad.minimalist.data
 
-import mohsen.muhammad.minimalist.data.RepeatMode
 import mohsen.muhammad.minimalist.data.files.FileCache
 import java.util.concurrent.ThreadLocalRandom
 

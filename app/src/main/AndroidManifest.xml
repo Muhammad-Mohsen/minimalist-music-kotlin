@@ -16,7 +16,10 @@
 		android:theme="@style/SplashTheme"
 		>
 
-		<activity android:name="mohsen.muhammad.minimalist.app.main.MainActivity">
+		<activity
+			android:name="mohsen.muhammad.minimalist.app.main.MainActivity"
+			android:screenOrientation="portrait"
+			>
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />

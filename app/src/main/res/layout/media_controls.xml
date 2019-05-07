@@ -23,35 +23,75 @@
 		>
 
 		<!--track title-->
-		<TextView
+		<TextSwitcher
 			android:id="@+id/textViewTitle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/spacingLarge"
 			android:layout_marginEnd="@dimen/fabMarginedSize"
 			android:layout_marginBottom="@dimen/spacingSmall"
-			android:textColor="@color/colorOnPrimary"
-			android:textSize="@dimen/textLarge"
-			android:maxLines="1"
-			android:ellipsize="end"
-			android:text="@string/minimalistMusicPlayer"
-			tools:text="Song title"
-			/>
+			android:inAnimation="@android:anim/slide_in_left"
+			android:outAnimation="@android:anim/slide_out_right"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textColor="@color/colorOnPrimary"
+				android:textSize="@dimen/textLarge"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:text="@string/minimalistMusicPlayer"
+				tools:text="Song title"
+				/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textColor="@color/colorOnPrimary"
+				android:textSize="@dimen/textLarge"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:text="@string/minimalistMusicPlayer"
+				tools:text="Song title"
+				/>
+
+		</TextSwitcher>
 
 		<!--album/artist-->
-		<TextView
+		<TextSwitcher
 			android:id="@+id/textViewSubtitle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/spacingLarge"
 			android:layout_marginEnd="@dimen/fabMarginedSize"
-			android:textColor="@color/colorOnSecondary"
-			android:textSize="@dimen/textSmall"
-			android:maxLines="1"
-			android:ellipsize="end"
-			android:text="@string/welcomeMessage"
-			tools:text="Song Album (Song Artist)"
-			/>
+			android:inAnimation="@android:anim/fade_in"
+			android:outAnimation="@android:anim/fade_out"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textColor="@color/colorOnSecondary"
+				android:textSize="@dimen/textSmall"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:text="@string/welcomeMessage"
+				tools:text="Song Album (Song Artist)"
+				/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textColor="@color/colorOnSecondary"
+				android:textSize="@dimen/textSmall"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:text="@string/welcomeMessage"
+				tools:text="Song Album (Song Artist)"
+				/>
+
+		</TextSwitcher>
 
 		<SeekBar
 			android:id="@+id/seekBar"

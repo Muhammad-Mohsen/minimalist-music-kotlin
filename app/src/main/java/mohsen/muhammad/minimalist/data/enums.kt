@@ -72,3 +72,11 @@ object FabMenu {
 	const val BUTTON_SHUFFLE = 2
 	const val BUTTON_PREV = 3
 }
+
+object NotificationAction {
+	const val PLAY_PAUSE = 0
+	const val PREV = 1
+	const val NEXT = 2
+
+	const val EXTRA = "Action"
+}

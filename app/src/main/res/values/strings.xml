@@ -30,4 +30,7 @@
 	<string name="permissionMessage">Storage Permission is required</string>
 	<string name="grantPermission">Grant Permission</string>
 
+	<string name="notificationChannelName">Playback Notification</string>
+	<string name="notificationChannelDescription">Displays the app\'s playback notification</string>
+
 </resources>

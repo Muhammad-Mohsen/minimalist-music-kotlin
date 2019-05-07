@@ -1,6 +1,7 @@
 package mohsen.muhammad.minimalist.app.main
 
 import android.app.Application
+import mohsen.muhammad.minimalist.app.notification.MediaNotificationManager
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.data.State
 
@@ -15,5 +16,7 @@ class MinimalistApplication : Application() {
 
 		PlaybackManager.start(this)
 		State.initialize(applicationContext)
+		MediaNotificationManager.initialize(applicationContext)
 	}
+
 }

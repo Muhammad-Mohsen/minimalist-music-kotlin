@@ -3,6 +3,7 @@ package mohsen.muhammad.minimalist.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
 import mohsen.muhammad.minimalist.data.files.FileHelper
@@ -45,6 +46,9 @@ object State {
 				.putString(Key.DIRECTORY, value.absolutePath)
 				.apply()
 		}
+
+	val isPlaying: Boolean
+		get() = PlaybackManager.isPlaying
 
 	// current track state props
 	// because getting the metadata is expensive, they're obtained once and stored here

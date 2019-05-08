@@ -78,10 +78,10 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 					onTouchEnded()
 
 					if (eventTimeDelta < ViewConfiguration.getLongPressTimeout()) { // treat this as a normal click
-						togglePlayPauseButton(!PlaybackManager.isPlaying)
+						togglePlayPauseButton(!State.isPlaying)
 
 						// dispatch the event
-						val eventType = if (!PlaybackManager.isPlaying) EventType.PLAY else EventType.PAUSE
+						val eventType = if (!State.isPlaying) EventType.PLAY else EventType.PAUSE
 						EventBus.send(SystemEvent(EventSource.CONTROLS, eventType))
 
 					} else {

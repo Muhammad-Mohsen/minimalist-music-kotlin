@@ -1,7 +1,6 @@
 package mohsen.muhammad.minimalist.app.notification
 
 import android.annotation.SuppressLint
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -39,12 +38,10 @@ object MediaNotificationManager :
 
 	private lateinit var context: Context // still holding the same application context from State.kt :D
 
-	private var notification: Notification? = null
-
 	private val style: androidx.media.app.NotificationCompat.MediaStyle by lazy {
 		androidx.media.app.NotificationCompat.MediaStyle()
 			.setShowCancelButton(false)
-		// .setShowActionsInCompactView(NotificationAction.PLAY_PAUSE)
+			.setShowActionsInCompactView(NotificationAction.PLAY_PAUSE)
 	}
 
 	fun initialize(applicationContext: Context) {
@@ -52,14 +49,11 @@ object MediaNotificationManager :
 		context.registerReceiver(this, IntentFilter())
 		EventBus.subscribe(this)
 
+		createChannel()
 		createNotification()
 	}
 
 	private fun createNotification() {
-
-		if (notification != null) return
-
-		createChannel()
 
 		val builder = NotificationCompat.Builder(context, CHANNEL_ID).apply {
 			setContentTitle(State.Track.title)
@@ -72,7 +66,7 @@ object MediaNotificationManager :
 			color = ContextCompat.getColor(context, R.color.colorOnBackgroundDark)
 
 			setStyle(style)
-			// addAction(createAction(R.drawable.ic_notification_play, NotificationAction.PLAY_PAUSE))
+			addAction(createAction(getPlayPauseIcon(), NotificationAction.PLAY_PAUSE))
 		}
 
 		with(NotificationManagerCompat.from(context)) {
@@ -83,6 +77,8 @@ object MediaNotificationManager :
 	override fun receive(data: EventBus.EventData) {
 		if (data is SystemEvent) {
 			when (data.type) {
+				EventType.PLAY,
+				EventType.PAUSE,
 				EventType.PLAY_ITEM,
 				EventType.PLAY_NEXT,
 				EventType.PLAY_PREVIOUS,
@@ -117,9 +113,12 @@ object MediaNotificationManager :
 			putExtra(NotificationAction.EXTRA, actionIndex)
 		}
 
-		val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+		val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
 
 		return NotificationCompat.Action(iconResId, actionIndex.toString(), pendingIntent)
 	}
 
+	private fun getPlayPauseIcon(): Int {
+		return if (State.isPlaying) R.drawable.ic_notification_pause else R.drawable.ic_notification_play
+	}
 }

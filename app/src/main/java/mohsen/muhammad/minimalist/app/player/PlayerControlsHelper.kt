@@ -55,7 +55,7 @@ internal fun PlayerControlsManager.getButtonAnimationByIndex(buttonIndex: Int): 
 	return when (buttonIndex) {
 		FabMenu.BUTTON_NEXT -> R.drawable.anim_next
 		FabMenu.BUTTON_REPEAT -> {
-			val currentRepeat = controls?.buttonRepeat?.tag as? Int ?: return repeatAnimations[0]
+			val currentRepeat = controls?.buttonRepeat?.tag as? Int ?: 0
 			repeatAnimations[(currentRepeat + 1) % repeatAnimations.size]
 		}
 		FabMenu.BUTTON_SHUFFLE -> {

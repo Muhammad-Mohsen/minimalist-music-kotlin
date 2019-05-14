@@ -5,6 +5,8 @@
 	>
 
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<application
 		android:name=".app.main.MinimalistApplication"
@@ -19,6 +21,7 @@
 		<activity
 			android:name="mohsen.muhammad.minimalist.app.main.MainActivity"
 			android:screenOrientation="portrait"
+			android:launchMode="singleInstance"
 			>
 
 			<intent-filter>
@@ -31,6 +34,16 @@
 			</intent-filter>
 
 		</activity>
+
+		<!--Playback Service-->
+		<service
+			android:name=".app.player.PlaybackManager"
+			android:stopWithTask="true"
+			android:exported="false"
+			/>
+
+		<!--For the life of me I can't know why registering this receiver dynamically doesn't work!!!-->
+		<receiver android:name=".app.notification.MediaNotificationManager$NotificationActionHandler" />
 
 	</application>
 

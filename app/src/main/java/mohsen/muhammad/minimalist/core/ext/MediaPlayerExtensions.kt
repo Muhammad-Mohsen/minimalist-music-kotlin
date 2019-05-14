@@ -37,8 +37,11 @@ val MediaPlayer.readableDuration: String
 val MediaPlayer.readablePosition: String
 	get() = formatMillis(currentPosition.toLong())
 
-val MediaPlayer.isPlayingSafe: Boolean
+val MediaPlayer?.isPlayingSafe: Boolean
 	get() {
+
+		if (this == null) return false
+
 		return try {
 			isPlaying
 

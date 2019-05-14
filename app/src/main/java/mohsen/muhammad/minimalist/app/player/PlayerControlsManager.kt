@@ -137,9 +137,9 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 
 		animateFabMenuButton(buttonIndex) // animate the button (overlay animation)
 		updateFabMenuUi(buttonIndex) // updates the shuffle and repeat buttons to show the correct icons (when the menu is expanded)
+		if (buttonIndex == FabMenu.BUTTON_PREV || buttonIndex == FabMenu.BUTTON_NEXT) togglePlayPauseButton(true) // for next/previous buttons, do the to_play animation (if paused)
 
 		if (eventType != null) EventBus.send(SystemEvent(EventSource.CONTROLS, eventType)) // dispatch the appropriate event
-		if (buttonIndex == FabMenu.BUTTON_PREV || buttonIndex == FabMenu.BUTTON_NEXT) togglePlayPauseButton(true) // for next/previous buttons, do the to_play animation (if paused)
 	}
 
 	private fun onTouchEnded() {
@@ -160,10 +160,10 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 			if (data.source == EventSource.CONTROLS) return@post // not interested in events that were sent from here
 
 			when (data.type) {
-				EventType.PLAY, EventType.PLAY_ITEM -> togglePlayPauseButton(true) // show the pause icon
+				EventType.PLAY, EventType.PLAY_ITEM, EventType.PLAY_NEXT, EventType.PLAY_PREVIOUS -> togglePlayPauseButton(true) // show the pause icon
+				EventType.PAUSE -> togglePlayPauseButton(false)
 				EventType.METADATA_UPDATE -> updateMetadata()
 				EventType.SEEK_UPDATE -> updateSeek()
-				EventType.PAUSE -> togglePlayPauseButton(false)
 			}
 
 		}

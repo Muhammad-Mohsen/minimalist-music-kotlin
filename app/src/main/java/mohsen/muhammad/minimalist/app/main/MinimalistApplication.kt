@@ -1,7 +1,8 @@
 package mohsen.muhammad.minimalist.app.main
 
 import android.app.Application
-import mohsen.muhammad.minimalist.app.notification.MediaNotificationManager
+import android.content.Intent
+import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.data.State
 
@@ -14,9 +15,10 @@ class MinimalistApplication : Application() {
 	override fun onCreate() {
 		super.onCreate()
 
-		PlaybackManager.start(this)
+		val playerIntent = Intent(applicationContext, PlaybackManager::class.java)
+		ContextCompat.startForegroundService(this, playerIntent)
+
 		State.initialize(applicationContext)
-		MediaNotificationManager.initialize(applicationContext)
 	}
 
 }

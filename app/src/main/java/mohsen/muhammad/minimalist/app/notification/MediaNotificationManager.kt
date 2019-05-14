@@ -1,6 +1,6 @@
 package mohsen.muhammad.minimalist.app.notification
 
-import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,17 +8,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
+import mohsen.muhammad.minimalist.app.main.MainActivity
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.data.EventType
-import mohsen.muhammad.minimalist.data.NotificationAction
-import mohsen.muhammad.minimalist.data.State
-import mohsen.muhammad.minimalist.data.SystemEvent
+import mohsen.muhammad.minimalist.data.*
 
 /**
  * Created by muhammad.mohsen on 5/3/2019.
@@ -26,36 +23,28 @@ import mohsen.muhammad.minimalist.data.SystemEvent
  * P.S. the "NotificationManager" name is already taken!
  */
 
-@SuppressLint("StaticFieldLeak")
-object MediaNotificationManager :
-	EventBus.Subscriber,
-	BroadcastReceiver() // receive notification clicks
-{
+class MediaNotificationManager(private val context: Context) : EventBus.Subscriber {
 
-	private const val CHANNEL_ID = "PLAYBACK_NOTIFICATION"
-	private const val ACTION_FILTER = "mohsen.muhammad.minimalist.NOTIFICATION_ACTION"
-	private const val NOTIFICATION_ID = 124816
-
-	private lateinit var context: Context // still holding the same application context from State.kt :D
-
+	// media notification style
 	private val style: androidx.media.app.NotificationCompat.MediaStyle by lazy {
-		androidx.media.app.NotificationCompat.MediaStyle()
+		androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle()
 			.setShowCancelButton(false)
-			.setShowActionsInCompactView(NotificationAction.PLAY_PAUSE)
+			.setShowActionsInCompactView(PlaybackNotification.PREV, PlaybackNotification.PLAY_PAUSE, PlaybackNotification.NEXT)
 	}
 
-	fun initialize(applicationContext: Context) {
-		context = applicationContext
-		context.registerReceiver(this, IntentFilter())
+	init {
 		EventBus.subscribe(this)
-
 		createChannel()
-		createNotification()
 	}
 
-	private fun createNotification() {
+	// creates the notification, and displays it
+	fun createNotification(): Notification {
+
+		// click the notification, get the main activity!
+		val contentIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_CANCEL_CURRENT)
 
 		val builder = NotificationCompat.Builder(context, CHANNEL_ID).apply {
+			setContentIntent(contentIntent)
 			setContentTitle(State.Track.title)
 			setContentText(State.Track.artist)
 			setSmallIcon(R.drawable.ic_notification)
@@ -66,30 +55,31 @@ object MediaNotificationManager :
 			color = ContextCompat.getColor(context, R.color.colorOnBackgroundDark)
 
 			setStyle(style)
-			addAction(createAction(getPlayPauseIcon(), NotificationAction.PLAY_PAUSE))
+			addAction(createAction(R.drawable.ic_notification_prev, PlaybackNotification.PREV))
+			addAction(createAction(getPlayPauseIcon(), PlaybackNotification.PLAY_PAUSE))
+			addAction(createAction(R.drawable.ic_notification_next, PlaybackNotification.NEXT))
 		}
 
-		with(NotificationManagerCompat.from(context)) {
-			notify(NOTIFICATION_ID, builder.build())
-		}
+		val notification = builder.build()
+		NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification) // display the notification
+
+		return notification
 	}
 
-	override fun receive(data: EventBus.EventData) {
-		if (data is SystemEvent) {
-			when (data.type) {
-				EventType.PLAY,
-				EventType.PAUSE,
-				EventType.PLAY_ITEM,
-				EventType.PLAY_NEXT,
-				EventType.PLAY_PREVIOUS,
-				EventType.METADATA_UPDATE -> createNotification() // simply recreating the notification updates it
-			}
+	// creates notification actions
+	private fun createAction(iconResId: Int, actionIndex: Int): NotificationCompat.Action {
+		val intent = Intent(context, NotificationActionHandler::class.java).apply {
+			putExtra(PlaybackNotification.EXTRA, actionIndex)
 		}
+
+		val pendingIntent = PendingIntent.getBroadcast(context, actionIndex, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+		return NotificationCompat.Action(iconResId, actionIndex.toString(), pendingIntent)
 	}
 
-	// broadcast receiver handler
-	override fun onReceive(context: Context?, intent: Intent?) {
-		val notificationAction = intent?.getIntExtra(NotificationAction.EXTRA, NotificationAction.PLAY_PAUSE) ?: NotificationAction.PLAY_PAUSE
+	// gets the correct play/pause icon based on current state
+	private fun getPlayPauseIcon(): Int {
+		return if (State.isPlaying) R.drawable.ic_notification_pause else R.drawable.ic_notification_play
 	}
 
 	// creates a notification channel to play nice with Oreo and above
@@ -107,18 +97,35 @@ object MediaNotificationManager :
 		}
 	}
 
-	private fun createAction(iconResId: Int, actionIndex: Int): NotificationCompat.Action {
-		val intent = Intent(context, MediaNotificationManager.javaClass).apply {
-			action = ACTION_FILTER
-			putExtra(NotificationAction.EXTRA, actionIndex)
+	override fun receive(data: EventBus.EventData) {
+		if (data is SystemEvent) {
+			when (data.type) {
+				EventType.PLAY,
+				EventType.PAUSE,
+				EventType.PLAY_ITEM,
+				EventType.PLAY_NEXT,
+				EventType.PLAY_PREVIOUS,
+				EventType.METADATA_UPDATE -> createNotification() // simply recreating the notification updates it
+			}
 		}
-
-		val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-
-		return NotificationCompat.Action(iconResId, actionIndex.toString(), pendingIntent)
 	}
 
-	private fun getPlayPauseIcon(): Int {
-		return if (State.isPlaying) R.drawable.ic_notification_pause else R.drawable.ic_notification_play
+	// basically the notification action click handler (registered statically in the manifest)
+	class NotificationActionHandler : BroadcastReceiver() {
+		override fun onReceive(context: Context?, intent: Intent?) {
+
+			val event = when (intent?.getIntExtra(PlaybackNotification.EXTRA, PlaybackNotification.PLAY_PAUSE) ?: PlaybackNotification.PLAY_PAUSE) {
+				PlaybackNotification.NEXT -> EventType.PLAY_NEXT
+				PlaybackNotification.PLAY_PAUSE -> if (State.isPlaying) EventType.PAUSE else EventType.PLAY
+				else -> EventType.PLAY_PREVIOUS
+			}
+
+			EventBus.send(SystemEvent(EventSource.NOTIFICATION, event))
+		}
+	}
+
+	companion object {
+		private const val CHANNEL_ID = "PLAYBACK_NOTIFICATION" // Android Oreo notification channel name
+		const val NOTIFICATION_ID = 124816
 	}
 }

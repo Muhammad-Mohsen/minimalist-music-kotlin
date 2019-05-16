@@ -46,7 +46,7 @@ class MediaNotificationManager(private val context: Context) : EventBus.Subscrib
 		val builder = NotificationCompat.Builder(context, CHANNEL_ID).apply {
 			setContentIntent(contentIntent)
 			setContentTitle(State.Track.title)
-			setContentText(State.Track.artist)
+			setContentText(State.Track.album)
 			setSmallIcon(R.drawable.ic_notification)
 			setShowWhen(false)
 			priority = NotificationCompat.PRIORITY_DEFAULT // for versions prior to Oreo

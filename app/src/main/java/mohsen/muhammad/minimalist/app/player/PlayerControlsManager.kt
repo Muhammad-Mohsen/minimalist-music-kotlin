@@ -114,7 +114,12 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 
 	private fun updateMetadata() {
 		controls?.textViewTitle?.setText(State.Track.title)
-		controls?.textViewSubtitle?.setText(controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
+
+		// if the artist exists, set both album and artist (we're guaranteed album info in the form of the parent dir name)
+		if (State.Track.artist.isNotEmpty()) controls?.textViewSubtitle?.setText(controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
+		// if there's no artist info, only set the album
+		else controls?.textViewSubtitle?.setText(State.Track.album)
+
 		controls?.textViewDuration?.text = State.Track.readableDuration
 
 		controls?.seekBar?.max = State.Track.duration.toInt()

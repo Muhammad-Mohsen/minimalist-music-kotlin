@@ -49,11 +49,12 @@ class ExplorerAdapter(
 		val file = files[position]
 		with(holder) {
 
-			val resources = itemView.context.resources
-			val topMargin = if (position == 0) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80f, resources.displayMetrics) else 0f
+			val metrics = itemView.context.resources.displayMetrics
+			val topMargin = if (position == 0) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80f, metrics) else 0f
+			val bottomMargin = if (position == files.size - 1) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, metrics) else 0f
 
 			val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-			params.setMargins(0, topMargin.toInt(), 0, 0)
+			params.setMargins(0, topMargin.toInt(), 0, bottomMargin.toInt())
 
 			itemView.layoutParams = params
 

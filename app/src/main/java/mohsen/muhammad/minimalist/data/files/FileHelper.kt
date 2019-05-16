@@ -26,22 +26,14 @@ class FileHelper(private val file: File) {
 	// metadata getters
 	val artist: String
 		get() {
-			var artist: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-
-			if (artist == null || artist == String.EMPTY)
-				artist = file.parent ?: String.EMPTY
-
-			return artist
+			val artist: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+			return artist?: String.EMPTY
 		}
 
 	val album: String
 		get() {
-			var album: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-
-			if (album == null || album == String.EMPTY)
-				album = String.EMPTY
-
-			return album
+			val album: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+			return album?: file.parentFile.name
 		}
 
 	val duration: Long

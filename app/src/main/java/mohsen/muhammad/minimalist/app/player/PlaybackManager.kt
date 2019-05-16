@@ -14,6 +14,7 @@ import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.initialize
 import mohsen.muhammad.minimalist.core.ext.isPlayingSafe
 import mohsen.muhammad.minimalist.core.ext.playPause
+import mohsen.muhammad.minimalist.core.ext.unregisterReceiverSafe
 import mohsen.muhammad.minimalist.data.*
 import mohsen.muhammad.minimalist.data.files.FileHelper
 import java.io.File
@@ -35,7 +36,7 @@ class PlaybackManager :
 	private val player = MediaPlayer() // initialize the media player
 	private val playlist = Playlist() // initialize the playlist
 
-	// TODO remove this thing
+	// TODO remove this thing??
 	private var timer: Timer? = null // a timer to update the seek
 
 	private lateinit var audioFocusHandler: AudioFocusHandler
@@ -43,7 +44,7 @@ class PlaybackManager :
 	private lateinit var notificationManager: MediaNotificationManager // needed throughout the life of the app because it subs to the EventBus and updates the notification
 
 	// headphone removal receiver
-	private val becomingNoisyReceiver = object : BroadcastReceiver() {
+	private val noisyReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context?, intent: Intent?) {
 			if (intent?.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
 				player.pause()
@@ -51,13 +52,13 @@ class PlaybackManager :
 			}
 		}
 	}
+	private val noisyIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
 
 	// life cycle...YAY!!
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
 		registerSelf(this)
 		EventBus.subscribe(this)
-		registerReceiver(becomingNoisyReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) // headphone removal
 
 		audioFocusHandler = AudioFocusHandler(this, this) // audio focus loss
 
@@ -71,7 +72,7 @@ class PlaybackManager :
 	}
 	override fun onDestroy() {
 		player.release() // destroy the Player instance
-		unregisterReceiver(becomingNoisyReceiver)
+		unregisterReceiverSafe(noisyReceiver)
 		EventBus.unsubscribe(this)
 	}
 
@@ -102,6 +103,8 @@ class PlaybackManager :
 		val focusResult = audioFocusHandler.request()
 		if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
 
+		registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
+
 		player.start()
 
 		sendMetadataUpdate(path)
@@ -112,8 +115,11 @@ class PlaybackManager :
 			val focusResult = audioFocusHandler.request()
 			if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
 
+			registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
+
 		} else {
 			audioFocusHandler.abandon()
+			unregisterReceiverSafe(noisyReceiver)
 		}
 
 		player.playPause(play)

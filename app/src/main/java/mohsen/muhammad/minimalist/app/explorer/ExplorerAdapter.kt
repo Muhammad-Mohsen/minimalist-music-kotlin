@@ -69,6 +69,15 @@ class ExplorerAdapter(
 			itemView.setOnClickListener {
 				interactionListener.onListItemClick(file, itemType)
 			}
+
+			itemView.setOnLongClickListener {
+				if (file.isDirectory) return@setOnLongClickListener true // no long click for you!
+
+				it.imageViewSelected.visibility = View.VISIBLE // this is all kinds of wrong but we're just testing at this point
+
+				// interactionListener.onListItemLongClick(file, itemType)
+				return@setOnLongClickListener true
+			}
 		}
 	}
 
@@ -98,6 +107,10 @@ class ExplorerAdapter(
 		// update the selection
 		val newSelectedPosition = getPositionByPath(newSelection)
 		notifyItemChanged(newSelectedPosition)
+	}
+
+	internal fun updateMultiSelection(path: String) {
+		val position = getPositionByPath(path)
 	}
 
 	// gets item position by absolutePath

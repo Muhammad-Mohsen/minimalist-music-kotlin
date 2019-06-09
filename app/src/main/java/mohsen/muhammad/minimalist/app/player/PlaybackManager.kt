@@ -68,6 +68,10 @@ class PlaybackManager :
 		notificationManager = MediaNotificationManager(applicationContext)
 		startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 
+		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched to which the response would be to call reinitialize
+		// so a manual call is necessary
+		reinitialize()
+
 		return super.onStartCommand(intent, flags, startId)
 	}
 	override fun onDestroy() {

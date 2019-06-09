@@ -2,7 +2,7 @@
 <resources>
 
 	<!--Background-->
-	<color name="colorBackground">#EEE</color>
+	<color name="colorBackground">#FFF0F0F0</color>
 	<color name="colorBackgroundWhite">#FFF</color>
 
 	<!--Primary-->
@@ -18,7 +18,7 @@
 	<color name="colorOnPrimary">#FFF</color>
 	<color name="colorOnSecondary">#BBB</color>
 	<color name="colorOnBackground">#333</color>
-	<color name="colorOnBackgroundDark">#111</color>
+	<color name="colorOnBackgroundDark">#000</color>
 
 	<!--Transparent-->
 	<color name="colorTransparent">#0FFF</color>

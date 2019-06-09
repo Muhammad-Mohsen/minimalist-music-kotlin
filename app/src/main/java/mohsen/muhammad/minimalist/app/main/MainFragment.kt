@@ -61,7 +61,7 @@ class MainFragment : Fragment() {
 					val playerControlsManager = PlayerControlsManager(controls)
 					playerControlsManager.initialize()
 
-					// after initializing everything, restore the state
+					// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't registered to the event bus!
 					if (State.Track.isInitialized) EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.METADATA_UPDATE))
 				}
 

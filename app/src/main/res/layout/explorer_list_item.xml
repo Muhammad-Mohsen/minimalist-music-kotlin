@@ -94,6 +94,17 @@
 
 		</LinearLayout>
 
+		<!--Selection icon-->
+		<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+			android:id="@+id/imageViewSelected"
+			android:layout_width="5dp"
+			android:layout_height="5dp"
+			android:layout_marginEnd="@dimen/spacingLarge"
+			android:visibility="invisible"
+			app:cornerRadius="5dp"
+			app:fillColor="@color/colorOnBackgroundDark"
+			/>
+
 	</LinearLayout>
 
 </mohsen.muhammad.minimalist.core.ExtendedFrameLayout>

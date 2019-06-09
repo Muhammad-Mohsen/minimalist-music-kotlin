@@ -57,13 +57,21 @@ class ExplorerManager(
 			EventBus.send(SystemEvent(EventSource.EXPLORER, EventType.DIR_CHANGE))
 
 		} else { // track item clicks
-			EventBus.send(SystemEvent(EventSource.EXPLORER, EventType.PLAY_ITEM, data.absolutePath))
-			onSelectionChange(data.absolutePath)
+
+			// check if select mode is active
+			if (isSelectModeActive()) {
+
+
+			} else {
+				EventBus.send(SystemEvent(EventSource.EXPLORER, EventType.PLAY_ITEM, data.absolutePath))
+				onSelectionChange(data.absolutePath)
+			}
 		}
 	}
 
 	override fun onListItemLongClick(data: File?, source: Int) {
-		// eventually
+		if (data == null) return
+		onMultiSelectionChange(data.absolutePath)
 	}
 
 	override fun receive(data: EventBus.EventData) {
@@ -97,8 +105,17 @@ class ExplorerManager(
 		explorerAdapter.updateSelection(path)
 	}
 
+	private fun onMultiSelectionChange(path: String) {
+		// TODO dispatch the select mode active
+		explorerAdapter.updateMultiSelection(path)
+	}
+
 	private fun toggleEmptyDirLayout(show: Boolean) {
 		recyclerViewExplorer.visibility = if (show) View.GONE else View.VISIBLE
 		linearLayoutEmptyDir?.visibility = if (show) View.VISIBLE else View.GONE
+	}
+
+	private fun isSelectModeActive(): Boolean {
+		return false
 	}
 }

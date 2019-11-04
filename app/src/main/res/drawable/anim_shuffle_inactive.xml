@@ -5,83 +5,158 @@
 	>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle015"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle014"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle013"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle012"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle011"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle010"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle009"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle008"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle007"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle006"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle005"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle004"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle003"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle002"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle001"
 		/>
 
 	<item
-		android:duration="20"
+		android:duration="15"
 		android:drawable="@drawable/shuffle000"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle017"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle018"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle019"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle020"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle021"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle022"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle023"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle024"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle025"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle026"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle027"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle028"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle029"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle030"
+		/>
+
+	<item
+		android:duration="15"
+		android:drawable="@drawable/shuffle031"
 		/>
 
 </animation-list>

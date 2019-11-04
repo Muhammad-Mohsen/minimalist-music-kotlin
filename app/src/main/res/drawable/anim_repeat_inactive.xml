@@ -6,82 +6,97 @@
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one015"
+		android:drawable="@drawable/repeat022"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one014"
+		android:drawable="@drawable/repeat023"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one013"
+		android:drawable="@drawable/repeat024"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one012"
+		android:drawable="@drawable/repeat025"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one011"
+		android:drawable="@drawable/repeat026"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one010"
+		android:drawable="@drawable/repeat027"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one009"
+		android:drawable="@drawable/repeat028"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one008"
+		android:drawable="@drawable/repeat029"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one007"
+		android:drawable="@drawable/repeat030"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one006"
+		android:drawable="@drawable/repeat031"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one005"
+		android:drawable="@drawable/repeat032"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one004"
+		android:drawable="@drawable/repeat033"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one003"
+		android:drawable="@drawable/repeat034"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one002"
+		android:drawable="@drawable/repeat035"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one001"
+		android:drawable="@drawable/repeat036"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat_one000"
+		android:drawable="@drawable/repeat037"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeat038"
+		/>
+
+	<item
+		android:duration="20"
+		android:drawable="@drawable/repeat039"
+		/>
+
+	<item
+		android:duration="100"
+		android:drawable="@drawable/repeat040"
 		/>
 
 </animation-list>

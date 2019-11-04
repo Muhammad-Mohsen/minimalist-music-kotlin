@@ -5,83 +5,63 @@
 	>
 
 	<item
+	android:duration="100"
+	android:drawable="@drawable/repeat040"
+	/>
+
+	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat000"
+		android:drawable="@drawable/repeat039"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat001"
+		android:drawable="@drawable/repeat038"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat002"
+		android:drawable="@drawable/repeat037"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat003"
+		android:drawable="@drawable/repeat036"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat004"
+		android:drawable="@drawable/repeat035"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat005"
+		android:drawable="@drawable/repeat034"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat006"
+		android:drawable="@drawable/repeat033"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat007"
+		android:drawable="@drawable/repeat032"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat008"
+		android:drawable="@drawable/repeat031"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat009"
+		android:drawable="@drawable/repeat030"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat010"
-		/>
-
-	<item
-		android:duration="20"
-		android:drawable="@drawable/repeat011"
-		/>
-
-	<item
-		android:duration="20"
-		android:drawable="@drawable/repeat012"
-		/>
-
-	<item
-		android:duration="20"
-		android:drawable="@drawable/repeat013"
-		/>
-
-	<item
-		android:duration="20"
-		android:drawable="@drawable/repeat014"
-		/>
-
-	<item
-		android:duration="100"
-		android:drawable="@drawable/repeat015"
+		android:drawable="@drawable/repeat029"
 		/>
 
 </animation-list>

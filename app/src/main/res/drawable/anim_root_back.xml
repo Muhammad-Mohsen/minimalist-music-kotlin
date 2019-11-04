@@ -74,19 +74,4 @@
 		android:drawable="@drawable/root_back013"
 		/>
 
-	<item
-		android:duration="20"
-		android:drawable="@drawable/root_back014"
-		/>
-
-	<item
-		android:duration="20"
-		android:drawable="@drawable/root_back015"
-		/>
-
-	<item
-		android:duration="20"
-		android:drawable="@drawable/root_back016"
-		/>
-
 </animation-list>

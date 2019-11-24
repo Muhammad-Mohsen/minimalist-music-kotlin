@@ -6,7 +6,9 @@ import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageButton
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
 
@@ -122,8 +124,8 @@ fun View.applyCornerAttr(attributes: AttributeSet) {
 	val radii = floatArrayOf(
 		cornerTopLeft, cornerTopLeft,
 		cornerTopRight, cornerTopRight,
-		cornerBottomLeft, cornerBottomLeft,
-		cornerBottomRight, cornerBottomRight
+		cornerBottomRight, cornerBottomRight,
+		cornerBottomLeft, cornerBottomLeft
 	)
 
 	backgroundShape.setDrawableCornerRadii(radii)
@@ -161,4 +163,8 @@ fun View.applyPaddingAttr(attributes: AttributeSet?) {
 	setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
 
 	paddingAttrTypedArray.recycle()
+}
+
+fun ImageButton.setImageDrawable(@DrawableRes d: Int) {
+	setImageDrawable(ContextCompat.getDrawable(context, d))
 }

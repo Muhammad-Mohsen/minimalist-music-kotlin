@@ -19,7 +19,7 @@ fun MediaPlayer.playPause(play: Boolean) {
 	}
 }
 
-fun MediaPlayer.initialize(path: String) {
+fun MediaPlayer.prepareSource(path: String) {
 	try {
 		reset()
 		setDataSource(path)

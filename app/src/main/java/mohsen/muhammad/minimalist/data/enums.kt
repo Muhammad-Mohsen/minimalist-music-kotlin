@@ -57,6 +57,7 @@ object EventSource {
 	const val NOTIFICATION = 4
 	const val BREADCRUMB = 5
 	const val FRAGMENT = 6
+	const val SESSION = 7
 }
 
 object FabMenu {

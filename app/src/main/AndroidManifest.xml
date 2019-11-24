@@ -9,7 +9,6 @@
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<application
-		android:name=".app.main.MinimalistApplication"
 		android:allowBackup="false"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/appName"

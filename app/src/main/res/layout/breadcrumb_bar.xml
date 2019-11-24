@@ -5,30 +5,22 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/breadcrumbs"
 	android:layout_width="match_parent"
-	android:layout_height="@dimen/heightBreadcrumbBar"
+	android:layout_height="wrap_content"
 	android:layout_margin="@dimen/spacingLarge"
-	android:padding="@dimen/spacingSmall"
 	android:gravity="center_vertical"
 	android:orientation="horizontal"
 	android:elevation="@dimen/elevationMedium"
 	app:fillColor="@color/colorBackgroundWhite"
-	app:cornerRadius="25dp"
+	app:cornerRadius="@dimen/cornerRadiusLarge"
 	tools:elevation="0dp"
 	>
 
 	<!--back button-->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonBack"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
-		android:padding="7dp"
-		android:adjustViewBounds="true"
-		android:scaleType="fitCenter"
+		style="@style/floatingButtonOmniStyle2"
 		android:src="@drawable/anim_back_root"
-		android:tint="@color/colorOnBackground"
-		app:cornerRadius="50dp"
-		app:fillColor="@color/colorBackgroundWhite"
-		app:rippleColor="@color/colorPrimaryDark"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
 		/>
 
 	<androidx.recyclerview.widget.RecyclerView
@@ -36,8 +28,8 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_weight="1"
+		android:layout_marginBottom="1dp"
 		android:layout_marginEnd="@dimen/spacingMedium"
-		android:layout_gravity="center_vertical"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 		android:orientation="horizontal"
 		tools:listitem="@layout/breadcrumb_bar_item"

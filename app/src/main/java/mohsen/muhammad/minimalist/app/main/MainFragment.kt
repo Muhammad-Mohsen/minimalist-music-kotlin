@@ -14,12 +14,12 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.breadcrumb_bar.*
 import kotlinx.android.synthetic.main.main_fragment.*
-import kotlinx.android.synthetic.main.media_controls.*
+import kotlinx.android.synthetic.main.media_controls_2.*
 import kotlinx.android.synthetic.main.permission_request.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.breadcrumb.BreadcrumbManager
 import mohsen.muhammad.minimalist.app.explorer.ExplorerManager
-import mohsen.muhammad.minimalist.app.player.PlayerControlsManager
+import mohsen.muhammad.minimalist.app.player.PlayerControlsManager2
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
@@ -58,7 +58,7 @@ class MainFragment : Fragment() {
 					explorerManager.initialize()
 
 					// controls
-					val playerControlsManager = PlayerControlsManager(controls)
+					val playerControlsManager = PlayerControlsManager2(controls_2)
 					playerControlsManager.initialize()
 
 					// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't registered to the event bus!

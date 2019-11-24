@@ -5,14 +5,15 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.media_controls.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ext.animateDrawable
 import mohsen.muhammad.minimalist.core.ext.fadeIn
 import mohsen.muhammad.minimalist.core.ext.fadeOut
+import mohsen.muhammad.minimalist.core.ext.setImageDrawable
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.FabMenu
+import mohsen.muhammad.minimalist.data.State
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.atan
@@ -55,44 +56,38 @@ internal fun PlayerControlsManager.getButtonAnimationByIndex(buttonIndex: Int): 
 	return when (buttonIndex) {
 		FabMenu.BUTTON_NEXT -> R.drawable.anim_next
 		FabMenu.BUTTON_REPEAT -> {
-			val currentRepeat = controls?.buttonRepeat?.tag as? Int ?: 0
-			repeatAnimations[(currentRepeat + 1) % repeatAnimations.size]
+			repeatAnimations[(State.Playlist.repeat + 1) % repeatAnimations.size]
 		}
 		FabMenu.BUTTON_SHUFFLE -> {
-			val currentShuffle = controls?.buttonShuffle?.tag as? Boolean
-			if (currentShuffle == true) R.drawable.anim_shuffle_inactive
+			if (State.Playlist.shuffle) R.drawable.anim_shuffle_inactive
 			else R.drawable.anim_shuffle_active
 		}
 		else -> R.drawable.anim_next // FabMenu.BUTTON_PREV
 	}
 }
 
-// updates the fab menu button iconography for shuffle and repeat buttons (also their tags)
+// updates the fab menu button iconography for shuffle and repeat buttons
 internal fun PlayerControlsManager.updateFabMenuUi(buttonIndex: Int) {
-	val context = controls?.context ?: return
 
 	if (buttonIndex == FabMenu.BUTTON_REPEAT) {
-		val currentRepeat = controls?.buttonRepeat?.tag as? Int ?: 0
-		val updatedRepeat = (currentRepeat + 1) % repeatIcons.size
-
-		// set the drawable
-		controls?.buttonRepeat?.setImageDrawable(ContextCompat.getDrawable(context, repeatIcons[updatedRepeat]))
-
-		val repeatTint = if (updatedRepeat == 0) R.color.colorPrimaryLight else R.color.colorOnBackgroundDark
-		controls?.buttonRepeat?.setColorFilter(ContextCompat.getColor(context, repeatTint)) // set the tint color (active/inactive)
-
-		controls?.buttonRepeat?.tag = updatedRepeat // update the tag
+		val updatedRepeat = (State.Playlist.repeat + 1) % repeatIcons.size
+		controls?.buttonRepeat?.setImageDrawable(repeatIcons[updatedRepeat])
 
 	} else if (buttonIndex == FabMenu.BUTTON_SHUFFLE) {
-		val currentShuffle = controls?.buttonShuffle?.tag as? Boolean ?: false
-		val shuffleTint = if (currentShuffle) R.color.colorPrimaryLight else R.color.colorOnBackgroundDark
-
-		controls?.buttonShuffle?.setColorFilter(ContextCompat.getColor(context, shuffleTint)) // set the tint color (active/inactive)
-
-		controls?.buttonShuffle?.tag = !currentShuffle // update the tag
+		// set the tint color (active/inactive)
+		val shuffleIcon = if (State.Playlist.shuffle) shuffleIcons[0] else shuffleIcons[1]
+		controls?.buttonShuffle?.setImageDrawable(shuffleIcon)
 	}
 
 	// otherwise, do nothing
+}
+
+// initializes FAB buttons' state (repeat and shuffle)
+internal fun PlayerControlsManager.initializeFabMenuUi() {
+	controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.Playlist.repeat])
+
+	val shuffleIcon = if (State.Playlist.shuffle) shuffleIcons[1] else shuffleIcons[0]
+	controls?.buttonShuffle?.setImageDrawable(shuffleIcon)
 }
 
 // expands/collapses the actual fab menu buttons
@@ -193,5 +188,7 @@ internal val fabMenuButtonEventMap = mapOf(
 	FabMenu.BUTTON_PREV to EventType.PLAY_PREVIOUS
 )
 
-internal val repeatIcons = arrayOf(R.drawable.repeat015, R.drawable.repeat015, R.drawable.repeat_one015) // inactive, active, one
+internal val shuffleIcons = arrayOf(R.drawable.shuffle031, R.drawable.shuffle015) // inactive, active
+
+internal val repeatIcons = arrayOf(R.drawable.repeat040, R.drawable.repeat015, R.drawable.repeat022) // inactive, active, one
 internal val repeatAnimations = arrayOf(R.drawable.anim_repeat_inactive, R.drawable.anim_repeat_active, R.drawable.anim_repeat_one)

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/controls_2"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:clipChildren="false"
+	tools:layout_gravity="bottom"
+	>
+
+	<!--Main Panel-->
+	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+		android:id="@+id/mainPanel"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/spacingLarge"
+		android:layout_marginEnd="@dimen/spacingLarge"
+		android:layout_marginBottom="56dp"
+		android:orientation="vertical"
+		android:elevation="@dimen/elevationMedium"
+		app:fillColor="@color/colorOnBackgroundDark"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
+		app:layout_constraintBottom_toBottomOf="parent"
+		>
+
+		<SeekBar
+			android:id="@+id/seekBar"
+			android:layout_width="match_parent"
+			android:layout_height="84dp"
+			android:maxHeight="84dp"
+			android:padding="0dp"
+			android:max="100"
+			android:progress="25"
+			android:progressDrawable="@drawable/style_seek_bar_progress_2"
+			android:thumb="@null"
+			/>
+
+		<!--track title-->
+		<TextSwitcher
+			android:id="@+id/textViewTitle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/spacingMediumLarge"
+			android:layout_marginStart="@dimen/spacingLarge"
+			android:layout_marginEnd="@dimen/spacingLarge"
+			android:inAnimation="@android:anim/slide_in_left"
+			android:outAnimation="@android:anim/slide_out_right"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textColor="@color/colorOnPrimary"
+				android:textSize="@dimen/textLarge"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:text="@string/minimalistMusicPlayer"
+				tools:text="Song title"
+				/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textColor="@color/colorOnPrimary"
+				android:textSize="@dimen/textLarge"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:text="@string/minimalistMusicPlayer"
+				tools:text="Song title"
+				/>
+
+		</TextSwitcher>
+
+		<!--album/artist-->
+		<TextSwitcher
+			android:id="@+id/textViewSubtitle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="36dp"
+			android:layout_marginStart="@dimen/spacingLarge"
+			android:layout_marginEnd="@dimen/spacingLarge"
+			android:inAnimation="@android:anim/fade_in"
+			android:outAnimation="@android:anim/fade_out"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textColor="@color/colorOnSecondary"
+				android:textSize="@dimen/textSmall"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:text="@string/welcomeMessage"
+				tools:text="Song Album (Song Artist)"
+				/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textColor="@color/colorOnSecondary"
+				android:textSize="@dimen/textSmall"
+				android:maxLines="1"
+				android:ellipsize="end"
+				android:text="@string/welcomeMessage"
+				tools:text="Song Album (Song Artist)"
+				/>
+
+		</TextSwitcher>
+
+	</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>
+
+	<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="60dp"
+		android:elevation="@dimen/elevationLarge"
+		app:layout_constraintStart_toStartOf="@id/mainPanel"
+		app:layout_constraintEnd_toEndOf="@id/mainPanel"
+		app:layout_constraintTop_toTopOf="@id/mainPanel"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
+		app:fillColor="@color/colorOnPrimary"
+		>
+
+		<!--Previous-->
+		<mohsen.muhammad.minimalist.core.ExtendedImageButton
+			android:id="@+id/buttonPrev"
+			style="@style/floatingButtonOmniStyle2"
+			android:src="@drawable/next000"
+			android:rotation="180"
+			app:cornerRadiusBottomRight="@dimen/cornerRadiusLarge"
+			app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
+			/>
+
+		<!--Omni button-->
+		<mohsen.muhammad.minimalist.core.ExtendedImageButton
+			android:id="@+id/buttonOmni"
+			android:src="@drawable/anim_play_pause"
+			style="@style/floatingButtonOmniStyle2"
+			/>
+
+		<!--Next-->
+		<mohsen.muhammad.minimalist.core.ExtendedImageButton
+			android:id="@+id/buttonNext"
+			style="@style/floatingButtonOmniStyle2"
+			android:src="@drawable/next000"
+			app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
+			app:cornerRadiusBottomRight="@dimen/cornerRadiusLarge"
+			/>
+
+
+	</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
+
+	<!--Seek Text-->
+	<TextView
+		android:id="@+id/textViewSeek"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/spacingMedium"
+		android:layout_marginStart="@dimen/spacingLarge"
+		android:elevation="@dimen/elevationLarge"
+		android:textSize="@dimen/textMedium"
+		android:textColor="@color/colorOnPrimary"
+		android:textStyle="bold"
+		android:text="@string/blankTimestamp"
+		app:layout_constraintStart_toStartOf="@id/mainPanel"
+		app:layout_constraintBottom_toBottomOf="@id/mainPanel"
+		tools:text="02:35"
+		/>
+
+	<!--Seek Text-->
+	<TextView
+		android:id="@+id/textViewDuration"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/spacingMedium"
+		android:layout_marginEnd="@dimen/spacingLarge"
+		android:elevation="@dimen/elevationLarge"
+		android:textSize="@dimen/textMedium"
+		android:textColor="@color/colorOnSecondary"
+		android:text="@string/blankTimestamp"
+		app:layout_constraintEnd_toEndOf="@id/mainPanel"
+		app:layout_constraintBottom_toBottomOf="@id/mainPanel"
+		tools:text="4:08"
+		/>
+
+	<!--Repeat-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonRepeat"
+		android:src="@drawable/repeat015"
+		style="@style/floatingButtonOmniStyle2"
+		android:layout_marginTop="@dimen/spacingMedium"
+		android:elevation="0dp"
+		app:layout_constraintStart_toStartOf="@id/mainPanel"
+		app:layout_constraintTop_toBottomOf="@id/mainPanel"
+		app:fillColor="@color/colorBackground"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
+		/>
+
+	<!--Shuffle-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonShuffle"
+		android:src="@drawable/shuffle015"
+		style="@style/floatingButtonOmniStyle2"
+		android:layout_marginTop="@dimen/spacingMedium"
+		app:layout_constraintEnd_toEndOf="@id/mainPanel"
+		app:layout_constraintTop_toBottomOf="@id/mainPanel"
+		app:fillColor="@color/colorBackground"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
+		/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

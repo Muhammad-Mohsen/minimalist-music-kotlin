@@ -4,6 +4,7 @@
 	<dimen name="heightMediaInfoBar">55dp</dimen>
 	<dimen name="heightSeekBar">18dp</dimen>
 	<dimen name="imageButtonContainerSize">55dp</dimen>
+	<dimen name="imageButtonContainerSize2">48dp</dimen>
 	<dimen name="fabMarginedSize">75dp</dimen>
 
 	<integer name="fabMenuExpandedBackgroundScale">1</integer>
@@ -24,8 +25,10 @@
 
 	<dimen name="cornerRadiusSmall">3dp</dimen>
 	<dimen name="cornerRadiusMedium">6dp</dimen>
+	<dimen name="cornerRadiusLarge">9dp</dimen>
 
-	<dimen name="elevationMedium">3dp</dimen>
-	<dimen name="elevationLarge">5dp</dimen>
+	<dimen name="elevationSmall">2dp</dimen>
+	<dimen name="elevationMedium">4dp</dimen>
+	<dimen name="elevationLarge">6dp</dimen>
 
 </resources>

@@ -11,7 +11,8 @@
 		<item name="android:windowLightStatusBar">true</item>
 		<item name="android:statusBarColor">@color/colorBackground</item>
 
-		<item name="android:navigationBarColor">@color/colorOnBackgroundDark</item>
+		<item name="android:navigationBarColor">@color/colorBackground</item>
+		<item name="android:windowLightNavigationBar">true</item>
 		<item name="android:textColorPrimary">@color/colorOnBackgroundDark</item>
 
 		<item name="windowActionBar">false</item>
@@ -56,6 +57,16 @@
 		<item name="layout_constraintCircle">@+id/buttonOmni</item>
 		<item name="layout_constraintCircleRadius">0dp</item>
 		<item name="android:outlineProvider">none</item>
+	</style>
+
+	<!--FAB (Omni-Play/Pause) style-->
+	<style name="floatingButtonOmniStyle2">
+		<item name="android:layout_width">@dimen/imageButtonContainerSize2</item>
+		<item name="android:layout_height">@dimen/imageButtonContainerSize2</item>
+		<item name="android:padding">@dimen/spacingMediumLarge</item>
+		<item name="android:tint">@color/colorPrimary</item>
+		<item name="android:scaleType">fitCenter</item>
+		<item name="fillColor">@color/colorOnPrimary</item>
 	</style>
 
 </resources>

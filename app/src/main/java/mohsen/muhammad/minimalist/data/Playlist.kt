@@ -16,8 +16,8 @@ class Playlist {
 	private var start: Int = 0 // starting index - to try and do circular playlist
 
 	// attributes
-	private var isShuffle: Boolean = false
-	private var repeatMode: Int = RepeatMode.INACTIVE
+	var isShuffle: Boolean = false
+	var repeatMode: Int = RepeatMode.INACTIVE
 
 	fun updateItems(trackPath: String) {
 		val tracks = FileCache.getMediaPathsByPath(trackPath)

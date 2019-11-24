@@ -176,7 +176,6 @@
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonRepeat"
 		android:src="@drawable/repeat015"
-		android:tint="@color/colorPrimaryLight"
 		app:layout_constraintCircleAngle="321"
 		style="@style/floatingButtonSecondaryStyle"
 		tools:ignore="MissingConstraints"
@@ -187,7 +186,6 @@
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonShuffle"
 		android:src="@drawable/shuffle015"
-		android:tint="@color/colorPrimaryLight"
 		app:layout_constraintCircleAngle="286"
 		style="@style/floatingButtonSecondaryStyle"
 		tools:ignore="MissingConstraints"

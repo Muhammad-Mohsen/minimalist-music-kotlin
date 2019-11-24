@@ -14,7 +14,7 @@
 		android:id="@+id/recyclerViewExplorer"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_marginBottom="99dp"
+		android:layout_marginBottom="140dp"
 		android:scrollbars="vertical"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 		style="@style/scrollbarStyle"
@@ -26,7 +26,7 @@
 
 	<!--Controls-->
 	<include
-		layout="@layout/media_controls"
+		layout="@layout/media_controls_2"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_gravity="bottom"

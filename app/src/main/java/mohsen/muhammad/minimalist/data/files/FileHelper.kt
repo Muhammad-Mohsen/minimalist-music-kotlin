@@ -97,7 +97,7 @@ class FileHelper(private val file: File) {
 	companion object {
 
 		const val ROOT = "/storage" // root directory
-		private val MEDIA_EXTENSIONS = Arrays.asList("mp3", "wav") // supported media extensions
+		private val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b") // supported media extensions
 
 		private val filter = ExplorerFileFilter()
 

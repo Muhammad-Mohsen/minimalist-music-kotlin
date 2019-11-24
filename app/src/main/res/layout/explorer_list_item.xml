@@ -14,7 +14,7 @@
 		android:layout_height="match_parent"
 		android:layout_margin="6dp"
 		android:visibility="gone"
-		app:cornerRadius="@dimen/cornerRadiusSmall"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
 		app:fillColor="@color/colorOnSecondary"
 		/>
 

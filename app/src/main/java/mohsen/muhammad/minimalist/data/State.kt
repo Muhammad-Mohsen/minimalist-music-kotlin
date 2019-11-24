@@ -122,6 +122,16 @@ object State {
 
 		val readableSeek: String
 			get() = formatMillis(seek.toLong())
+
+		fun update(filePath: String) {
+			val metadataHelper = FileHelper(File(filePath))
+
+			path = filePath // this is mostly redundant, but it's ok
+			title = metadataHelper.title
+			album = metadataHelper.album
+			artist = metadataHelper.artist
+			duration = metadataHelper.duration
+		}
 	}
 
 	// playlist state props

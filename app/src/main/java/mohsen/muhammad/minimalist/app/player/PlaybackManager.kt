@@ -11,13 +11,11 @@ import android.os.IBinder
 import android.os.PowerManager
 import mohsen.muhammad.minimalist.app.notification.MediaNotificationManager
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.core.ext.initialize
 import mohsen.muhammad.minimalist.core.ext.isPlayingSafe
 import mohsen.muhammad.minimalist.core.ext.playPause
+import mohsen.muhammad.minimalist.core.ext.prepareSource
 import mohsen.muhammad.minimalist.core.ext.unregisterReceiverSafe
 import mohsen.muhammad.minimalist.data.*
-import mohsen.muhammad.minimalist.data.files.FileHelper
-import java.io.File
 import java.util.*
 
 
@@ -36,12 +34,10 @@ class PlaybackManager :
 	private val player = MediaPlayer() // initialize the media player
 	private val playlist = Playlist() // initialize the playlist
 
-	// TODO remove this thing??
-	private var timer: Timer? = null // a timer to update the seek
-
 	private lateinit var audioFocusHandler: AudioFocusHandler
 
-	private lateinit var notificationManager: MediaNotificationManager // needed throughout the life of the app because it subs to the EventBus and updates the notification
+	private lateinit var notificationManager: MediaNotificationManager
+	private lateinit var sessionManager: MediaSessionManager
 
 	// headphone removal receiver
 	private val noisyReceiver = object : BroadcastReceiver() {
@@ -53,6 +49,9 @@ class PlaybackManager :
 		}
 	}
 	private val noisyIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+
+	// TODO replace with coroutine??
+	private var timer: Timer? = null // a timer to update the seek
 
 	// life cycle...YAY!!
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -66,37 +65,41 @@ class PlaybackManager :
 		player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK) // acquire a wake lock so that the system won't shut us down
 
 		notificationManager = MediaNotificationManager(applicationContext)
+		sessionManager = MediaSessionManager(applicationContext)
+
 		startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 
-		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched to which the response would be to call reinitialize
+		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched to which the response would be to call restoreState
 		// so a manual call is necessary
-		reinitialize()
+		restoreState()
 
 		return super.onStartCommand(intent, flags, startId)
 	}
 	override fun onDestroy() {
 		player.release() // destroy the Player instance
+		sessionManager.release() // and the media session
 		unregisterReceiverSafe(noisyReceiver)
 		EventBus.unsubscribe(this)
 	}
 
 	// restores state (from the State object) from a previous session
-	private fun reinitialize() {
+	private fun restoreState() {
 		if (State.Track.path.isBlank()) return
 
 		setTrack(State.Track.path)
 		updateSeek(State.Track.seek)
+
+		playlist.repeatMode = State.Playlist.repeat
+		playlist.isShuffle = State.Playlist.shuffle
 	}
 
 	// playback
 	private fun setTrack(path: String, updatePlaylist: Boolean = true) {
 		// update playlist
 		if (updatePlaylist) playlist.updateItems(path)
-
 		playlist.setTrack(path, true)
 
-		// initialize the track
-		player.initialize(path)
+		player.prepareSource(path)
 	}
 	private fun playTrack(path: String?) {
 
@@ -157,17 +160,8 @@ class PlaybackManager :
 
 	// metadata
 	private fun sendMetadataUpdate(path: String) {
-		updateMetadataState(path)
+		State.Track.update(path)
 		EventBus.send(SystemEvent(EVENT_SOURCE, EventType.METADATA_UPDATE))
-	}
-	private fun updateMetadataState(path: String) {
-		val metadataHelper = FileHelper(File(path))
-
-		State.Track.path = path // this is mostly redundant, but it's ok
-		State.Track.title = metadataHelper.title
-		State.Track.album = metadataHelper.album
-		State.Track.artist = metadataHelper.artist
-		State.Track.duration = metadataHelper.duration
 	}
 
 	// pause playback on audio focus loss
@@ -181,11 +175,11 @@ class PlaybackManager :
 	// on playback completion
 	override fun onCompletion(mp: MediaPlayer) {
 		val nextTrack = playlist.getNextTrack(true)
-		
+
 		if (nextTrack != null) {
 			playTrack(nextTrack)
 			EventBus.send(SystemEvent(EVENT_SOURCE, EventType.PLAY_ITEM, nextTrack))
-		
+
 		} else {
 			EventBus.send(SystemEvent(EVENT_SOURCE, EventType.PAUSE))
 		}
@@ -201,17 +195,16 @@ class PlaybackManager :
 				EventType.SEEK_UPDATE -> updateSeek(data.extras.toInt())
 
 				// playlist stuff
-				EventType.CYCLE_REPEAT -> playlist.cycleRepeatMode()
-				EventType.CYCLE_SHUFFLE -> playlist.toggleShuffle()
+				EventType.CYCLE_REPEAT -> { playlist.cycleRepeatMode(); State.Playlist.repeat = playlist.repeatMode }
+				EventType.CYCLE_SHUFFLE -> { playlist.toggleShuffle(); State.Playlist.shuffle = playlist.isShuffle }
 				EventType.PLAY_PREVIOUS -> playTrack(playlist.getPreviousTrack())
 				EventType.PLAY_NEXT -> playTrack(playlist.getNextTrack(false))
 
-				EventType.METADATA_UPDATE -> reinitialize()
+				EventType.METADATA_UPDATE -> restoreState()
 			}
 		}
 	}
 
-	// override is mandated by the framework
 	override fun onBind(intent: Intent?): IBinder? { return null }
 
 	companion object {
@@ -226,6 +219,10 @@ class PlaybackManager :
 
 		private fun registerSelf(i: PlaybackManager) {
 			instance = i
+		}
+
+		fun stopSelf() {
+			instance?.stopSelf()
 		}
 	}
 }

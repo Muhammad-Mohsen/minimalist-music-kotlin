@@ -125,6 +125,8 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		controls?.seekBar?.max = State.Track.duration.toInt()
 		controls?.seekBar?.progress = State.Track.seek
 		controls?.textViewSeek?.text = State.Track.readableSeek
+
+		initializeFabMenuUi()
 	}
 
 	private fun updateSeek() {
@@ -142,6 +144,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 
 		animateFabMenuButton(buttonIndex) // animate the button (overlay animation)
 		updateFabMenuUi(buttonIndex) // updates the shuffle and repeat buttons to show the correct icons (when the menu is expanded)
+
 		if (buttonIndex == FabMenu.BUTTON_PREV || buttonIndex == FabMenu.BUTTON_NEXT) togglePlayPauseButton(true) // for next/previous buttons, do the to_play animation (if paused)
 
 		if (eventType != null) EventBus.send(SystemEvent(EventSource.CONTROLS, eventType)) // dispatch the appropriate event

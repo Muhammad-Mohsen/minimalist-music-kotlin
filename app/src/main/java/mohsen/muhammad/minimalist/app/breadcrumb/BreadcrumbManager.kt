@@ -2,13 +2,16 @@ package mohsen.muhammad.minimalist.app.breadcrumb
 
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.breadcrumb_bar.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnListItemClickListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.animateDrawable
+import mohsen.muhammad.minimalist.core.ext.fadeIn
+import mohsen.muhammad.minimalist.core.ext.fadeOut
+import mohsen.muhammad.minimalist.core.ext.slideY
 import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
@@ -23,12 +26,20 @@ import java.io.File
  */
 
 class BreadcrumbManager(
-	private val recyclerViewBreadcrumb: RecyclerView,
-	private val buttonBack: ImageView
+	private val breadcrumbBarContainer: LinearLayout,
+	private val multiSelectBarContainer: LinearLayout,
 ) : EventBus.Subscriber, OnListItemClickListener<File> {
 
+	private val recyclerViewBreadcrumbs = breadcrumbBarContainer.recyclerViewBreadcrumbs
+	private val buttonBack = breadcrumbBarContainer.buttonBack
+
+	private val buttonCancel = multiSelectBarContainer.buttonCancel
+	private val buttonAppendToPlaylist = multiSelectBarContainer.buttonAddSelection
+	private val buttonPlaySelected = multiSelectBarContainer.buttonPlaySelected
+	private val textViewSelectionCount = multiSelectBarContainer.textViewSelectionCount
+
 	private val breadcrumbAdapter: BreadcrumbAdapter
-		get() = recyclerViewBreadcrumb.adapter as BreadcrumbAdapter
+		get() = recyclerViewBreadcrumbs.adapter as BreadcrumbAdapter
 
 	fun initialize() {
 
@@ -38,30 +49,15 @@ class BreadcrumbManager(
 		val currentDirectory = State.currentDirectory
 
 		val breadcrumbAdapter = BreadcrumbAdapter(currentDirectory, this)
-		recyclerViewBreadcrumb.adapter = breadcrumbAdapter
+		recyclerViewBreadcrumbs.adapter = breadcrumbAdapter
 
-		// set back button icon.
-		// a lot of work for such a simple proposition
-		val animationResourceId: Int
-		val tag: Int
-		if (currentDirectory.absolutePath == FileHelper.ROOT) {
-			animationResourceId = R.drawable.anim_root_back
-			tag = R.drawable.anim_back_root
-
-		} else {
-			animationResourceId = R.drawable.anim_back_root
-			tag = R.drawable.anim_root_back
-		}
-
+		// set back button icon
+		val animationResourceId = if (currentDirectory.absolutePath == FileHelper.ROOT) R.drawable.anim_root_back else R.drawable.anim_back_root
 		val drawable = ContextCompat.getDrawable(buttonBack.context, animationResourceId)
 		buttonBack.setImageDrawable(drawable)
 
-		// because the animation is not started,
-		// the tag should be the opposite of the animation drawable being set on the button
-		buttonBack.tag = tag
-
 		// scroll to end
-		recyclerViewBreadcrumb.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
+		recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
 
 		// back button click listener
 		buttonBack.setOnClickListener {
@@ -74,20 +70,31 @@ class BreadcrumbManager(
 				EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.DIR_CHANGE))
 			}
 		}
+
+		// set the cancel multi-select button listener
+		buttonCancel.setOnClickListener {
+			State.Playlist.selectedTracks.clear() // update the state
+			onSelectModeChange()
+			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.SELECT_MODE_INACTIVE))
+		}
+		// set the add to playlist button listener
+		buttonAppendToPlaylist.setOnClickListener {
+			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.SELECT_MODE_APPEND))
+		}
+		// set the play playlist button listener
+		buttonPlaySelected.setOnClickListener {
+			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.PLAY_SELECTED))
+		}
 	}
 
 	// crumb click handler
 	override fun onListItemClick(data: File?, source: Int) {
 		if (data == null) return
-
-		val currentDirectory = State.currentDirectory
-
-		if (data.absolutePath == currentDirectory.absolutePath) return // clicking the same directory should do nothing
+		if (data.absolutePath == State.currentDirectory.absolutePath) return // clicking the same directory should do nothing
 
 		State.currentDirectory = data
 		onDirectoryChange(data) // repopulate the recycler views
 
-		// breadcrumbManager?.onDirectoryChange(data) // repopulate the breadcrumb bar
 		EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.DIR_CHANGE, data.absolutePath))
 	}
 
@@ -97,22 +104,48 @@ class BreadcrumbManager(
 
 				when (data.type) {
 					EventType.DIR_CHANGE -> onDirectoryChange(State.currentDirectory)
+					EventType.SELECT_MODE_ADD,
+					EventType.SELECT_MODE_SUB,
+					EventType.SELECT_MODE_APPEND,
+					EventType.SELECT_MODE_INACTIVE,
+					EventType.PLAY_SELECTED -> onSelectModeChange()
 				}
-
 			}
 		}
 	}
 
 	private fun onDirectoryChange(currentDirectory: File) {
 		breadcrumbAdapter.update(currentDirectory)
-
-		recyclerViewBreadcrumb.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
+		recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
 
 		// if currently at the root, animate to the root icon
-		if (currentDirectory.absolutePath == FileHelper.ROOT)
-			animateBackButton(false)
-		else if (currentDirectory.absolutePath != FileHelper.ROOT && buttonBack.tag as Int != R.drawable.anim_root_back)
-			animateBackButton(true) // if not at the root AND not displaying the back icon, animate to it
+		if (currentDirectory.absolutePath == FileHelper.ROOT) animateBackButton(false)
+		// if not at the root AND not displaying the back icon, animate to it
+		else if (currentDirectory.absolutePath != FileHelper.ROOT && currentDirectory.parent == FileHelper.ROOT) animateBackButton(true)
+	}
+
+	private fun onSelectModeChange() {
+		val isCurrentlyActive = breadcrumbBarContainer.translationY != 0F
+		val selectionCount = State.Playlist.selectedTracks.count()
+		val isActive = selectionCount > 0
+
+		// only play the animations when changing states
+		if (isActive && !isCurrentlyActive) {
+			breadcrumbBarContainer.slideY(-10F, 150L, 50L)
+			breadcrumbBarContainer.fadeOut(150L, 50L)
+
+			multiSelectBarContainer.slideY(0F, 200L)
+			multiSelectBarContainer.fadeIn(200L)
+
+		} else if (!isActive && isCurrentlyActive) {
+			breadcrumbBarContainer.slideY(0F, 200L)
+			breadcrumbBarContainer.fadeIn(200L)
+
+			multiSelectBarContainer.slideY(10F, 150L, 50L)
+			multiSelectBarContainer.fadeOut(150L, 50L)
+		}
+
+		textViewSelectionCount.setText(breadcrumbBarContainer.resources.getQuantityString(R.plurals.selectedCount, selectionCount, selectionCount))
 	}
 
 	// forward means that we're going deeper into the directory hierarchy

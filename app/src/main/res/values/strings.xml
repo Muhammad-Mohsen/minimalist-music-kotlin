@@ -18,8 +18,8 @@
 	<string name="trackAlbumArtist">%1$s (%2$s)</string>
 
 	<plurals name="trackCount">
-		<item quantity="one">%1$s track</item>
-		<item quantity="other">%1$s tracks</item>
+		<item quantity="one">%1$d track</item>
+		<item quantity="other">%1$d tracks</item>
 	</plurals>
 
 	<string name="loadingMetadata">Loading metadata&#8230;</string> <!--That's an ellipsis-->
@@ -32,5 +32,10 @@
 
 	<string name="notificationChannelName">Playback Notification</string>
 	<string name="notificationChannelDescription">Displays the app\'s playback notification</string>
+
+	<plurals name="selectedCount">
+		<item quantity="one">%1$d Track Selected</item>
+		<item quantity="other">%1$d Tracks Selected</item>
+	</plurals>
 
 </resources>

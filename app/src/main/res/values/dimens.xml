@@ -12,8 +12,10 @@
 	<dimen name="fabMenuExpandedRadius">150dp</dimen>
 
 	<dimen name="spacingSmall">4dp</dimen>
+	<dimen name="spacingSmallMedium">6dp</dimen>
 	<dimen name="spacingMedium">8dp</dimen>
 	<dimen name="spacingMediumLarge">12dp</dimen>
+	<dimen name="spacingExtraMediumLarge">14dp</dimen> <!-- :D :D -->
 	<dimen name="spacingLarge">16dp</dimen>
 	<dimen name="spacingExtraLarge">24dp</dimen>
 	<dimen name="spacingExtraExtraLarge">32dp</dimen>
@@ -30,5 +32,8 @@
 	<dimen name="elevationSmall">2dp</dimen>
 	<dimen name="elevationMedium">4dp</dimen>
 	<dimen name="elevationLarge">6dp</dimen>
+
+	<dimen name="alphaTransparent">0</dimen>
+	<dimen name="alphaOpaque">1</dimen>
 
 </resources>

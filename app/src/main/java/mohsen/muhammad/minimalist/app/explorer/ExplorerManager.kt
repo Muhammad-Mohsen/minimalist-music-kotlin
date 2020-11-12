@@ -21,7 +21,6 @@ import java.io.File
 
 class ExplorerManager(
 	private val recyclerViewExplorer: RecyclerView,
-	private val linearLayoutPermission: LinearLayout? = null,
 	private val linearLayoutEmptyDir: LinearLayout? = null
 ) : EventBus.Subscriber, OnListItemInteractionListener<File> {
 
@@ -53,16 +52,13 @@ class ExplorerManager(
 			State.currentDirectory = data
 			onDirectoryChange(data) // repopulate the recycler views
 
-			// breadcrumbManager?.onDirectoryChange(data) // repopulate the breadcrumb bar
 			EventBus.send(SystemEvent(EventSource.EXPLORER, EventType.DIR_CHANGE))
 
 		} else { // track item clicks
 
 			// check if select mode is active
-			if (isSelectModeActive()) {
-
-
-			} else {
+			if (State.isSelectModeActive) onMultiSelectionChange(data)
+			else {
 				EventBus.send(SystemEvent(EventSource.EXPLORER, EventType.PLAY_ITEM, data.absolutePath))
 				onSelectionChange(data.absolutePath)
 			}
@@ -71,7 +67,7 @@ class ExplorerManager(
 
 	override fun onListItemLongClick(data: File?, source: Int) {
 		if (data == null) return
-		onMultiSelectionChange(data.absolutePath)
+		onMultiSelectionChange(data) // dispatch the select mode active
 	}
 
 	override fun receive(data: EventBus.EventData) {
@@ -81,10 +77,19 @@ class ExplorerManager(
 				when (data.type) {
 					EventType.METADATA_UPDATE -> explorerAdapter.updateSelection(State.Track.path)
 					EventType.DIR_CHANGE -> onDirectoryChange(State.currentDirectory)
+					EventType.SELECT_MODE_INACTIVE -> explorerAdapter.notifyDataSetChanged() // the state should already be updated and this should only come from the cancel button in the breadcrumb bar
+					EventType.PLAY_SELECTED -> explorerAdapter.updateSelection(State.Track.path) // TODO
 				}
 
 			}
 		}
+	}
+
+	private fun onMultiSelectionChange(data: File) {
+		explorerAdapter.updateMultiSelection(data.absolutePath)
+
+		val eventType = State.Playlist.updateSelectedTracks(data.absolutePath) // update the state and figure out if the file was added or removed
+		EventBus.send(SystemEvent(EventSource.EXPLORER, eventType)) // dispatch the multi-selection change event
 	}
 
 	// called when the current directory is changed
@@ -105,17 +110,8 @@ class ExplorerManager(
 		explorerAdapter.updateSelection(path)
 	}
 
-	private fun onMultiSelectionChange(path: String) {
-		// TODO dispatch the select mode active
-		explorerAdapter.updateMultiSelection(path)
-	}
-
 	private fun toggleEmptyDirLayout(show: Boolean) {
 		recyclerViewExplorer.visibility = if (show) View.GONE else View.VISIBLE
 		linearLayoutEmptyDir?.visibility = if (show) View.VISIBLE else View.GONE
-	}
-
-	private fun isSelectModeActive(): Boolean {
-		return false
 	}
 }

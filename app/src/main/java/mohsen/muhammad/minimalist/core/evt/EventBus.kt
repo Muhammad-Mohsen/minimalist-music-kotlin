@@ -12,7 +12,7 @@ object EventBus {
 	private val subscribers = ArrayList<WeakReference<Subscriber>>()
 
 	fun subscribe(subscriber: Subscriber) {
-		val ref = WeakReference<Subscriber>(subscriber)
+		val ref = WeakReference(subscriber)
 		subscribers.add(ref)
 	}
 	fun unsubscribe(subscriber: Subscriber) {

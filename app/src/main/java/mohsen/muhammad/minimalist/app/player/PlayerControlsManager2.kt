@@ -22,7 +22,7 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 
 	// just to ensure that we don't ever leak!
 	private val controlsWeakRef = WeakReference<ConstraintLayout>(controlsStrongRef)
-	internal val controls: ConstraintLayout?
+	private val controls: ConstraintLayout?
 		get() = controlsWeakRef.get()
 
 	fun initialize() {
@@ -54,6 +54,15 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 				controls?.buttonPrev?.setImageDrawable(R.drawable.next000)
 			}
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.PLAY_PREVIOUS))
+		}
+		// quick and dirty, but it's better than nothing
+		controls?.buttonNext?.setOnLongClickListener {
+			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.FF))
+			return@setOnLongClickListener true
+		}
+		controls?.buttonPrev?.setOnLongClickListener {
+			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.RW))
+			return@setOnLongClickListener true
 		}
 		controls?.buttonRepeat?.setOnClickListener {
 			controls?.buttonRepeat?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_REPEAT)) {

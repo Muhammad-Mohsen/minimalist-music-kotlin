@@ -14,13 +14,8 @@ object FileCache {
 
     // cache API
     fun getExplorerFilesByDirectory(f: File): ArrayList<ExplorerFile> {
-        return getExplorerFilesByPath(f.absolutePath) // such design, much abstraction
-    }
-
-    private fun getExplorerFilesByPath(path: String): ArrayList<ExplorerFile> {
+        val path = f.absolutePath
         var files = fileCache[path]
-
-        val f = File(path)
 
         // if not cached, or directory was modified more recently than the cache
         if (files == null || f.lastModified() > lastModifiedCache[path] ?: 0L) {

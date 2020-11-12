@@ -41,16 +41,16 @@ class MainFragment : Fragment() {
 
 	private fun initialize() {
 		// ask for permission
-		Dexter.withActivity(requireActivity())
+		Dexter.withContext(requireActivity())
 			.withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
 			.withListener(object : PermissionListener {
 
 				override fun onPermissionGranted(response: PermissionGrantedResponse?) {
 
-					togglePermissionLayout(false) // hide permission layout
+					layoutPermission.visibility = View.GONE
 
 					// breadcrumbs
-					val breadcrumbManager = BreadcrumbManager(recyclerViewBreadcrumbs, buttonBack)
+					val breadcrumbManager = BreadcrumbManager(breadcrumbBarContainer, multiSelectBarContainer)
 					breadcrumbManager.initialize()
 
 					// explorer
@@ -61,17 +61,15 @@ class MainFragment : Fragment() {
 					val playerControlsManager = PlayerControlsManager2(controls_2)
 					playerControlsManager.initialize()
 
-					// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't registered to the event bus!
+					// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't yet registered to the event bus!
 					if (State.Track.isInitialized) EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.METADATA_UPDATE))
 				}
 
-				override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
-					token?.continuePermissionRequest()
-				}
+				override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) { token?.continuePermissionRequest() }
 
 				// show permission layout
 				override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-					togglePermissionLayout(true)
+					layoutPermission.visibility = View.VISIBLE
 
 					buttonGrantPermission.setOnClickListener {
 						initialize()
@@ -83,6 +81,8 @@ class MainFragment : Fragment() {
 
 	fun onBackPressed(): Boolean {
 		val currentDirectory = State.currentDirectory
+
+		// TODO check if select mode is active, and deactivate it if so
 
 		return if (currentDirectory.absolutePath == FileHelper.ROOT) false
 		else {

@@ -3,7 +3,9 @@ package mohsen.muhammad.minimalist.core.ext
 import android.graphics.drawable.AnimationDrawable
 import android.os.Handler
 import android.os.Looper
+import android.util.TypedValue
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -31,8 +33,7 @@ fun ImageView.animateDrawable(drawableResourceId: Int, endAction: (() -> Unit)? 
 val AnimationDrawable.totalDuration: Long
 	get() {
 		var totalDuration = 0L
-		for (i in 0 until numberOfFrames)
-			totalDuration += getDuration(i)
+		for (i in 0 until numberOfFrames) totalDuration += getDuration(i)
 
 		return totalDuration
 	}
@@ -54,7 +55,7 @@ fun AnimationDrawable.start(endAction: (() -> Unit)? = null) {
 }
 
 // fades in/out a view with the PropertyAnimator API which is pretty awesome
-fun View.fadeIn(duration: Long, endAction: (() -> Unit)? = null) {
+fun View.fadeIn(duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = null) {
 	visibility = View.VISIBLE
 
 	// if the duration is 0, just set the alpha
@@ -66,17 +67,45 @@ fun View.fadeIn(duration: Long, endAction: (() -> Unit)? = null) {
 	}
 
 	ViewCompat.animate(this)
+		.setStartDelay(delay)
 		.setDuration(duration)
 		.alpha(1F)
 		.withEndAction {
 			endAction?.invoke()
 		}
 }
-fun View.fadeOut(duration: Long) {
+fun View.fadeOut(duration: Long, delay: Long = 0L) {
 	ViewCompat.animate(this)
+		.setStartDelay(delay)
 		.setDuration(duration)
 		.alpha(0f)
 		.withEndAction {
 			visibility = View.GONE
+		}
+}
+
+fun View.slideY(to: Float, duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = null) {
+	val metrics = resources.displayMetrics
+	val toPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, to, metrics)
+
+	ViewCompat.animate(this)
+		.setStartDelay(delay)
+		.setDuration(duration)
+		.translationY(toPixels)
+		.setInterpolator(AccelerateDecelerateInterpolator())
+		.withEndAction {
+			endAction?.invoke()
+		}
+}
+
+fun View.scale(to: Float, duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = null) {
+	ViewCompat.animate(this)
+		.setStartDelay(delay)
+		.setDuration(duration)
+		.scaleX(to)
+		.scaleY(to)
+		.setInterpolator(AccelerateDecelerateInterpolator())
+		.withEndAction {
+			endAction?.invoke()
 		}
 }

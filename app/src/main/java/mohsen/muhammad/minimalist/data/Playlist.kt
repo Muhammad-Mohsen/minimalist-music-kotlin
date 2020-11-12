@@ -78,8 +78,7 @@ class Playlist {
 	fun setTrack(currentTrackPath: String, isStart: Boolean = true) {
 		index = trackList.indexOf(currentTrackPath)
 
-		if (isStart)
-			start = index
+		if (isStart) start = index
 	}
 
 	fun toggleShuffle() {

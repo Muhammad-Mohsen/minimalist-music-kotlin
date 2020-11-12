@@ -8,14 +8,16 @@
 	app:fillColor="@color/colorBackground"
 	>
 
+	<!--Selection-->
 	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
-		android:id="@+id/frameLayoutSelected"
+		android:id="@+id/frameLayoutCurrent"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_margin="6dp"
-		android:visibility="gone"
+		android:alpha="@dimen/alphaTransparent"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		app:fillColor="@color/colorOnSecondary"
+		tools:alpha="@dimen/alphaOpaque"
 		/>
 
 	<LinearLayout
@@ -26,7 +28,7 @@
 		android:orientation="horizontal"
 		>
 
-		<!--icon-->
+		<!-- icon -->
 		<ImageView
 			android:id="@+id/imageViewIcon"
 			android:layout_width="40dp"
@@ -35,10 +37,10 @@
 			android:layout_marginEnd="@dimen/spacingSmall"
 			android:contentDescription="@string/descriptionRecyclerItemTypeTrack"
 			android:src="@mipmap/ic_track"
-			android:tint="@color/colorOnBackgroundDark"
+			app:tint="@color/colorOnBackgroundDark"
 			/>
 
-		<!--track name, album, artist-->
+		<!-- track name, album, artist -->
 		<LinearLayout
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
@@ -47,7 +49,7 @@
 			android:orientation="vertical"
 			>
 
-			<!--Title-->
+			<!-- title -->
 			<TextView
 				android:id="@+id/textViewTitle"
 				android:layout_width="match_parent"
@@ -59,7 +61,7 @@
 				tools:text="Track Title"
 				/>
 
-			<!--Subtitle/Duration - Hidden-->
+			<!-- subtitle/duration - hidden-->
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -94,15 +96,16 @@
 
 		</LinearLayout>
 
-		<!--Selection icon-->
+		<!-- selection icon -->
 		<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 			android:id="@+id/imageViewSelected"
-			android:layout_width="5dp"
-			android:layout_height="5dp"
+			android:layout_width="@dimen/spacingSmallMedium"
+			android:layout_height="@dimen/spacingSmallMedium"
 			android:layout_marginEnd="@dimen/spacingLarge"
-			android:visibility="invisible"
-			app:cornerRadius="5dp"
-			app:fillColor="@color/colorOnBackgroundDark"
+			android:alpha="@dimen/alphaTransparent"
+			app:cornerRadius="15dp"
+			app:fillColor="@color/colorOnBackground"
+			tools:alpha="@dimen/alphaOpaque"
 			/>
 
 	</LinearLayout>

@@ -26,7 +26,6 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		stateBuilder = PlaybackStateCompat.Builder()
 		metadataBuilder = MediaMetadataCompat.Builder()
 
-		setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS) // Enable callbacks from MediaButtons
 		setCallback(this@MediaSessionManager)
 		isActive = true
 

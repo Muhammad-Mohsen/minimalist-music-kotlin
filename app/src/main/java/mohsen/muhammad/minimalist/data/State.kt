@@ -14,6 +14,7 @@ import java.io.File
  * Created by muhammad.mohsen on 11/3/2018.
  * holds application-wide state variables (such as current directory, shuffle/repeat states, etc.)
  * it's also responsible for persisting those variables (in shared preferences)
+ * State should never be registered with the EventBus...the async nature of EventBus would prevent the State from being 'trustworthy'
  */
 
 @SuppressLint("StaticFieldLeak")
@@ -33,10 +34,7 @@ object State {
 
 			if (savedPath != String.EMPTY) {
 				val savedFile = File(savedPath)
-
-				// only return the saved file if it exists
-				// it may not exist due to the file being removed, or the SD card being unmounted!
-				if (savedFile.exists()) return savedFile
+				if (savedFile.exists()) return savedFile // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
 			}
 
 			return File(FileHelper.ROOT)
@@ -49,6 +47,9 @@ object State {
 
 	val isPlaying: Boolean
 		get() = PlaybackManager.isPlaying
+
+	val isSelectModeActive: Boolean
+		get() = Playlist.selectedTracks.count() > 0
 
 	// current track state props
 	// because getting the metadata is expensive, they're obtained once and stored here
@@ -157,17 +158,29 @@ object State {
 			}
 
 		// we may need to store the playlist into SQLite. We'll see.
-		var playlist: ArrayList<String>
+		var tracks: ArrayList<String>
 			get() {
 				// get a semi colon-separated string
 				val savedPlaylist = sharedPreferences.getString(Key.PLAYLIST, String.EMPTY) ?: String.EMPTY
-				return ArrayList(savedPlaylist.split(";").takeWhile { it.isNotEmpty() })
+				return ArrayList(savedPlaylist.split(";"))
 			}
 			set(value) {
 				sharedPreferences.edit()
 					.putString(Key.PLAYLIST, value.joinToString(";"))
 					.apply()
 			}
+
+		val selectedTracks = ArrayList<String>()
+		fun updateSelectedTracks(track: String): Int {
+			return if (selectedTracks.contains(track)) { // track already in the list, remove it
+				selectedTracks.remove(track)
+				if (selectedTracks.isEmpty()) EventType.SELECT_MODE_INACTIVE else EventType.SELECT_MODE_SUB // if the list is empty, deactivate the select mode
+
+			} else {
+				selectedTracks.add(track)
+				EventType.SELECT_MODE_ADD
+			}
+		}
 	}
 
 	// the shared preferences keys

@@ -8,6 +8,7 @@ import mohsen.muhammad.minimalist.core.ext.EMPTY
  * Created by muhammad.mohsen on 4/16/2017.
  * gets a file metadata asynchronously and updates the UI.
  * obtaining metadata is dog slow. Also, notifyItemChanged has to be called somewhere.
+ * no longer used!
  */
 
 class MetadataAsyncTask : AsyncTask<ArrayList<ExplorerFile>, Void, ArrayList<ExplorerFile>>() {

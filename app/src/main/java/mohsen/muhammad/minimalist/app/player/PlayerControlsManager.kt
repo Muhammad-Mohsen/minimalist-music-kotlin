@@ -78,6 +78,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 					onTouchEnded()
 
 					if (eventTimeDelta < ViewConfiguration.getLongPressTimeout()) { // treat this as a normal click
+						view.performClick()
 						togglePlayPauseButton(!State.isPlaying)
 
 						// dispatch the event

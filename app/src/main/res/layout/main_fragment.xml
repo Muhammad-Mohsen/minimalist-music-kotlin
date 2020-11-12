@@ -25,6 +25,8 @@
 	<include layout="@layout/breadcrumb_bar" />
 
 	<!--Controls-->
+
+	<!--Permission denied layout-->
 	<include
 		layout="@layout/media_controls_2"
 		android:layout_width="match_parent"
@@ -32,7 +34,6 @@
 		android:layout_gravity="bottom"
 		/>
 
-	<!--Permission denied layout-->
 	<include
 		android:id="@+id/layoutPermission"
 		layout="@layout/permission_request"

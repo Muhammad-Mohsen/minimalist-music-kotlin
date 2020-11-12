@@ -4,7 +4,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 
 
-
 /**
  * Created by muhammad.mohsen on 11/3/2018.
  * custom item animator for the Explorer recycler view
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
  */
 
 class ExplorerItemAnimator : DefaultItemAnimator() {
-
 
     override fun animateDisappearance(
         viewHolder: RecyclerView.ViewHolder,

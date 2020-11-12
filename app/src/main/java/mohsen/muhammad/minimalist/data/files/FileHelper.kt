@@ -12,6 +12,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by muhammad.mohsen on 11/3/2018.
  * contains methods to help with listing files, sorting, etc
+ * instance APIs are no longer used!!
  */
 
 class FileHelper(private val file: File) {
@@ -50,16 +51,14 @@ class FileHelper(private val file: File) {
 		get() {
 			if (file.isDirectory) {
 				val tracks = file.listFiles(MediaFileFilter())
-				if (tracks != null)
-					return tracks.size
+				if (tracks != null) return tracks.size
 			}
 
 			return 0
 		}
 
 	init {
-		if (isTrack(file))
-			retriever.setDataSource(file.path)
+		if (isTrack(file)) retriever.setDataSource(file.path)
 	}
 
 	// FileFilter implementation that accepts media files defined by the media extensions string array
@@ -80,17 +79,10 @@ class FileHelper(private val file: File) {
 
 	private class FileComparator : Comparator<File> {
 		override fun compare(o1: File, o2: File): Int {
-			return if (o1.isDirectory && o2.isDirectory)
-			// if both are directories, compare their names
-				o1.name.compareTo(o2.name, true)
-			else if (o1.isDirectory && !o2.isDirectory)
-			// if the first is a directory, it's always first
-				-1
-			else if (o2.isDirectory)
-			// if the second is a directory, it's always first
-				1
-			else
-				o1.name.compareTo(o2.name, true) // if both are tracks, compare their names
+			return if (o1.isDirectory && o2.isDirectory) o1.name.compareTo(o2.name, true) // if both are directories, compare their names
+			else if (o1.isDirectory && !o2.isDirectory) -1 // if the first is a directory, it's always first
+			else if (o2.isDirectory) 1 // if the second is a directory, it's always first
+			else o1.name.compareTo(o2.name, true) // if both are tracks, compare their names
 		}
 	}
 
@@ -115,8 +107,7 @@ class FileHelper(private val file: File) {
 
 			Arrays.sort(files, FileComparator())
 
-			for (f in files)
-				fileModels.add(ExplorerFile(f.absolutePath))
+			for (f in files) fileModels.add(ExplorerFile(f.absolutePath))
 
 			return fileModels
 		}

@@ -11,10 +11,7 @@ import android.os.IBinder
 import android.os.PowerManager
 import mohsen.muhammad.minimalist.app.notification.MediaNotificationManager
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.core.ext.isPlayingSafe
-import mohsen.muhammad.minimalist.core.ext.playPause
-import mohsen.muhammad.minimalist.core.ext.prepareSource
-import mohsen.muhammad.minimalist.core.ext.unregisterReceiverSafe
+import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.*
 import java.util.*
 
@@ -78,6 +75,10 @@ class PlaybackManager :
 	override fun onDestroy() {
 		player.release() // destroy the Player instance
 		sessionManager.release() // and the media session
+
+		timer.cancelSafe()
+		timer = null
+
 		unregisterReceiverSafe(noisyReceiver)
 		EventBus.unsubscribe(this)
 	}
@@ -139,7 +140,7 @@ class PlaybackManager :
 		sendSingleSeekUpdate()
 	}
 	private fun sendSeekUpdates(toggleDispatch: Boolean = true) {
-		timer?.cancel()
+		timer.cancelSafe()
 
 		if (!toggleDispatch) return
 
@@ -150,6 +151,15 @@ class PlaybackManager :
 			}
 
 		}, 0L, 1000L)
+	}
+
+	private fun fastForward() {
+		player.seekTo(player.currentPosition + SEEK_JUMP)
+		sendSingleSeekUpdate()
+	}
+	private fun rewind() {
+		player.seekTo(player.currentPosition - SEEK_JUMP)
+		sendSingleSeekUpdate()
 	}
 
 	// used to update the seek (used for when the playback is stopped but the user changes seek)
@@ -193,6 +203,8 @@ class PlaybackManager :
 				EventType.PLAY -> playPause(true)
 				EventType.PAUSE -> playPause(false)
 				EventType.SEEK_UPDATE -> updateSeek(data.extras.toInt())
+				EventType.FF -> fastForward()
+				EventType.RW -> rewind()
 
 				// playlist stuff
 				EventType.CYCLE_REPEAT -> { playlist.cycleRepeatMode(); State.Playlist.repeat = playlist.repeatMode }
@@ -210,6 +222,7 @@ class PlaybackManager :
 	companion object {
 
 		private const val EVENT_SOURCE = EventSource.SERVICE
+		private const val SEEK_JUMP = 60000 // one minute jump to FF or rewind
 
 		private var instance: PlaybackManager? = null
 

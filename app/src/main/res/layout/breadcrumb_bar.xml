@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
+<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
@@ -7,32 +7,112 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_margin="@dimen/spacingLarge"
-	android:gravity="center_vertical"
-	android:orientation="horizontal"
 	android:elevation="@dimen/elevationMedium"
 	app:fillColor="@color/colorBackgroundWhite"
 	app:cornerRadius="@dimen/cornerRadiusLarge"
-	tools:elevation="0dp"
 	>
 
-	<!--back button-->
-	<mohsen.muhammad.minimalist.core.ExtendedImageButton
-		android:id="@+id/buttonBack"
-		style="@style/floatingButtonOmniStyle2"
-		android:src="@drawable/anim_back_root"
-		app:cornerRadius="@dimen/cornerRadiusLarge"
-		/>
-
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/recyclerViewBreadcrumbs"
-		android:layout_width="0dp"
+	<!--breadcrumb bar-->
+	<LinearLayout
+		android:id="@+id/breadcrumbBarContainer"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_weight="1"
-		android:layout_marginBottom="1dp"
-		android:layout_marginEnd="@dimen/spacingMedium"
-		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+		android:gravity="center_vertical"
 		android:orientation="horizontal"
-		tools:listitem="@layout/breadcrumb_bar_item"
-		/>
+		>
 
-</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
+		<!--back button-->
+		<mohsen.muhammad.minimalist.core.ExtendedImageButton
+			android:id="@+id/buttonBack"
+			style="@style/floatingButtonOmniStyle2"
+			android:src="@drawable/anim_back_root"
+			app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
+			app:cornerRadiusBottomLeft="@dimen/cornerRadiusLarge"
+			/>
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerViewBreadcrumbs"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:layout_marginBottom="1dp"
+			android:layout_marginEnd="@dimen/spacingMedium"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			android:orientation="horizontal"
+			tools:listitem="@layout/breadcrumb_bar_item"
+			/>
+
+	</LinearLayout>
+
+	<!--multi-select bar-->
+	<LinearLayout
+		android:id="@+id/multiSelectBarContainer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:translationY="10dp"
+		android:alpha="@dimen/alphaTransparent"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		>
+
+		<!--cancel button-->
+		<mohsen.muhammad.minimalist.core.ExtendedImageButton
+			android:id="@+id/buttonCancel"
+			style="@style/floatingButtonOmniStyle2"
+			android:padding="@dimen/spacingExtraMediumLarge"
+			android:src="@drawable/ic_cancel"
+			app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
+			app:cornerRadiusBottomLeft="@dimen/cornerRadiusLarge"
+			app:tint="@color/colorOnBackgroundDark"
+			/>
+
+		<TextSwitcher
+			android:id="@+id/textViewSelectionCount"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:layout_marginStart="@dimen/spacingSmall"
+			android:layout_marginBottom="1dp"
+			android:inAnimation="@android:anim/slide_in_left"
+			android:outAnimation="@android:anim/slide_out_right"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textColor="@color/colorOnBackground"
+				android:textSize="@dimen/textLarge"
+				tools:text="Track Count"
+				/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textColor="@color/colorOnBackground"
+				android:textSize="@dimen/textLarge"
+				tools:text="Track Count"
+				/>
+
+		</TextSwitcher>
+
+		<!--cancel button-->
+		<mohsen.muhammad.minimalist.core.ExtendedImageButton
+			android:id="@+id/buttonAddSelection"
+			style="@style/floatingButtonOmniStyle2"
+			android:src="@drawable/ic_add"
+			app:tint="@color/colorOnBackgroundDark"
+			/>
+
+		<!--cancel button-->
+		<mohsen.muhammad.minimalist.core.ExtendedImageButton
+			android:id="@+id/buttonPlaySelected"
+			style="@style/floatingButtonOmniStyle2"
+			android:src="@drawable/ic_play_selected"
+			app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
+			app:cornerRadiusBottomRight="@dimen/cornerRadiusLarge"
+			app:tint="@color/colorOnBackgroundDark"
+			/>
+
+	</LinearLayout>
+
+</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>

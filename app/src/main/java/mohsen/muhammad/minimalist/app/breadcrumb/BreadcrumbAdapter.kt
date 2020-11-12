@@ -52,24 +52,20 @@ class BreadcrumbAdapter(file: File, private val interactionListener: OnListItemC
 		crumbList.removeAt(0)
 
 		// if you're at the same directory, don't do anything
-		if (crumbList[crumbList.size - 1] == crumbs[crumbs.size - 1] && crumbList.size == crumbs.size)
-			return
+		if (crumbList[crumbList.size - 1] == crumbs[crumbs.size - 1] && crumbList.size == crumbs.size) return
 
 		// +ve means that we're going deeper
 		// -ve means that we're going back
 		val navigationSteps = crumbList.size - crumbs.size
 
-		// only one can be added
+		// only one can be added at a time
 		if (navigationSteps > 0) {
 			crumbs.add(crumbList[crumbList.size - 1]) // add the new crumb
 			notifyItemInserted(crumbs.size - 1)
 
-			// one or more crumbs can be removed
-		} else {
+		} else { // one or more crumbs can be removed
 			val initialSize = crumbs.size
-			for (i in initialSize - 1 downTo initialSize + navigationSteps) {
-				crumbs.removeAt(i)
-			}
+			for (i in initialSize - 1 downTo initialSize + navigationSteps) crumbs.removeAt(i)
 
 			// starting position will be the final size (last index of the updated list + 1)
 			notifyItemRangeRemoved(crumbs.size, -navigationSteps)

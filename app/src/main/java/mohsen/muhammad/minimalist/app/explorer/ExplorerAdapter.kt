@@ -1,6 +1,5 @@
 package mohsen.muhammad.minimalist.app.explorer
 
-import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +13,7 @@ import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
 import mohsen.muhammad.minimalist.data.ItemType
+import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
 import java.io.File
 
@@ -25,7 +25,7 @@ import java.io.File
 
 class ExplorerAdapter(
 	explorerFiles: ArrayList<ExplorerFile>,
-	selectedTrackPath: String,
+	private var selection: String,
 	private val interactionListener: OnListItemInteractionListener<File>
 
 ) : RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder>() {
@@ -33,7 +33,6 @@ class ExplorerAdapter(
 	// ArrayList has to be copied in order to separate the cache reference from the Adapter's data set reference
 	// otherwise, whatever cached list that was used to initialize the adapter will be changed whenever the data set is changed
 	private val files: ArrayList<ExplorerFile> = ArrayList(explorerFiles)
-	private var selection: String = selectedTrackPath
 
 	override fun getItemCount(): Int {
 		return files.size
@@ -49,6 +48,7 @@ class ExplorerAdapter(
 		val file = files[position]
 		with(holder) {
 
+			// set the margins on the first and last items in the list (they are different than the rest)
 			val metrics = itemView.context.resources.displayMetrics
 			val topMargin = if (position == 0) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80f, metrics) else 0f
 			val bottomMargin = if (position == files.size - 1) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, metrics) else 0f
@@ -62,7 +62,10 @@ class ExplorerAdapter(
 			title.text = file.name
 
 			// selection states
-			selectionView.visibility = if (isSelected(file)) View.VISIBLE else View.GONE
+			if (isSelected(file)) currentlyPlayingView.alpha = 1F
+			else currentlyPlayingView.alpha = 0F
+
+			selectedView.alpha = if (State.Playlist.selectedTracks.contains(file.absolutePath)) 1F else 0F
 
 			// click listener
 			val itemType = if (file.isDirectory) ItemType.DIRECTORY else ItemType.TRACK
@@ -73,9 +76,7 @@ class ExplorerAdapter(
 			itemView.setOnLongClickListener {
 				if (file.isDirectory) return@setOnLongClickListener true // no long click for you!
 
-				it.imageViewSelected.visibility = View.VISIBLE // this is all kinds of wrong but we're just testing at this point
-
-				// interactionListener.onListItemLongClick(file, itemType)
+				interactionListener.onListItemLongClick(file, itemType)
 				return@setOnLongClickListener true
 			}
 		}
@@ -88,9 +89,7 @@ class ExplorerAdapter(
 		this.files.retainAll(ArrayList()) // remove everything
 		notifyItemRangeRemoved(0, initialSize)
 
-		for (file in files)
-			this.files.add(file)
-
+		for (file in files) this.files.add(file)
 		notifyItemRangeInserted(0, this.files.size)
 	}
 
@@ -111,6 +110,7 @@ class ExplorerAdapter(
 
 	internal fun updateMultiSelection(path: String) {
 		val position = getPositionByPath(path)
+		notifyItemChanged(position)
 	}
 
 	// gets item position by absolutePath
@@ -125,16 +125,13 @@ class ExplorerAdapter(
 
 	// ViewHolder class
 	class ExplorerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-		val context: Context = itemView.context
-
 		val icon: ImageView = itemView.imageViewIcon
-
-		val selectionView: ExtendedFrameLayout = itemView.frameLayoutSelected
-
 		val title: TextView = itemView.textViewTitle
-		val subtitle: TextView = itemView.textViewSubtitle
 
+		val currentlyPlayingView: ExtendedFrameLayout = itemView.frameLayoutCurrent
+		val selectedView: ExtendedFrameLayout = itemView.imageViewSelected
+
+		val subtitle: TextView = itemView.textViewSubtitle
 		val duration: TextView = itemView.textViewDuration
 	}
 }

@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "mohsen.muhammad.minimalist"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 30
 
         versionCode 1
         versionName "1.0"
@@ -26,14 +26,14 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'androidx.media:media:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.media:media:1.2.0'
 
     // permissions
-    implementation 'com.karumi:dexter:5.0.0'
+    implementation 'com.karumi:dexter:6.2.1'
 
     // recycler view animators
-    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
+    implementation 'jp.wasabeef:recyclerview-animators:4.0.1'
 }

@@ -14,6 +14,7 @@ import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -29,7 +30,6 @@ class PlaybackManager :
 {
 
 	private val player = MediaPlayer() // initialize the media player
-	private val playlist = Playlist() // initialize the playlist
 
 	private lateinit var audioFocusHandler: AudioFocusHandler
 
@@ -89,24 +89,20 @@ class PlaybackManager :
 
 		setTrack(State.Track.path)
 		updateSeek(State.Track.seek)
-
-		playlist.repeatMode = State.Playlist.repeat
-		playlist.isShuffle = State.Playlist.shuffle
 	}
 
 	// playback
 	private fun setTrack(path: String, updatePlaylist: Boolean = true) {
 		// update playlist
-		if (updatePlaylist) playlist.updateItems(path)
-		playlist.setTrack(path, true)
+		if (updatePlaylist) State.playlist.updateItems(path)
+		State.playlist.setTrack(path, true)
 
 		player.prepareSource(path)
 	}
-	private fun playTrack(path: String?) {
-
+	private fun playTrack(path: String?, updatePlaylist: Boolean = true) {
 		if (path == null) return
 
-		setTrack(path)
+		setTrack(path, updatePlaylist)
 
 		val focusResult = audioFocusHandler.request()
 		if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
@@ -184,7 +180,7 @@ class PlaybackManager :
 
 	// on playback completion
 	override fun onCompletion(mp: MediaPlayer) {
-		val nextTrack = playlist.getNextTrack(true)
+		val nextTrack = State.playlist.getNextTrack(true)
 
 		if (nextTrack != null) {
 			playTrack(nextTrack)
@@ -207,12 +203,14 @@ class PlaybackManager :
 				EventType.RW -> rewind()
 
 				// playlist stuff
-				EventType.CYCLE_REPEAT -> { playlist.cycleRepeatMode(); State.Playlist.repeat = playlist.repeatMode }
-				EventType.CYCLE_SHUFFLE -> { playlist.toggleShuffle(); State.Playlist.shuffle = playlist.isShuffle }
-				EventType.PLAY_PREVIOUS -> playTrack(playlist.getPreviousTrack())
-				EventType.PLAY_NEXT -> playTrack(playlist.getNextTrack(false))
+				EventType.CYCLE_REPEAT -> { State.playlist.cycleRepeatMode() }
+				EventType.CYCLE_SHUFFLE -> { State.playlist.toggleShuffle() }
+				EventType.PLAY_PREVIOUS -> playTrack(State.playlist.getPreviousTrack(), false)
+				EventType.PLAY_NEXT -> playTrack(State.playlist.getNextTrack(false), false)
 
 				EventType.METADATA_UPDATE -> restoreState()
+
+				EventType.PLAY_SELECTED -> playTrack(State.playlist.getTrackByIndex(0), false)
 			}
 		}
 	}

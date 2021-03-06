@@ -1,6 +1,5 @@
 package mohsen.muhammad.minimalist.app.explorer
 
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,8 @@ import kotlinx.android.synthetic.main.explorer_list_item.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
+import mohsen.muhammad.minimalist.core.ext.toDip
+import mohsen.muhammad.minimalist.data.Const
 import mohsen.muhammad.minimalist.data.ItemType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
@@ -49,23 +50,28 @@ class ExplorerAdapter(
 		with(holder) {
 
 			// set the margins on the first and last items in the list (they are different than the rest)
-			val metrics = itemView.context.resources.displayMetrics
-			val topMargin = if (position == 0) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80f, metrics) else 0f
-			val bottomMargin = if (position == files.size - 1) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, metrics) else 0f
-
+			val topMargin = if (position == 0) Const.Margin.FIRST_ITEM.toDip(itemView.context) else 0f
+			val bottomMargin = if (position == files.size - 1) Const.Margin.LAST_ITEM.toDip(itemView.context) else 0f
 			val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 			params.setMargins(0, topMargin.toInt(), 0, bottomMargin.toInt())
 
 			itemView.layoutParams = params
 
+			icon.setColorFilter(R.color.colorBackground)
 			icon.setImageResource(if (file.isDirectory) R.mipmap.ic_directory else R.mipmap.ic_track)
 			title.text = file.name
 
-			// selection states
-			if (isSelected(file)) currentlyPlayingView.alpha = 1F
-			else currentlyPlayingView.alpha = 0F
+			// text/icon color
+			var itemColor = itemView.context.getColor(R.color.colorOnBackgroundDark)
+			if (!file.isDirectory && !State.playlist.contains(file.absolutePath)) itemColor = itemView.context.getColor(R.color.colorSecondary)
+			icon.setColorFilter(itemColor)
+			title.setTextColor(itemColor)
 
-			selectedView.alpha = if (State.Playlist.selectedTracks.contains(file.absolutePath)) 1F else 0F
+			// selection states
+			if (isSelected(file)) currentlyPlayingView.alpha = Const.Alpha.OPAQUE
+			else currentlyPlayingView.alpha = Const.Alpha.TRANSPARENT
+
+			selectedView.alpha = if (State.selectedTracks.contains(file.absolutePath)) Const.Alpha.OPAQUE else Const.Alpha.TRANSPARENT
 
 			// click listener
 			val itemType = if (file.isDirectory) ItemType.DIRECTORY else ItemType.TRACK
@@ -95,17 +101,8 @@ class ExplorerAdapter(
 
 	// updates the selected item
 	internal fun updateSelection(newSelection: String) {
-		// update the selected path
-		val oldSelection = selection
 		selection = newSelection
-
-		// remove the old selection (if possible)
-		val oldSelectedPosition = getPositionByPath(oldSelection)
-		notifyItemChanged(oldSelectedPosition)
-
-		// update the selection
-		val newSelectedPosition = getPositionByPath(newSelection)
-		notifyItemChanged(newSelectedPosition)
+		notifyItemRangeChanged(0, files.size)
 	}
 
 	internal fun updateMultiSelection(path: String) {

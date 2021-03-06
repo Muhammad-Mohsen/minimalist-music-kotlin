@@ -78,7 +78,7 @@ class ExplorerManager(
 					EventType.METADATA_UPDATE -> explorerAdapter.updateSelection(State.Track.path)
 					EventType.DIR_CHANGE -> onDirectoryChange(State.currentDirectory)
 					EventType.SELECT_MODE_INACTIVE -> explorerAdapter.notifyDataSetChanged() // the state should already be updated and this should only come from the cancel button in the breadcrumb bar
-					EventType.PLAY_SELECTED -> explorerAdapter.updateSelection(State.Track.path) // TODO
+					EventType.PLAY_SELECTED -> explorerAdapter.updateSelection(State.Track.path)
 				}
 
 			}
@@ -88,7 +88,7 @@ class ExplorerManager(
 	private fun onMultiSelectionChange(data: File) {
 		explorerAdapter.updateMultiSelection(data.absolutePath)
 
-		val eventType = State.Playlist.updateSelectedTracks(data.absolutePath) // update the state and figure out if the file was added or removed
+		val eventType = State.updateSelectedTracks(data.absolutePath) // update the state and figure out if the file was added or removed
 		EventBus.send(SystemEvent(EventSource.EXPLORER, eventType)) // dispatch the multi-selection change event
 	}
 

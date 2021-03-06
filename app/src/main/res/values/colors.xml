@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<color name="colorWhite">#FFF</color>
+
 	<!--Background-->
 	<color name="colorBackground">#FFF0F0F0</color>
-	<color name="colorBackgroundWhite">#FFF</color>
 
 	<!--Primary-->
 	<color name="colorPrimary">#393939</color>
@@ -11,8 +12,7 @@
 	<color name="colorPrimaryDark">#1a1a1a</color>
 
 	<!--Secondary-->
-	<color name="colorSecondary">#393939</color>
-	<color name="colorSecondaryDark">#393939</color>
+	<color name="colorSecondary">#555</color>
 
 	<!--On's-->
 	<color name="colorOnPrimary">#FFF</color>

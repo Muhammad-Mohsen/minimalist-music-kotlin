@@ -20,7 +20,7 @@ fun Context.unregisterReceiverSafe(receiver: BroadcastReceiver) {
 		unregisterReceiver(receiver)
 
 	} catch (e: Exception) {
-		Log.e("unregisterReceiverSafe", e.message)
+		e.message?.let { Log.e("unregisterReceiverSafe", it) }
 	}
 }
 
@@ -29,7 +29,7 @@ fun Timer?.cancelSafe() {
 		this?.cancel()
 
 	} catch (e: Exception) {
-		Log.e("cancelSafe", e.message)
+		e.message?.let { Log.e("cancelSafe", it) }
 	}
 }
 

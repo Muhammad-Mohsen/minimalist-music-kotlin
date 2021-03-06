@@ -1,7 +1,6 @@
 package mohsen.muhammad.minimalist.data.files
 
 import android.os.AsyncTask
-import mohsen.muhammad.minimalist.core.ext.EMPTY
 
 
 /**
@@ -15,12 +14,12 @@ class MetadataAsyncTask : AsyncTask<ArrayList<ExplorerFile>, Void, ArrayList<Exp
 
     override fun doInBackground(vararg params: ArrayList<ExplorerFile>): ArrayList<ExplorerFile> {
         for (model in params[0]) {
-            val helper = FileHelper(model)
+            val helper = FileMetadata(model)
 
             if (!model.isDirectory) {
                 model.artist = helper.artist
                 model.album = helper.album
-                model.duration = helper.readableDuration ?: String.EMPTY
+                model.duration
 
             } else {
                 model.trackCount = helper.trackCount

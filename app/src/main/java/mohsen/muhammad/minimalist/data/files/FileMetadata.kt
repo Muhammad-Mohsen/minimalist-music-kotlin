@@ -15,7 +15,7 @@ import kotlin.collections.ArrayList
  * instance APIs are no longer used!!
  */
 
-class FileHelper(private val file: File) {
+class FileMetadata(private val file: File) {
 
 	private val retriever: MediaMetadataRetriever = MediaMetadataRetriever()
 
@@ -34,7 +34,7 @@ class FileHelper(private val file: File) {
 	val album: String
 		get() {
 			val album: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
-			return album?: file.parentFile.name
+			return album?: file.parentFile?.name ?: String.EMPTY
 		}
 
 	val duration: Long
@@ -44,7 +44,7 @@ class FileHelper(private val file: File) {
 		}
 
 	// format the duration string
-	val readableDuration: String?
+	val readableDuration: String
 		get() = formatMillis(duration)
 
 	val trackCount: Int

@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference
 class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Subscriber {
 
 	// just to ensure that we don't ever leak!
-	private val controlsWeakRef = WeakReference<ConstraintLayout>(controlsStrongRef)
+	private val controlsWeakRef = WeakReference(controlsStrongRef)
 	private val controls: ConstraintLayout?
 		get() = controlsWeakRef.get()
 
@@ -66,13 +66,13 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 		}
 		controls?.buttonRepeat?.setOnClickListener {
 			controls?.buttonRepeat?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_REPEAT)) {
-				controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.Playlist.repeat])
+				controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
 			}
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.CYCLE_REPEAT))
 		}
 		controls?.buttonShuffle?.setOnClickListener {
 			controls?.buttonShuffle?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_SHUFFLE)) { // do the animation
-				val shuffleIcon = if (State.Playlist.shuffle) shuffleIcons[1] else shuffleIcons[0]
+				val shuffleIcon = if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0]
 				controls?.buttonShuffle?.setImageDrawable(shuffleIcon)
 			}
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.CYCLE_SHUFFLE))
@@ -93,8 +93,8 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 		controls?.seekBar?.progress = State.Track.seek
 		controls?.textViewSeek?.text = State.Track.readableSeek
 
-		controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.Playlist.repeat])
-		controls?.buttonShuffle?.setImageDrawable(if (State.Playlist.shuffle) shuffleIcons[1] else shuffleIcons[0])
+		controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
+		controls?.buttonShuffle?.setImageDrawable(if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0])
 	}
 
 	private fun updateSeek() {
@@ -119,10 +119,10 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 		return when (buttonIndex) {
 			FabMenu.BUTTON_NEXT -> R.drawable.anim_next
 			FabMenu.BUTTON_REPEAT -> {
-				repeatAnimations[(State.Playlist.repeat + 1) % repeatAnimations.size]
+				repeatAnimations[(State.playlist.repeat + 1) % repeatAnimations.size]
 			}
 			FabMenu.BUTTON_SHUFFLE -> {
-				if (State.Playlist.shuffle) R.drawable.anim_shuffle_inactive
+				if (State.playlist.shuffle) R.drawable.anim_shuffle_inactive
 				else R.drawable.anim_shuffle_active
 			}
 			else -> R.drawable.anim_next // FabMenu.BUTTON_PREV
@@ -138,7 +138,7 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 			if (data.source == EventSource.CONTROLS) return@post // not interested in events that were sent from here
 
 			when (data.type) {
-				EventType.PLAY, EventType.PLAY_ITEM, EventType.PLAY_NEXT, EventType.PLAY_PREVIOUS -> togglePlayPauseButton(true) // show the pause icon
+				EventType.PLAY, EventType.PLAY_ITEM, EventType.PLAY_NEXT, EventType.PLAY_PREVIOUS, EventType.PLAY_SELECTED -> togglePlayPauseButton(true) // show the pause icon
 				EventType.PAUSE -> togglePlayPauseButton(false)
 				EventType.METADATA_UPDATE -> updateMetadata()
 				EventType.SEEK_UPDATE -> updateSeek()

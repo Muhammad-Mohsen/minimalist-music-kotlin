@@ -16,7 +16,7 @@ import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
-import mohsen.muhammad.minimalist.data.files.FileHelper
+import mohsen.muhammad.minimalist.data.files.FileMetadata
 import java.io.File
 
 
@@ -52,7 +52,7 @@ class BreadcrumbManager(
 		recyclerViewBreadcrumbs.adapter = breadcrumbAdapter
 
 		// set back button icon
-		val animationResourceId = if (currentDirectory.absolutePath == FileHelper.ROOT) R.drawable.anim_root_back else R.drawable.anim_back_root
+		val animationResourceId = if (currentDirectory.absolutePath == FileMetadata.ROOT) R.drawable.anim_root_back else R.drawable.anim_back_root
 		val drawable = ContextCompat.getDrawable(buttonBack.context, animationResourceId)
 		buttonBack.setImageDrawable(drawable)
 
@@ -62,7 +62,7 @@ class BreadcrumbManager(
 		// back button click listener
 		buttonBack.setOnClickListener {
 
-			if (State.currentDirectory.absolutePath != FileHelper.ROOT) {
+			if (State.currentDirectory.absolutePath != FileMetadata.ROOT) {
 				val dir = State.currentDirectory.parentFile
 				State.currentDirectory = dir
 
@@ -73,7 +73,7 @@ class BreadcrumbManager(
 
 		// set the cancel multi-select button listener
 		buttonCancel.setOnClickListener {
-			State.Playlist.selectedTracks.clear() // update the state
+			State.selectedTracks.clear() // update the state
 			onSelectModeChange()
 			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.SELECT_MODE_INACTIVE))
 		}
@@ -83,7 +83,12 @@ class BreadcrumbManager(
 		}
 		// set the play playlist button listener
 		buttonPlaySelected.setOnClickListener {
+			// update state
+			State.playlist.updateItems(State.selectedTracks)
+			State.selectedTracks.clear()
+
 			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.PLAY_SELECTED))
+			onSelectModeChange()
 		}
 	}
 
@@ -107,8 +112,7 @@ class BreadcrumbManager(
 					EventType.SELECT_MODE_ADD,
 					EventType.SELECT_MODE_SUB,
 					EventType.SELECT_MODE_APPEND,
-					EventType.SELECT_MODE_INACTIVE,
-					EventType.PLAY_SELECTED -> onSelectModeChange()
+					EventType.SELECT_MODE_INACTIVE -> onSelectModeChange()
 				}
 			}
 		}
@@ -119,14 +123,14 @@ class BreadcrumbManager(
 		recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
 
 		// if currently at the root, animate to the root icon
-		if (currentDirectory.absolutePath == FileHelper.ROOT) animateBackButton(false)
+		if (currentDirectory.absolutePath == FileMetadata.ROOT) animateBackButton(false)
 		// if not at the root AND not displaying the back icon, animate to it
-		else if (currentDirectory.absolutePath != FileHelper.ROOT && currentDirectory.parent == FileHelper.ROOT) animateBackButton(true)
+		else if (currentDirectory.absolutePath != FileMetadata.ROOT && currentDirectory.parent == FileMetadata.ROOT) animateBackButton(true)
 	}
 
 	private fun onSelectModeChange() {
 		val isCurrentlyActive = breadcrumbBarContainer.translationY != 0F
-		val selectionCount = State.Playlist.selectedTracks.count()
+		val selectionCount = State.selectedTracks.count()
 		val isActive = selectionCount > 0
 
 		// only play the animations when changing states

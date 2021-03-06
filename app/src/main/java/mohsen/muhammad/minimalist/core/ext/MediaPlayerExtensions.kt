@@ -39,7 +39,6 @@ val MediaPlayer.readablePosition: String
 
 val MediaPlayer?.isPlayingSafe: Boolean
 	get() {
-
 		if (this == null) return false
 
 		return try {

@@ -56,10 +56,10 @@ internal fun PlayerControlsManager.getButtonAnimationByIndex(buttonIndex: Int): 
 	return when (buttonIndex) {
 		FabMenu.BUTTON_NEXT -> R.drawable.anim_next
 		FabMenu.BUTTON_REPEAT -> {
-			repeatAnimations[(State.Playlist.repeat + 1) % repeatAnimations.size]
+			repeatAnimations[(State.playlist.repeat + 1) % repeatAnimations.size]
 		}
 		FabMenu.BUTTON_SHUFFLE -> {
-			if (State.Playlist.shuffle) R.drawable.anim_shuffle_inactive
+			if (State.playlist.shuffle) R.drawable.anim_shuffle_inactive
 			else R.drawable.anim_shuffle_active
 		}
 		else -> R.drawable.anim_next // FabMenu.BUTTON_PREV
@@ -70,12 +70,12 @@ internal fun PlayerControlsManager.getButtonAnimationByIndex(buttonIndex: Int): 
 internal fun PlayerControlsManager.updateFabMenuUi(buttonIndex: Int) {
 
 	if (buttonIndex == FabMenu.BUTTON_REPEAT) {
-		val updatedRepeat = (State.Playlist.repeat + 1) % repeatIcons.size
+		val updatedRepeat = (State.playlist.repeat + 1) % repeatIcons.size
 		controls?.buttonRepeat?.setImageDrawable(repeatIcons[updatedRepeat])
 
 	} else if (buttonIndex == FabMenu.BUTTON_SHUFFLE) {
 		// set the tint color (active/inactive)
-		val shuffleIcon = if (State.Playlist.shuffle) shuffleIcons[0] else shuffleIcons[1]
+		val shuffleIcon = if (State.playlist.shuffle) shuffleIcons[0] else shuffleIcons[1]
 		controls?.buttonShuffle?.setImageDrawable(shuffleIcon)
 	}
 
@@ -84,9 +84,9 @@ internal fun PlayerControlsManager.updateFabMenuUi(buttonIndex: Int) {
 
 // initializes FAB buttons' state (repeat and shuffle)
 internal fun PlayerControlsManager.initializeFabMenuUi() {
-	controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.Playlist.repeat])
+	controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
 
-	val shuffleIcon = if (State.Playlist.shuffle) shuffleIcons[1] else shuffleIcons[0]
+	val shuffleIcon = if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0]
 	controls?.buttonShuffle?.setImageDrawable(shuffleIcon)
 }
 

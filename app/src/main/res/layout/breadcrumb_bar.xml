@@ -8,7 +8,7 @@
 	android:layout_height="wrap_content"
 	android:layout_margin="@dimen/spacingLarge"
 	android:elevation="@dimen/elevationMedium"
-	app:fillColor="@color/colorBackgroundWhite"
+	app:fillColor="@color/colorWhite"
 	app:cornerRadius="@dimen/cornerRadiusLarge"
 	>
 
@@ -59,8 +59,9 @@
 		<mohsen.muhammad.minimalist.core.ExtendedImageButton
 			android:id="@+id/buttonCancel"
 			style="@style/floatingButtonOmniStyle2"
-			android:padding="@dimen/spacingExtraMediumLarge"
-			android:src="@drawable/ic_cancel"
+			android:padding="@dimen/spacingMediumLarge"
+			android:src="@drawable/ic_add"
+			android:rotation="45"
 			app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
 			app:cornerRadiusBottomLeft="@dimen/cornerRadiusLarge"
 			app:tint="@color/colorOnBackgroundDark"

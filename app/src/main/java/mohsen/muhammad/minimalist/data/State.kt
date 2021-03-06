@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
-import mohsen.muhammad.minimalist.data.files.FileHelper
+import mohsen.muhammad.minimalist.data.files.FileMetadata
 import java.io.File
 
 
@@ -26,18 +26,20 @@ object State {
 	fun initialize(applicationContext: Context) {
 		context = applicationContext
 		sharedPreferences = context.getSharedPreferences(Key.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+
+		playlist = Playlist(context)
 	}
 
 	var currentDirectory: File
 		get() {
-			val savedPath = sharedPreferences.getString(Key.DIRECTORY, String.EMPTY)
+			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null)
 
-			if (savedPath != String.EMPTY) {
+			if (savedPath != null) {
 				val savedFile = File(savedPath)
 				if (savedFile.exists()) return savedFile // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
 			}
 
-			return File(FileHelper.ROOT)
+			return File(FileMetadata.ROOT)
 		}
 		set(value) {
 			sharedPreferences.edit()
@@ -47,9 +49,6 @@ object State {
 
 	val isPlaying: Boolean
 		get() = PlaybackManager.isPlaying
-
-	val isSelectModeActive: Boolean
-		get() = Playlist.selectedTracks.count() > 0
 
 	// current track state props
 	// because getting the metadata is expensive, they're obtained once and stored here
@@ -125,61 +124,30 @@ object State {
 			get() = formatMillis(seek.toLong())
 
 		fun update(filePath: String) {
-			val metadataHelper = FileHelper(File(filePath))
+			val metadata = FileMetadata(File(filePath))
 
 			path = filePath // this is mostly redundant, but it's ok
-			title = metadataHelper.title
-			album = metadataHelper.album
-			artist = metadataHelper.artist
-			duration = metadataHelper.duration
+			title = metadata.title
+			album = metadata.album
+			artist = metadata.artist
+			duration = metadata.duration
 		}
 	}
 
-	// playlist state props
-	object Playlist {
-		var repeat: Int
-			get() {
-				return sharedPreferences.getInt(Key.REPEAT, RepeatMode.INACTIVE)
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putInt(Key.REPEAT, value)
-					.apply()
-			}
+	lateinit var playlist: Playlist
 
-		var shuffle: Boolean
-			get() {
-				return sharedPreferences.getBoolean(Key.SHUFFLE, false)
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putBoolean(Key.SHUFFLE, value)
-					.apply()
-			}
+	val isSelectModeActive: Boolean
+		get() = selectedTracks.count() > 0
 
-		// we may need to store the playlist into SQLite. We'll see.
-		var tracks: ArrayList<String>
-			get() {
-				// get a semi colon-separated string
-				val savedPlaylist = sharedPreferences.getString(Key.PLAYLIST, String.EMPTY) ?: String.EMPTY
-				return ArrayList(savedPlaylist.split(";"))
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putString(Key.PLAYLIST, value.joinToString(";"))
-					.apply()
-			}
+	val selectedTracks = ArrayList<String>()
+	fun updateSelectedTracks(track: String): Int {
+		return if (selectedTracks.contains(track)) { // track already in the list, remove it
+			selectedTracks.remove(track)
+			if (selectedTracks.isEmpty()) EventType.SELECT_MODE_INACTIVE else EventType.SELECT_MODE_SUB // if the list is empty, deactivate the select mode
 
-		val selectedTracks = ArrayList<String>()
-		fun updateSelectedTracks(track: String): Int {
-			return if (selectedTracks.contains(track)) { // track already in the list, remove it
-				selectedTracks.remove(track)
-				if (selectedTracks.isEmpty()) EventType.SELECT_MODE_INACTIVE else EventType.SELECT_MODE_SUB // if the list is empty, deactivate the select mode
-
-			} else {
-				selectedTracks.add(track)
-				EventType.SELECT_MODE_ADD
-			}
+		} else {
+			selectedTracks.add(track)
+			EventType.SELECT_MODE_ADD
 		}
 	}
 

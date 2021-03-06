@@ -23,7 +23,7 @@ import kotlin.math.abs
 class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subscriber {
 
 	// just to ensure that we don't ever leak!
-	private val controlsWeakRef = WeakReference<ConstraintLayout>(controlsStrongRef)
+	private val controlsWeakRef = WeakReference(controlsStrongRef)
 	internal val controls: ConstraintLayout?
 		get() = controlsWeakRef.get()
 

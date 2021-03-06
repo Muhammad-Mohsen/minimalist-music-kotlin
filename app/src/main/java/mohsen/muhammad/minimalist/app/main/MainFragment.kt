@@ -25,7 +25,7 @@ import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
-import mohsen.muhammad.minimalist.data.files.FileHelper
+import mohsen.muhammad.minimalist.data.files.FileMetadata
 
 
 class MainFragment : Fragment() {
@@ -84,7 +84,7 @@ class MainFragment : Fragment() {
 
 		// TODO check if select mode is active, and deactivate it if so
 
-		return if (currentDirectory.absolutePath == FileHelper.ROOT) false
+		return if (currentDirectory.absolutePath == FileMetadata.ROOT) false
 		else {
 			val parentDir = currentDirectory.parentFile
 			State.currentDirectory = parentDir

@@ -6,6 +6,18 @@ import android.view.ViewConfiguration
  * Created by muhammad.mohsen on 11/3/2018.
  */
 
+object Const {
+	object Alpha {
+		const val OPAQUE = 1F
+		const val TRANSPARENT = 0F
+	}
+
+	object Margin {
+		const val FIRST_ITEM = 80F
+		const val LAST_ITEM = 20F
+	}
+}
+
 // defines the explorer recycler view adapter view types
 // also used to determine the interaction (click, long click) source
 object ItemType {

@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
+import mohsen.muhammad.minimalist.core.ext.put
 import mohsen.muhammad.minimalist.data.files.FileMetadata
 import java.io.File
 
@@ -58,54 +59,29 @@ object State {
 			get() = path.isNotBlank()
 
 		var path: String
-			get() {
-				return sharedPreferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putString(Key.PATH, value)
-					.apply()
-			}
+			get() = sharedPreferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY
+			set(value) = sharedPreferences.put(Key.PATH, value)
 
 		var title: String
-			get() {
-				return sharedPreferences.getString(Key.TITLE, String.EMPTY) ?: String.EMPTY
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putString(Key.TITLE, value)
-					.apply()
-			}
+			get() = sharedPreferences.getString(Key.TITLE, String.EMPTY) ?: String.EMPTY
+			set(value) = sharedPreferences.put(Key.TITLE, value)
+
 
 		var album: String
-			get() {
-				return sharedPreferences.getString(Key.ALBUM, String.EMPTY) ?: String.EMPTY
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putString(Key.ALBUM, value)
-					.apply()
-			}
+			get() = sharedPreferences.getString(Key.ALBUM, String.EMPTY) ?: String.EMPTY
+			set(value) = sharedPreferences.put(Key.ALBUM, value)
 
 		var artist: String
-			get() {
-				return sharedPreferences.getString(Key.ARTIST, String.EMPTY) ?: String.EMPTY
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putString(Key.ARTIST, value)
-					.apply()
-			}
+			get() = sharedPreferences.getString(Key.ARTIST, String.EMPTY) ?: String.EMPTY
+			set(value) = sharedPreferences.put(Key.ARTIST, value)
 
 		var duration: Long
-			get() {
-				return sharedPreferences.getLong(Key.DURATION, 0L)
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putLong(Key.DURATION, value)
-					.apply()
-			}
+			get() = sharedPreferences.getLong(Key.DURATION, 0L)
+			set(value) = sharedPreferences.put(Key.DURATION, value)
+
+		var chapterCount: Int
+			get() = sharedPreferences.getInt(Key.CHAPTER_COUNT, 0)
+			set(value) = sharedPreferences.put(Key.CHAPTER_COUNT, value)
 
 		val readableDuration: String
 			get() = formatMillis(duration)
@@ -125,12 +101,13 @@ object State {
 
 		fun update(filePath: String) {
 			val metadata = FileMetadata(File(filePath))
+			path = filePath
 
-			path = filePath // this is mostly redundant, but it's ok
 			title = metadata.title
 			album = metadata.album
 			artist = metadata.artist
 			duration = metadata.duration
+			chapterCount = metadata.chapterCount
 		}
 	}
 
@@ -168,5 +145,7 @@ object State {
 		const val SHUFFLE = "Shuffle"
 
 		const val SEEK = "Seek"
+
+		const val CHAPTER_COUNT = "ChapterCount"
 	}
 }

@@ -4,13 +4,15 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.android.synthetic.main.media_controls_2.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.animateDrawable
+import mohsen.muhammad.minimalist.core.ext.context
+import mohsen.muhammad.minimalist.core.ext.resources
 import mohsen.muhammad.minimalist.core.ext.setImageDrawable
 import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.databinding.MediaControls2Binding
 import java.lang.ref.WeakReference
 
 /**
@@ -22,8 +24,11 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 
 	// just to ensure that we don't ever leak!
 	private val controlsWeakRef = WeakReference(controlsStrongRef)
-	private val controls: ConstraintLayout?
-		get() = controlsWeakRef.get()
+	private val binding: MediaControls2Binding?
+		get() {
+			val nullSafeControls = controlsWeakRef.get() ?: return null
+			return MediaControls2Binding.bind(nullSafeControls)
+		}
 
 	fun initialize() {
 
@@ -31,75 +36,75 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 		EventBus.subscribe(this)
 
 		// seek change
-		controls?.seekBar?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+		binding?.seekBar?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
 			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
 				if (p2) sendSeek(p1)
 			}
 		})
 
-		controls?.buttonOmni?.setOnClickListener {
+		binding?.buttonOmni?.setOnClickListener {
 			togglePlayPauseButton(!State.isPlaying) // UI
 			EventBus.send(SystemEvent(EventSource.CONTROLS, if (!State.isPlaying) EventType.PLAY else EventType.PAUSE)) // Event
 		}
-		controls?.buttonNext?.setOnClickListener {
+		binding?.buttonNext?.setOnClickListener {
 			togglePlayPauseButton(true)
-			controls?.buttonNext?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_NEXT)) {
-				controls?.buttonNext?.setImageDrawable(R.drawable.next000)
+			binding?.buttonNext?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_NEXT)) {
+				binding?.buttonNext?.setImageDrawable(R.drawable.next000)
 			}
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.PLAY_NEXT))
 		}
-		controls?.buttonPrev?.setOnClickListener {
+		binding?.buttonPrev?.setOnClickListener {
 			togglePlayPauseButton(true)
-			controls?.buttonPrev?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_NEXT)) {
-				controls?.buttonPrev?.setImageDrawable(R.drawable.next000)
+			binding?.buttonPrev?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_NEXT)) {
+				binding?.buttonPrev?.setImageDrawable(R.drawable.next000)
 			}
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.PLAY_PREVIOUS))
 		}
 		// quick and dirty, but it's better than nothing
-		controls?.buttonNext?.setOnLongClickListener {
+		binding?.buttonNext?.setOnLongClickListener {
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.FF))
 			return@setOnLongClickListener true
 		}
-		controls?.buttonPrev?.setOnLongClickListener {
+		binding?.buttonPrev?.setOnLongClickListener {
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.RW))
 			return@setOnLongClickListener true
 		}
-		controls?.buttonRepeat?.setOnClickListener {
-			controls?.buttonRepeat?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_REPEAT)) {
-				controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
+		binding?.buttonRepeat?.setOnClickListener {
+			binding?.buttonRepeat?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_REPEAT)) {
+				binding?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
 			}
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.CYCLE_REPEAT))
 		}
-		controls?.buttonShuffle?.setOnClickListener {
-			controls?.buttonShuffle?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_SHUFFLE)) { // do the animation
+		binding?.buttonShuffle?.setOnClickListener {
+			binding?.buttonShuffle?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_SHUFFLE)) { // do the animation
 				val shuffleIcon = if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0]
-				controls?.buttonShuffle?.setImageDrawable(shuffleIcon)
+				binding?.buttonShuffle?.setImageDrawable(shuffleIcon)
 			}
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.CYCLE_SHUFFLE))
 		}
 	}
 
 	private fun updateMetadata() {
-		controls?.textViewTitle?.setText(State.Track.title)
+		binding?.textViewTitle?.setText(State.Track.title)
 
 		// if the artist exists, set both album and artist (we're guaranteed album info in the form of the parent dir name)
-		if (State.Track.artist.isNotEmpty()) controls?.textViewSubtitle?.setText(controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
+		if (State.Track.artist.isNotEmpty()) binding?.textViewSubtitle?.setText(binding?.resources?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
 		// if there's no artist info, only set the album
-		else controls?.textViewSubtitle?.setText(State.Track.album)
+		else binding?.textViewSubtitle?.setText(State.Track.album)
 
-		controls?.textViewDuration?.text = State.Track.readableDuration
+		binding?.textViewDuration?.text = State.Track.readableDuration
 
-		controls?.seekBar?.max = State.Track.duration.toInt()
-		controls?.seekBar?.progress = State.Track.seek
-		controls?.textViewSeek?.text = State.Track.readableSeek
+		binding?.seekBar?.max = State.Track.duration.toInt()
+		binding?.seekBar?.progress = State.Track.seek
+		binding?.textViewSeek?.text = State.Track.readableSeek
 
-		controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
-		controls?.buttonShuffle?.setImageDrawable(if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0])
+		binding?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
+		binding?.buttonShuffle?.setImageDrawable(if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0])
 	}
 
 	private fun updateSeek() {
-		controls?.seekBar?.progress = State.Track.seek
-		controls?.textViewSeek?.text = State.Track.readableSeek
+		binding?.seekBar?.progress = State.Track.seek
+		binding?.textViewSeek?.text = State.Track.readableSeek
 	}
 
 	private fun sendSeek(seek: Int) {
@@ -109,10 +114,10 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 	private fun togglePlayPauseButton(play: Boolean) {
 		val animId = if (!play) R.drawable.anim_pause_play else R.drawable.anim_play_pause
 
-		if (controls?.buttonOmni?.tag == animId) return // if the same animation is shown, do nothing
+		if (binding?.buttonOmni?.tag == animId) return // if the same animation is shown, do nothing
 
-		controls?.buttonOmni?.animateDrawable(animId)
-		controls?.buttonOmni?.tag = animId // set the tag
+		binding?.buttonOmni?.animateDrawable(animId)
+		binding?.buttonOmni?.tag = animId // set the tag
 	}
 
 	private fun getButtonAnimationByIndex(buttonIndex: Int): Int {

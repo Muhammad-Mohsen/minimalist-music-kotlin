@@ -4,18 +4,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.explorer_list_item.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
+import mohsen.muhammad.minimalist.core.ext.setLayoutMargins
 import mohsen.muhammad.minimalist.core.ext.toDip
 import mohsen.muhammad.minimalist.data.Const
 import mohsen.muhammad.minimalist.data.ItemType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
+import mohsen.muhammad.minimalist.databinding.ExplorerListItemBinding
 import java.io.File
 
 
@@ -51,11 +51,8 @@ class ExplorerAdapter(
 
 			// set the margins on the first and last items in the list (they are different than the rest)
 			val topMargin = if (position == 0) Const.Margin.FIRST_ITEM.toDip(itemView.context) else 0f
-			val bottomMargin = if (position == files.size - 1) Const.Margin.LAST_ITEM.toDip(itemView.context) else 0f
-			val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-			params.setMargins(0, topMargin.toInt(), 0, bottomMargin.toInt())
-
-			itemView.layoutParams = params
+			val bottomMargin = if (position == files.lastIndex) Const.Margin.LAST_ITEM.toDip(itemView.context) else 0f
+			itemView.setLayoutMargins(0, topMargin.toInt(), 0, bottomMargin.toInt())
 
 			icon.setColorFilter(R.color.colorBackground)
 			icon.setImageResource(if (file.isDirectory) R.mipmap.ic_directory else R.mipmap.ic_track)
@@ -73,12 +70,11 @@ class ExplorerAdapter(
 
 			selectedView.alpha = if (State.selectedTracks.contains(file.absolutePath)) Const.Alpha.OPAQUE else Const.Alpha.TRANSPARENT
 
-			// click listener
+			// listeners
 			val itemType = if (file.isDirectory) ItemType.DIRECTORY else ItemType.TRACK
 			itemView.setOnClickListener {
 				interactionListener.onListItemClick(file, itemType)
 			}
-
 			itemView.setOnLongClickListener {
 				if (file.isDirectory) return@setOnLongClickListener true // no long click for you!
 
@@ -122,13 +118,15 @@ class ExplorerAdapter(
 
 	// ViewHolder class
 	class ExplorerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-		val icon: ImageView = itemView.imageViewIcon
-		val title: TextView = itemView.textViewTitle
+		private val binding = ExplorerListItemBinding.bind(itemView)
 
-		val currentlyPlayingView: ExtendedFrameLayout = itemView.frameLayoutCurrent
-		val selectedView: ExtendedFrameLayout = itemView.imageViewSelected
+		val icon: ImageView = binding.imageViewIcon
+		val title: TextView = binding.textViewTitle
 
-		val subtitle: TextView = itemView.textViewSubtitle
-		val duration: TextView = itemView.textViewDuration
+		val currentlyPlayingView: ExtendedFrameLayout = binding.frameLayoutCurrent
+		val selectedView: ExtendedFrameLayout = binding.imageViewSelected
+
+		val subtitle: TextView = binding.textViewSubtitle
+		val duration: TextView = binding.textViewDuration
 	}
 }

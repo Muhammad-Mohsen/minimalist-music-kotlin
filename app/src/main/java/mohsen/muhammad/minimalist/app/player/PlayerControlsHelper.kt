@@ -5,12 +5,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.android.synthetic.main.media_controls.view.*
 import mohsen.muhammad.minimalist.R
-import mohsen.muhammad.minimalist.core.ext.animateDrawable
-import mohsen.muhammad.minimalist.core.ext.fadeIn
-import mohsen.muhammad.minimalist.core.ext.fadeOut
-import mohsen.muhammad.minimalist.core.ext.setImageDrawable
+import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.FabMenu
 import mohsen.muhammad.minimalist.data.State
@@ -28,26 +24,26 @@ import kotlin.math.hypot
 internal fun PlayerControlsManager.togglePlayPauseButton(play: Boolean) {
 	val animId = if (!play) R.drawable.anim_pause_play else R.drawable.anim_play_pause
 
-	if (controls?.buttonOmni?.tag == animId) return // if the same animation is shown, do nothing
+	if (binding?.buttonOmni?.tag == animId) return // if the same animation is shown, do nothing
 
-	controls?.buttonOmni?.animateDrawable(animId)
-	controls?.buttonOmni?.tag = animId // set the tag
+	binding?.buttonOmni?.animateDrawable(animId)
+	binding?.buttonOmni?.tag = animId // set the tag
 }
 
 // does the little animation when selecting one of the fab menu buttons (next, shuffle, etc.)
 internal fun PlayerControlsManager.animateFabMenuButton(buttonIndex: Int) {
 
 	// flip the thing for prev
-	controls?.fabButtonAnimationOverlay?.rotation = if (buttonIndex == FabMenu.BUTTON_PREV) 180F else 0F
+	binding?.fabButtonAnimationOverlay?.rotation = if (buttonIndex == FabMenu.BUTTON_PREV) 180F else 0F
 
 	// make the overlay visible
-	controls?.fabButtonAnimationOverlay?.fadeIn(0L)
+	binding?.fabButtonAnimationOverlay?.fadeIn(0L)
 
 	// do the animation
-	controls?.fabButtonAnimationOverlay?.animateDrawable(getButtonAnimationByIndex(buttonIndex)) {
+	binding?.fabButtonAnimationOverlay?.animateDrawable(getButtonAnimationByIndex(buttonIndex)) {
 
 		// hide the overlay (after the animation completes)
-		controls?.fabButtonAnimationOverlay?.fadeOut(200L)
+		binding?.fabButtonAnimationOverlay?.fadeOut(200L)
 	}
 }
 
@@ -71,12 +67,12 @@ internal fun PlayerControlsManager.updateFabMenuUi(buttonIndex: Int) {
 
 	if (buttonIndex == FabMenu.BUTTON_REPEAT) {
 		val updatedRepeat = (State.playlist.repeat + 1) % repeatIcons.size
-		controls?.buttonRepeat?.setImageDrawable(repeatIcons[updatedRepeat])
+		binding?.buttonRepeat?.setImageDrawable(repeatIcons[updatedRepeat])
 
 	} else if (buttonIndex == FabMenu.BUTTON_SHUFFLE) {
 		// set the tint color (active/inactive)
 		val shuffleIcon = if (State.playlist.shuffle) shuffleIcons[0] else shuffleIcons[1]
-		controls?.buttonShuffle?.setImageDrawable(shuffleIcon)
+		binding?.buttonShuffle?.setImageDrawable(shuffleIcon)
 	}
 
 	// otherwise, do nothing
@@ -84,18 +80,18 @@ internal fun PlayerControlsManager.updateFabMenuUi(buttonIndex: Int) {
 
 // initializes FAB buttons' state (repeat and shuffle)
 internal fun PlayerControlsManager.initializeFabMenuUi() {
-	controls?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
+	binding?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
 
 	val shuffleIcon = if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0]
-	controls?.buttonShuffle?.setImageDrawable(shuffleIcon)
+	binding?.buttonShuffle?.setImageDrawable(shuffleIcon)
 }
 
 // expands/collapses the actual fab menu buttons
 internal fun PlayerControlsManager.toggleFabMenuButtonExpansion(show: Boolean) {
-	val buttons = arrayOf(controls?.buttonNext, controls?.buttonRepeat, controls?.buttonPrev, controls?.buttonShuffle)
+	val buttons = arrayOf(binding?.buttonNext, binding?.buttonRepeat, binding?.buttonPrev, binding?.buttonShuffle)
 	val layoutParamsList = buttons.map { button -> button?.layoutParams as? ConstraintLayout.LayoutParams }
 
-	val expandedRadius = controls?.resources?.getDimension(R.dimen.fabMenuExpandedRadius)?.toInt() ?: 0
+	val expandedRadius = binding?.resources?.getDimension(R.dimen.fabMenuExpandedRadius)?.toInt() ?: 0 // this is shit
 
 	val currentRadii = layoutParamsList.map { params -> params?.circleRadius }
 	val finalRadius = if (show) expandedRadius else 0
@@ -119,9 +115,9 @@ internal fun PlayerControlsManager.toggleFabMenuButtonExpansion(show: Boolean) {
 // expands/collapses the white circle background
 internal fun PlayerControlsManager.toggleFabMenuBackground(show: Boolean) {
 
-	val expandedScale = controls?.resources?.getInteger(R.integer.fabMenuExpandedBackgroundScale) ?: 0
+	val expandedScale = binding?.resources?.getInteger(R.integer.fabMenuExpandedBackgroundScale) ?: 0 // also shit
 
-	val currentScale = controls?.fabMenuBackground?.scaleX ?: 0F
+	val currentScale = binding?.fabMenuBackground?.scaleX ?: 0F
 	val finalScale = if (show) expandedScale.toFloat() else 0F
 
 	if (currentScale == finalScale) return
@@ -131,8 +127,8 @@ internal fun PlayerControlsManager.toggleFabMenuBackground(show: Boolean) {
 		interpolator = AccelerateDecelerateInterpolator()
 		start()
 		addUpdateListener {
-			controls?.fabMenuBackground?.scaleX = it.animatedValue as Float
-			controls?.fabMenuBackground?.scaleY = it.animatedValue as Float
+			binding?.fabMenuBackground?.scaleX = it.animatedValue as Float
+			binding?.fabMenuBackground?.scaleY = it.animatedValue as Float
 		}
 	}
 }
@@ -175,10 +171,10 @@ internal fun getButtonByAngle(angle: Float): Int {
 
 // how awful is that??!!
 internal fun PlayerControlsManager.toggleFabMenuButtonHighlight(buttonIndex: Int? = null) {
-	controls?.buttonNext?.isPressed = false || buttonIndex == FabMenu.BUTTON_NEXT
-	controls?.buttonRepeat?.isPressed = false || buttonIndex == FabMenu.BUTTON_REPEAT
-	controls?.buttonShuffle?.isPressed = false || buttonIndex == FabMenu.BUTTON_SHUFFLE
-	controls?.buttonPrev?.isPressed = false || buttonIndex == FabMenu.BUTTON_PREV
+	binding?.buttonNext?.isPressed = false || buttonIndex == FabMenu.BUTTON_NEXT
+	binding?.buttonRepeat?.isPressed = false || buttonIndex == FabMenu.BUTTON_REPEAT
+	binding?.buttonShuffle?.isPressed = false || buttonIndex == FabMenu.BUTTON_SHUFFLE
+	binding?.buttonPrev?.isPressed = false || buttonIndex == FabMenu.BUTTON_PREV
 }
 
 internal val fabMenuButtonEventMap = mapOf(

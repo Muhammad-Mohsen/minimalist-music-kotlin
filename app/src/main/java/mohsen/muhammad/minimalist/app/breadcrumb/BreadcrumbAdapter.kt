@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.breadcrumb_bar_item.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 import mohsen.muhammad.minimalist.core.OnListItemClickListener
 import mohsen.muhammad.minimalist.data.ItemType
+import mohsen.muhammad.minimalist.databinding.BreadcrumbBarItemBinding
 import java.io.File
 import java.util.*
 
@@ -73,8 +73,10 @@ class BreadcrumbAdapter(file: File, private val interactionListener: OnListItemC
 	}
 
 	class CrumbViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-		val crumbText: TextView = itemView.textViewCrumb
-		val crumbButton: ExtendedFrameLayout = itemView.buttonCrumb
+		private val binding = BreadcrumbBarItemBinding.bind(itemView)
+
+		val crumbText: TextView = binding.textViewCrumb
+		val crumbButton: ExtendedFrameLayout = binding.buttonCrumb
 	}
 
 }

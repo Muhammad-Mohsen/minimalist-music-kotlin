@@ -2,9 +2,9 @@ package mohsen.muhammad.minimalist.app.breadcrumb
 
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.breadcrumb_bar.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnListItemClickListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
@@ -17,6 +17,8 @@ import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.FileMetadata
+import mohsen.muhammad.minimalist.databinding.BreadcrumbBarBinding
+import mohsen.muhammad.minimalist.databinding.MediaControls2Binding
 import java.io.File
 
 
@@ -30,13 +32,15 @@ class BreadcrumbManager(
 	private val multiSelectBarContainer: LinearLayout,
 ) : EventBus.Subscriber, OnListItemClickListener<File> {
 
-	private val recyclerViewBreadcrumbs = breadcrumbBarContainer.recyclerViewBreadcrumbs
-	private val buttonBack = breadcrumbBarContainer.buttonBack
+	private val binding = BreadcrumbBarBinding.bind(breadcrumbBarContainer.parent as View)
 
-	private val buttonCancel = multiSelectBarContainer.buttonCancel
-	private val buttonAppendToPlaylist = multiSelectBarContainer.buttonAddSelection
-	private val buttonPlaySelected = multiSelectBarContainer.buttonPlaySelected
-	private val textViewSelectionCount = multiSelectBarContainer.textViewSelectionCount
+	private val recyclerViewBreadcrumbs = binding.recyclerViewBreadcrumbs
+	private val buttonBack = binding.buttonBack
+
+	private val buttonCancel = binding.buttonCancel
+	private val buttonAppendToPlaylist = binding.buttonAddSelection
+	private val buttonPlaySelected = binding.buttonPlaySelected
+	private val textViewSelectionCount = binding.textViewSelectionCount
 
 	private val breadcrumbAdapter: BreadcrumbAdapter
 		get() = recyclerViewBreadcrumbs.adapter as BreadcrumbAdapter

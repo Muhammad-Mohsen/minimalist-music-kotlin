@@ -1,8 +1,8 @@
 package mohsen.muhammad.minimalist.data.files
 
-import android.media.MediaMetadataRetriever
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
+import wseemann.media.FFmpegMediaMetadataRetriever
 import java.io.File
 import java.io.FileFilter
 import java.util.*
@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 
 class FileMetadata(private val file: File) {
 
-	private val retriever: MediaMetadataRetriever = MediaMetadataRetriever()
+	private val retriever = FFmpegMediaMetadataRetriever()
 
 	val title: String
 		get() {
@@ -27,19 +27,19 @@ class FileMetadata(private val file: File) {
 	// metadata getters
 	val artist: String
 		get() {
-			val artist: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+			val artist: String? = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST)
 			return artist?: String.EMPTY
 		}
 
 	val album: String
 		get() {
-			val album: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+			val album: String? = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM)
 			return album?: file.parentFile?.name ?: String.EMPTY
 		}
 
 	val duration: Long
 		get() {
-			val durationString: String? = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+			val durationString: String? = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)
 			return durationString?.toLong() ?: 0L
 		}
 
@@ -56,6 +56,18 @@ class FileMetadata(private val file: File) {
 
 			return 0
 		}
+
+	val chapterCount: Int
+		get() {
+			return retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
+		}
+
+	val hasChapters: Boolean
+		get() = chapterCount > 0
+
+	fun getChapterStartTime(i: Int): Long {
+		return retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_CHAPTER_START_TIME, i)?.toLong() ?: 0
+	}
 
 	init {
 		if (isTrack(file)) retriever.setDataSource(file.path)
@@ -97,7 +109,7 @@ class FileMetadata(private val file: File) {
 			return MEDIA_EXTENSIONS.contains(f.extension)
 		}
 
-		fun listFileModels(path: String): ArrayList<ExplorerFile> {
+		fun listExplorerFiles(path: String): ArrayList<ExplorerFile> {
 			val fileModels = ArrayList<ExplorerFile>()
 
 			var files = File(path).listFiles(filter)

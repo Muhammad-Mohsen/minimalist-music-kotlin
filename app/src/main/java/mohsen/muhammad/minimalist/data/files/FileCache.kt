@@ -19,7 +19,7 @@ object FileCache {
 
         // if not cached, or directory was modified more recently than the cache
         if (files == null || f.lastModified() > lastModifiedCache[path] ?: 0L) {
-            files = FileMetadata.listFileModels(path)
+            files = FileMetadata.listExplorerFiles(path)
             fileCache[path] = files
 
             lastModifiedCache[path] = f.lastModified()
@@ -36,7 +36,7 @@ object FileCache {
 
         // if not cached, or directory was modified more recently than the cache
         if (files == null || parentDir.lastModified() > lastModifiedCache[parentDirPath] ?: 0L) {
-            files = FileMetadata.listFileModels(parentDirPath)
+            files = FileMetadata.listExplorerFiles(parentDirPath)
             fileCache[parentDirPath] = files
 
             lastModifiedCache[parentDirPath] = parentDir.lastModified()

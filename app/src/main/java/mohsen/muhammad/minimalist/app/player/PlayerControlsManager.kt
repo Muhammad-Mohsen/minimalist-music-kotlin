@@ -1,5 +1,6 @@
 package mohsen.muhammad.minimalist.app.player
 
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -7,11 +8,11 @@ import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.android.synthetic.main.media_controls.view.*
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.databinding.MediaControlsBinding
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -24,13 +25,20 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 
 	// just to ensure that we don't ever leak!
 	private val controlsWeakRef = WeakReference(controlsStrongRef)
-	internal val controls: ConstraintLayout?
+	private val controls: ConstraintLayout?
 		get() = controlsWeakRef.get()
+
+	internal val binding: MediaControlsBinding?
+		get() {
+			val nullSafeControls = controls ?: return null
+			return MediaControlsBinding.bind(nullSafeControls)
+		}
 
 	// handler is used to kickoff a delayed runnable (gestureRunnable) to show the fab menu
 	private val handler = Handler()
 	private lateinit var gestureRunnable: Runnable
 
+	@SuppressLint("ClickableViewAccessibility")
 	fun initialize() {
 
 		// event bus subscription
@@ -41,11 +49,11 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 			toggleFabMenuButtonExpansion(true)
 			toggleFabMenuBackground(true)
 
-			controls?.buttonOmni?.isPressed = false
+			binding?.buttonOmni?.isPressed = false
 		}
 
 		// the touch listener to rule them all
-		controls?.buttonOmni?.setOnTouchListener { view, motionEvent ->
+		binding?.buttonOmni?.setOnTouchListener { view, motionEvent ->
 
 			val eventTimeDelta = abs(SystemClock.uptimeMillis() - motionEvent.downTime)
 
@@ -106,7 +114,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		}
 
 		// seek change
-		controls?.seekBar?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+		binding?.seekBar?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
 			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
 				if (p2) sendSeek(p1)
 			}
@@ -114,25 +122,25 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 	}
 
 	private fun updateMetadata() {
-		controls?.textViewTitle?.setText(State.Track.title)
+		binding?.textViewTitle?.setText(State.Track.title)
 
 		// if the artist exists, set both album and artist (we're guaranteed album info in the form of the parent dir name)
-		if (State.Track.artist.isNotEmpty()) controls?.textViewSubtitle?.setText(controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
+		if (State.Track.artist.isNotEmpty()) binding?.textViewSubtitle?.setText(controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
 		// if there's no artist info, only set the album
-		else controls?.textViewSubtitle?.setText(State.Track.album)
+		else binding?.textViewSubtitle?.setText(State.Track.album)
 
-		controls?.textViewDuration?.text = State.Track.readableDuration
+		binding?.textViewDuration?.text = State.Track.readableDuration
 
-		controls?.seekBar?.max = State.Track.duration.toInt()
-		controls?.seekBar?.progress = State.Track.seek
-		controls?.textViewSeek?.text = State.Track.readableSeek
+		binding?.seekBar?.max = State.Track.duration.toInt()
+		binding?.seekBar?.progress = State.Track.seek
+		binding?.textViewSeek?.text = State.Track.readableSeek
 
 		initializeFabMenuUi()
 	}
 
 	private fun updateSeek() {
-		controls?.seekBar?.progress = State.Track.seek
-		controls?.textViewSeek?.text = State.Track.readableSeek
+		binding?.seekBar?.progress = State.Track.seek
+		binding?.textViewSeek?.text = State.Track.readableSeek
 	}
 
 	private fun sendSeek(seek: Int) {
@@ -152,7 +160,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 	}
 
 	private fun onTouchEnded() {
-		controls?.buttonOmni?.isPressed = false
+		binding?.buttonOmni?.isPressed = false
 
 		handler.removeCallbacks(gestureRunnable) // remove the callback to show the fab menu if possible
 		toggleFabMenuButtonExpansion(false) // collapse the fab menu if visible

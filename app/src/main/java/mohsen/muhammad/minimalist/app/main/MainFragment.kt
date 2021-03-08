@@ -12,11 +12,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import kotlinx.android.synthetic.main.breadcrumb_bar.*
-import kotlinx.android.synthetic.main.main_fragment.*
-import kotlinx.android.synthetic.main.media_controls_2.*
-import kotlinx.android.synthetic.main.permission_request.*
-import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.breadcrumb.BreadcrumbManager
 import mohsen.muhammad.minimalist.app.explorer.ExplorerManager
 import mohsen.muhammad.minimalist.app.player.PlayerControlsManager2
@@ -26,12 +21,26 @@ import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.FileMetadata
+import mohsen.muhammad.minimalist.databinding.BreadcrumbBarBinding
+import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
+import mohsen.muhammad.minimalist.databinding.MediaControls2Binding
+import mohsen.muhammad.minimalist.databinding.PermissionRequestBinding
 
 
 class MainFragment : Fragment() {
 
+	private lateinit var mainBinding: MainFragmentBinding
+	private lateinit var permissionBinding: PermissionRequestBinding
+	private lateinit var breadcrumbBinding: BreadcrumbBarBinding
+	private lateinit var controlsBinding: MediaControls2Binding
+
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-		return inflater.inflate(R.layout.main_fragment, container, false)
+		mainBinding = MainFragmentBinding.inflate(inflater, container, false)
+		permissionBinding = PermissionRequestBinding.bind(mainBinding.layoutPermission.root)
+		breadcrumbBinding = BreadcrumbBarBinding.bind(mainBinding.layoutBreadcrumbs.root)
+		controlsBinding = MediaControls2Binding.bind(mainBinding.layoutControls2.root)
+
+		return mainBinding.root
 	}
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -47,18 +56,18 @@ class MainFragment : Fragment() {
 
 				override fun onPermissionGranted(response: PermissionGrantedResponse?) {
 
-					layoutPermission.visibility = View.GONE
+					mainBinding.layoutPermission.root.visibility = View.GONE
 
 					// breadcrumbs
-					val breadcrumbManager = BreadcrumbManager(breadcrumbBarContainer, multiSelectBarContainer)
+					val breadcrumbManager = BreadcrumbManager(breadcrumbBinding.breadcrumbBarContainer, breadcrumbBinding.multiSelectBarContainer)
 					breadcrumbManager.initialize()
 
 					// explorer
-					val explorerManager = ExplorerManager(recyclerViewExplorer)
+					val explorerManager = ExplorerManager(mainBinding.recyclerViewExplorer)
 					explorerManager.initialize()
 
 					// controls
-					val playerControlsManager = PlayerControlsManager2(controls_2)
+					val playerControlsManager = PlayerControlsManager2(controlsBinding.root)
 					playerControlsManager.initialize()
 
 					// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't yet registered to the event bus!
@@ -69,9 +78,9 @@ class MainFragment : Fragment() {
 
 				// show permission layout
 				override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-					layoutPermission.visibility = View.VISIBLE
+					mainBinding.layoutPermission.root.visibility = View.VISIBLE
 
-					buttonGrantPermission.setOnClickListener {
+					permissionBinding.buttonGrantPermission.setOnClickListener {
 						initialize()
 					}
 				}
@@ -80,23 +89,23 @@ class MainFragment : Fragment() {
 	}
 
 	fun onBackPressed(): Boolean {
-		val currentDirectory = State.currentDirectory
-
-		// TODO check if select mode is active, and deactivate it if so
-
-		return if (currentDirectory.absolutePath == FileMetadata.ROOT) false
-		else {
-			val parentDir = currentDirectory.parentFile
-			State.currentDirectory = parentDir
-			EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.DIR_CHANGE, parentDir.absolutePath))
-
-			true
+		return when {
+			State.isSelectModeActive -> {
+				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.SELECT_MODE_INACTIVE))
+				true
+			}
+			State.currentDirectory.absolutePath == FileMetadata.ROOT -> false
+			else -> {
+				State.currentDirectory = State.currentDirectory.parentFile!! // don't worry about it
+				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.DIR_CHANGE, State.currentDirectory.absolutePath))
+				true
+			}
 		}
 	}
 
 	private fun togglePermissionLayout(show: Boolean) {
-		breadcrumbs.visibility = if (show) View.GONE else View.VISIBLE // this is due to the elevation of the breadcrumbs
-		layoutPermission.visibility = if (show) View.VISIBLE else View.GONE
+		breadcrumbBinding.root.visibility = if (show) View.GONE else View.VISIBLE // this is due to the elevation of the breadcrumbs
+		mainBinding.layoutPermission.root.visibility = if (show) View.VISIBLE else View.GONE
 	}
 
 	companion object {

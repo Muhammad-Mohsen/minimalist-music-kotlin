@@ -22,12 +22,15 @@
 		/>
 
 	<!--Breadcrumb bar-->
-	<include layout="@layout/breadcrumb_bar" />
+	<include
+		android:id="@+id/layoutBreadcrumbs"
+		layout="@layout/breadcrumb_bar" />
 
 	<!--Controls-->
 
 	<!--Permission denied layout-->
 	<include
+		android:id="@+id/layoutControls2"
 		layout="@layout/media_controls_2"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

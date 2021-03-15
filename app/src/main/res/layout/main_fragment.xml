@@ -18,13 +18,14 @@
 		android:scrollbars="vertical"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 		style="@style/scrollbarStyle"
-		tools:listitem="@layout/explorer_list_item"
+		tools:listitem="@layout/explorer_item"
 		/>
 
 	<!--Breadcrumb bar-->
 	<include
 		android:id="@+id/layoutBreadcrumbs"
-		layout="@layout/breadcrumb_bar" />
+		layout="@layout/breadcrumb_bar"
+		/>
 
 	<!--Controls-->
 

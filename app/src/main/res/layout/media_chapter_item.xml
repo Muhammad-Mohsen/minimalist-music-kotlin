@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mohsen.muhammad.minimalist.core.ExtendedView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="@dimen/chapterIndicatorWidth"
+	android:layout_height="@dimen/chapterIndicatorHeight"
+	app:fillColor="@color/colorPrimary"
+	/>

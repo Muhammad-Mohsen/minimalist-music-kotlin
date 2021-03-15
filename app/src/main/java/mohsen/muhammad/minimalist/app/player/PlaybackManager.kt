@@ -13,8 +13,9 @@ import mohsen.muhammad.minimalist.app.notification.MediaNotificationManager
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.data.files.getNextChapter
+import mohsen.muhammad.minimalist.data.files.getPrevChapter
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -130,6 +131,27 @@ class PlaybackManager :
 		sendSeekUpdates(play)
 	}
 
+	private fun playNext() {
+		if (State.Track.hasChapters) {
+			val nextChapter = State.Track.chapters.getNextChapter(player.currentPosition.toLong())
+			updateSeek(nextChapter.startTime.toInt())
+			if (!player.isPlaying) playPause(true)
+
+		} else {
+			playTrack(State.playlist.getNextTrack(false), false)
+		}
+	}
+	private fun playPrev() {
+		if (State.Track.hasChapters) {
+			val prevChapter = State.Track.chapters.getPrevChapter(player.currentPosition.toLong())
+			updateSeek(prevChapter.startTime.toInt())
+			if (!player.isPlaying) playPause(true)
+
+		} else {
+			playTrack(State.playlist.getPreviousTrack(), false)
+		}
+	}
+
 	// seek
 	private fun updateSeek(mils: Int) {
 		player.seekTo(mils)
@@ -205,8 +227,8 @@ class PlaybackManager :
 				// playlist stuff
 				EventType.CYCLE_REPEAT -> { State.playlist.cycleRepeatMode() }
 				EventType.CYCLE_SHUFFLE -> { State.playlist.toggleShuffle() }
-				EventType.PLAY_PREVIOUS -> playTrack(State.playlist.getPreviousTrack(), false)
-				EventType.PLAY_NEXT -> playTrack(State.playlist.getNextTrack(false), false)
+				EventType.PLAY_PREVIOUS -> playPrev()
+				EventType.PLAY_NEXT -> playNext()
 
 				EventType.METADATA_UPDATE -> restoreState()
 

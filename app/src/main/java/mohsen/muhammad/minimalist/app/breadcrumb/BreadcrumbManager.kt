@@ -3,22 +3,18 @@ package mohsen.muhammad.minimalist.app.breadcrumb
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnListItemClickListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.core.ext.animateDrawable
-import mohsen.muhammad.minimalist.core.ext.fadeIn
-import mohsen.muhammad.minimalist.core.ext.fadeOut
-import mohsen.muhammad.minimalist.core.ext.slideY
+import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.FileMetadata
 import mohsen.muhammad.minimalist.databinding.BreadcrumbBarBinding
-import mohsen.muhammad.minimalist.databinding.MediaControls2Binding
+import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
 import java.io.File
 
 
@@ -27,12 +23,9 @@ import java.io.File
  * Controls layout properties (scroll position, back button) for the breadcrumb bar layout
  */
 
-class BreadcrumbManager(
-	private val breadcrumbBarContainer: LinearLayout,
-	private val multiSelectBarContainer: LinearLayout,
-) : EventBus.Subscriber, OnListItemClickListener<File> {
+class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber, OnListItemClickListener<File> {
 
-	private val binding = BreadcrumbBarBinding.bind(breadcrumbBarContainer.parent as View)
+	private val binding = BreadcrumbBarBinding.bind(mainBinding.layoutBreadcrumbs.root as View)
 
 	private val recyclerViewBreadcrumbs = binding.recyclerViewBreadcrumbs
 	private val buttonBack = binding.buttonBack
@@ -67,9 +60,9 @@ class BreadcrumbManager(
 		buttonBack.setOnClickListener {
 
 			if (State.currentDirectory.absolutePath != FileMetadata.ROOT) {
-				val dir = State.currentDirectory.parentFile
-				State.currentDirectory = dir
+				val dir = State.currentDirectory.parentFile ?: return@setOnClickListener
 
+				State.currentDirectory = dir
 				onDirectoryChange(dir) // repopulate the breadcrumb bar
 				EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.DIR_CHANGE))
 			}
@@ -133,27 +126,27 @@ class BreadcrumbManager(
 	}
 
 	private fun onSelectModeChange() {
-		val isCurrentlyActive = breadcrumbBarContainer.translationY != 0F
+		val isCurrentlyActive = binding.breadcrumbBarContainer.translationY != 0F
 		val selectionCount = State.selectedTracks.count()
 		val isActive = selectionCount > 0
 
 		// only play the animations when changing states
 		if (isActive && !isCurrentlyActive) {
-			breadcrumbBarContainer.slideY(-10F, 150L, 50L)
-			breadcrumbBarContainer.fadeOut(150L, 50L)
+			binding.breadcrumbBarContainer.slideY(-10F, 150L, 50L)
+			binding.breadcrumbBarContainer.fadeOut(150L, 50L)
 
-			multiSelectBarContainer.slideY(0F, 200L)
-			multiSelectBarContainer.fadeIn(200L)
+			binding.multiSelectBarContainer.slideY(0F, 200L)
+			binding.multiSelectBarContainer.fadeIn(200L)
 
 		} else if (!isActive && isCurrentlyActive) {
-			breadcrumbBarContainer.slideY(0F, 200L)
-			breadcrumbBarContainer.fadeIn(200L)
+			binding.breadcrumbBarContainer.slideY(0F, 200L)
+			binding.breadcrumbBarContainer.fadeIn(200L)
 
-			multiSelectBarContainer.slideY(10F, 150L, 50L)
-			multiSelectBarContainer.fadeOut(150L, 50L)
+			binding.multiSelectBarContainer.slideY(10F, 150L, 50L)
+			binding.multiSelectBarContainer.fadeOut(150L, 50L)
 		}
 
-		textViewSelectionCount.setText(breadcrumbBarContainer.resources.getQuantityString(R.plurals.selectedCount, selectionCount, selectionCount))
+		textViewSelectionCount.setText(binding.resources.getQuantityString(R.plurals.selectedCount, selectionCount, selectionCount))
 	}
 
 	// forward means that we're going deeper into the directory hierarchy

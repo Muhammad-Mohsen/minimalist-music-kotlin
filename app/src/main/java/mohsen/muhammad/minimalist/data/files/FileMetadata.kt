@@ -24,7 +24,6 @@ class FileMetadata(private val file: File) {
 			return file.nameWithoutExtension
 		}
 
-	// metadata getters
 	val artist: String
 		get() {
 			val artist: String? = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST)
@@ -42,10 +41,6 @@ class FileMetadata(private val file: File) {
 			val durationString: String? = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)
 			return durationString?.toLong() ?: 0L
 		}
-
-	// format the duration string
-	val readableDuration: String
-		get() = formatMillis(duration)
 
 	val trackCount: Int
 		get() {
@@ -65,7 +60,18 @@ class FileMetadata(private val file: File) {
 	val hasChapters: Boolean
 		get() = chapterCount > 0
 
-	fun getChapterStartTime(i: Int): Long {
+	val chapters: ArrayList<Chapter>
+		get() {
+			val list = ArrayList<Chapter>()
+
+			(0 until chapterCount).forEach {
+				list.add(Chapter(it, getChapterStartTime(it)))
+			}
+
+			return list
+		}
+
+	private fun getChapterStartTime(i: Int): Long {
 		return retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_CHAPTER_START_TIME, i)?.toLong() ?: 0
 	}
 

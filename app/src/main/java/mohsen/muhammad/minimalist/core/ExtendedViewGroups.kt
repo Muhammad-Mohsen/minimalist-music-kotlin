@@ -2,6 +2,7 @@ package mohsen.muhammad.minimalist.core
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageButton
@@ -53,6 +54,15 @@ class ExtendedImageButton @JvmOverloads constructor(context: Context, attributes
 
 class ExtendedButton @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_AppCompat_Button)
 	: AppCompatButton(context, attributes, defStyleAttr) {
+
+	init {
+		setRoundedBackground(attributes)
+		applyPaddingAttr(attributes)
+	}
+}
+
+class ExtendedView @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0)
+	: View(context, attributes, defStyleAttr) {
 
 	init {
 		setRoundedBackground(attributes)

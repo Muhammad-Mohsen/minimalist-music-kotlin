@@ -7,6 +7,7 @@ import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
 import mohsen.muhammad.minimalist.core.ext.put
+import mohsen.muhammad.minimalist.data.files.Chapter
 import mohsen.muhammad.minimalist.data.files.FileMetadata
 import java.io.File
 
@@ -79,9 +80,23 @@ object State {
 			get() = sharedPreferences.getLong(Key.DURATION, 0L)
 			set(value) = sharedPreferences.put(Key.DURATION, value)
 
-		var chapterCount: Int
+		private var chapterCount: Int
 			get() = sharedPreferences.getInt(Key.CHAPTER_COUNT, 0)
 			set(value) = sharedPreferences.put(Key.CHAPTER_COUNT, value)
+
+		val hasChapters = chapterCount > 1
+
+		private var _chapters: ArrayList<Chapter>? = null
+		var chapters: ArrayList<Chapter>
+			get() {
+				_chapters?.let { return it }
+				_chapters = Chapter.deserialize(sharedPreferences.getString(Key.CHAPTERS, String.EMPTY))
+				return _chapters!!
+			}
+			set(value) {
+				_chapters = value
+				sharedPreferences.put(Key.CHAPTERS, Chapter.serialize(value))
+			}
 
 		val readableDuration: String
 			get() = formatMillis(duration)
@@ -108,6 +123,7 @@ object State {
 			artist = metadata.artist
 			duration = metadata.duration
 			chapterCount = metadata.chapterCount
+			chapters = metadata.chapters
 		}
 	}
 
@@ -147,5 +163,6 @@ object State {
 		const val SEEK = "Seek"
 
 		const val CHAPTER_COUNT = "ChapterCount"
+		const val CHAPTERS = "Chapters"
 	}
 }

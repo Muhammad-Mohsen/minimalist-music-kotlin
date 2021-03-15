@@ -7,10 +7,12 @@ import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.viewbinding.ViewBinding
 import java.util.*
-import kotlin.reflect.typeOf
 
 /**
  * Created by muhammad.mohsen on 11/4/2018.
@@ -48,9 +50,14 @@ fun Context.convertToDip(value: Float): Float {
 	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
 }
 
-fun View.setLayoutMargins(left: Int, top: Int, right: Int, bottom: Int) {
-	val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-	params.setMargins(left, top, right, bottom)
+fun View.setLayoutMargins(left: Number, top: Number, right: Number, bottom: Number) {
+	val params = when (this.layoutParams) {
+		is FrameLayout.LayoutParams -> FrameLayout.LayoutParams(this.layoutParams.width, this.layoutParams.height)
+		is LinearLayoutCompat.LayoutParams -> LinearLayoutCompat.LayoutParams(this.layoutParams.width, this.layoutParams.height)
+		else -> LinearLayout.LayoutParams(this.layoutParams.width, this.layoutParams.height) // default to LinearLayout
+	}
+
+	params.setMargins(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
 	this.layoutParams = params
 }
 

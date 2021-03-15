@@ -21,26 +21,16 @@ import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.FileMetadata
-import mohsen.muhammad.minimalist.databinding.BreadcrumbBarBinding
 import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
-import mohsen.muhammad.minimalist.databinding.MediaControls2Binding
-import mohsen.muhammad.minimalist.databinding.PermissionRequestBinding
 
 
 class MainFragment : Fragment() {
 
-	private lateinit var mainBinding: MainFragmentBinding
-	private lateinit var permissionBinding: PermissionRequestBinding
-	private lateinit var breadcrumbBinding: BreadcrumbBarBinding
-	private lateinit var controlsBinding: MediaControls2Binding
+	private lateinit var binding: MainFragmentBinding
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-		mainBinding = MainFragmentBinding.inflate(inflater, container, false)
-		permissionBinding = PermissionRequestBinding.bind(mainBinding.layoutPermission.root)
-		breadcrumbBinding = BreadcrumbBarBinding.bind(mainBinding.layoutBreadcrumbs.root)
-		controlsBinding = MediaControls2Binding.bind(mainBinding.layoutControls2.root)
-
-		return mainBinding.root
+		binding = MainFragmentBinding.inflate(inflater, container, false)
+		return binding.root
 	}
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -56,18 +46,18 @@ class MainFragment : Fragment() {
 
 				override fun onPermissionGranted(response: PermissionGrantedResponse?) {
 
-					mainBinding.layoutPermission.root.visibility = View.GONE
+					binding.layoutPermission.root.visibility = View.GONE
 
 					// breadcrumbs
-					val breadcrumbManager = BreadcrumbManager(breadcrumbBinding.breadcrumbBarContainer, breadcrumbBinding.multiSelectBarContainer)
+					val breadcrumbManager = BreadcrumbManager(binding)
 					breadcrumbManager.initialize()
 
 					// explorer
-					val explorerManager = ExplorerManager(mainBinding.recyclerViewExplorer)
+					val explorerManager = ExplorerManager(binding.recyclerViewExplorer)
 					explorerManager.initialize()
 
 					// controls
-					val playerControlsManager = PlayerControlsManager2(controlsBinding.root)
+					val playerControlsManager = PlayerControlsManager2(binding)
 					playerControlsManager.initialize()
 
 					// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't yet registered to the event bus!
@@ -78,9 +68,9 @@ class MainFragment : Fragment() {
 
 				// show permission layout
 				override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-					mainBinding.layoutPermission.root.visibility = View.VISIBLE
+					binding.layoutPermission.root.visibility = View.VISIBLE
 
-					permissionBinding.buttonGrantPermission.setOnClickListener {
+					binding.layoutPermission.buttonGrantPermission.setOnClickListener {
 						initialize()
 					}
 				}
@@ -91,6 +81,7 @@ class MainFragment : Fragment() {
 	fun onBackPressed(): Boolean {
 		return when {
 			State.isSelectModeActive -> {
+				State.selectedTracks.clear() // update the state
 				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.SELECT_MODE_INACTIVE))
 				true
 			}
@@ -104,8 +95,8 @@ class MainFragment : Fragment() {
 	}
 
 	private fun togglePermissionLayout(show: Boolean) {
-		breadcrumbBinding.root.visibility = if (show) View.GONE else View.VISIBLE // this is due to the elevation of the breadcrumbs
-		mainBinding.layoutPermission.root.visibility = if (show) View.VISIBLE else View.GONE
+		binding.layoutBreadcrumbs.root.visibility = if (show) View.GONE else View.VISIBLE // this is due to the elevation of the breadcrumbs
+		binding.layoutPermission.root.visibility = if (show) View.VISIBLE else View.GONE
 	}
 
 	companion object {

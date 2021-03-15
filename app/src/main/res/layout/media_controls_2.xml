@@ -19,12 +19,20 @@
 		android:layout_marginStart="@dimen/spacingLarge"
 		android:layout_marginEnd="@dimen/spacingLarge"
 		android:layout_marginBottom="56dp"
-		android:orientation="vertical"
 		android:elevation="@dimen/elevationMedium"
 		app:fillColor="@color/colorOnBackgroundDark"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		app:layout_constraintBottom_toBottomOf="parent"
 		>
+
+		<!-- Chapters -->
+		<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+			android:id="@+id/frameLayoutChapters"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/chapterIndicatorHeight"
+			android:layout_marginTop="@dimen/spacingSmallMedium"
+			app:fillColor="@color/colorTransparent"
+			/>
 
 		<SeekBar
 			android:id="@+id/seekBar"

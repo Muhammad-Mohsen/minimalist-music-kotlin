@@ -1,11 +1,17 @@
 package mohsen.muhammad.minimalist.app.player
 
 import android.animation.ValueAnimator
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import mohsen.muhammad.minimalist.R
+import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+import mohsen.muhammad.minimalist.core.ExtendedLinearLayout
 import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.FabMenu
@@ -175,6 +181,20 @@ internal fun PlayerControlsManager.toggleFabMenuButtonHighlight(buttonIndex: Int
 	binding?.buttonRepeat?.isPressed = false || buttonIndex == FabMenu.BUTTON_REPEAT
 	binding?.buttonShuffle?.isPressed = false || buttonIndex == FabMenu.BUTTON_SHUFFLE
 	binding?.buttonPrev?.isPressed = false || buttonIndex == FabMenu.BUTTON_PREV
+}
+
+internal fun PlayerControlsManager2.updateChapters(container: ExtendedFrameLayout) {
+	container.removeAllViews() // clear it out
+	if (!State.Track.hasChapters) return
+
+	val inflater = LayoutInflater.from(container.context)
+	for (c in State.Track.chapters.drop(2).dropLast(1)) {
+		val chapterView = inflater.inflate(R.layout.media_chapter_item, container, false)
+		container.addView(chapterView)
+
+		val leftMargin = (c.startTime.toFloat() / State.Track.duration * container.width.toFloat()).toInt()
+		chapterView.setLayoutMargins(leftMargin, 0, 0, 0)
+	}
 }
 
 internal val fabMenuButtonEventMap = mapOf(

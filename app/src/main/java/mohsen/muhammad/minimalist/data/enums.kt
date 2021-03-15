@@ -16,6 +16,8 @@ object Const {
 		const val FIRST_ITEM = 80F
 		const val LAST_ITEM = 20F
 	}
+
+	const val PREV_THRESHOLD = 5000L
 }
 
 // defines the explorer recycler view adapter view types
@@ -24,12 +26,6 @@ object ItemType {
 	const val DIRECTORY = 0
 	const val TRACK = 1
 	const val CRUMB = 2
-}
-
-object SelectionState {
-	const val NONE = 0
-	const val SELECTED = 1
-	const val SELECTED_PENDING = 11
 }
 
 object RepeatMode {

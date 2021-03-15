@@ -3,15 +3,14 @@ package mohsen.muhammad.minimalist.app.player
 import android.os.Handler
 import android.os.Looper
 import android.widget.SeekBar
-import androidx.constraintlayout.widget.ConstraintLayout
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.animateDrawable
-import mohsen.muhammad.minimalist.core.ext.context
 import mohsen.muhammad.minimalist.core.ext.resources
 import mohsen.muhammad.minimalist.core.ext.setImageDrawable
 import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
 import mohsen.muhammad.minimalist.databinding.MediaControls2Binding
 import java.lang.ref.WeakReference
 
@@ -20,10 +19,10 @@ import java.lang.ref.WeakReference
  * Manages the player controls section of the UI (omni button, current track, seek, etc.)
  */
 
-class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Subscriber {
+class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber {
 
 	// just to ensure that we don't ever leak!
-	private val controlsWeakRef = WeakReference(controlsStrongRef)
+	private val controlsWeakRef = WeakReference(binding.layoutControls2.root)
 	private val binding: MediaControls2Binding?
 		get() {
 			val nullSafeControls = controlsWeakRef.get() ?: return null
@@ -100,6 +99,13 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 
 		binding?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
 		binding?.buttonShuffle?.setImageDrawable(if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0])
+
+		// thanks https://stackoverflow.com/questions/3591784/views-getwidth-and-getheight-returns-0
+		// updateChapters uses the container's (frameLayoutChapters) width to determine the margins. On app startup, when this is called,
+		// the container is not yet laid out, and thus, width returns 0, so we just post it after
+		binding?.frameLayoutChapters?.post {
+			updateChapters(binding?.frameLayoutChapters!!)
+		}
 	}
 
 	private fun updateSeek() {
@@ -148,7 +154,7 @@ class PlayerControlsManager2(controlsStrongRef: ConstraintLayout) : EventBus.Sub
 				EventType.METADATA_UPDATE -> updateMetadata()
 				EventType.SEEK_UPDATE -> updateSeek()
 			}
-
 		}
 	}
+
 }

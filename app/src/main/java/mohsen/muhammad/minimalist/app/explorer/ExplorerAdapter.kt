@@ -15,7 +15,7 @@ import mohsen.muhammad.minimalist.data.Const
 import mohsen.muhammad.minimalist.data.ItemType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
-import mohsen.muhammad.minimalist.databinding.ExplorerListItemBinding
+import mohsen.muhammad.minimalist.databinding.ExplorerItemBinding
 import java.io.File
 
 
@@ -40,7 +40,7 @@ class ExplorerAdapter(
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExplorerViewHolder {
-		return ExplorerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.explorer_list_item, parent, false))
+		return ExplorerViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.explorer_item, parent, false))
 	}
 
 	// binds the ViewHolder with the content
@@ -118,7 +118,7 @@ class ExplorerAdapter(
 
 	// ViewHolder class
 	class ExplorerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-		private val binding = ExplorerListItemBinding.bind(itemView)
+		private val binding = ExplorerItemBinding.bind(itemView)
 
 		val icon: ImageView = binding.imageViewIcon
 		val title: TextView = binding.textViewTitle

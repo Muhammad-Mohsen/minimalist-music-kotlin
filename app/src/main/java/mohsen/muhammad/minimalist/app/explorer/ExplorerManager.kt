@@ -77,10 +77,9 @@ class ExplorerManager(
 				when (data.type) {
 					EventType.METADATA_UPDATE -> explorerAdapter.updateSelection(State.Track.path)
 					EventType.DIR_CHANGE -> onDirectoryChange(State.currentDirectory)
-					EventType.SELECT_MODE_INACTIVE -> explorerAdapter.notifyDataSetChanged() // the state should already be updated and this should only come from the cancel button in the breadcrumb bar
+					EventType.SELECT_MODE_INACTIVE -> explorerAdapter.notifyDataSetChanged() // the state should already be updated
 					EventType.PLAY_SELECTED -> explorerAdapter.updateSelection(State.Track.path)
 				}
-
 			}
 		}
 	}

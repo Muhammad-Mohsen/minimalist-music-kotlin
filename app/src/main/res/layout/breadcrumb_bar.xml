@@ -53,6 +53,7 @@
 		android:alpha="@dimen/alphaTransparent"
 		android:gravity="center_vertical"
 		android:orientation="horizontal"
+		android:visibility="gone"
 		>
 
 		<!--cancel button-->

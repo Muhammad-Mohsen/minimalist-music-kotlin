@@ -201,7 +201,7 @@
 	<!--Repeat-->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonRepeat"
-		android:src="@drawable/repeat015"
+		android:src="@drawable/repeat040"
 		style="@style/floatingButtonOmniStyle2"
 		android:layout_marginTop="@dimen/spacingMedium"
 		android:elevation="0dp"
@@ -214,7 +214,7 @@
 	<!--Shuffle-->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonShuffle"
-		android:src="@drawable/shuffle015"
+		android:src="@drawable/shuffle031"
 		style="@style/floatingButtonOmniStyle2"
 		android:layout_marginTop="@dimen/spacingMedium"
 		app:layout_constraintEnd_toEndOf="@id/mainPanel"

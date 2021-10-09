@@ -41,7 +41,7 @@ class MediaNotificationManager(private val context: Context) : EventBus.Subscrib
 	fun createNotification(): Notification {
 
 		// click the notification, get the main activity!
-		val contentIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_CANCEL_CURRENT)
+		val contentIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
 
 		val builder = NotificationCompat.Builder(context, CHANNEL_ID).apply {
 			setContentIntent(contentIntent)
@@ -72,7 +72,7 @@ class MediaNotificationManager(private val context: Context) : EventBus.Subscrib
 			putExtra(PlaybackNotification.EXTRA, actionIndex)
 		}
 
-		val pendingIntent = PendingIntent.getBroadcast(context, actionIndex, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+		val pendingIntent = PendingIntent.getBroadcast(context, actionIndex, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
 
 		return NotificationCompat.Action(iconResId, actionIndex.toString(), pendingIntent)
 	}
@@ -84,17 +84,15 @@ class MediaNotificationManager(private val context: Context) : EventBus.Subscrib
 
 	// creates a notification channel to play nice with Oreo and above
 	private fun createChannel() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val name = context.getString(R.string.notificationChannelName)
-			val descriptionText = context.getString(R.string.notificationChannelDescription)
+		val name = context.getString(R.string.notificationChannelName)
+		val descriptionText = context.getString(R.string.notificationChannelDescription)
 
-			val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW)
-			channel.description = descriptionText
-			channel.setShowBadge(false)
+		val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW)
+		channel.description = descriptionText
+		channel.setShowBadge(false)
 
-			val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-			notificationManager.createNotificationChannel(channel)
-		}
+		val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+		notificationManager.createNotificationChannel(channel)
 	}
 
 	override fun receive(data: EventBus.EventData) {

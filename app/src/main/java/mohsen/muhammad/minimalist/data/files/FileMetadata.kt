@@ -1,7 +1,6 @@
 package mohsen.muhammad.minimalist.data.files
 
 import mohsen.muhammad.minimalist.core.ext.EMPTY
-import mohsen.muhammad.minimalist.core.ext.formatMillis
 import wseemann.media.FFmpegMediaMetadataRetriever
 import java.io.File
 import java.io.FileFilter

@@ -5,13 +5,9 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
-import mohsen.muhammad.minimalist.core.ExtendedLinearLayout
 import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.FabMenu

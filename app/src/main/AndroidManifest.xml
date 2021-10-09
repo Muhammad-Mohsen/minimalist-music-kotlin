@@ -4,6 +4,8 @@
 	package="mohsen.muhammad.minimalist"
 	>
 
+	<uses-feature android:name="android.hardware.screen.portrait"/>
+
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -21,6 +23,7 @@
 			android:name="mohsen.muhammad.minimalist.app.main.MainActivity"
 			android:screenOrientation="portrait"
 			android:launchMode="singleInstance"
+			android:exported="false"
 			>
 
 			<intent-filter>

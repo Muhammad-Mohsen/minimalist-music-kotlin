@@ -21,26 +21,18 @@ class AudioFocusHandler(private val audioFocusChangeListener: AudioManager.OnAud
 
 	// request audio focus
 	fun request(): Int {
-		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val focusRequest = createFocusRequest(audioFocusChangeListener)
-			audioManager.requestAudioFocus(focusRequest!!)
-
-		} else audioManager.requestAudioFocus(audioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+		val focusRequest = createFocusRequest(audioFocusChangeListener)
+		return audioManager.requestAudioFocus(focusRequest!!)
 	}
 
 	// abandon audio focus
 	fun abandon(): Int {
-		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			audioManager.abandonAudioFocusRequest(focusRequest!!)
-
-		} else audioManager.abandonAudioFocus(audioFocusChangeListener)
+		return audioManager.abandonAudioFocusRequest(focusRequest!!)
 	}
 
 	// creates a "FocusRequest" for Oreo and above
 	private fun createFocusRequest(audioFocusChangeListener: AudioManager.OnAudioFocusChangeListener): AudioFocusRequest? {
-
-		return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) null
-		else AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
+		return AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
 
 			setAudioAttributes(AudioAttributes.Builder().run {
 				setUsage(AudioAttributes.USAGE_MEDIA)

@@ -213,7 +213,7 @@ class PlaybackManager :
 		val nextTrack = State.playlist.getNextTrack(true)
 
 		if (nextTrack != null) {
-			playTrack(nextTrack)
+			playTrack(nextTrack, false)
 			EventBus.send(SystemEvent(EVENT_SOURCE, EventType.PLAY_ITEM, nextTrack))
 
 		} else {

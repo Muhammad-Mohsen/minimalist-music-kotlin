@@ -9,12 +9,14 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.IBinder
 import android.os.PowerManager
+import android.util.Log
 import mohsen.muhammad.minimalist.app.notification.MediaNotificationManager
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.*
 import mohsen.muhammad.minimalist.data.files.getNextChapter
 import mohsen.muhammad.minimalist.data.files.getPrevChapter
+import java.lang.IllegalStateException
 import java.util.*
 
 
@@ -76,6 +78,7 @@ class PlaybackManager :
 	override fun onDestroy() {
 		player.release() // destroy the Player instance
 		sessionManager.release() // and the media session
+		audioFocusHandler.abandon() // ...and the audio focus
 
 		timer.cancelSafe()
 		timer = null
@@ -195,8 +198,13 @@ class PlaybackManager :
 	// pause playback on audio focus loss
 	override fun onAudioFocusChange(focusChange: Int) {
 		if (focusChange != AudioManager.AUDIOFOCUS_GAIN) {
-			player.pause()
-			EventBus.send(SystemEvent(EVENT_SOURCE, EventType.PAUSE))
+			try {
+				player.pause() // throws if app is playing, gets killed, and another app acquires focus (however, shouldn't occur anymore since the focus listener is abandoned in onDestroy)
+				EventBus.send(SystemEvent(EVENT_SOURCE, EventType.PAUSE))
+
+			} catch (e: IllegalStateException) {
+				Log.d(PlaybackManager::class.simpleName, "onAudioFocusChange: ${e.message}")
+			}
 		}
 	}
 

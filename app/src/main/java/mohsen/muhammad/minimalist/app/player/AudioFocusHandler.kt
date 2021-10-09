@@ -4,7 +4,6 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
-import android.os.Build
 
 /**
  * Created by muhammad.mohsen on 4/7/2019.
@@ -13,7 +12,6 @@ import android.os.Build
  * https://developer.android.com/guide/topics/media-apps/audio-focus
  */
 
-@Suppress("DEPRECATION")
 class AudioFocusHandler(private val audioFocusChangeListener: AudioManager.OnAudioFocusChangeListener, context: Context) {
 
 	private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager

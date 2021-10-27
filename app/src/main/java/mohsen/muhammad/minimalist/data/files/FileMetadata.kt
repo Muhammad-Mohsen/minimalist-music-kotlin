@@ -106,7 +106,7 @@ class FileMetadata(private val file: File) {
 	companion object {
 
 		const val ROOT = "/storage" // root directory
-		private val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b") // supported media extensions
+		private val MEDIA_EXTENSIONS = listOf("mp3", "MP3", "wav", "m4b", "mp4", "m4a", "ogg", "flac") // supported media extensions
 
 		private val filter = ExplorerFileFilter()
 

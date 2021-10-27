@@ -84,6 +84,7 @@ class PlaybackManager :
 		timer = null
 
 		unregisterReceiverSafe(noisyReceiver)
+		unregisterReceiverSafe(screenReceiver)
 		EventBus.unsubscribe(this)
 	}
 
@@ -112,22 +113,43 @@ class PlaybackManager :
 		if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
 
 		registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
+		registerReceiver(screenReceiver, screenIntentFilter)
 
 		player.start()
 
 		sendMetadataUpdate(path)
 		sendSeekUpdates()
 	}
+
+	private val screenReceiver = object : BroadcastReceiver() {
+		override fun onReceive(context: Context, intent: Intent) {
+			if (intent.action == Intent.ACTION_SCREEN_OFF) {
+				screenOn=false
+				sendSeekUpdates(screenOn)
+			} else if (intent.action == Intent.ACTION_SCREEN_ON) {
+				screenOn=true
+				sendSeekUpdates(screenOn)
+			}
+		}
+	}
+	private val screenIntentFilter = IntentFilter(Intent.ACTION_SCREEN_ON)
+	init {
+		screenIntentFilter.addAction(Intent.ACTION_SCREEN_OFF)
+	}
+	private var screenOn=true
+
 	private fun playPause(play: Boolean) {
 		if (play) {
 			val focusResult = audioFocusHandler.request()
 			if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
 
 			registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
+			registerReceiver(screenReceiver, screenIntentFilter)
 
 		} else {
 			audioFocusHandler.abandon()
 			unregisterReceiverSafe(noisyReceiver)
+			unregisterReceiverSafe(screenReceiver)
 		}
 
 		player.playPause(play)
@@ -164,6 +186,7 @@ class PlaybackManager :
 		timer.cancelSafe()
 
 		if (!toggleDispatch) return
+		if (!screenOn) return
 
 		timer = Timer()
 		timer?.scheduleAtFixedRate(object : TimerTask() {

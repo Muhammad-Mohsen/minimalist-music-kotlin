@@ -14,10 +14,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_margin="6dp"
-		android:alpha="@dimen/alphaTransparent"
+		android:alpha="@dimen/transparent"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		app:fillColor="@color/colorOnSecondary"
-		tools:alpha="@dimen/alphaOpaque"
+		tools:alpha="@dimen/opaque"
 		/>
 
 	<LinearLayout
@@ -102,10 +102,10 @@
 			android:layout_width="@dimen/spacingSmallMedium"
 			android:layout_height="@dimen/spacingSmallMedium"
 			android:layout_marginEnd="@dimen/spacingLarge"
-			android:alpha="@dimen/alphaTransparent"
+			android:alpha="@dimen/transparent"
 			app:cornerRadius="15dp"
 			app:fillColor="@color/colorOnBackground"
-			tools:alpha="@dimen/alphaOpaque"
+			tools:alpha="@dimen/opaque"
 			/>
 
 	</LinearLayout>

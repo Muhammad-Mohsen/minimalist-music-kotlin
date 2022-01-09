@@ -29,7 +29,7 @@ object FileCache {
     }
 
     fun getMediaPathsByPath(path: String): List<String> {
-        val parentDir = File(path).parentFile
+        val parentDir = File(path).parentFile ?: return emptyList()
 	    val parentDirPath = parentDir.absolutePath
 
         var files = fileCache[parentDir.absolutePath]

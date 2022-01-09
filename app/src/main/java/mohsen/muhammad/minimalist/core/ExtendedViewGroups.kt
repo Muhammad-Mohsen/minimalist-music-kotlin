@@ -69,3 +69,12 @@ class ExtendedView @JvmOverloads constructor(context: Context, attributes: Attri
 		applyPaddingAttr(attributes)
 	}
 }
+
+class ExtendedImageView @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0)
+	: androidx.appcompat.widget.AppCompatImageView(context, attributes, defStyleAttr) {
+
+	init {
+		setRoundedBackground(attributes)
+		applyPaddingAttr(attributes)
+	}
+}

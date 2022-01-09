@@ -1,5 +1,8 @@
 package mohsen.muhammad.minimalist.data.files
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import wseemann.media.FFmpegMediaMetadataRetriever
 import java.io.File
@@ -52,12 +55,13 @@ class FileMetadata(private val file: File) {
 		}
 
 	val chapterCount: Int
-		get() {
-			return retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
-		}
+		get() = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
 
 	val hasChapters: Boolean
-		get() = chapterCount > 0
+		get() = chapterCount > 1
+
+	val albumArt: ByteArray?
+		get() = retriever.embeddedPicture
 
 	val chapters: ArrayList<Chapter>
 		get() {
@@ -70,9 +74,8 @@ class FileMetadata(private val file: File) {
 			return list
 		}
 
-	private fun getChapterStartTime(i: Int): Long {
-		return retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_CHAPTER_START_TIME, i)?.toLong() ?: 0
-	}
+	private fun getChapterStartTime(i: Int): Long =
+		retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_CHAPTER_START_TIME, i)?.toLong() ?: 0
 
 	init {
 		if (isTrack(file)) retriever.setDataSource(file.path)

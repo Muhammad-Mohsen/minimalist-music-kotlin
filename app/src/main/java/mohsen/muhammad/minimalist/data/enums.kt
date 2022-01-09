@@ -12,9 +12,11 @@ object Const {
 		const val TRANSPARENT = 0F
 	}
 
-	object Margin {
+	object Dimen {
 		const val FIRST_ITEM = 80F
 		const val LAST_ITEM = 20F
+		const val ALBUM_ART_EXPANDED = 300
+		const val ALBUM_ART_COLLAPSED = 84
 	}
 
 	const val PREV_THRESHOLD = 5000L

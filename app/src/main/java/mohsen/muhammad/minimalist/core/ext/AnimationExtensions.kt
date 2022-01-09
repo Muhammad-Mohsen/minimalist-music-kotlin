@@ -1,5 +1,6 @@
 package mohsen.muhammad.minimalist.core.ext
 
+import android.animation.ValueAnimator
 import android.graphics.drawable.AnimationDrawable
 import android.os.Handler
 import android.os.Looper
@@ -108,4 +109,19 @@ fun View.scale(to: Float, duration: Long, delay: Long = 0L, endAction: (() -> Un
 		.withEndAction {
 			endAction?.invoke()
 		}
+}
+
+// bad API design
+fun View.animateHeight(to: Int, duration: Long) {
+	val valueAnimator = ValueAnimator.ofInt(this.measuredHeight, to)
+	valueAnimator.duration = duration
+
+	valueAnimator.addUpdateListener {
+		val animatedValue = valueAnimator.animatedValue as Int
+		val layoutParams = this.layoutParams
+		layoutParams.height = animatedValue
+		this.layoutParams = layoutParams
+	}
+
+	valueAnimator.start()
 }

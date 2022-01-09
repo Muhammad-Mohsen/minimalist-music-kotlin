@@ -50,9 +50,9 @@ class ExplorerAdapter(
 		with(holder) {
 
 			// set the margins on the first and last items in the list (they are different than the rest)
-			val topMargin = if (position == 0) Const.Margin.FIRST_ITEM.toDip(itemView.context) else 0f
-			val bottomMargin = if (position == files.lastIndex) Const.Margin.LAST_ITEM.toDip(itemView.context) else 0f
-			itemView.setLayoutMargins(0, topMargin.toInt(), 0, bottomMargin.toInt())
+			val topMargin = if (position == 0) Const.Dimen.FIRST_ITEM.toDip(itemView.context) else 0f
+			val bottomMargin = if (position == files.lastIndex) Const.Dimen.LAST_ITEM.toDip(itemView.context) else 0f
+			itemView.setLayoutMargins(0, topMargin.toInt(), 0, bottomMargin.toInt()) // TODO possible performance issue
 
 			icon.setColorFilter(R.color.colorBackground)
 			icon.setImageResource(if (file.isDirectory) R.mipmap.ic_directory else R.mipmap.ic_track)
@@ -88,7 +88,7 @@ class ExplorerAdapter(
 	internal fun update(files: ArrayList<ExplorerFile>) {
 		val initialSize = this.files.size
 
-		this.files.retainAll(ArrayList()) // remove everything
+		this.files.retainAll(ArrayList<ExplorerFile>().toSet()) // remove everything
 		notifyItemRangeRemoved(0, initialSize)
 
 		for (file in files) this.files.add(file)
@@ -126,7 +126,7 @@ class ExplorerAdapter(
 		val currentlyPlayingView: ExtendedFrameLayout = binding.frameLayoutCurrent
 		val selectedView: ExtendedFrameLayout = binding.imageViewSelected
 
-		val subtitle: TextView = binding.textViewSubtitle
+		// val subtitle: TextView = binding.textViewSubtitle
 		val duration: TextView = binding.textViewDuration
 	}
 }

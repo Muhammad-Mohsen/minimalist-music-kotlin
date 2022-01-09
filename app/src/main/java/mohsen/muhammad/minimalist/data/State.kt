@@ -3,6 +3,8 @@ package mohsen.muhammad.minimalist.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
@@ -84,17 +86,20 @@ object State {
 			get() = sharedPreferences.getInt(Key.CHAPTER_COUNT, 0)
 			set(value) = sharedPreferences.put(Key.CHAPTER_COUNT, value)
 
-		val hasChapters = chapterCount > 1
+		val hasChapters: Boolean
+			get() = chapterCount > 1
 
-		private var _chapters: ArrayList<Chapter>? = null
+		var albumArt: ByteArray? = null
+
+		private var chaptersField: ArrayList<Chapter>? = null
 		var chapters: ArrayList<Chapter>
 			get() {
-				_chapters?.let { return it }
-				_chapters = Chapter.deserialize(sharedPreferences.getString(Key.CHAPTERS, String.EMPTY))
-				return _chapters!!
+				chaptersField?.let { return it }
+				chaptersField = Chapter.deserialize(sharedPreferences.getString(Key.CHAPTERS, String.EMPTY))
+				return chaptersField!!
 			}
 			set(value) {
-				_chapters = value
+				chaptersField = value
 				sharedPreferences.put(Key.CHAPTERS, Chapter.serialize(value))
 			}
 
@@ -124,6 +129,7 @@ object State {
 			duration = metadata.duration
 			chapterCount = metadata.chapterCount
 			chapters = metadata.chapters
+			albumArt = metadata.albumArt
 		}
 	}
 
@@ -156,6 +162,7 @@ object State {
 		const val ALBUM = "Album"
 		const val ARTIST = "Artist"
 		const val DURATION = "Duration"
+		const val ALBUM_ART = "AlbumArt"
 
 		const val REPEAT = "Repeat"
 		const val SHUFFLE = "Shuffle"

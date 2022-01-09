@@ -1,14 +1,17 @@
 package mohsen.muhammad.minimalist.core.ext
 
 import android.content.res.ColorStateList
+import android.graphics.Outline
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.ImageButton
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
 
@@ -40,13 +43,28 @@ fun View.setRoundedBackground(attributes: AttributeSet?) {
 	background = ContextCompat.getDrawable(context, R.drawable.background_extended_view)
 
 	if (attributes != null) {
-
-		// mutate has to be called so that the following changes don't affect other instances of the drawable
-		background.mutate()
+		background.mutate() // mutate has to be called so that the following changes don't affect other instances of the drawable
 
 		applyExtendedViewAttr(attributes)
 		applyCornerAttr(attributes)
 	}
+}
+
+// holy hell, a corner radius is WORK!!
+fun AppCompatImageView.setRoundedBackground(attributes: AttributeSet?) {
+
+	val cornerAttrs = context.obtainStyledAttributes(attributes, R.styleable.ExtendedView)
+	if (!cornerAttrs.hasValue(R.styleable.ExtendedView_cornerRadius)) return
+	val radius = cornerAttrs.getDimension(R.styleable.ExtendedView_cornerRadius, 0F)
+
+	outlineProvider = object : ViewOutlineProvider() {
+		override fun getOutline(view: View?, outline: Outline?) {
+			outline?.setRoundRect(0, 0, view!!.width, view.height, radius)
+		}
+	}
+	clipToOutline = true
+
+	cornerAttrs.recycle()
 }
 
 /**
@@ -167,4 +185,11 @@ fun View.applyPaddingAttr(attributes: AttributeSet?) {
 
 fun ImageButton.setImageDrawable(@DrawableRes d: Int) {
 	setImageDrawable(ContextCompat.getDrawable(context, d))
+}
+
+fun View.setHeight(height: Int) {
+	val layoutParams = this.layoutParams
+	layoutParams.height = height
+
+	this.layoutParams = layoutParams
 }

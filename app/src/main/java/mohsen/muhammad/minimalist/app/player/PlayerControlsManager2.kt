@@ -1,14 +1,16 @@
 package mohsen.muhammad.minimalist.app.player
 
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.drawable.BitmapDrawable
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.SeekBar
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.core.ext.animateDrawable
-import mohsen.muhammad.minimalist.core.ext.resources
-import mohsen.muhammad.minimalist.core.ext.setImageDrawable
+import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.*
 import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
 import mohsen.muhammad.minimalist.databinding.MediaControls2Binding
@@ -81,6 +83,19 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 			}
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.CYCLE_SHUFFLE))
 		}
+		binding?.buttonAlbumArt?.setOnClickListener {
+			binding?.buttonAlbumArt?.let {
+				val animId = if (it.tag == R.drawable.anim_collapse_expand) R.drawable.anim_expand_collapse else R.drawable.anim_collapse_expand
+
+				val art = (binding?.imageViewAlbumArt?.drawable as BitmapDrawable).bitmap
+				val height = if (it.tag == R.drawable.anim_collapse_expand) Const.Dimen.ALBUM_ART_COLLAPSED.toDip(it.context)
+				else art.height * (binding?.imageViewAlbumArt?.width ?: 1) / art.width
+
+				it.tag = animId
+				it.animateDrawable(animId)
+				binding?.mainPanel?.animateHeight(height.toInt(), 210)
+			}
+		}
 	}
 
 	private fun updateMetadata() {
@@ -99,6 +114,9 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 
 		binding?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
 		binding?.buttonShuffle?.setImageDrawable(if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0])
+
+		binding?.buttonAlbumArt?.visibility = if (State.Track.albumArt != null) View.VISIBLE else View.GONE
+		binding?.imageViewAlbumArt?.setEncodedBitmap(State.Track.albumArt) // album art
 
 		// thanks https://stackoverflow.com/questions/3591784/views-getwidth-and-getheight-returns-0
 		// updateChapters uses the container's (frameLayoutChapters) width to determine the margins. On app startup, when this is called,

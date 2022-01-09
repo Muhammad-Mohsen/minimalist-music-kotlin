@@ -1,8 +1,9 @@
 <resources>
 
-	<dimen name="heightBreadcrumbBar">50dp</dimen>
-	<dimen name="heightMediaInfoBar">55dp</dimen>
-	<dimen name="heightSeekBar">18dp</dimen>
+	<dimen name="breadcrumbBarHeight">50dp</dimen>
+	<dimen name="mediaInfoBarHeight">55dp</dimen>
+	<dimen name="seekBarHeight">84dp</dimen>
+	<dimen name="seekBarMargin">56dp</dimen>
 	<dimen name="imageButtonContainerSize">55dp</dimen>
 	<dimen name="imageButtonContainerSize2">48dp</dimen>
 	<dimen name="fabMarginedSize">75dp</dimen>
@@ -35,7 +36,7 @@
 	<dimen name="elevationMedium">4dp</dimen>
 	<dimen name="elevationLarge">6dp</dimen>
 
-	<dimen name="alphaTransparent">0</dimen>
-	<dimen name="alphaOpaque">1</dimen>
+	<dimen name="transparent">0</dimen>
+	<dimen name="opaque">1</dimen>
 
 </resources>

@@ -109,7 +109,6 @@ class Playlist(context: Context) {
 	// sets the index of the current track - isStart indicates whether the current track should be treated as the starting index in the current playlist
 	fun setTrack(currentTrackPath: String, isStart: Boolean = true) {
 		index = tracks.indexOf(currentTrackPath)
-
 		if (isStart) start = index
 	}
 

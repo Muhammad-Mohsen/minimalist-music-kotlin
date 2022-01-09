@@ -184,10 +184,11 @@ internal fun PlayerControlsManager2.updateChapters(container: ExtendedFrameLayou
 	if (!State.Track.hasChapters) return
 
 	val inflater = LayoutInflater.from(container.context)
-	for (c in State.Track.chapters.drop(2).dropLast(1)) {
+	for (c in State.Track.chapters.drop(1)) {
 		val chapterView = inflater.inflate(R.layout.media_chapter_item, container, false)
 		container.addView(chapterView)
 
+		// TODO only add the view if it clears the corners
 		val leftMargin = (c.startTime.toFloat() / State.Track.duration * container.width.toFloat()).toInt()
 		chapterView.setLayoutMargins(leftMargin, 0, 0, 0)
 	}

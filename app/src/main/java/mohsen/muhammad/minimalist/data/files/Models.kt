@@ -1,7 +1,11 @@
 package mohsen.muhammad.minimalist.data.files
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.data.Const
+import mohsen.muhammad.minimalist.data.State
 import java.io.File
 
 
@@ -49,4 +53,12 @@ fun ArrayList<Chapter>.getPrevChapter(currentSeek: Long): Chapter {
 	return this.last {
 		it.startTime < currentSeek - Const.PREV_THRESHOLD // less than 5 seconds since the chapter began
 	}
+}
+
+class SerializableBitmap(val data: ByteArray?) {
+	private val bitmapDecoded = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)
+	private val bitmapEncoded = Base64.encodeToString(data, Base64.DEFAULT)
+
+	val bitmap: Bitmap? = bitmapDecoded
+	val serialize: String = bitmapEncoded
 }

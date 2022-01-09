@@ -35,7 +35,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		}
 
 	// handler is used to kickoff a delayed runnable (gestureRunnable) to show the fab menu
-	private val handler = Handler()
+	private val handler = Handler(Looper.getMainLooper())
 	private lateinit var gestureRunnable: Runnable
 
 	@SuppressLint("ClickableViewAccessibility")

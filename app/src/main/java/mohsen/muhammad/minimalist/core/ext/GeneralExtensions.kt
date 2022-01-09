@@ -4,14 +4,29 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.viewbinding.ViewBinding
+import mohsen.muhammad.minimalist.data.State
 import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import android.R
+
+
+
 
 /**
  * Created by muhammad.mohsen on 11/4/2018.
@@ -48,7 +63,9 @@ fun Float.toDip(context: Context): Float {
 fun Context.convertToDip(value: Float): Float {
 	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
 }
-
+fun Number.toDip(context: Context): Float {
+	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics)
+}
 fun View.setLayoutMargins(left: Number, top: Number, right: Number, bottom: Number) {
 	val params = when (this.layoutParams) {
 		is FrameLayout.LayoutParams -> FrameLayout.LayoutParams(this.layoutParams.width, this.layoutParams.height)
@@ -57,6 +74,12 @@ fun View.setLayoutMargins(left: Number, top: Number, right: Number, bottom: Numb
 	}
 
 	params.setMargins(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+	this.layoutParams = params
+}
+
+fun View.setLayoutHeight(height: Int) {
+	val params = this.layoutParams
+	params.height = height
 	this.layoutParams = params
 }
 
@@ -78,3 +101,19 @@ val ViewBinding.context: Context
 
 val ViewBinding.resources: Resources
 	get() = this.root.resources
+
+fun AppCompatImageView.setEncodedBitmap(encodedBitmap: ByteArray?) {
+	if (encodedBitmap == null) {
+		setImageResource(android.R.color.transparent)
+		return
+	}
+
+	// TODO decode the bitmap in the background, then post it back to main?
+	// https://developer.android.com/guide/background/threading
+	val bitmap = BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
+	setImageBitmap(bitmap)
+	val matrix = ColorMatrix().apply {
+		setSaturation(0f)
+	}
+	colorFilter = ColorMatrixColorFilter(matrix)
+}

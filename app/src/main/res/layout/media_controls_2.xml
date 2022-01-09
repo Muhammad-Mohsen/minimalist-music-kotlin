@@ -15,11 +15,12 @@
 	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 		android:id="@+id/mainPanel"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="@dimen/seekBarHeight"
 		android:layout_marginStart="@dimen/spacingLarge"
 		android:layout_marginEnd="@dimen/spacingLarge"
-		android:layout_marginBottom="56dp"
+		android:layout_marginBottom="@dimen/seekBarMargin"
 		android:elevation="@dimen/elevationMedium"
+		android:animateLayoutChanges="true"
 		app:fillColor="@color/colorOnBackgroundDark"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		app:layout_constraintBottom_toBottomOf="parent"
@@ -30,15 +31,16 @@
 			android:id="@+id/frameLayoutChapters"
 			android:layout_width="match_parent"
 			android:layout_height="@dimen/chapterIndicatorHeight"
-			android:layout_marginTop="@dimen/spacingSmallMedium"
+			android:layout_marginBottom="74dp"
+			android:layout_gravity="bottom"
 			app:fillColor="@color/colorTransparent"
 			/>
 
 		<SeekBar
 			android:id="@+id/seekBar"
 			android:layout_width="match_parent"
-			android:layout_height="84dp"
-			android:maxHeight="84dp"
+			android:layout_height="match_parent"
+			android:maxHeight="900dp"
 			android:padding="0dp"
 			android:max="100"
 			android:progress="25"
@@ -46,14 +48,25 @@
 			android:thumb="@null"
 			/>
 
+		<mohsen.muhammad.minimalist.core.ExtendedImageView
+			android:id="@+id/imageViewAlbumArt"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:contentDescription="@string/album_art"
+			android:scaleType="centerCrop"
+			android:alpha="0.3"
+			app:cornerRadius="@dimen/cornerRadiusLarge"
+			/>
+
 		<!--track title-->
 		<TextSwitcher
 			android:id="@+id/textViewTitle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/spacingMediumLarge"
+			android:layout_marginBottom="50dp"
 			android:layout_marginStart="@dimen/spacingLarge"
 			android:layout_marginEnd="@dimen/spacingLarge"
+			android:layout_gravity="bottom"
 			android:inAnimation="@android:anim/slide_in_left"
 			android:outAnimation="@android:anim/slide_out_right"
 			>
@@ -89,9 +102,10 @@
 			android:id="@+id/textViewSubtitle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="36dp"
+			android:layout_marginBottom="34dp"
 			android:layout_marginStart="@dimen/spacingLarge"
 			android:layout_marginEnd="@dimen/spacingLarge"
+			android:layout_gravity="bottom"
 			android:inAnimation="@android:anim/fade_in"
 			android:outAnimation="@android:anim/fade_out"
 			>
@@ -127,11 +141,11 @@
 	<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="60dp"
+		android:layout_marginBottom="-24dp"
 		android:elevation="@dimen/elevationLarge"
 		app:layout_constraintStart_toStartOf="@id/mainPanel"
 		app:layout_constraintEnd_toEndOf="@id/mainPanel"
-		app:layout_constraintTop_toTopOf="@id/mainPanel"
+		app:layout_constraintBottom_toBottomOf="@id/mainPanel"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		app:fillColor="@color/colorOnPrimary"
 		>
@@ -219,6 +233,19 @@
 		android:layout_marginTop="@dimen/spacingMedium"
 		app:layout_constraintEnd_toEndOf="@id/mainPanel"
 		app:layout_constraintTop_toBottomOf="@id/mainPanel"
+		app:fillColor="@color/colorBackground"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
+		/>
+
+	<!--Expand/Collapse-->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonAlbumArt"
+		android:src="@drawable/expand_collapse000"
+		style="@style/floatingButtonOmniStyle2"
+		android:layout_marginEnd="@dimen/spacingMediumLarge"
+		android:visibility="gone"
+		app:layout_constraintEnd_toStartOf="@id/buttonShuffle"
+		app:layout_constraintBottom_toBottomOf="@id/buttonShuffle"
 		app:fillColor="@color/colorBackground"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		/>

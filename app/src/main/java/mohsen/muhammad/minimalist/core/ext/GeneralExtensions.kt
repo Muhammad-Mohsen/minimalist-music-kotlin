@@ -4,12 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -17,15 +14,8 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.widget.ImageViewCompat
 import androidx.viewbinding.ViewBinding
-import mohsen.muhammad.minimalist.data.State
 import java.util.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import android.R
-
-
 
 
 /**
@@ -54,15 +44,6 @@ fun Timer?.cancelSafe() {
 	}
 }
 
-val View.isTransparent: Boolean
-	get() = alpha == 0f
-
-fun Float.toDip(context: Context): Float {
-	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics)
-}
-fun Context.convertToDip(value: Float): Float {
-	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
-}
 fun Number.toDip(context: Context): Float {
 	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics)
 }
@@ -74,12 +55,6 @@ fun View.setLayoutMargins(left: Number, top: Number, right: Number, bottom: Numb
 	}
 
 	params.setMargins(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
-	this.layoutParams = params
-}
-
-fun View.setLayoutHeight(height: Int) {
-	val params = this.layoutParams
-	params.height = height
 	this.layoutParams = params
 }
 

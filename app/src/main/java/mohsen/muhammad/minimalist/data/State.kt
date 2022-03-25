@@ -3,8 +3,6 @@ package mohsen.muhammad.minimalist.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
@@ -21,29 +19,22 @@ import java.io.File
  * State should never be registered with the EventBus...the async nature of EventBus would prevent the State from being 'trustworthy'
  */
 
-@SuppressLint("StaticFieldLeak")
 object State {
 
-	private lateinit var context: Context // holds the application context...don't worry
-	private lateinit var sharedPreferences: SharedPreferences
+	private lateinit var sharedPreferences: SharedPreferences // holds the application context...don't worry
 
-	fun initialize(applicationContext: Context) {
-		context = applicationContext
-		sharedPreferences = context.getSharedPreferences(Key.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-
-		playlist = Playlist(context)
+	fun initialize(prefs: SharedPreferences) {
+		sharedPreferences = prefs
+		playlist = Playlist(prefs)
 	}
 
 	var currentDirectory: File
 		get() {
-			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null)
+			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: FileMetadata.ROOT
 
-			if (savedPath != null) {
-				val savedFile = File(savedPath)
-				if (savedFile.exists()) return savedFile // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
-			}
+			val savedFile = File(savedPath)
+			return if (savedFile.exists()) savedFile else File(FileMetadata.ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
 
-			return File(FileMetadata.ROOT)
 		}
 		set(value) {
 			sharedPreferences.edit()
@@ -152,8 +143,6 @@ object State {
 
 	// the shared preferences keys
 	internal object Key {
-		const val MINIMALIST_SHARED_PREFERENCES = "Minimalist"
-
 		const val DIRECTORY = "CurrentDirectory"
 		const val PLAYLIST = "Playlist"
 

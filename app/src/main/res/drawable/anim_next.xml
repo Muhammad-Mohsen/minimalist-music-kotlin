@@ -6,7 +6,7 @@
 
 	<item
 		android:duration="90"
-		android:drawable="@drawable/next001"
+		android:drawable="@drawable/_blank"
 		/>
 
 	<item
@@ -36,7 +36,12 @@
 
 	<item
 		android:duration="90"
-		android:drawable="@drawable/next001"
+		android:drawable="@drawable/_blank"
+		/>
+
+	<item
+		android:duration="90"
+		android:drawable="@drawable/next000"
 		/>
 
 </animation-list>

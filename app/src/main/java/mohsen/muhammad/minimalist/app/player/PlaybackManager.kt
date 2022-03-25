@@ -31,7 +31,6 @@ class PlaybackManager :
 	MediaPlayer.OnCompletionListener,
 	AudioManager.OnAudioFocusChangeListener // audio focus loss
 {
-
 	private val player = MediaPlayer() // initialize the media player
 
 	private lateinit var audioFocusHandler: AudioFocusHandler

@@ -1,7 +1,5 @@
 package mohsen.muhammad.minimalist.app.player
 
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.os.Handler
 import android.os.Looper
@@ -49,16 +47,12 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 		}
 		binding?.buttonNext?.setOnClickListener {
 			togglePlayPauseButton(true)
-			binding?.buttonNext?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_NEXT)) {
-				binding?.buttonNext?.setImageDrawable(R.drawable.next000)
-			}
+			binding?.buttonNext?.animateDrawable(R.drawable.anim_next)
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.PLAY_NEXT))
 		}
 		binding?.buttonPrev?.setOnClickListener {
 			togglePlayPauseButton(true)
-			binding?.buttonPrev?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_NEXT)) {
-				binding?.buttonPrev?.setImageDrawable(R.drawable.next000)
-			}
+			binding?.buttonPrev?.animateDrawable(R.drawable.anim_next)
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.PLAY_PREVIOUS))
 		}
 		// quick and dirty, but it's better than nothing
@@ -71,16 +65,11 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 			return@setOnLongClickListener true
 		}
 		binding?.buttonRepeat?.setOnClickListener {
-			binding?.buttonRepeat?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_REPEAT)) {
-				binding?.buttonRepeat?.setImageDrawable(repeatIcons[State.playlist.repeat])
-			}
+			binding?.buttonRepeat?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_REPEAT))
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.CYCLE_REPEAT))
 		}
 		binding?.buttonShuffle?.setOnClickListener {
-			binding?.buttonShuffle?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_SHUFFLE)) { // do the animation
-				val shuffleIcon = if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0]
-				binding?.buttonShuffle?.setImageDrawable(shuffleIcon)
-			}
+			binding?.buttonShuffle?.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_SHUFFLE))
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.CYCLE_SHUFFLE))
 		}
 		binding?.buttonAlbumArt?.setOnClickListener {
@@ -98,6 +87,8 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 		}
 	}
 
+	// why am I not calling this on start up?!
+	// because...
 	private fun updateMetadata() {
 		binding?.textViewTitle?.setText(State.Track.title)
 
@@ -130,7 +121,6 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 		binding?.seekBar?.progress = State.Track.seek
 		binding?.textViewSeek?.text = State.Track.readableSeek
 	}
-
 	private fun sendSeek(seek: Int) {
 		EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.SEEK_UPDATE, seek.toString()))
 	}
@@ -143,7 +133,6 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 		binding?.buttonOmni?.animateDrawable(animId)
 		binding?.buttonOmni?.tag = animId // set the tag
 	}
-
 	private fun getButtonAnimationByIndex(buttonIndex: Int): Int {
 		return when (buttonIndex) {
 			FabMenu.BUTTON_NEXT -> R.drawable.anim_next

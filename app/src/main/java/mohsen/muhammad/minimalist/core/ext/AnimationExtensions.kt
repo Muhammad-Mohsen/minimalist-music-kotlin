@@ -117,9 +117,8 @@ fun View.animateHeight(to: Int, duration: Long) {
 	valueAnimator.duration = duration
 
 	valueAnimator.addUpdateListener {
-		val animatedValue = valueAnimator.animatedValue as Int
 		val layoutParams = this.layoutParams
-		layoutParams.height = animatedValue
+		layoutParams.height = valueAnimator.animatedValue as Int
 		this.layoutParams = layoutParams
 	}
 

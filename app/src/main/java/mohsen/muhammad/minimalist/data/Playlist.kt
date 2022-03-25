@@ -1,6 +1,8 @@
 package mohsen.muhammad.minimalist.data
 
 import android.content.Context
+import android.content.SharedPreferences
+import mohsen.muhammad.minimalist.core.ext.put
 import mohsen.muhammad.minimalist.data.files.FileCache
 import java.util.concurrent.ThreadLocalRandom
 
@@ -9,44 +11,26 @@ import java.util.concurrent.ThreadLocalRandom
  * Holds playlist items, information about the playlist (shuffle, repeat modes, current index, current directory...
  */
 
-class Playlist(context: Context) {
-
-	private val sharedPreferences = context.getSharedPreferences(State.Key.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+class Playlist(private val sharedPreferences: SharedPreferences) {
 
 	private val tracks: ArrayList<String> = ArrayList()
 		/* get() {
-			// get a semi colon-separated string
-			val savedPlaylist = sharedPreferences.getString(Key.PLAYLIST, String.EMPTY) ?: String.EMPTY
+			val savedPlaylist = sharedPreferences.getString(Key.PLAYLIST, String.EMPTY) ?: String.EMPTY // get a semi colon-separated string
 			return ArrayList(savedPlaylist.split(";"))
 		}
-		set(value) {
-			sharedPreferences.edit()
-				.putString(Key.PLAYLIST, value.joinToString(";"))
-				.apply()
-		} */
+		set(value) = sharedPreferences.put(Key.PLAYLIST, value.joinToString(";")) */
+
 	private var index: Int = 0 // current index
 	private var start: Int = 0 // starting index - to try and do circular playlist
 
 	// stored attributes
 	var repeat: Int
-		get() {
-			return sharedPreferences.getInt(State.Key.REPEAT, RepeatMode.INACTIVE)
-		}
-		set(value) {
-			sharedPreferences.edit()
-				.putInt(State.Key.REPEAT, value)
-				.apply()
-		}
+		get() = sharedPreferences.getInt(State.Key.REPEAT, RepeatMode.INACTIVE)
+		set(value) = sharedPreferences.put(State.Key.REPEAT, value)
 
 	var shuffle: Boolean
-		get() {
-			return sharedPreferences.getBoolean(State.Key.SHUFFLE, false)
-		}
-		set(value) {
-			sharedPreferences.edit()
-				.putBoolean(State.Key.SHUFFLE, value)
-				.apply()
-		}
+		get() = sharedPreferences.getBoolean(State.Key.SHUFFLE, false)
+		set(value) = sharedPreferences.put(State.Key.SHUFFLE, value)
 
 	fun updateItems(trackPath: String) {
 		val tracks = FileCache.getMediaPathsByPath(trackPath)
@@ -56,9 +40,6 @@ class Playlist(context: Context) {
 	fun updateItems(items: List<String>) {
 		tracks.clear()
 		tracks.addAll(items)
-
-		// State.playlist.tracks.clear()
-		// State.playlist.tracks.addAll(items)
 	}
 
 	fun contains(track: String): Boolean {
@@ -117,5 +98,13 @@ class Playlist(context: Context) {
 	}
 	fun cycleRepeatMode() {
 		repeat = RepeatMode.list[(repeat + 1) % RepeatMode.list.size]
+	}
+
+	object RepeatMode {
+		const val INACTIVE = 0 // inactive
+		const val ACTIVE = 1 // active
+		const val REPEAT_ONE = 2 // repeat-one
+
+		val list = arrayOf(INACTIVE, ACTIVE, REPEAT_ONE)
 	}
 }

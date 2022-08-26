@@ -46,14 +46,13 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 		return tracks.contains(track)
 	}
 
-	// first, check the shuffle state
-	// then, if we're not at the first track of the playlist, decrement by one!
-	// otherwise, rotate the index to the end of the list
 	fun getPreviousTrack(): String? {
+		if (tracks.size == 0) return null
+
 		when {
-			shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.
-			index > 0 -> index--
-			else -> index = tracks.size - 1
+			shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // first, check the shuffle state
+			index > 0 -> index-- // then, if we're not at the first track of the playlist, decrement by one!
+			else -> index = tracks.size - 1 // otherwise, rotate the index to the end of the list
 		}
 
 		return if (index != -1) tracks[index] else null
@@ -62,6 +61,7 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 	// the onComplete param indicates whether we're requesting the next track upon completion of playing the current track,
 	// or by clicking the "Next" button
 	fun getNextTrack(onComplete: Boolean): String? {
+		if (tracks.size == 0) return null
 
 		// first, check the shuffle state
 		if (shuffle) index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.

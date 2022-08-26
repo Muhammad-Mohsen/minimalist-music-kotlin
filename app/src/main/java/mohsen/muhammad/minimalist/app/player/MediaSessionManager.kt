@@ -6,6 +6,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import mohsen.muhammad.minimalist.core.evt.EventBus
+import mohsen.muhammad.minimalist.core.ext.putEncodedBitmap
 import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
@@ -79,9 +80,7 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.Track.title)
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.Track.artist)
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, State.Track.album)
-
-		val bitmap = BitmapFactory.decodeByteArray(State.Track.albumArt, 0, State.Track.albumArt?.size ?: 0)
-		metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
+		metadataBuilder.putEncodedBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.Track.albumArt)
 
 		mediaSession.setMetadata(metadataBuilder.build())
 	}

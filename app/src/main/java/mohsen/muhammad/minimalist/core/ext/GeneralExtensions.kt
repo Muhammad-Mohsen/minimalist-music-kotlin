@@ -9,6 +9,7 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.os.Handler
 import android.os.Looper
+import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -19,6 +20,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.os.HandlerCompat
 import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.*
+import mohsen.muhammad.minimalist.data.State
 import java.util.*
 
 
@@ -81,6 +83,7 @@ val ViewBinding.context: Context
 val ViewBinding.resources: Resources
 	get() = this.root.resources
 
+// coroutines, yay!!
 fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?) {
 	if (encodedBitmap == null) {
 		setImageResource(android.R.color.transparent)
@@ -98,4 +101,10 @@ fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?) {
 		}
 		colorFilter = ColorMatrixColorFilter(matrix)
 	}
+}
+fun MediaMetadataCompat.Builder.putEncodedBitmap(key: String, encodedBitmap: ByteArray?) {
+	if (encodedBitmap == null) return
+
+	val bitmap = BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
+	this.putBitmap(key, bitmap)
 }

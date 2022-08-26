@@ -51,19 +51,21 @@ class PlaybackManager :
 	// TODO replace with coroutine??
 	private var timer: Timer? = null // a timer to update the seek
 
-	// life cycle...YAY!!
-	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+	// some stuff need to be initialized early (sometimes the system calls onDestroy before calling onStartCommand!
+	// so we get a "lateinit property sessionManager has not been initialized" thrown at our face!!
+	override fun onCreate() {
+		super.onCreate()
 
+		audioFocusHandler = AudioFocusHandler(this, this) // audio focus loss
+		notificationManager = MediaNotificationManager(applicationContext)
+		sessionManager = MediaSessionManager(applicationContext)
+	}
+	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 		registerSelf(this)
 		EventBus.subscribe(this)
 
-		audioFocusHandler = AudioFocusHandler(this, this) // audio focus loss
-
 		player.setOnCompletionListener(this) //Set up MediaPlayer event listeners
 		player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK) // acquire a wake lock so that the system won't shut us down
-
-		notificationManager = MediaNotificationManager(applicationContext)
-		sessionManager = MediaSessionManager(applicationContext)
 
 		startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 

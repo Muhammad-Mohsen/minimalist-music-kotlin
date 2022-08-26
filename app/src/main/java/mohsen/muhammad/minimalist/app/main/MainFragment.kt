@@ -39,6 +39,11 @@ class MainFragment : Fragment() {
 	}
 
 	private fun initialize() {
+
+		// state - initializing the state in the permission callback sometimes threw "lateinit property sharedPreferences has not been initialized" exception!
+		val preferences = requireActivity().getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+		State.initialize(preferences)
+
 		// ask for permission
 		Dexter.withContext(requireActivity())
 			.withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -47,10 +52,6 @@ class MainFragment : Fragment() {
 				override fun onPermissionGranted(response: PermissionGrantedResponse?) {
 
 					binding.layoutPermission.root.visibility = View.GONE
-
-					// state
-					val preferences = requireActivity().getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-					State.initialize(preferences)
 
 					// service
 					val playerIntent = Intent(requireActivity(), PlaybackManager::class.java)

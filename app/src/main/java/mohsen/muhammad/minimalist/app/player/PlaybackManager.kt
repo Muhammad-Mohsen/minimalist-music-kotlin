@@ -10,7 +10,6 @@ import android.media.MediaPlayer
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
-import mohsen.muhammad.minimalist.app.notification.MediaNotificationManager
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.*

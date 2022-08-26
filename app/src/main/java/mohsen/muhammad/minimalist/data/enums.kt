@@ -8,6 +8,7 @@ import android.view.ViewConfiguration
 
 object Const {
 	const val MINIMALIST_SHARED_PREFERENCES = "Minimalist"
+	const val PREV_THRESHOLD = 5000L
 
 	object Alpha {
 		const val OPAQUE = 1F
@@ -19,8 +20,6 @@ object Const {
 		const val LAST_ITEM = 20F
 		const val ALBUM_ART_COLLAPSED = 84
 	}
-
-	const val PREV_THRESHOLD = 5000L
 }
 
 // defines the explorer recycler view adapter view types

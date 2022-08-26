@@ -1,7 +1,5 @@
 package mohsen.muhammad.minimalist.app.breadcrumb
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
@@ -102,7 +100,7 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 
 	override fun receive(data: EventBus.EventData) {
 		if (data is SystemEvent && data.source != EventSource.BREADCRUMB) {
-			Handler(Looper.getMainLooper()).post {
+			EventBus.main.post {
 
 				when (data.type) {
 					EventType.DIR_CHANGE -> onDirectoryChange(State.currentDirectory)

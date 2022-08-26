@@ -72,7 +72,7 @@ class ExplorerManager(
 
 	override fun receive(data: EventBus.EventData) {
 		if (data is SystemEvent && data.source != EventSource.EXPLORER) {
-			Handler(Looper.getMainLooper()).post {
+			EventBus.main.post {
 
 				when (data.type) {
 					EventType.METADATA_UPDATE -> explorerAdapter.updateSelection(State.Track.path)

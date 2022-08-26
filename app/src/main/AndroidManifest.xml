@@ -44,7 +44,7 @@
 		<service android:name=".app.player.PlaybackManager" android:stopWithTask="true" android:exported="false" />
 
 		<!--For the life of me I can't know why registering this receiver dynamically doesn't work!!!-->
-		<receiver android:name=".app.notification.MediaNotificationManager$NotificationActionHandler" />
+		<receiver android:name=".app.player.MediaNotificationManager$NotificationActionHandler" />
 
 	</application>
 

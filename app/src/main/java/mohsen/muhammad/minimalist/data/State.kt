@@ -1,7 +1,5 @@
 package mohsen.muhammad.minimalist.data
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.SharedPreferences
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
@@ -26,21 +24,16 @@ object State {
 	fun initialize(prefs: SharedPreferences) {
 		sharedPreferences = prefs
 		playlist = Playlist(prefs)
+		Track.update()
 	}
 
 	var currentDirectory: File
 		get() {
 			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: FileMetadata.ROOT
-
 			val savedFile = File(savedPath)
 			return if (savedFile.exists()) savedFile else File(FileMetadata.ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
-
 		}
-		set(value) {
-			sharedPreferences.edit()
-				.putString(Key.DIRECTORY, value.absolutePath)
-				.apply()
-		}
+		set(value) = sharedPreferences.put(Key.DIRECTORY, value.absolutePath)
 
 	val isPlaying: Boolean
 		get() = PlaybackManager.isPlaying
@@ -56,69 +49,37 @@ object State {
 			get() = sharedPreferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY
 			set(value) = sharedPreferences.put(Key.PATH, value)
 
-		var title: String
-			get() = sharedPreferences.getString(Key.TITLE, String.EMPTY) ?: String.EMPTY
-			set(value) = sharedPreferences.put(Key.TITLE, value)
-
-
-		var album: String
-			get() = sharedPreferences.getString(Key.ALBUM, String.EMPTY) ?: String.EMPTY
-			set(value) = sharedPreferences.put(Key.ALBUM, value)
-
-		var artist: String
-			get() = sharedPreferences.getString(Key.ARTIST, String.EMPTY) ?: String.EMPTY
-			set(value) = sharedPreferences.put(Key.ARTIST, value)
-
-		var duration: Long
-			get() = sharedPreferences.getLong(Key.DURATION, 0L)
-			set(value) = sharedPreferences.put(Key.DURATION, value)
-
-		private var chapterCount: Int
-			get() = sharedPreferences.getInt(Key.CHAPTER_COUNT, 0)
-			set(value) = sharedPreferences.put(Key.CHAPTER_COUNT, value)
-
-		val hasChapters: Boolean
-			get() = chapterCount > 1
-
+		var title= String.EMPTY
+		var album = String.EMPTY
+		var artist = String.EMPTY
+		var duration = 0L
 		var albumArt: ByteArray? = null
 
-		private var chaptersField: ArrayList<Chapter>? = null
-		var chapters: ArrayList<Chapter>
-			get() {
-				chaptersField?.let { return it }
-				chaptersField = Chapter.deserialize(sharedPreferences.getString(Key.CHAPTERS, String.EMPTY))
-				return chaptersField!!
-			}
-			set(value) {
-				chaptersField = value
-				sharedPreferences.put(Key.CHAPTERS, Chapter.serialize(value))
-			}
-
-		val readableDuration: String
-			get() = formatMillis(duration)
+		var chapters: ArrayList<Chapter> = ArrayList()
+		val hasChapters: Boolean
+			get() = chapters.size > 1
 
 		var seek: Int
-			get() {
-				return sharedPreferences.getInt(Key.SEEK, 0)
-			}
-			set(value) {
-				sharedPreferences.edit()
-					.putInt(Key.SEEK, value)
-					.apply()
-			}
+			get() = sharedPreferences.getInt(Key.SEEK, 0)
+			set(value) = sharedPreferences.put(Key.SEEK, value)
 
 		val readableSeek: String
 			get() = formatMillis(seek.toLong())
 
-		fun update(filePath: String) {
-			val metadata = FileMetadata(File(filePath))
-			path = filePath
+		val readableDuration: String
+			get() = formatMillis(duration)
+
+		fun update(filePath: String = String.EMPTY) {
+			val p = filePath.ifBlank { path }
+			if (p.isBlank()) return
+
+			val metadata = FileMetadata(File(p))
+			path = p
 
 			title = metadata.title
 			album = metadata.album
 			artist = metadata.artist
 			duration = metadata.duration
-			chapterCount = metadata.chapterCount
 			chapters = metadata.chapters
 			albumArt = metadata.albumArt
 		}
@@ -127,7 +88,7 @@ object State {
 	lateinit var playlist: Playlist
 
 	val isSelectModeActive: Boolean
-		get() = selectedTracks.count() > 0
+		get() = selectedTracks.isNotEmpty()
 
 	val selectedTracks = ArrayList<String>()
 	fun updateSelectedTracks(track: String): Int {
@@ -145,20 +106,10 @@ object State {
 	internal object Key {
 		const val DIRECTORY = "CurrentDirectory"
 		const val PLAYLIST = "Playlist"
-
 		const val PATH = "CurrentTrack"
-		const val TITLE = "Title"
-		const val ALBUM = "Album"
-		const val ARTIST = "Artist"
-		const val DURATION = "Duration"
-		const val ALBUM_ART = "AlbumArt"
+		const val SEEK = "Seek"
 
 		const val REPEAT = "Repeat"
 		const val SHUFFLE = "Shuffle"
-
-		const val SEEK = "Seek"
-
-		const val CHAPTER_COUNT = "ChapterCount"
-		const val CHAPTERS = "Chapters"
 	}
 }

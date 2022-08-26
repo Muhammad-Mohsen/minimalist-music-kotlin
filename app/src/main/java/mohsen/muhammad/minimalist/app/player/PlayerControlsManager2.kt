@@ -5,6 +5,8 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.SeekBar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
@@ -87,8 +89,6 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 		}
 	}
 
-	// why am I not calling this on start up?!
-	// because...
 	private fun updateMetadata() {
 		binding?.textViewTitle?.setText(State.Track.title)
 
@@ -107,7 +107,7 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 		binding?.buttonShuffle?.setImageDrawable(if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0])
 
 		binding?.buttonAlbumArt?.visibility = if (State.Track.albumArt != null) View.VISIBLE else View.GONE
-		binding?.imageViewAlbumArt?.setEncodedBitmap(State.Track.albumArt) // album art
+		binding?.imageViewAlbumArt?.setEncodedBitmapAsync(State.Track.albumArt) // album art
 
 		// thanks https://stackoverflow.com/questions/3591784/views-getwidth-and-getheight-returns-0
 		// updateChapters uses the container's (frameLayoutChapters) width to determine the margins. On app startup, when this is called,
@@ -150,7 +150,7 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 	override fun receive(data: EventBus.EventData) {
 
 		// make sure we're running on main
-		Handler(Looper.getMainLooper()).post {
+		EventBus.main.post {
 
 			if (data !is SystemEvent) return@post // not interested in event types other then SystemEvent
 			if (data.source == EventSource.CONTROLS) return@post // not interested in events that were sent from here

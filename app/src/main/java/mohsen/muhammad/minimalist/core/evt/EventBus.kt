@@ -1,5 +1,7 @@
 package mohsen.muhammad.minimalist.core.evt
 
+import android.os.Handler
+import android.os.Looper
 import java.lang.ref.WeakReference
 
 /**
@@ -8,6 +10,8 @@ import java.lang.ref.WeakReference
  * that need to be updated when various events occur
  */
 object EventBus {
+
+	val main = Handler(Looper.getMainLooper())
 
 	private val subscribers = ArrayList<WeakReference<Subscriber>>()
 

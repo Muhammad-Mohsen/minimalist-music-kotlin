@@ -11,8 +11,11 @@
         <entry key="..\:/Code/minimalist/minimalist-music-kotlin/remote/app/src/main/res/drawable/background_extended_view.xml" value="0.39479166666666665" />
         <entry key="..\:/Code/minimalist/minimalist-music-kotlin/remote/app/src/main/res/drawable/background_gradient.xml" value="0.39479166666666665" />
         <entry key="..\:/Code/minimalist/minimalist-music-kotlin/remote/app/src/main/res/drawable/style_seek_bar_progress_2.xml" value="0.39479166666666665" />
+        <entry key="..\:/Code/minimalist/minimalist-music-kotlin/remote/app/src/main/res/layout/main_activity.xml" value="0.37864583333333335" />
         <entry key="..\:/Code/minimalist/minimalist-music-kotlin/remote/app/src/main/res/layout/main_fragment.xml" value="0.3582427536231884" />
+        <entry key="..\:/Code/minimalist/minimalist-music-kotlin/remote/app/src/main/res/layout/media_chapter_item.xml" value="0.37864583333333335" />
         <entry key="..\:/Code/minimalist/minimalist-music-kotlin/remote/app/src/main/res/layout/media_controls_2.xml" value="0.4810267857142857" />
+        <entry key="..\:/Code/minimalist/minimalist-music-kotlin/remote/app/src/main/res/layout/permission_request.xml" value="0.37864583333333335" />
       </map>
     </option>
   </component>

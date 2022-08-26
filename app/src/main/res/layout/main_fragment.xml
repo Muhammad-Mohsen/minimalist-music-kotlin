@@ -28,8 +28,6 @@
 		/>
 
 	<!--Controls-->
-
-	<!--Permission denied layout-->
 	<include
 		android:id="@+id/layoutControls2"
 		layout="@layout/media_controls_2"
@@ -38,10 +36,11 @@
 		android:layout_gravity="bottom"
 		/>
 
+	<!--Permission denied layout-->
 	<include
 		android:id="@+id/layoutPermission"
 		layout="@layout/permission_request"
-		android:visibility="gone"
+		android:visibility="visible"
 		tools:visibility="gone"
 		/>
 

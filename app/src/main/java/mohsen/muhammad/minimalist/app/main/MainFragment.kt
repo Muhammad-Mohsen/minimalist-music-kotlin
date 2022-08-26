@@ -1,11 +1,17 @@
 package mohsen.muhammad.minimalist.app.main
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -14,12 +20,10 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import mohsen.muhammad.minimalist.app.breadcrumb.BreadcrumbManager
 import mohsen.muhammad.minimalist.app.explorer.ExplorerManager
+import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.app.player.PlayerControlsManager2
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.data.EventSource
-import mohsen.muhammad.minimalist.data.EventType
-import mohsen.muhammad.minimalist.data.State
-import mohsen.muhammad.minimalist.data.SystemEvent
+import mohsen.muhammad.minimalist.data.*
 import mohsen.muhammad.minimalist.data.files.FileMetadata
 import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
 
@@ -30,12 +34,8 @@ class MainFragment : Fragment() {
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		binding = MainFragmentBinding.inflate(inflater, container, false)
-		return binding.root
-	}
-
-	override fun onActivityCreated(savedInstanceState: Bundle?) {
-		super.onActivityCreated(savedInstanceState)
 		initialize()
+		return binding.root
 	}
 
 	private fun initialize() {
@@ -47,6 +47,14 @@ class MainFragment : Fragment() {
 				override fun onPermissionGranted(response: PermissionGrantedResponse?) {
 
 					binding.layoutPermission.root.visibility = View.GONE
+
+					// state
+					val preferences = requireActivity().getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+					State.initialize(preferences)
+
+					// service
+					val playerIntent = Intent(requireActivity(), PlaybackManager::class.java)
+					ContextCompat.startForegroundService(requireActivity(), playerIntent)
 
 					// breadcrumbs
 					val breadcrumbManager = BreadcrumbManager(binding)
@@ -92,11 +100,6 @@ class MainFragment : Fragment() {
 				true
 			}
 		}
-	}
-
-	private fun togglePermissionLayout(show: Boolean) {
-		binding.layoutBreadcrumbs.root.visibility = if (show) View.GONE else View.VISIBLE // this is due to the elevation of the breadcrumbs
-		binding.layoutPermission.root.visibility = if (show) View.VISIBLE else View.GONE
 	}
 
 	companion object {

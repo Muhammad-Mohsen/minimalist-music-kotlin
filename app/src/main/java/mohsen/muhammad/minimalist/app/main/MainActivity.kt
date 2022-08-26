@@ -19,12 +19,6 @@ class MainActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.main_activity)
 
-		val playerIntent = Intent(applicationContext, PlaybackManager::class.java)
-		ContextCompat.startForegroundService(this, playerIntent)
-
-		val preferences = getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-		State.initialize(preferences)
-
 		if (savedInstanceState == null) {
 			supportFragmentManager.beginTransaction()
 					.replace(R.id.container, MainFragment.newInstance())

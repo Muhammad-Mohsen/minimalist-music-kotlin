@@ -1,6 +1,7 @@
 package mohsen.muhammad.minimalist.app.player
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -31,9 +32,6 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 
 		EventBus.subscribe(this@MediaSessionManager)
 	}
-
-	val token: MediaSessionCompat.Token
-		get() = mediaSession.sessionToken
 
 	fun release() {
 		mediaSession.isActive = false
@@ -81,6 +79,9 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.Track.title)
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.Track.artist)
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, State.Track.album)
+
+		val bitmap = BitmapFactory.decodeByteArray(State.Track.albumArt, 0, State.Track.albumArt?.size ?: 0)
+		metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
 
 		mediaSession.setMetadata(metadataBuilder.build())
 	}

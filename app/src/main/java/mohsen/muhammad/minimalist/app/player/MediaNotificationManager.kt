@@ -1,4 +1,4 @@
-package mohsen.muhammad.minimalist.app.notification
+package mohsen.muhammad.minimalist.app.player
 
 import android.app.Notification
 import android.app.NotificationChannel

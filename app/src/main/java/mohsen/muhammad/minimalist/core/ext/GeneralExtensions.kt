@@ -7,6 +7,8 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -14,7 +16,9 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.os.HandlerCompat
 import androidx.viewbinding.ViewBinding
+import kotlinx.coroutines.*
 import java.util.*
 
 
@@ -77,18 +81,21 @@ val ViewBinding.context: Context
 val ViewBinding.resources: Resources
 	get() = this.root.resources
 
-fun AppCompatImageView.setEncodedBitmap(encodedBitmap: ByteArray?) {
+fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?) {
 	if (encodedBitmap == null) {
 		setImageResource(android.R.color.transparent)
 		return
 	}
 
-	// TODO decode the bitmap in the background, then post it back to main?
-	// https://developer.android.com/guide/background/threading
-	val bitmap = BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
-	setImageBitmap(bitmap)
-	val matrix = ColorMatrix().apply {
-		setSaturation(0f)
+	MainScope().launch {
+		val bitmap = withContext(Dispatchers.Default) {
+			BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
+		}
+
+		setImageBitmap(bitmap)
+		val matrix = ColorMatrix().apply {
+			setSaturation(0f)
+		}
+		colorFilter = ColorMatrixColorFilter(matrix)
 	}
-	colorFilter = ColorMatrixColorFilter(matrix)
 }

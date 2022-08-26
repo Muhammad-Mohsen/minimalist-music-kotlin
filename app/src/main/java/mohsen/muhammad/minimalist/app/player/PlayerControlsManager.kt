@@ -171,7 +171,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 	override fun receive(data: EventBus.EventData) {
 
 		// make sure we're running on main
-		Handler(Looper.getMainLooper()).post {
+		EventBus.main.post {
 
 			if (data !is SystemEvent) return@post // not interested in event types other then SystemEvent
 			if (data.source == EventSource.CONTROLS) return@post // not interested in events that were sent from here

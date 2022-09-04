@@ -1,14 +1,9 @@
 package mohsen.muhammad.minimalist.app.main
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
-import mohsen.muhammad.minimalist.data.Const
-import mohsen.muhammad.minimalist.data.State
 
 class MainActivity : AppCompatActivity() {
 

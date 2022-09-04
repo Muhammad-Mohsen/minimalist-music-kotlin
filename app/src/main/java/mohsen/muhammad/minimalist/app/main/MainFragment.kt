@@ -9,9 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -24,7 +21,7 @@ import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.app.player.PlayerControlsManager2
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.*
-import mohsen.muhammad.minimalist.data.files.FileMetadata
+import mohsen.muhammad.minimalist.data.files.ExplorerFile
 import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
 
 
@@ -94,7 +91,7 @@ class MainFragment : Fragment() {
 				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.SELECT_MODE_INACTIVE))
 				true
 			}
-			State.currentDirectory.absolutePath == FileMetadata.ROOT -> false
+			State.currentDirectory.absolutePath == ExplorerFile.ROOT -> false
 			else -> {
 				State.currentDirectory = State.currentDirectory.parentFile!! // don't worry about it
 				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.DIR_CHANGE, State.currentDirectory.absolutePath))

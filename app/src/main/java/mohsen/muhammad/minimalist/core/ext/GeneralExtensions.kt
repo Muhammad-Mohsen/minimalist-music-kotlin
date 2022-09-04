@@ -7,8 +7,6 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
-import android.os.Handler
-import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
 import android.util.TypedValue
@@ -17,10 +15,11 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.os.HandlerCompat
 import androidx.viewbinding.ViewBinding
-import kotlinx.coroutines.*
-import mohsen.muhammad.minimalist.data.State
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 

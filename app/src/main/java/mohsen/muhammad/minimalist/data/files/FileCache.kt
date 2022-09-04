@@ -18,8 +18,8 @@ object FileCache {
         var files = fileCache[path]
 
         // if not cached, or directory was modified more recently than the cache
-        if (files == null || f.lastModified() > lastModifiedCache[path] ?: 0L) {
-            files = FileMetadata.listExplorerFiles(path)
+        if (files == null || f.lastModified() > (lastModifiedCache[path] ?: 0L)) {
+            files = ExplorerFile.listExplorerFiles(path)
             fileCache[path] = files
 
             lastModifiedCache[path] = f.lastModified()
@@ -35,8 +35,8 @@ object FileCache {
         var files = fileCache[parentDir.absolutePath]
 
         // if not cached, or directory was modified more recently than the cache
-        if (files == null || parentDir.lastModified() > lastModifiedCache[parentDirPath] ?: 0L) {
-            files = FileMetadata.listExplorerFiles(parentDirPath)
+        if (files == null || parentDir.lastModified() > (lastModifiedCache[parentDirPath] ?: 0L)) {
+            files = ExplorerFile.listExplorerFiles(parentDirPath)
             fileCache[parentDirPath] = files
 
             lastModifiedCache[parentDirPath] = parentDir.lastModified()

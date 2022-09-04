@@ -1,6 +1,5 @@
 package mohsen.muhammad.minimalist.data
 
-import android.content.Context
 import android.content.SharedPreferences
 import mohsen.muhammad.minimalist.core.ext.put
 import mohsen.muhammad.minimalist.data.files.FileCache

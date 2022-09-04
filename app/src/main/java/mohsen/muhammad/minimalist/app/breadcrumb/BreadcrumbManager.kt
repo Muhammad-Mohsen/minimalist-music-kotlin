@@ -10,7 +10,7 @@ import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
-import mohsen.muhammad.minimalist.data.files.FileMetadata
+import mohsen.muhammad.minimalist.data.files.ExplorerFile
 import mohsen.muhammad.minimalist.databinding.BreadcrumbBarBinding
 import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
 import java.io.File
@@ -47,7 +47,7 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		recyclerViewBreadcrumbs.adapter = breadcrumbAdapter
 
 		// set back button icon
-		val animationResourceId = if (currentDirectory.absolutePath == FileMetadata.ROOT) R.drawable.anim_root_back else R.drawable.anim_back_root
+		val animationResourceId = if (currentDirectory.absolutePath == ExplorerFile.ROOT) R.drawable.anim_root_back else R.drawable.anim_back_root
 		val drawable = ContextCompat.getDrawable(buttonBack.context, animationResourceId)
 		buttonBack.setImageDrawable(drawable)
 
@@ -57,7 +57,7 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		// back button click listener
 		buttonBack.setOnClickListener {
 
-			if (State.currentDirectory.absolutePath != FileMetadata.ROOT) {
+			if (State.currentDirectory.absolutePath != ExplorerFile.ROOT) {
 				val dir = State.currentDirectory.parentFile ?: return@setOnClickListener
 
 				State.currentDirectory = dir
@@ -118,9 +118,9 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
 
 		// if currently at the root, animate to the root icon
-		if (currentDirectory.absolutePath == FileMetadata.ROOT) animateBackButton(false)
+		if (currentDirectory.absolutePath == ExplorerFile.ROOT) animateBackButton(false)
 		// if not at the root AND not displaying the back icon, animate to it
-		else if (currentDirectory.absolutePath != FileMetadata.ROOT && currentDirectory.parent == FileMetadata.ROOT) animateBackButton(true)
+		else if (currentDirectory.absolutePath != ExplorerFile.ROOT && currentDirectory.parent == ExplorerFile.ROOT) animateBackButton(true)
 	}
 
 	private fun onSelectModeChange() {

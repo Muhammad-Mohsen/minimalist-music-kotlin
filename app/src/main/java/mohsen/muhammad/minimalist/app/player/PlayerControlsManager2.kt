@@ -1,12 +1,8 @@
 package mohsen.muhammad.minimalist.app.player
 
 import android.graphics.drawable.BitmapDrawable
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.SeekBar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus

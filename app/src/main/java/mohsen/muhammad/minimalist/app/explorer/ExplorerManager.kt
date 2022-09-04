@@ -1,7 +1,5 @@
 package mohsen.muhammad.minimalist.app.explorer
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView

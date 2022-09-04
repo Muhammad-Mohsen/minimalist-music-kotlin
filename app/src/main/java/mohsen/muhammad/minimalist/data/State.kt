@@ -6,6 +6,7 @@ import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
 import mohsen.muhammad.minimalist.core.ext.put
 import mohsen.muhammad.minimalist.data.files.Chapter
+import mohsen.muhammad.minimalist.data.files.ExplorerFile
 import mohsen.muhammad.minimalist.data.files.FileMetadata
 import java.io.File
 
@@ -29,9 +30,9 @@ object State {
 
 	var currentDirectory: File
 		get() {
-			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: FileMetadata.ROOT
+			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: ExplorerFile.MEDIA_DIR
 			val savedFile = File(savedPath)
-			return if (savedFile.exists()) savedFile else File(FileMetadata.ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
+			return if (savedFile.exists()) savedFile else File(ExplorerFile.MEDIA_DIR) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
 		}
 		set(value) = sharedPreferences.put(Key.DIRECTORY, value.absolutePath)
 

@@ -1,14 +1,8 @@
 package mohsen.muhammad.minimalist.data.files
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.MediaMetadataRetriever
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import wseemann.media.FFmpegMediaMetadataRetriever
 import java.io.File
-import java.io.FileFilter
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -20,6 +14,9 @@ import kotlin.collections.ArrayList
 class FileMetadata(private val file: File) {
 
 	private val retriever = FFmpegMediaMetadataRetriever()
+	init {
+		if (ExplorerFile.isTrack(file)) retriever.setDataSource(file.path)
+	}
 
 	val title: String
 		get() {
@@ -47,18 +44,16 @@ class FileMetadata(private val file: File) {
 	val trackCount: Int
 		get() {
 			if (file.isDirectory) {
-				val tracks = file.listFiles(MediaFileFilter())
+				// FileFilter implementation that accepts media files defined by the media extensions string array
+				val tracks = file.listFiles { file: File -> ExplorerFile.MEDIA_EXTENSIONS.contains(file.extension.lowercase()) }
 				if (tracks != null) return tracks.size
 			}
 
 			return 0
 		}
 
-	val chapterCount: Int
+	private val chapterCount: Int
 		get() = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
-
-	val hasChapters: Boolean
-		get() = chapterCount > 1
 
 	val albumArt: ByteArray?
 		get() = retriever.embeddedPicture
@@ -77,59 +72,4 @@ class FileMetadata(private val file: File) {
 	private fun getChapterStartTime(i: Int): Long =
 		retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_CHAPTER_START_TIME, i)?.toLong() ?: 0
 
-	init {
-		if (isTrack(file)) retriever.setDataSource(file.path)
-	}
-
-	// FileFilter implementation that accepts media files defined by the media extensions string array
-	private class MediaFileFilter : FileFilter {
-
-		override fun accept(file: File): Boolean {
-			return MEDIA_EXTENSIONS.contains(file.extension)
-		}
-	}
-
-	// FileFilter implementation that accepts directory/media files.
-	private class ExplorerFileFilter : FileFilter {
-
-		override fun accept(file: File): Boolean {
-			return file.isDirectory || MEDIA_EXTENSIONS.contains(file.extension)
-		}
-	}
-
-	private class FileComparator : Comparator<File> {
-		override fun compare(o1: File, o2: File): Int {
-			return if (o1.isDirectory && o2.isDirectory) o1.name.compareTo(o2.name, true) // if both are directories, compare their names
-			else if (o1.isDirectory && !o2.isDirectory) -1 // if the first is a directory, it's always first
-			else if (o2.isDirectory) 1 // if the second is a directory, it's always first
-			else o1.name.compareTo(o2.name, true) // if both are tracks, compare their names
-		}
-	}
-
-	companion object {
-
-		const val ROOT = "/storage" // root directory
-		private val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b") // supported media extensions
-
-		private val filter = ExplorerFileFilter()
-
-		private fun isTrack(f: File): Boolean {
-			return MEDIA_EXTENSIONS.contains(f.extension)
-		}
-
-		fun listExplorerFiles(path: String): ArrayList<ExplorerFile> {
-			val fileModels = ArrayList<ExplorerFile>()
-
-			var files = File(path).listFiles(filter)
-
-			if (path == "/storage/emulated") files = arrayOf(File("/storage/emulated/0"))
-			else if (files == null) return ArrayList()
-
-			Arrays.sort(files, FileComparator())
-
-			for (f in files) fileModels.add(ExplorerFile(f.absolutePath))
-
-			return fileModels
-		}
-	}
 }

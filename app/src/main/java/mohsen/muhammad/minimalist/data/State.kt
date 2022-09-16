@@ -30,9 +30,9 @@ object State {
 
 	var currentDirectory: File
 		get() {
-			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: ExplorerFile.MEDIA_DIR
+			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: ExplorerFile.ROOT
 			val savedFile = File(savedPath)
-			return if (savedFile.exists()) savedFile else File(ExplorerFile.MEDIA_DIR) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
+			return if (savedFile.exists()) savedFile else File(ExplorerFile.ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
 		}
 		set(value) = sharedPreferences.put(Key.DIRECTORY, value.absolutePath)
 

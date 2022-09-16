@@ -136,7 +136,7 @@ class PlaybackManager :
 
 	private fun playNext() {
 		if (State.Track.hasChapters) {
-			val nextChapter = State.Track.chapters.getNextChapter(player.currentPosition.toLong())
+			val nextChapter = State.Track.chapters.getNextChapter(player.currentPositionSafe.toLong())
 			updateSeek(nextChapter.startTime.toInt())
 			if (!player.isPlaying) playPause(true)
 
@@ -146,7 +146,7 @@ class PlaybackManager :
 	}
 	private fun playPrev() {
 		if (State.Track.hasChapters) {
-			val prevChapter = State.Track.chapters.getPrevChapter(player.currentPosition.toLong())
+			val prevChapter = State.Track.chapters.getPrevChapter(player.currentPositionSafe.toLong())
 			updateSeek(prevChapter.startTime.toInt())
 			if (!player.isPlaying) playPause(true)
 
@@ -175,17 +175,17 @@ class PlaybackManager :
 	}
 
 	private fun fastForward() {
-		player.seekTo(player.currentPosition + SEEK_JUMP)
+		player.seekTo(player.currentPositionSafe + SEEK_JUMP)
 		sendSingleSeekUpdate()
 	}
 	private fun rewind() {
-		player.seekTo(player.currentPosition - SEEK_JUMP)
+		player.seekTo(player.currentPositionSafe - SEEK_JUMP)
 		sendSingleSeekUpdate()
 	}
 
 	// used to update the seek (used for when the playback is stopped but the user changes seek)
 	private fun sendSingleSeekUpdate() {
-		State.Track.seek = player.currentPosition
+		State.Track.seek = player.currentPositionSafe
 		EventBus.send(SystemEvent(EVENT_SOURCE, EventType.SEEK_UPDATE))
 	}
 

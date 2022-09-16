@@ -34,7 +34,6 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 	companion object {
 
 		const val ROOT = "/storage" // root directory
-		val MEDIA_DIR: String = Environment.DIRECTORY_MUSIC
 		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg") // supported media extensions
 
 		private val filter = ExplorerFileFilter()

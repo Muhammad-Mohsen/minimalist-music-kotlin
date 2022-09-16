@@ -33,7 +33,6 @@ fun MediaPlayer.prepareSource(path: String) {
 val MediaPlayer.readableDuration: String
 	get() = formatMillis(duration.toLong())
 
-
 val MediaPlayer.readablePosition: String
 	get() = formatMillis(currentPosition.toLong())
 
@@ -46,6 +45,15 @@ val MediaPlayer?.isPlayingSafe: Boolean
 
 		} catch (e: Exception) {
 			false
+		}
+	}
+
+val MediaPlayer.currentPositionSafe: Int
+	get() {
+		return try {
+			currentPosition
+		} catch (e: Exception) {
+			0
 		}
 	}
 

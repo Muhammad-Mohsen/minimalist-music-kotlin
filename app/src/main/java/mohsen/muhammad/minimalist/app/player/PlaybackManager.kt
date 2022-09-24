@@ -57,8 +57,8 @@ class PlaybackManager :
 		super.onCreate()
 
 		audioFocusHandler = AudioFocusHandler(this, this) // audio focus loss
-		notificationManager = MediaNotificationManager(applicationContext)
 		sessionManager = MediaSessionManager(applicationContext)
+		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
 	}
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 		registerSelf(this)
@@ -256,7 +256,6 @@ class PlaybackManager :
 
 		val isPlaying: Boolean
 			get() = instance?.player.isPlayingSafe
-
 
 		private fun registerSelf(i: PlaybackManager) {
 			instance = i

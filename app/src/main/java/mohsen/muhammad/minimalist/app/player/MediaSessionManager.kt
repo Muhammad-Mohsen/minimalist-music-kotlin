@@ -33,6 +33,8 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		EventBus.subscribe(this@MediaSessionManager)
 	}
 
+	val token: MediaSessionCompat.Token = mediaSession.sessionToken
+
 	fun release() {
 		mediaSession.isActive = false
 		mediaSession.release()
@@ -60,49 +62,57 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		EventBus.send(SystemEvent(EventSource.SESSION, EventType.PLAY_PREVIOUS))
 	}
 
-	private fun updatePlaybackState(state: Int) {
-		// set actions
-		stateBuilder.setActions(SUPPORTED_ACTIONS)
+	override fun onSeekTo(pos: Long) {
+		updatePlaybackState(EventType.SEEK_UPDATE, pos)
+		EventBus.send(SystemEvent(EventSource.SESSION, EventType.SEEK_UPDATE, pos.toString()))
+	}
 
-		// update state
+	private fun updatePlaybackState(state: Int, seek: Long = 0) {
+		stateBuilder.setActions(SUPPORTED_ACTIONS) // actions
+
+		// state
 		when (state) {
 			EventType.PLAY_NEXT,
 			EventType.PLAY_PREVIOUS,
 			EventType.PLAY,
-			EventType.PLAY_ITEM -> stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, State.Track.seek.toLong(), 1F)
-			EventType.PAUSE -> stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, State.Track.seek.toLong(), 0F)
+			EventType.PLAY_ITEM -> stateBuilder.setState(PLAYING, State.Track.seek.toLong(), 1F)
+			EventType.PAUSE -> stateBuilder.setState(PAUSED, State.Track.seek.toLong(), 0F)
+			EventType.SEEK_UPDATE -> stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, seek, if (State.isPlaying) 1F else 0F)
 		}
-
 		mediaSession.setPlaybackState(stateBuilder.build())
 
-		// set metadata
+		// metadata
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.Track.title)
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.Track.artist)
 		metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, State.Track.album)
+		metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, State.Track.duration)
 		metadataBuilder.putEncodedBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.Track.albumArt)
 
 		mediaSession.setMetadata(metadataBuilder.build())
 	}
 
 	override fun receive(data: EventBus.EventData) {
-		if (data is SystemEvent) {
-			when (data.type) {
-				EventType.PLAY,
-				EventType.PAUSE,
-				EventType.PLAY_ITEM,
-				EventType.PLAY_NEXT,
-				EventType.PLAY_PREVIOUS,
-				EventType.METADATA_UPDATE -> updatePlaybackState(data.type)
-			}
+		if (data !is SystemEvent) return
+		when (data.type) {
+			EventType.PLAY,
+			EventType.PAUSE,
+			EventType.PLAY_ITEM,
+			EventType.PLAY_NEXT,
+			EventType.PLAY_PREVIOUS,
+			EventType.METADATA_UPDATE -> updatePlaybackState(data.type)
 		}
 	}
 
 	companion object {
+		const val PLAYING = PlaybackStateCompat.STATE_PLAYING
+		const val PAUSED = PlaybackStateCompat.STATE_PAUSED
+
 		private const val SUPPORTED_ACTIONS = PlaybackStateCompat.ACTION_PLAY or
-					PlaybackStateCompat.ACTION_PLAY_PAUSE or
-					PlaybackStateCompat.ACTION_PAUSE or
-					PlaybackStateCompat.ACTION_STOP or
-					PlaybackStateCompat.ACTION_SKIP_TO_NEXT or
-					PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+				PlaybackStateCompat.ACTION_PLAY_PAUSE or
+				PlaybackStateCompat.ACTION_PAUSE or
+				PlaybackStateCompat.ACTION_STOP or
+				PlaybackStateCompat.ACTION_SKIP_TO_NEXT or
+				PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
+				PlaybackStateCompat.ACTION_SEEK_TO
 	}
 }

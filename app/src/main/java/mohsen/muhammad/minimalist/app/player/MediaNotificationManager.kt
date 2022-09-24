@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -22,13 +23,14 @@ import mohsen.muhammad.minimalist.data.*
  * P.S. the "NotificationManager" name is already taken!
  */
 
-class MediaNotificationManager(private val context: Context) : EventBus.Subscriber {
+class MediaNotificationManager(private val context: Context, sessionToken: MediaSessionCompat.Token) : EventBus.Subscriber {
 
 	// media notification style
 	private val style: androidx.media.app.NotificationCompat.MediaStyle by lazy {
 		androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle()
 			.setShowCancelButton(false)
 			.setShowActionsInCompactView(Action.PREV, Action.PLAY_PAUSE, Action.NEXT)
+			.setMediaSession(sessionToken)
 	}
 
 	init {
@@ -48,15 +50,17 @@ class MediaNotificationManager(private val context: Context) : EventBus.Subscrib
 			setContentText(State.Track.album)
 			setSmallIcon(R.drawable.ic_notification)
 			setShowWhen(false)
+			setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 			priority = NotificationCompat.PRIORITY_DEFAULT // for versions prior to Oreo
 
 			setColorized(true)
 			color = ContextCompat.getColor(context, R.color.colorOnBackgroundDark)
-
 			setStyle(style)
+
 			addAction(createAction(R.drawable.ic_notification_prev, Action.PREV))
 			addAction(createAction(getPlayPauseIcon(), Action.PLAY_PAUSE))
 			addAction(createAction(R.drawable.ic_notification_next, Action.NEXT))
+
 		}.build()
 
 		NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification) // display the notification
@@ -92,7 +96,8 @@ class MediaNotificationManager(private val context: Context) : EventBus.Subscrib
 	}
 
 	override fun receive(data: EventBus.EventData) {
-		if (data is SystemEvent) {
+		if (data !is SystemEvent) return
+		EventBus.main.post { // post-ing here just to delay the notification creation long enough for the playback state to settle (without it, State.isPlaying reported the previous state!)
 			when (data.type) {
 				EventType.PLAY,
 				EventType.PAUSE,

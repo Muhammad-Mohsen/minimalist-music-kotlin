@@ -2,7 +2,6 @@ package mohsen.muhammad.minimalist.data.files
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Environment
 import android.util.Base64
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.data.Const

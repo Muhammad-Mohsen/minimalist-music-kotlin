@@ -14,6 +14,7 @@
 	<dimen name="fabMenuExpandedBackgroundRadius">380dp</dimen>
 	<dimen name="fabMenuExpandedRadius">150dp</dimen>
 
+	<dimen name="spacingZero">0dp</dimen>
 	<dimen name="spacingSmall">4dp</dimen>
 	<dimen name="spacingSmallMedium">6dp</dimen>
 	<dimen name="spacingMedium">8dp</dimen>
@@ -32,6 +33,7 @@
 	<dimen name="cornerRadiusMedium">6dp</dimen>
 	<dimen name="cornerRadiusLarge">9dp</dimen>
 
+	<dimen name="elevationZero">0dp</dimen>
 	<dimen name="elevationSmall">2dp</dimen>
 	<dimen name="elevationMedium">4dp</dimen>
 	<dimen name="elevationLarge">6dp</dimen>

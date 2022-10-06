@@ -4,10 +4,15 @@ import android.animation.ValueAnimator
 import android.graphics.drawable.AnimationDrawable
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.Transformation
+import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.DimenRes
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 
@@ -85,20 +90,6 @@ fun View.fadeOut(duration: Long, delay: Long = 0L) {
 		}
 }
 
-fun View.slideY(to: Float, duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = null) {
-	val metrics = resources.displayMetrics
-	val toPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, to, metrics)
-
-	ViewCompat.animate(this)
-		.setStartDelay(delay)
-		.setDuration(duration)
-		.translationY(toPixels)
-		.setInterpolator(AccelerateDecelerateInterpolator())
-		.withEndAction {
-			endAction?.invoke()
-		}
-}
-
 fun View.scale(to: Float, duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = null) {
 	ViewCompat.animate(this)
 		.setStartDelay(delay)
@@ -111,7 +102,7 @@ fun View.scale(to: Float, duration: Long, delay: Long = 0L, endAction: (() -> Un
 		}
 }
 
-// bad API design
+// bad API design...can't remember why I said that!
 fun View.animateHeight(to: Int, duration: Long) {
 	val valueAnimator = ValueAnimator.ofInt(this.measuredHeight, to)
 	valueAnimator.duration = duration
@@ -123,4 +114,43 @@ fun View.animateHeight(to: Int, duration: Long) {
 	}
 
 	valueAnimator.start()
+}
+
+fun View.animateLayoutMargins(@DimenRes left: Int, @DimenRes top: Int, @DimenRes right: Int, @DimenRes bottom: Int, duration: Long) {
+	val anim = object : Animation() {
+
+		val params = when (parent) {
+			is LinearLayoutCompat -> layoutParams as LinearLayoutCompat.LayoutParams
+			is ConstraintLayout -> layoutParams as ConstraintLayout.LayoutParams
+			else -> layoutParams as FrameLayout.LayoutParams
+		}
+
+		val il = params.leftMargin
+		val it = params.topMargin
+		val ir = params.rightMargin
+		val ib = params.bottomMargin
+
+		val dl = resources.getDimension(left) - params.leftMargin
+		val dt = resources.getDimension(top) - params.topMargin
+		val dr = resources.getDimension(right) - params.rightMargin
+		val db = resources.getDimension(bottom) - params.bottomMargin
+
+		@Override
+		override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+			params.leftMargin = il + (dl * interpolatedTime).toInt()
+			params.topMargin = it + (dt * interpolatedTime).toInt()
+			params.rightMargin = ir + (dr * interpolatedTime).toInt()
+			params.bottomMargin = ib + (db * interpolatedTime).toInt()
+
+			layoutParams = params
+		}
+	}
+	anim.duration = duration
+	startAnimation(anim)
+}
+fun View.animateLayoutMargins(@DimenRes horizontal: Int, @DimenRes vertical: Int, duration: Long) {
+	animateLayoutMargins(horizontal, vertical, horizontal, vertical, duration)
+}
+fun View.animateLayoutMargins(@DimenRes margin: Int, duration: Long) {
+	animateLayoutMargins(margin, margin, duration)
 }

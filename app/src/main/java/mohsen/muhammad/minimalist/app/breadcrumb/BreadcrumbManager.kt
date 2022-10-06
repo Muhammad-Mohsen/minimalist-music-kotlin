@@ -47,7 +47,7 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		recyclerViewBreadcrumbs.adapter = breadcrumbAdapter
 
 		// set back button icon
-		val animationResourceId = if (currentDirectory.absolutePath == ExplorerFile.ROOT) R.drawable.anim_root_back else R.drawable.anim_back_root
+		val animationResourceId = if (ExplorerFile.isAtRoot(currentDirectory.absolutePath)) R.drawable.anim_root_back else R.drawable.anim_back_root
 		val drawable = ContextCompat.getDrawable(buttonBack.context, animationResourceId)
 		buttonBack.setImageDrawable(drawable)
 
@@ -74,7 +74,11 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		}
 		// set the add to playlist button listener
 		buttonAppendToPlaylist.setOnClickListener {
-			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.SELECT_MODE_APPEND))
+			// update state
+			State.playlist.updateItems(State.selectedTracks, true)
+			State.selectedTracks.clear()
+			onSelectModeChange()
+			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.SELECT_MODE_INACTIVE))
 		}
 		// set the play playlist button listener
 		buttonPlaySelected.setOnClickListener {
@@ -106,7 +110,6 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 					EventType.DIR_CHANGE -> onDirectoryChange(State.currentDirectory)
 					EventType.SELECT_MODE_ADD,
 					EventType.SELECT_MODE_SUB,
-					EventType.SELECT_MODE_APPEND,
 					EventType.SELECT_MODE_INACTIVE -> onSelectModeChange()
 				}
 			}
@@ -118,30 +121,25 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
 
 		// if currently at the root, animate to the root icon
-		if (currentDirectory.absolutePath == ExplorerFile.ROOT) animateBackButton(false)
+		if (ExplorerFile.isAtRoot(currentDirectory.absolutePath)) animateBackButton(false)
 		// if not at the root AND not displaying the back icon, animate to it
-		else if (currentDirectory.absolutePath != ExplorerFile.ROOT && currentDirectory.parent == ExplorerFile.ROOT) animateBackButton(true)
+		else if (!ExplorerFile.isAtRoot(currentDirectory.absolutePath) && ExplorerFile.isAtRoot(currentDirectory.parent)) animateBackButton(true)
 	}
 
 	private fun onSelectModeChange() {
-		val isCurrentlyActive = binding.breadcrumbBarContainer.translationY != 0F
+		val isCurrentlyActive = binding.breadcrumbBarContainer.alpha != 1F
 		val selectionCount = State.selectedTracks.count()
 		val isActive = selectionCount > 0
 
-		// only play the animations when changing states
 		if (isActive && !isCurrentlyActive) {
-			binding.breadcrumbBarContainer.slideY(-10F, 150L, 50L)
-			binding.breadcrumbBarContainer.fadeOut(150L, 50L)
-
-			binding.multiSelectBarContainer.slideY(0F, 200L)
+			binding.breadcrumbBarContainer.fadeOut(200L)
 			binding.multiSelectBarContainer.fadeIn(200L)
+			binding.breadcrumbs.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingLarge, 150L)
 
 		} else if (!isActive && isCurrentlyActive) {
-			binding.breadcrumbBarContainer.slideY(0F, 200L)
 			binding.breadcrumbBarContainer.fadeIn(200L)
-
-			binding.multiSelectBarContainer.slideY(10F, 150L, 50L)
-			binding.multiSelectBarContainer.fadeOut(150L, 50L)
+			binding.multiSelectBarContainer.fadeOut(200L)
+			binding.breadcrumbs.animateLayoutMargins(R.dimen.spacingLarge, 150L)
 		}
 
 		textViewSelectionCount.setText(binding.resources.getQuantityString(R.plurals.selectedCount, selectionCount, selectionCount))

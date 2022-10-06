@@ -2,6 +2,7 @@ package mohsen.muhammad.minimalist.data.files
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Environment
 import android.util.Base64
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.data.Const
@@ -32,10 +33,14 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 
 	companion object {
 
-		const val ROOT = "/storage" // root directory
+		val ROOT: String = Environment.getExternalStorageDirectory().path // root directory
 		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg") // supported media extensions
 
 		private val filter = ExplorerFileFilter()
+
+		fun isAtRoot(path: String?): Boolean {
+			return (path?.filter { it == '/' }?.length ?: 1) <= 1
+		}
 
 		fun isTrack(f: File): Boolean {
 			return MEDIA_EXTENSIONS.contains(f.extension.lowercase())

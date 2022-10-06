@@ -91,7 +91,7 @@ class MainFragment : Fragment() {
 				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.SELECT_MODE_INACTIVE))
 				true
 			}
-			State.currentDirectory.absolutePath == ExplorerFile.ROOT -> false
+			ExplorerFile.isAtRoot(State.currentDirectory.absolutePath) -> false
 			else -> {
 				State.currentDirectory = State.currentDirectory.parentFile!! // don't worry about it
 				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.DIR_CHANGE, State.currentDirectory.absolutePath))

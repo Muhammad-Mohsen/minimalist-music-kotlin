@@ -50,7 +50,7 @@ fun View.setRoundedBackground(attributes: AttributeSet?) {
 	}
 }
 
-// holy hell, a corner radius is WORK!!
+// holy hell, corner radius is WORK!!
 fun AppCompatImageView.setRoundedBackground(attributes: AttributeSet?) {
 
 	val cornerAttrs = context.obtainStyledAttributes(attributes, R.styleable.ExtendedView)
@@ -69,7 +69,7 @@ fun AppCompatImageView.setRoundedBackground(attributes: AttributeSet?) {
 
 /**
  * Applies the ExtendedView attribute set on the specified view.
- * Note that the R.drawable.background_teardrop_card background HAS to be set on the view before calling this function
+ * Note that the R.drawable.background_extended_view background HAS to be set on the view before calling this function
  */
 fun View.applyExtendedViewAttr(attributes: AttributeSet) {
 	val backgroundShape = (background as LayerDrawable).findDrawableByLayerId(R.id.roundedCardShape) as GradientDrawable
@@ -109,7 +109,7 @@ fun View.applyExtendedViewAttr(attributes: AttributeSet) {
 
 /**
  * Applies the Corners attribute set on the specified view.
- * Note that the R.drawable.background_teardrop_card background HAS to be set on the view before calling this function
+ * Note that the R.drawable.background_extended_view background HAS to be set on the view before calling this function
  */
 fun View.applyCornerAttr(attributes: AttributeSet) {
 

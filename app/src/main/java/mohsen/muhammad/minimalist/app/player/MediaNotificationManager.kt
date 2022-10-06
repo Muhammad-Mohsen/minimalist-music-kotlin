@@ -27,7 +27,7 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 
 	// media notification style
 	private val style: androidx.media.app.NotificationCompat.MediaStyle by lazy {
-		androidx.media.app.NotificationCompat.DecoratedMediaCustomViewStyle()
+		androidx.media.app.NotificationCompat.MediaStyle()
 			.setShowCancelButton(false)
 			.setShowActionsInCompactView(Action.PREV, Action.PLAY_PAUSE, Action.NEXT)
 			.setMediaSession(sessionToken)

@@ -20,7 +20,7 @@ import java.io.File
 
 object State {
 
-	private lateinit var sharedPreferences: SharedPreferences // holds the application context...don't worry
+	private lateinit var sharedPreferences: SharedPreferences
 
 	fun initialize(prefs: SharedPreferences) {
 		sharedPreferences = prefs
@@ -47,7 +47,10 @@ object State {
 			get() = path.isNotBlank()
 
 		var path: String
-			get() = sharedPreferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY
+			get() {
+				// initialized check introduced to prevent an exception on Android8! where restoreState is called before sharedPrefs is initialized!!
+				return if (::sharedPreferences.isInitialized) sharedPreferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY else String.EMPTY
+			}
 			set(value) = sharedPreferences.put(Key.PATH, value)
 
 		var title= String.EMPTY

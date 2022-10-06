@@ -36,8 +36,8 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 		updateItems(tracks)
 	}
 
-	fun updateItems(items: List<String>) {
-		tracks.clear()
+	fun updateItems(items: List<String>, addToExisting: Boolean = false) {
+		if (!addToExisting) tracks.clear()
 		tracks.addAll(items)
 	}
 

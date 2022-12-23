@@ -20,7 +20,7 @@ object EventBus {
 		subscribers.add(ref)
 	}
 	fun unsubscribe(subscriber: Subscriber) {
-		val ref = subscribers.first {ref -> ref.get() == subscriber }
+		val ref = subscribers.firstOrNull {ref -> ref.get() == subscriber }
 		subscribers.remove(ref)
 	}
 

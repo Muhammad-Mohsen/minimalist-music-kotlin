@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ripple
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:color="@color/colorPrimary"
+	android:color="@color/explorerForegroundLight"
 	>
 
 	<item android:id="@+id/roundedCardShape">
 		<shape>
 
-			<solid android:color="@color/colorPrimary"/>
+			<solid android:color="@color/alwaysBlack"/>
 
 			<stroke
-				android:color="@color/colorPrimary"
+				android:color="@color/alwaysBlack"
 				android:width="2dp"
 				/>
 

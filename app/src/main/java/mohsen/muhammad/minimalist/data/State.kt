@@ -74,12 +74,12 @@ object State {
 			get() = formatMillis(duration)
 
 		fun update(filePath: String = String.EMPTY) {
-			val p = filePath.ifBlank { path }
-			if (p.isBlank()) return
+			path = filePath.ifBlank { path }
 
-			val metadata = FileMetadata(File(p))
-			path = p
+			val f = File(path)
+			if (!f.exists()) return
 
+			val metadata = FileMetadata(f)
 			title = metadata.title
 			album = metadata.album
 			artist = metadata.artist
@@ -109,7 +109,7 @@ object State {
 	// the shared preferences keys
 	internal object Key {
 		const val DIRECTORY = "CurrentDirectory"
-		const val PLAYLIST = "Playlist"
+		// const val PLAYLIST = "Playlist"
 		const val PATH = "CurrentTrack"
 		const val SEEK = "Seek"
 

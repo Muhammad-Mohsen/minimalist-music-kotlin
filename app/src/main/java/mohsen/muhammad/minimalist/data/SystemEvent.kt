@@ -42,7 +42,5 @@ object EventType {
 
     const val SELECT_MODE_ADD = 50 // add a track to the selected list (activate the mode if none were selected before)
     const val SELECT_MODE_SUB = 51 // remove a track from the selected list (deactivate the mode if none are selected now)
-
     const val SELECT_MODE_INACTIVE = 52 // deactivate select mode (press cancel from the breadcrumb bar)
-    const val SELECT_MODE_APPEND = 53 // append selected tracks to the current playlist (press add from the breadcrumb bar)
 }

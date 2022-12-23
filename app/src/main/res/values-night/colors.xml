@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<color name="mainBackground">#000</color>
+	<color name="mainForeground">#DDD</color>
+	<color name="explorerForegroundLight">#555</color>
+	<color name="explorerSelection">#111</color>
+
+	<color name="breadcrumbBackground">#050505</color>
+	<color name="breadcrumbForeground">#DDD</color>
+	<color name="breadcrumbForegroundDark">#DDD</color>
+	<color name="breadcrumbBorder">#050505</color>
+
+	<color name="seekProgress">#5555</color>
+	<color name="seekBackground">#050505</color>
+
+</resources>

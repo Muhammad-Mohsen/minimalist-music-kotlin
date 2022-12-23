@@ -60,13 +60,9 @@ class FileMetadata(private val file: File) {
 
 	val chapters: ArrayList<Chapter>
 		get() {
-			val list = ArrayList<Chapter>()
-
-			(0 until chapterCount).forEach {
-				list.add(Chapter(it, getChapterStartTime(it)))
-			}
-
-			return list
+			return ArrayList((0 until chapterCount).map {
+				Chapter(it, getChapterStartTime(it))
+			})
 		}
 
 	private fun getChapterStartTime(i: Int): Long =

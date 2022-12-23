@@ -7,7 +7,7 @@
 		>
 
 		<shape android:shape="rectangle" >
-			<solid android:color="@color/colorTransparent" />
+			<solid android:color="@color/seekBackground" />
 			<corners android:radius="@dimen/cornerRadiusLarge" />
 		</shape>
 
@@ -20,7 +20,7 @@
 
 		<clip>
 			<shape android:shape="rectangle" >
-				<solid android:color="@color/colorOverlayPrimary" />
+				<solid android:color="@color/seekProgress" />
 				<corners android:radius="@dimen/cornerRadiusLarge" />
 			</shape>
 		</clip>

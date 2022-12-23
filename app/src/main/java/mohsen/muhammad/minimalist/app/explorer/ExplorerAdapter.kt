@@ -54,19 +54,18 @@ class ExplorerAdapter(
 			val bottomMargin = if (position == files.lastIndex) Const.Dimen.LAST_ITEM.toDip(itemView.context) else 0f
 			itemView.setLayoutMargins(0, topMargin.toInt(), 0, bottomMargin.toInt()) // TODO possible performance issue
 
-			icon.setColorFilter(R.color.colorBackground)
+			icon.setColorFilter(R.color.mainBackground)
 			icon.setImageResource(if (file.isDirectory) R.mipmap.ic_directory else R.mipmap.ic_track)
 			title.text = file.name
 
 			// text/icon color
-			var itemColor = itemView.context.getColor(R.color.colorOnBackgroundDark)
-			if (!file.isDirectory && !State.playlist.contains(file.absolutePath)) itemColor = itemView.context.getColor(R.color.colorSecondary)
+			var itemColor = itemView.context.getColor(R.color.mainForeground)
+			if (!file.isDirectory && !State.playlist.contains(file.absolutePath)) itemColor = itemView.context.getColor(R.color.explorerForegroundLight)
 			icon.setColorFilter(itemColor)
 			title.setTextColor(itemColor)
 
 			// selection states
-			if (isSelected(file)) currentlyPlayingView.alpha = Const.Alpha.OPAQUE
-			else currentlyPlayingView.alpha = Const.Alpha.TRANSPARENT
+			currentlyPlayingView.alpha = if (isSelected(file)) Const.Alpha.OPAQUE else Const.Alpha.TRANSPARENT
 
 			selectedView.alpha = if (State.selectedTracks.contains(file.absolutePath)) Const.Alpha.OPAQUE else Const.Alpha.TRANSPARENT
 

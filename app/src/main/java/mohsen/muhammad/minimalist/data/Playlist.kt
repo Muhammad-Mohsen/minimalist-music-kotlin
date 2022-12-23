@@ -65,6 +65,11 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 		// first, check the shuffle state
 		if (shuffle) index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.
 
+		// this seems to work (if a playlist is done (and we're not repeating, the index is set to -1...then if the user hits play again,
+		// the index stays at -1 and, then, after the second play through is done, that -1 comes in and gets incremented to 0 by the condition after this one
+		// and the playback continues for another cycle of the playlist!!!
+		else if (index == -1 && repeat == RepeatMode.INACTIVE) return null
+
 		// if we hit the end, and we're repeating, go back to the start.
 		// next up, if we're yet to hit the end of the playlist AND we're not repeating the same track, simply increment the index.
 		else if (index < tracks.size - 1 && repeat != RepeatMode.REPEAT_ONE) index++
@@ -74,9 +79,7 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 		// if we did hit the end, and we're not repeating, we look into the onComplete argument:
 		// if it is true, meaning that we're looking for the next track after finishing playing the current one, we'll stop.
 		// otherwise, it means that the user clicked the Next button, so, we'll return the first track index.
-		else if (repeat == RepeatMode.INACTIVE) {
-			index = if (onComplete) -1 else 0
-		}
+		else if (repeat == RepeatMode.INACTIVE) index = if (onComplete) -1 else 0
 
 		// finally, if the index isn't invalid, we return the track.
 		return if (index != -1) tracks[index] else null

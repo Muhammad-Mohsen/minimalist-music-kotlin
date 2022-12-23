@@ -54,7 +54,7 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 			priority = NotificationCompat.PRIORITY_DEFAULT // for versions prior to Oreo
 
 			setColorized(true)
-			color = ContextCompat.getColor(context, R.color.colorOnBackgroundDark)
+			color = ContextCompat.getColor(context, R.color.alwaysBlack)
 			setStyle(style)
 
 			addAction(createAction(R.drawable.ic_notification_prev, Action.PREV))

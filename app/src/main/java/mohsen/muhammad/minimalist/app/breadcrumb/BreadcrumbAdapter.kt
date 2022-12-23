@@ -3,10 +3,8 @@ package mohsen.muhammad.minimalist.app.breadcrumb
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import mohsen.muhammad.minimalist.R
-import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 import mohsen.muhammad.minimalist.core.OnListItemClickListener
 import mohsen.muhammad.minimalist.data.ItemType
 import mohsen.muhammad.minimalist.databinding.BreadcrumbBarItemBinding
@@ -75,8 +73,8 @@ class BreadcrumbAdapter(file: File, private val interactionListener: OnListItemC
 	class CrumbViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 		private val binding = BreadcrumbBarItemBinding.bind(itemView)
 
-		val crumbText: TextView = binding.textViewCrumb
-		val crumbButton: ExtendedFrameLayout = binding.buttonCrumb
+		val crumbText = binding.crumbText
+		val crumbButton = binding.crumbButton
 	}
 
 }

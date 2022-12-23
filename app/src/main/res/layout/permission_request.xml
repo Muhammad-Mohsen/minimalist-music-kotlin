@@ -6,7 +6,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	android:background="@color/colorBackground"
+	android:background="@color/mainBackground"
 	android:elevation="@dimen/elevationLarge"
 	>
 
@@ -24,7 +24,7 @@
 			android:layout_height="80dp"
 			android:layout_gravity="center"
 			android:src="@drawable/ic_storage_permission"
-			app:tint="@color/colorPrimaryDark"
+			app:tint="@color/mainForeground"
 			tools:ignore="ContentDescription"
 			/>
 
@@ -34,7 +34,7 @@
 			android:layout_marginTop="@dimen/spacingMedium"
 			android:text="@string/permissionMessage"
 			android:textSize="@dimen/textLarge"
-			android:textColor="@color/colorOnBackgroundDark"
+			android:textColor="@color/mainForeground"
 			android:layout_gravity="center"
 			/>
 
@@ -49,9 +49,9 @@
 		android:gravity="center"
 		android:padding="@dimen/spacingMediumLarge"
 		android:text="@string/grantPermission"
-		android:textColor="@color/colorOnPrimary"
+		android:textColor="@color/mainBackground"
 		android:elevation="@dimen/elevationMedium"
-		app:fillColor="@color/colorPrimaryDark"
+		app:fillColor="@color/mainForeground"
 		app:cornerRadius="@dimen/cornerRadiusMedium"
 		tools:elevation="0dp"
 		/>

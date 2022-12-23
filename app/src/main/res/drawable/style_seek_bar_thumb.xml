@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:color="@color/colorPrimary"
+	android:color="@color/transparent"
 	>
 
 	<item>
 		<shape>
-			<solid android:color="@color/colorOnPrimary" />
+			<solid android:color="@color/oldSeekThumb" />
 			<size android:width="2dp" android:height="12dp"/>
 		</shape>
 	</item>

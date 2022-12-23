@@ -21,9 +21,10 @@
 		android:layout_marginBottom="@dimen/seekBarMargin"
 		android:elevation="@dimen/elevationMedium"
 		android:animateLayoutChanges="true"
-		app:fillColor="@color/colorOnBackgroundDark"
+		app:fillColor="@color/alwaysBlack"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		app:layout_constraintBottom_toBottomOf="parent"
+		android:clickable="false"
 		>
 
 		<!-- Chapters -->
@@ -33,7 +34,7 @@
 			android:layout_height="@dimen/chapterIndicatorHeight"
 			android:layout_marginBottom="74dp"
 			android:layout_gravity="bottom"
-			app:fillColor="@color/colorTransparent"
+			app:fillColor="@color/transparent"
 			/>
 
 		<SeekBar
@@ -75,7 +76,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="center"
-				android:textColor="@color/colorOnPrimary"
+				android:textColor="@color/alwaysWhite"
 				android:textSize="@dimen/textLarge"
 				android:maxLines="1"
 				android:ellipsize="end"
@@ -87,7 +88,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="center"
-				android:textColor="@color/colorOnPrimary"
+				android:textColor="@color/alwaysWhite"
 				android:textSize="@dimen/textLarge"
 				android:maxLines="1"
 				android:ellipsize="end"
@@ -114,7 +115,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="center"
-				android:textColor="@color/colorOnSecondary"
+				android:textColor="@color/alwaysOffWhite"
 				android:textSize="@dimen/textSmall"
 				android:maxLines="1"
 				android:ellipsize="end"
@@ -126,7 +127,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="center"
-				android:textColor="@color/colorOnSecondary"
+				android:textColor="@color/alwaysOffWhite"
 				android:textSize="@dimen/textSmall"
 				android:maxLines="1"
 				android:ellipsize="end"
@@ -147,13 +148,15 @@
 		app:layout_constraintEnd_toEndOf="@id/mainPanel"
 		app:layout_constraintBottom_toBottomOf="@id/mainPanel"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
-		app:fillColor="@color/colorOnPrimary"
+		app:fillColor="@color/alwaysWhite"
 		>
 
 		<!--Previous-->
 		<mohsen.muhammad.minimalist.core.ExtendedImageButton
 			android:id="@+id/buttonPrev"
 			style="@style/floatingButtonOmniStyle2"
+			android:tint="@color/alwaysOffBlack"
+			app:fillColor="@color/alwaysWhite"
 			android:src="@drawable/next000"
 			android:rotation="180"
 			app:cornerRadiusBottomRight="@dimen/cornerRadiusLarge"
@@ -163,14 +166,18 @@
 		<!--Omni button-->
 		<mohsen.muhammad.minimalist.core.ExtendedImageButton
 			android:id="@+id/buttonOmni"
-			android:src="@drawable/anim_play_pause"
 			style="@style/floatingButtonOmniStyle2"
+			android:tint="@color/alwaysOffBlack"
+			app:fillColor="@color/alwaysWhite"
+			android:src="@drawable/anim_play_pause"
 			/>
 
 		<!--Next-->
 		<mohsen.muhammad.minimalist.core.ExtendedImageButton
 			android:id="@+id/buttonNext"
 			style="@style/floatingButtonOmniStyle2"
+			android:tint="@color/alwaysOffBlack"
+			app:fillColor="@color/alwaysWhite"
 			android:src="@drawable/next000"
 			app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
 			app:cornerRadiusBottomRight="@dimen/cornerRadiusLarge"
@@ -188,7 +195,7 @@
 		android:layout_marginStart="@dimen/spacingLarge"
 		android:elevation="@dimen/elevationLarge"
 		android:textSize="@dimen/textMedium"
-		android:textColor="@color/colorOnPrimary"
+		android:textColor="@color/alwaysWhite"
 		android:textStyle="bold"
 		android:text="@string/blankTimestamp"
 		app:layout_constraintStart_toStartOf="@id/mainPanel"
@@ -205,7 +212,7 @@
 		android:layout_marginEnd="@dimen/spacingLarge"
 		android:elevation="@dimen/elevationLarge"
 		android:textSize="@dimen/textMedium"
-		android:textColor="@color/colorOnSecondary"
+		android:textColor="@color/alwaysOffWhite"
 		android:text="@string/blankTimestamp"
 		app:layout_constraintEnd_toEndOf="@id/mainPanel"
 		app:layout_constraintBottom_toBottomOf="@id/mainPanel"
@@ -219,9 +226,10 @@
 		style="@style/floatingButtonOmniStyle2"
 		android:layout_marginTop="@dimen/spacingMedium"
 		android:elevation="0dp"
+		android:tint="@color/mainForeground"
 		app:layout_constraintStart_toStartOf="@id/mainPanel"
 		app:layout_constraintTop_toBottomOf="@id/mainPanel"
-		app:fillColor="@color/colorBackground"
+		app:fillColor="@color/mainBackground"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		/>
 
@@ -231,9 +239,10 @@
 		android:src="@drawable/shuffle031"
 		style="@style/floatingButtonOmniStyle2"
 		android:layout_marginTop="@dimen/spacingMedium"
+		android:tint="@color/mainForeground"
 		app:layout_constraintEnd_toEndOf="@id/mainPanel"
 		app:layout_constraintTop_toBottomOf="@id/mainPanel"
-		app:fillColor="@color/colorBackground"
+		app:fillColor="@color/mainBackground"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		/>
 
@@ -244,9 +253,10 @@
 		style="@style/floatingButtonOmniStyle2"
 		android:layout_marginEnd="@dimen/spacingMediumLarge"
 		android:visibility="gone"
+		android:tint="@color/mainForeground"
 		app:layout_constraintEnd_toStartOf="@id/buttonShuffle"
 		app:layout_constraintBottom_toBottomOf="@id/buttonShuffle"
-		app:fillColor="@color/colorBackground"
+		app:fillColor="@color/mainBackground"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		/>
 

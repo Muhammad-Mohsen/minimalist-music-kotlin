@@ -4,5 +4,5 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="@dimen/chapterIndicatorWidth"
 	android:layout_height="@dimen/chapterIndicatorHeight"
-	app:fillColor="@color/colorPrimary"
+	app:fillColor="@color/controlsChapters"
 	/>

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<color name="colorWhite">#FFF</color>
+	<color name="alwaysBlack">#000</color>
+	<color name="alwaysOffBlack">#333</color>
+	<color name="alwaysWhite">#FFF</color>
+	<color name="alwaysOffWhite">#AAA</color>
 
-	<!--Background-->
-	<color name="colorBackground">#FFF0F0F0</color>
+	<color name="mainBackground">#FFF0F0F0</color>
+	<color name="mainForeground">#333</color>
 
-	<!--Primary-->
-	<color name="colorPrimary">#393939</color>
-	<color name="colorPrimaryDark">#1a1a1a</color>
+	<color name="explorerForegroundLight">#666</color>
+	<color name="explorerSelection">#BBB</color>
 
-	<!--Secondary-->
-	<color name="colorSecondary">#555</color>
+	<color name="breadcrumbBackground">#FFF</color>
+	<color name="breadcrumbForeground">#333</color>
+	<color name="breadcrumbForegroundDark">#111</color>
+	<color name="breadcrumbBorder">#CCC</color>
 
-	<!--On's-->
-	<color name="colorOnPrimary">#FFF</color>
-	<color name="colorOnSecondary">#BBB</color>
-	<color name="colorOnBackground">#333</color>
-	<color name="colorOnBackgroundDark">#000</color>
+	<color name="controlsChapters">#333</color>
+	<color name="seekProgress">#5CCC</color>
+	<color name="seekBackground">#000</color>
 
-	<!--Transparent-->
-	<color name="colorTransparent">#0FFF</color>
-	<color name="colorOverlay">#7111</color> <!-- Seekbar -->
-	<color name="colorOverlayPrimary">#5CCC</color> <!-- Seekbar -->
+	<color name="transparent">#0FFF</color>
 
-	<color name="colorSeparator">#7AAA</color>
+	<!--OLD-->
+	<color name="oldSeekThumb">#FFF</color>
 
-	<!--Gradient-->
+	<!--Gradient - NOT USED-->
 	<color name="colorGradientStart">#CC00ABC5</color>
 	<color name="colorGradientCenter">#CC161138</color>
 	<color name="colorGradientEnd">#CC161138</color>

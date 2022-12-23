@@ -1,19 +1,19 @@
 <resources>
 
 	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-		<item name="colorPrimary">@color/colorBackground</item>
-		<item name="colorPrimaryDark">@color/colorBackground</item>
-		<item name="colorAccent">@color/colorPrimaryDark</item>
+	<style name="AppTheme" parent="Theme.AppCompat.DayNight">
+		<item name="colorPrimary">@color/mainBackground</item>
+		<item name="colorPrimaryDark">@color/mainBackground</item>
+		<item name="colorAccent">@color/mainForeground</item>
 
-		<item name="android:background">@color/colorTransparent</item>
+		<item name="android:background">@color/transparent</item>
 
-		<item name="android:windowLightStatusBar">true</item>
-		<item name="android:statusBarColor">@color/colorBackground</item>
+		<!-- <item name="android:windowLightStatusBar">true</item> -->
+		<item name="android:statusBarColor">@color/mainBackground</item>
 
-		<item name="android:navigationBarColor">@color/colorBackground</item>
+		<item name="android:navigationBarColor">@color/mainBackground</item>
 		<item name="android:windowLightNavigationBar">true</item>
-		<item name="android:textColorPrimary">@color/colorOnBackgroundDark</item>
+		<item name="android:textColorPrimary">@color/mainForeground</item>
 
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
@@ -22,8 +22,8 @@
 	<!-- Splash screen theme -->
 	<style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:windowBackground">@drawable/splash</item>
-		<item name="android:statusBarColor">@color/colorOnBackgroundDark</item>
-		<item name="android:navigationBarColor">@color/colorOnBackgroundDark</item>
+		<item name="android:statusBarColor">@color/alwaysBlack</item>
+		<item name="android:navigationBarColor">@color/alwaysBlack</item>
 	</style>
 
 	<!-- Scrollbar style for the explorer recycler view -->
@@ -43,10 +43,10 @@
 		<item name="android:layout_width">@dimen/imageButtonContainerSize</item>
 		<item name="android:layout_height">@dimen/imageButtonContainerSize</item>
 		<item name="android:padding">@dimen/spacingMediumLarge</item>
-		<item name="android:tint">@color/colorPrimary</item>
+		<item name="android:tint">@color/alwaysBlack</item>
 		<item name="android:scaleType">fitCenter</item>
 		<item name="android:elevation">@dimen/elevationLarge</item>
-		<item name="fillColor">@color/colorOnPrimary</item>
+		<item name="fillColor">@color/alwaysWhite</item>
 		<item name="cornerRadius">40dp</item>
 	</style>
 
@@ -64,9 +64,7 @@
 		<item name="android:layout_width">@dimen/imageButtonContainerSize2</item>
 		<item name="android:layout_height">@dimen/imageButtonContainerSize2</item>
 		<item name="android:padding">@dimen/spacingMediumLarge</item>
-		<item name="android:tint">@color/colorPrimary</item>
 		<item name="android:scaleType">fitCenter</item>
-		<item name="fillColor">@color/colorOnPrimary</item>
 	</style>
 
 </resources>

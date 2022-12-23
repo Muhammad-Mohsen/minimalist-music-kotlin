@@ -8,21 +8,21 @@
 	>
 
 	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
-		android:id="@+id/buttonCrumb"
+		android:id="@+id/crumbButton"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="@dimen/spacingSmall"
-		app:fillColor="@color/colorWhite"
-		app:rippleColor="@color/colorOnBackground"
+		app:fillColor="@color/breadcrumbBackground"
+		app:rippleColor="@color/breadcrumbForeground"
 		app:cornerRadius="@dimen/cornerRadiusSmall"
 		>
 
 		<TextView
-			android:id="@+id/textViewCrumb"
+			android:id="@+id/crumbText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="@dimen/textLarge"
-			android:textColor="@color/colorOnBackground"
+			android:textColor="@color/breadcrumbForeground"
 			tools:text="Directory"
 			/>
 
@@ -33,7 +33,7 @@
 		android:layout_height="wrap_content"
 		android:text="@string/breadcrumbSeparator"
 		android:padding="@dimen/spacingSmall"
-		android:textColor="@color/colorOnBackground"
+		android:textColor="@color/breadcrumbForeground"
 		android:textSize="@dimen/textLarge"
 		/>
 

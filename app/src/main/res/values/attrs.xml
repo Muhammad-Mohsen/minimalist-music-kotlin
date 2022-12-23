@@ -21,16 +21,6 @@
 
 	</declare-styleable>
 
-	<declare-styleable name="IconFontView">
-		<attr name="mirrorRtl" format="boolean"/>
-	</declare-styleable>
-
-	<!--Auto-generated used with the fullscreen SearchMessagesActivity-->
-	<declare-styleable name="ButtonBarContainerTheme">
-		<attr name="metaButtonBarStyle" format="reference"/>
-		<attr name="metaButtonBarButtonStyle" format="reference"/>
-	</declare-styleable>
-
 	<!--
 		Styleable used to obtain native attributes
 		source: https://stackoverflow.com/questions/13719103/how-to-retrieve-style-attributes-programmatically-from-styles-xml

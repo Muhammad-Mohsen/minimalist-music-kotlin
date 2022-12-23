@@ -43,7 +43,7 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 		}
 
 		fun isTrack(f: File): Boolean {
-			return MEDIA_EXTENSIONS.contains(f.extension.lowercase())
+			return f.exists() && MEDIA_EXTENSIONS.contains(f.extension.lowercase())
 		}
 
 		fun listExplorerFiles(path: String): ArrayList<ExplorerFile> {
@@ -102,9 +102,9 @@ fun ArrayList<Chapter>.getPrevChapter(currentSeek: Long): Chapter {
 }
 
 class SerializableBitmap(val data: ByteArray?) {
-	private val bitmapDecoded = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)
-	private val bitmapEncoded = Base64.encodeToString(data, Base64.DEFAULT)
+	private val decoded = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)
+	private val encoded = Base64.encodeToString(data, Base64.DEFAULT)
 
-	val bitmap: Bitmap? = bitmapDecoded
-	val serialize: String = bitmapEncoded
+	val bitmap: Bitmap? = decoded
+	val serialize: String = encoded
 }

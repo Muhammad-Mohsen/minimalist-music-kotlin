@@ -5,7 +5,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:fillColor="@color/colorBackground"
+	app:fillColor="@color/mainBackground"
 	>
 
 	<!--Selection-->
@@ -16,7 +16,7 @@
 		android:layout_margin="6dp"
 		android:alpha="@dimen/transparent"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
-		app:fillColor="@color/colorOnSecondary"
+		app:fillColor="@color/explorerSelection"
 		tools:alpha="@dimen/opaque"
 		/>
 
@@ -37,7 +37,7 @@
 			android:layout_marginEnd="@dimen/spacingSmall"
 			android:contentDescription="@string/descriptionRecyclerItemTypeTrack"
 			android:src="@mipmap/ic_track"
-			app:tint="@color/colorOnBackgroundDark"
+			app:tint="@color/explorerForegroundLight"
 			/>
 
 		<!-- track name, album, artist -->
@@ -57,7 +57,7 @@
 				android:layout_marginTop="@dimen/spacingMedium"
 				android:layout_marginBottom="@dimen/spacingMedium"
 				android:textSize="@dimen/textLarge"
-				android:textColor="@color/colorOnBackgroundDark"
+				android:textColor="@color/explorerForegroundLight"
 				tools:text="Track Title"
 				/>
 
@@ -77,7 +77,7 @@
 					android:maxLines="1"
 					android:ellipsize="end"
 					android:textSize="@dimen/textSmall"
-					android:textColor="@color/colorOnBackground"
+					android:textColor="@color/explorerForegroundLight"
 					tools:text="Artist"
 					/>
 
@@ -88,7 +88,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginStart="20dp"
 					android:textSize="@dimen/textSmall"
-					android:textColor="@color/colorOnBackground"
+					android:textColor="@color/explorerForegroundLight"
 					tools:text="00:00"
 					/>
 
@@ -104,7 +104,7 @@
 			android:layout_marginEnd="@dimen/spacingLarge"
 			android:alpha="@dimen/transparent"
 			app:cornerRadius="15dp"
-			app:fillColor="@color/colorOnBackground"
+			app:fillColor="@color/mainForeground"
 			tools:alpha="@dimen/opaque"
 			/>
 

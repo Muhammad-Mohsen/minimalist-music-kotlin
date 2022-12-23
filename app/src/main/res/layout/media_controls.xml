@@ -18,7 +18,7 @@
 		android:paddingBottom="@dimen/spacingMediumLarge"
 		android:orientation="vertical"
 		android:elevation="@dimen/elevationMedium"
-		app:fillColor="@color/colorOnBackgroundDark"
+		app:fillColor="@color/alwaysBlack"
 		app:layout_constraintBottom_toBottomOf="parent"
 		>
 
@@ -37,7 +37,7 @@
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textColor="@color/colorOnPrimary"
+				android:textColor="@color/alwaysWhite"
 				android:textSize="@dimen/textLarge"
 				android:maxLines="1"
 				android:ellipsize="end"
@@ -48,7 +48,7 @@
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textColor="@color/colorOnPrimary"
+				android:textColor="@color/alwaysWhite"
 				android:textSize="@dimen/textLarge"
 				android:maxLines="1"
 				android:ellipsize="end"
@@ -72,7 +72,7 @@
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textColor="@color/colorOnSecondary"
+				android:textColor="@color/mainBackground"
 				android:textSize="@dimen/textSmall"
 				android:maxLines="1"
 				android:ellipsize="end"
@@ -83,7 +83,7 @@
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textColor="@color/colorOnSecondary"
+				android:textColor="@color/mainBackground"
 				android:textSize="@dimen/textSmall"
 				android:maxLines="1"
 				android:ellipsize="end"
@@ -119,7 +119,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:textSize="@dimen/textMedium"
-				android:textColor="@color/colorOnPrimary"
+				android:textColor="@color/alwaysWhite"
 				android:textStyle="bold"
 				android:textAlignment="viewStart"
 				android:text="@string/blankTimestamp"
@@ -133,7 +133,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:textSize="@dimen/textMedium"
-				android:textColor="@color/colorOnSecondary"
+				android:textColor="@color/mainBackground"
 				android:gravity="end"
 				android:text="@string/blankTimestamp"
 				tools:text="4:08"
@@ -157,7 +157,7 @@
 		app:layout_constraintTop_toTopOf="@id/buttonOmni"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:cornerRadius="200dp"
-		app:fillColor="@color/colorOnPrimary"
+		app:fillColor="@color/alwaysWhite"
 		tools:scaleX="1"
 		tools:scaleY="1"
 		/>

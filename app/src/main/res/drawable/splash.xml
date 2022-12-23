@@ -5,7 +5,7 @@
 	>
 
 	<item
-		android:drawable="@color/colorOnBackgroundDark"
+		android:drawable="@color/alwaysBlack"
 		/>
 
 	<item>

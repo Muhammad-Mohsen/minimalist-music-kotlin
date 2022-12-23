@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.ImageButton
-import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
@@ -21,23 +20,6 @@ import mohsen.muhammad.minimalist.R
  * Drawable extension functions
  */
 
-
-fun GradientDrawable.setDrawableStroke(width: Float, @ColorInt color: Int) {
-	this.setStroke(width.toInt(), color)
-}
-
-fun GradientDrawable.setDrawableStroke(width: Float, @ColorInt color: Int, dashWidth: Float, dashGap: Float) {
-	this.setStroke(width.toInt(), color, dashWidth, dashGap)
-}
-
-// sets the fill color
-fun GradientDrawable.setDrawableFillColor(@ColorInt color: Int) {
-	this.setColor(color)
-}
-
-fun GradientDrawable.setDrawableCornerRadii(radii: FloatArray) {
-	this.cornerRadii = radii
-}
 
 fun View.setRoundedBackground(attributes: AttributeSet?) {
 	background = ContextCompat.getDrawable(context, R.drawable.background_extended_view)
@@ -76,29 +58,26 @@ fun View.applyExtendedViewAttr(attributes: AttributeSet) {
 
 	val roundedViewAttrs = context.obtainStyledAttributes(attributes, R.styleable.ExtendedView)
 
-	// fill color (default transparent)
-	val fillColor = roundedViewAttrs.getColor(R.styleable.ExtendedView_fillColor, ContextCompat.getColor(context, R.color.colorPrimary))
-	backgroundShape.setDrawableFillColor(fillColor)
+	// fill color
+	val fillColor = roundedViewAttrs.getColor(R.styleable.ExtendedView_fillColor, ContextCompat.getColor(context, R.color.mainBackground))
+	backgroundShape.setColor(fillColor)
 
-	// stroke (default white)
+	// stroke
 	val strokeWidth = roundedViewAttrs.getDimension(R.styleable.ExtendedView_strokeWidth, 0F)
-	val strokeColor = roundedViewAttrs.getColor(R.styleable.ExtendedView_strokeColor, ContextCompat.getColor(context, R.color.colorPrimary))
+	val strokeColor = roundedViewAttrs.getColor(R.styleable.ExtendedView_strokeColor, ContextCompat.getColor(context, R.color.mainForeground))
 
-	// dashes - check if the attributes exist or not
+	// dashes
 	if (roundedViewAttrs.hasValue(R.styleable.ExtendedView_strokeDashWidth)) {
 		val dashWidth = roundedViewAttrs.getDimension(R.styleable.ExtendedView_strokeDashWidth, 1F)
 		val dashGap = roundedViewAttrs.getDimension(R.styleable.ExtendedView_strokeDashGap, 1F)
+		backgroundShape.setStroke(strokeWidth.toInt(), strokeColor, dashWidth, dashGap)
 
-		// actually apply the stroke
-		backgroundShape.setDrawableStroke(strokeWidth, strokeColor, dashWidth, dashGap)
-
-	} else {
-		// actually apply the stroke (without dashes)
-		backgroundShape.setDrawableStroke(strokeWidth, strokeColor)
+	} else { // solid
+		backgroundShape.setStroke(strokeWidth.toInt(), strokeColor)
 	}
 
 	// rippleColor
-	val rippleColor = roundedViewAttrs.getColor(R.styleable.ExtendedView_rippleColor, ContextCompat.getColor(context, R.color.colorPrimary))
+	val rippleColor = roundedViewAttrs.getColor(R.styleable.ExtendedView_rippleColor, ContextCompat.getColor(context, R.color.mainForeground))
 	(background as RippleDrawable).setColor(ColorStateList(
 		arrayOf(intArrayOf()),
 		intArrayOf(rippleColor)
@@ -146,7 +125,7 @@ fun View.applyCornerAttr(attributes: AttributeSet) {
 		cornerBottomLeft, cornerBottomLeft
 	)
 
-	backgroundShape.setDrawableCornerRadii(radii)
+	backgroundShape.cornerRadii = radii
 
 	cornerAttrs.recycle()
 }

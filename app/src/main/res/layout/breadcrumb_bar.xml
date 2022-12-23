@@ -7,7 +7,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_margin="@dimen/spacingLarge"
-	app:fillColor="@color/colorTransparent"
+	app:fillColor="@color/transparent"
 	android:clipChildren="false"
 	>
 
@@ -19,7 +19,7 @@
 		android:gravity="center_vertical"
 		android:orientation="horizontal"
 		android:elevation="@dimen/elevationMedium"
-		app:fillColor="@color/colorWhite"
+		app:fillColor="@color/breadcrumbBackground"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		>
 
@@ -28,6 +28,8 @@
 			android:id="@+id/buttonBack"
 			style="@style/floatingButtonOmniStyle2"
 			android:src="@drawable/anim_back_root"
+			app:fillColor="@color/breadcrumbBackground"
+			android:tint="@color/breadcrumbForeground"
 			app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
 			app:cornerRadiusBottomLeft="@dimen/cornerRadiusLarge"
 			/>
@@ -51,7 +53,7 @@
 		android:id="@+id/multiSelectBarContainer"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="@color/colorBackground"
+		android:background="@color/mainBackground"
 		android:alpha="@dimen/transparent"
 		android:visibility="gone"
 		android:clipChildren="false"
@@ -63,12 +65,13 @@
 			android:layout_height="@dimen/breadcrumbBarHeight"
 			android:translationY="-24dp"
 			android:layout_gravity="bottom"
-			android:background="@color/colorBackground"
+			android:background="@color/mainBackground"
 			/>
 
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
 			android:gravity="center_vertical"
 			android:orientation="horizontal"
 			>
@@ -80,8 +83,8 @@
 				android:padding="@dimen/spacingMediumLarge"
 				android:src="@drawable/ic_cancel"
 				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
-				app:fillColor="@color/colorBackground"
-				app:tint="@color/colorOnBackgroundDark"
+				app:fillColor="@color/mainBackground"
+				app:tint="@color/breadcrumbForegroundDark"
 				/>
 
 			<TextSwitcher
@@ -98,7 +101,7 @@
 				<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:textColor="@color/colorOnBackground"
+					android:textColor="@color/breadcrumbForeground"
 					android:textSize="@dimen/textLarge"
 					tools:text="Track Count"
 					/>
@@ -106,7 +109,7 @@
 				<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:textColor="@color/colorOnBackground"
+					android:textColor="@color/breadcrumbForeground"
 					android:textSize="@dimen/textLarge"
 					tools:text="Track Count"
 					/>
@@ -120,8 +123,8 @@
 				android:src="@drawable/ic_add"
 				app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
 				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
-				app:fillColor="@color/colorBackground"
-				app:tint="@color/colorOnBackgroundDark"
+				app:fillColor="@color/mainBackground"
+				app:tint="@color/breadcrumbForegroundDark"
 				/>
 
 			<!--play selected button-->
@@ -130,8 +133,8 @@
 				style="@style/floatingButtonOmniStyle2"
 				android:src="@drawable/ic_play_selected"
 				app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
-				app:fillColor="@color/colorBackground"
-				app:tint="@color/colorOnBackgroundDark"
+				app:fillColor="@color/mainBackground"
+				app:tint="@color/breadcrumbForegroundDark"
 				/>
 
 		</LinearLayout>
@@ -141,7 +144,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
 			android:layout_gravity="bottom"
-			android:background="@color/colorSeparator"
+			android:background="@color/breadcrumbBorder"
 			/>
 
 	</FrameLayout>

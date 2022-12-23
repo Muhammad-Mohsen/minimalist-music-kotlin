@@ -7,7 +7,7 @@
 		>
 
 		<shape android:shape="rectangle" >
-			<solid android:color="@color/colorPrimary" />
+			<solid android:color="@color/alwaysBlack" />
 			<size android:height="2dp" />
 		</shape>
 
@@ -20,7 +20,7 @@
 
 		<clip>
 			<shape android:shape="rectangle" >
-				<solid android:color="@color/colorOnPrimary" />
+				<solid android:color="@color/oldSeekThumb" />
 				<size android:height="2dp" />
 			</shape>
 		</clip>

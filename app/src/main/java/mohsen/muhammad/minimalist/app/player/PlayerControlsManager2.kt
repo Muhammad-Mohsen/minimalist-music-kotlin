@@ -105,6 +105,15 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 		binding?.buttonAlbumArt?.visibility = if (State.Track.albumArt != null) View.VISIBLE else View.GONE
 		binding?.imageViewAlbumArt?.setEncodedBitmapAsync(State.Track.albumArt) // album art
 
+		// collapse th album art panel if the new file doesn't have any
+		if (State.Track.albumArt != null) {
+			binding?.buttonAlbumArt?.let {
+				it.tag = R.drawable.anim_expand_collapse
+				it.animateDrawable(R.drawable.anim_expand_collapse)
+				binding?.mainPanel?.animateHeight(Const.Dimen.ALBUM_ART_COLLAPSED.toDip(it.context).toInt(), 210)
+			}
+		}
+
 		// thanks https://stackoverflow.com/questions/3591784/views-getwidth-and-getheight-returns-0
 		// updateChapters uses the container's (frameLayoutChapters) width to determine the margins. On app startup, when this is called,
 		// the container is not yet laid out, and thus, width returns 0, so we just post it after

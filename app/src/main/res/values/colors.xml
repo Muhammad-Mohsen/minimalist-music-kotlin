@@ -21,6 +21,10 @@
 	<color name="seekProgress">#5CCC</color>
 	<color name="seekBackground">#000</color>
 
+	<color name="scrollBar">#333</color>
+
+	<color name="ripple">#666</color>
+
 	<color name="transparent">#0FFF</color>
 
 	<!--OLD-->

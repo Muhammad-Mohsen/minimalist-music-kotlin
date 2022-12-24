@@ -77,7 +77,7 @@ fun View.applyExtendedViewAttr(attributes: AttributeSet) {
 	}
 
 	// rippleColor
-	val rippleColor = roundedViewAttrs.getColor(R.styleable.ExtendedView_rippleColor, ContextCompat.getColor(context, R.color.mainForeground))
+	val rippleColor = roundedViewAttrs.getColor(R.styleable.ExtendedView_rippleColor, ContextCompat.getColor(context, R.color.ripple))
 	(background as RippleDrawable).setColor(ColorStateList(
 		arrayOf(intArrayOf()),
 		intArrayOf(rippleColor)

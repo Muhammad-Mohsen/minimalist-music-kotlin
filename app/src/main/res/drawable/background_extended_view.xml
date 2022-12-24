@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- All colors are overwritten in code (drawableExtensions) -->
 <ripple
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:color="@color/explorerForegroundLight"
+	android:color="@color/ripple"
 	>
 
 	<item android:id="@+id/roundedCardShape">

@@ -14,4 +14,6 @@
 	<color name="seekProgress">#5555</color>
 	<color name="seekBackground">#050505</color>
 
+	<color name="ripple">#555</color>
+
 </resources>

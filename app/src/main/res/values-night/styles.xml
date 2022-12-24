@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="AppTheme" parent="Theme.AppCompat.DayNight">
+		<item name="colorPrimary">@color/mainBackground</item>
+		<item name="colorPrimaryDark">@color/mainBackground</item>
+		<item name="colorAccent">@color/mainForeground</item>
+
+		<item name="android:background">@color/transparent</item>
+
+		<item name="android:windowLightStatusBar">false</item>
+		<item name="android:statusBarColor">@color/mainBackground</item>
+
+		<item name="android:navigationBarColor">@color/mainBackground</item>
+		<item name="android:windowLightNavigationBar">false</item>
+		<item name="android:textColorPrimary">@color/mainForeground</item>
+
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
+
+</resources>

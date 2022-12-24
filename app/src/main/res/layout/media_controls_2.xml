@@ -27,16 +27,6 @@
 		android:clickable="false"
 		>
 
-		<!-- Chapters -->
-		<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
-			android:id="@+id/frameLayoutChapters"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/chapterIndicatorHeight"
-			android:layout_marginBottom="74dp"
-			android:layout_gravity="bottom"
-			app:fillColor="@color/transparent"
-			/>
-
 		<SeekBar
 			android:id="@+id/seekBar"
 			android:layout_width="match_parent"
@@ -57,6 +47,16 @@
 			android:scaleType="centerCrop"
 			android:alpha="0.3"
 			app:cornerRadius="@dimen/cornerRadiusLarge"
+			/>
+
+		<!-- Chapters -->
+		<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+			android:id="@+id/frameLayoutChapters"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/chapterIndicatorHeight"
+			android:layout_marginBottom="74dp"
+			android:layout_gravity="bottom"
+			app:fillColor="@color/transparent"
 			/>
 
 		<!--track title-->

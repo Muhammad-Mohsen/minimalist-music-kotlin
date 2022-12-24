@@ -106,7 +106,7 @@ class PlayerControlsManager2(binding: MainFragmentBinding) : EventBus.Subscriber
 		binding?.imageViewAlbumArt?.setEncodedBitmapAsync(State.Track.albumArt) // album art
 
 		// collapse th album art panel if the new file doesn't have any
-		if (State.Track.albumArt != null) {
+		if (State.Track.albumArt == null && binding?.buttonAlbumArt?.tag == R.drawable.anim_collapse_expand) {
 			binding?.buttonAlbumArt?.let {
 				it.tag = R.drawable.anim_expand_collapse
 				it.animateDrawable(R.drawable.anim_expand_collapse)

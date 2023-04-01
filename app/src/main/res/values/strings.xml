@@ -28,7 +28,7 @@
 	<string name="breadcrumbSeparator">/</string> <!-- other symbols to try out: ›> | -->
 
 	<string name="permissionMessage">Storage Permission is required</string>
-	<string name="grantPermission">Grant Permission</string>
+	<string name="permissionMessageSubtitle">Tap anywhere to grant the permission</string>
 
 	<string name="notificationChannelName">Playback Notification</string>
 	<string name="notificationChannelDescription">Displays the app\'s playback notification</string>

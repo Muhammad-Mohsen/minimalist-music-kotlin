@@ -49,9 +49,12 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 		fun listExplorerFiles(path: String): ArrayList<ExplorerFile> {
 			val fileModels = ArrayList<ExplorerFile>()
 
-			var files = File(path).listFiles(filter)
-			if (path == "/storage/emulated") files = arrayOf(File("/storage/emulated/0"))
-			else if (files == null) return ArrayList()
+		var files = File(path).listFiles(filter)
+			// just to make sure that we aren't trapped at the basement
+			if (path == "/storage/emulated" && files == null) files = arrayOf(File("/storage/emulated/0"))
+			else if (path == "/storage" && files == null) files = arrayOf(File("/storage/emulated"))
+
+			if (files == null) return ArrayList()
 
 			Arrays.sort(files) { o1, o2 ->
 				if (o1.isDirectory && o2.isDirectory) o1.name.compareTo(o2.name, true) // if both are directories, compare their names

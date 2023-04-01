@@ -110,11 +110,7 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 	private fun onDirectoryChange(currentDirectory: File) {
 		breadcrumbAdapter.update(currentDirectory)
 		b.recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
-
-		// if currently at the root, animate to the root icon
-		if (ExplorerFile.isAtRoot(currentDirectory.absolutePath)) animateBackButton(false)
-		// if not at the root AND not displaying the back icon, animate to it
-		else if (!ExplorerFile.isAtRoot(currentDirectory.absolutePath) && ExplorerFile.isAtRoot(currentDirectory.parent)) animateBackButton(true)
+		animateBackButton(!ExplorerFile.isAtRoot(currentDirectory.absolutePath)) // animate the back button icon depending on the current directory
 	}
 
 	private fun onSelectModeChange() {
@@ -138,6 +134,10 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 
 	// forward means that we're going deeper into the directory hierarchy
 	private fun animateBackButton(forward: Boolean) {
-		b.buttonBack.animateDrawable(if (forward) R.drawable.anim_root_back else R.drawable.anim_back_root)
+		val anim = if (forward) R.drawable.anim_root_back else R.drawable.anim_back_root
+		if (b.buttonBack.tag == anim) return
+
+		b.buttonBack.tag = anim
+		b.buttonBack.animateDrawable(anim)
 	}
 }

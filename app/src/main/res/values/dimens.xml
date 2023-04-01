@@ -40,5 +40,5 @@
 
 	<dimen name="transparent">0</dimen>
 	<dimen name="opaque">1</dimen>
-
+	
 </resources>

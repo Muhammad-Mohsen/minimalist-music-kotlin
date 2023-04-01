@@ -23,7 +23,7 @@ import androidx.core.view.ViewCompat
  */
 
 fun ImageView.animateDrawable(drawableResourceId: Int, endAction: (() -> Unit)? = null) {
-    val drawable = ContextCompat.getDrawable(this.context, drawableResourceId) // get the frame animation drawable
+	val drawable = ContextCompat.getDrawable(this.context, drawableResourceId) // get the frame animation drawable
 
 	(this.drawable as? AnimationDrawable)?.stop() // stop any animation that might be running
 

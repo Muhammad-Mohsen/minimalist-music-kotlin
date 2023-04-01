@@ -8,40 +8,40 @@ import java.io.File
  */
 object FileCache {
 
-    // cache
-    private val fileCache = HashMap<String, ArrayList<ExplorerFile>>()
-    private val lastModifiedCache = HashMap<String, Long>()
+	// cache
+	private val fileCache = HashMap<String, ArrayList<ExplorerFile>>()
+	private val lastModifiedCache = HashMap<String, Long>()
 
-    // cache API
-    fun getExplorerFilesByDirectory(f: File): ArrayList<ExplorerFile> {
-        val path = f.absolutePath
-        var files = fileCache[path]
+	// cache API
+	fun getExplorerFilesByDirectory(f: File): ArrayList<ExplorerFile> {
+		val path = f.absolutePath
+		var files = fileCache[path]
 
-        // if not cached, or directory was modified more recently than the cache
-        if (files == null || f.lastModified() > (lastModifiedCache[path] ?: 0L)) {
-            files = ExplorerFile.listExplorerFiles(path)
-            fileCache[path] = files
+		// if not cached, or directory was modified more recently than the cache
+		if (files == null || f.lastModified() > (lastModifiedCache[path] ?: 0L)) {
+			files = ExplorerFile.listExplorerFiles(path)
+			fileCache[path] = files
 
-            lastModifiedCache[path] = f.lastModified()
-        }
+			lastModifiedCache[path] = f.lastModified()
+		}
 
-        return files
-    }
+		return files
+	}
 
-    fun getMediaPathsByPath(path: String): List<String> {
-        val parentDir = File(path).parentFile ?: return emptyList()
-	    val parentDirPath = parentDir.absolutePath
+	fun getMediaPathsByPath(path: String): List<String> {
+		val parentDir = File(path).parentFile ?: return emptyList()
+		val parentDirPath = parentDir.absolutePath
 
-        var files = fileCache[parentDir.absolutePath]
+		var files = fileCache[parentDir.absolutePath]
 
-        // if not cached, or directory was modified more recently than the cache
-        if (files == null || parentDir.lastModified() > (lastModifiedCache[parentDirPath] ?: 0L)) {
-            files = ExplorerFile.listExplorerFiles(parentDirPath)
-            fileCache[parentDirPath] = files
+		// if not cached, or directory was modified more recently than the cache
+		if (files == null || parentDir.lastModified() > (lastModifiedCache[parentDirPath] ?: 0L)) {
+			files = ExplorerFile.listExplorerFiles(parentDirPath)
+			fileCache[parentDirPath] = files
 
-            lastModifiedCache[parentDirPath] = parentDir.lastModified()
-        }
+			lastModifiedCache[parentDirPath] = parentDir.lastModified()
+		}
 
-        return files.filter { file -> !file.isDirectory }.map { file -> file.absolutePath }
-    }
+		return files.filter { file -> !file.isDirectory }.map { file -> file.absolutePath }
+	}
 }

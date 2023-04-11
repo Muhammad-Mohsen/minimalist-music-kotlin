@@ -8,14 +8,13 @@ import java.io.File
 /**
  * Created by muhammad.mohsen on 11/3/2018.
  * contains methods to help with listing files, sorting, etc
- * instance APIs are no longer used!!
  */
 
 class FileMetadata(private val file: File) {
 
 	private val retriever = FFmpegMediaMetadataRetriever()
 	init {
-		if (ExplorerFile.isTrack(file)) retriever.setDataSource(file.path)
+		retriever.setDataSource(file.path)
 	}
 
 	val title: String

@@ -61,7 +61,7 @@
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat029"
+		android:drawable="@drawable/repeat015"
 		/>
 
 </animation-list>

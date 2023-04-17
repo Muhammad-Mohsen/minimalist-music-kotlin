@@ -81,7 +81,7 @@
 
 	<item
 		android:duration="15"
-		android:drawable="@drawable/shuffle000"
+		android:drawable="@drawable/_blank"
 		/>
 
 	<item

@@ -41,7 +41,7 @@
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/root_back007"
+		android:drawable="@drawable/_blank"
 		/>
 
 	<item

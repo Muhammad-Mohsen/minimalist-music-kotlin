@@ -11,17 +11,17 @@
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat023"
+		android:drawable="@drawable/repeat022"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat024"
+		android:drawable="@drawable/repeat022"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat025"
+		android:drawable="@drawable/repeat022"
 		/>
 
 	<item
@@ -41,7 +41,7 @@
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat029"
+		android:drawable="@drawable/repeat015"
 		/>
 
 	<item

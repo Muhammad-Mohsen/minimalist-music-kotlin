@@ -11,7 +11,7 @@
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/repeat016"
+		android:drawable="@drawable/repeat015"
 		/>
 
 	<item

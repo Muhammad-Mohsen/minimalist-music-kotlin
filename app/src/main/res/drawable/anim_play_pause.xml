@@ -66,12 +66,12 @@
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/play012"
+		android:drawable="@drawable/_blank"
 		/>
 
 	<item
 		android:duration="20"
-		android:drawable="@drawable/pause004"
+		android:drawable="@drawable/_blank"
 		/>
 
 	<item

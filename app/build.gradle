@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "mohsen.muhammad.minimalist" // don't forget to change this back (remove the .dev please!)
         minSdkVersion 27
-        targetSdkVersion 32
+        targetSdkVersion 33
 
         versionCode 9
         versionName "2.0"

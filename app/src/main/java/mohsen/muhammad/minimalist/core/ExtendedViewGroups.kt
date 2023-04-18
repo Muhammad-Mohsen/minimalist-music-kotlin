@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
-import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ext.applyPaddingAttr
 import mohsen.muhammad.minimalist.core.ext.setRoundedBackground
 
@@ -43,7 +42,7 @@ class ExtendedConstraintLayout @JvmOverloads constructor(context: Context, attri
 	}
 }
 
-class ExtendedImageButton @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_AppCompat_ImageButton)
+class ExtendedImageButton @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = androidx.appcompat.R.style.Widget_AppCompat_ImageButton)
 	: AppCompatImageButton(context, attributes, defStyleAttr) {
 
 	init {
@@ -52,7 +51,7 @@ class ExtendedImageButton @JvmOverloads constructor(context: Context, attributes
 	}
 }
 
-class ExtendedButton @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_AppCompat_Button)
+class ExtendedButton @JvmOverloads constructor(context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = androidx.appcompat.R.style.Widget_AppCompat_Button)
 	: AppCompatButton(context, attributes, defStyleAttr) {
 
 	init {

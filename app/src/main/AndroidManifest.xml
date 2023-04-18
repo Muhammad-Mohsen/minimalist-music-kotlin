@@ -6,7 +6,9 @@
 
 	<uses-feature android:name="android.hardware.screen.portrait"/>
 
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+	<uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 

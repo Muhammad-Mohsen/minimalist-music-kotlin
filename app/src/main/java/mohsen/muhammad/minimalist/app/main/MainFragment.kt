@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.karumi.dexter.Dexter
@@ -29,6 +30,20 @@ class MainFragment : Fragment() {
 
 	private lateinit var binding: MainFragmentBinding
 
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+
+		// state - initializing the state in the permission callback sometimes threw "lateinit property sharedPreferences has not been initialized" exception!
+		val preferences = requireActivity().getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+		State.initialize(preferences)
+
+		requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+			override fun handleOnBackPressed() {
+				onBackPressed()
+			}
+		})
+	}
+
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		binding = MainFragmentBinding.inflate(inflater, container, false)
 		initialize()
@@ -37,17 +52,12 @@ class MainFragment : Fragment() {
 
 	private fun initialize() {
 
-		// state - initializing the state in the permission callback sometimes threw "lateinit property sharedPreferences has not been initialized" exception!
-		val preferences = requireActivity().getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-		State.initialize(preferences)
-
 		// ask for permission
 		Dexter.withContext(requireActivity())
-			.withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+			.withPermission(PERMISSION)
 			.withListener(object : PermissionListener {
 
 				override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-
 					binding.layoutPermission.root.visibility = View.GONE
 
 					// service
@@ -69,13 +79,11 @@ class MainFragment : Fragment() {
 					// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't yet registered to the event bus!
 					if (State.Track.isInitialized) EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.METADATA_UPDATE))
 				}
-
 				override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) { token?.continuePermissionRequest() }
 
 				// show permission layout
 				override fun onPermissionDenied(response: PermissionDeniedResponse?) {
 					binding.layoutPermission.root.visibility = View.VISIBLE
-
 					binding.layoutPermission.buttonGrantPermission.setOnClickListener {
 						initialize()
 					}
@@ -84,23 +92,30 @@ class MainFragment : Fragment() {
 			}).check()
 	}
 
-	fun onBackPressed(): Boolean {
-		return when {
+	private fun onBackPressed() {
+		when {
 			State.isSelectModeActive -> {
 				State.selectedTracks.clear() // update the state
 				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.SELECT_MODE_INACTIVE))
-				true
 			}
-			ExplorerFile.isAtRoot(State.currentDirectory.absolutePath) -> false
+			ExplorerFile.isAtRoot(State.currentDirectory.absolutePath) -> {
+				requireActivity().moveTaskToBack(true)
+			}
 			else -> {
 				State.currentDirectory = State.currentDirectory.parentFile!! // don't worry about it
 				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.DIR_CHANGE, State.currentDirectory.absolutePath))
-				true
 			}
 		}
 	}
 
+	override fun onDestroy() {
+		super.onDestroy()
+		PlaybackManager.stopSelf()
+	}
+
 	companion object {
 		fun newInstance() = MainFragment()
+
+		val PERMISSION = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_AUDIO else Manifest.permission.READ_EXTERNAL_STORAGE
 	}
 }

@@ -1,5 +1,6 @@
 package mohsen.muhammad.minimalist.app.player
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -39,6 +40,9 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 	}
 
 	// creates the notification, and displays it
+	// the MissingPermission suppression is because this notification should be exempt from this requirement according to:
+	// https://developer.android.com/develop/ui/views/notifications/notification-permission#exemptions
+	@SuppressLint("MissingPermission")
 	fun createNotification(): Notification {
 
 		// click the notification, get the main activity!
@@ -84,11 +88,8 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 
 	// creates a notification channel to play nice with Oreo and above
 	private fun createChannel() {
-		val name = context.getString(R.string.notificationChannelName)
-		val descriptionText = context.getString(R.string.notificationChannelDescription)
-
-		val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW)
-		channel.description = descriptionText
+		val channel = NotificationChannel(CHANNEL_ID, context.getString(R.string.notificationChannelName), NotificationManager.IMPORTANCE_LOW)
+		channel.description = context.getString(R.string.notificationChannelDescription)
 		channel.setShowBadge(false)
 
 		val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager

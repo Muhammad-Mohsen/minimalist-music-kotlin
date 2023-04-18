@@ -77,15 +77,21 @@ object State {
 			path = filePath.ifBlank { path }
 
 			val f = File(path)
-			if (!f.exists()) return
+			if (!ExplorerFile.isTrack(f)) return
 
-			val metadata = FileMetadata(f)
-			title = metadata.title
-			album = metadata.album
-			artist = metadata.artist
-			duration = metadata.duration
-			chapters = metadata.chapters
-			albumArt = metadata.albumArt
+			// Play Store keeps saying that the ffmpeg.setDataSource throws an illegalArgumentException...to me the above check should, but it didn't
+			// so just try/catch the fucker
+			// I also updated the ffmpeg library from 1.0.16 to 1.0.19, but I didn't want to try it
+			try {
+				val metadata = FileMetadata(f)
+				title = metadata.title
+				album = metadata.album
+				artist = metadata.artist
+				duration = metadata.duration
+				chapters = metadata.chapters
+				albumArt = metadata.albumArt
+
+			} catch (_: Exception) {}
 		}
 	}
 

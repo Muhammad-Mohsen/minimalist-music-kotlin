@@ -48,7 +48,6 @@ class PlaybackManager :
 	}
 	private val noisyIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
 
-	// TODO replace with coroutine??
 	private var timer: Timer? = null // a timer to update the seek
 
 	// some stuff need to be initialized early (sometimes the system calls onDestroy before calling onStartCommand!
@@ -99,7 +98,7 @@ class PlaybackManager :
 	private fun setTrack(path: String, updatePlaylist: Boolean = true) {
 		// update playlist
 		if (updatePlaylist) State.playlist.updateItems(path)
-		State.playlist.setTrack(path, true)
+		State.playlist.setTrack(path)
 
 		player.prepareSource(path)
 	}
@@ -171,7 +170,7 @@ class PlaybackManager :
 				sendSingleSeekUpdate()
 			}
 
-		}, 0L, 1000L)
+		}, 0L, SEEK_UPDATE_PERIOD)
 	}
 
 	private fun fastForward() {
@@ -210,6 +209,8 @@ class PlaybackManager :
 
 	// on playback completion
 	override fun onCompletion(mp: MediaPlayer) {
+		if (mp.duration > mp.currentPositionSafe) return // sometimes onComplete is called when it's not actually on complete!!
+
 		val nextTrack = State.playlist.getNextTrack(true)
 
 		if (nextTrack != null) {
@@ -251,6 +252,7 @@ class PlaybackManager :
 
 		private const val EVENT_SOURCE = EventSource.SERVICE
 		private const val SEEK_JUMP = 60000 // one minute jump to FF or rewind
+		private const val SEEK_UPDATE_PERIOD = 1000L
 
 		private var instance: PlaybackManager? = null
 

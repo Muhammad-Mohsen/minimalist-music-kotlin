@@ -3,24 +3,24 @@ package mohsen.muhammad.minimalist.data
 import android.content.SharedPreferences
 import mohsen.muhammad.minimalist.core.ext.put
 import mohsen.muhammad.minimalist.data.files.FileCache
+import java.util.Collections
 import java.util.concurrent.ThreadLocalRandom
 
 /**
  * Created by muhammad.mohsen on 11/3/2018.
- * Holds playlist items, information about the playlist (shuffle, repeat modes, current index, current directory...
+ * Holds playlist items, information about the playlist (shuffle, repeat modes, current index...
  */
 
 class Playlist(private val sharedPreferences: SharedPreferences) {
 
 	private val tracks: ArrayList<String> = ArrayList()
-		/* get() {
-			val savedPlaylist = sharedPreferences.getString(Key.PLAYLIST, String.EMPTY) ?: String.EMPTY // get a semi colon-separated string
-			return ArrayList(savedPlaylist.split(";"))
-		}
-		set(value) = sharedPreferences.put(Key.PLAYLIST, value.joinToString(";")) */
+	/* get() {
+		val savedPlaylist = sharedPreferences.getString(Key.PLAYLIST, String.EMPTY) ?: String.EMPTY // get a semi colon-separated string
+		return ArrayList(savedPlaylist.split(";"))
+	}
+	set(value) = sharedPreferences.put(Key.PLAYLIST, value.joinToString(";")) */
 
 	private var index: Int = 0 // current index
-	private var start: Int = 0 // starting index - to try and do circular playlist
 
 	// stored attributes
 	var repeat: Int
@@ -33,11 +33,14 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 
 	fun updateItems(trackPath: String) {
 		val tracks = FileCache.getMediaPathsByPath(trackPath)
+		val start = tracks.indexOf(trackPath)
+		Collections.rotate(tracks, -start) // start where the user clicked
+
 		updateItems(tracks)
 	}
 
-	fun updateItems(items: List<String>, addToExisting: Boolean = false) {
-		if (!addToExisting) tracks.clear()
+	fun updateItems(items: List<String>, append: Boolean = false) {
+		if (!append) tracks.clear()
 		tracks.addAll(items)
 	}
 
@@ -63,25 +66,17 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 		if (tracks.size == 0) return null
 
 		// first, check the shuffle state
-		if (shuffle) index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.
+		when {
+			shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.
 
-		// this seems to work (if a playlist is done (and we're not repeating, the index is set to -1...then if the user hits play again,
-		// the index stays at -1 and, then, after the second play through is done, that -1 comes in and gets incremented to 0 by the condition after this one
-		// and the playback continues for another cycle of the playlist!!!
-		else if (index == -1 && repeat == RepeatMode.INACTIVE) return null
+			repeat == RepeatMode.REPEAT_ONE -> return tracks[index]
+			repeat == RepeatMode.ACTIVE -> index = (index + 1) % tracks.size
+			repeat == RepeatMode.INACTIVE -> {
+				index = (index + 1) % tracks.size
+				if (index == 0 && onComplete) return null
+			}
+		}
 
-		// if we hit the end, and we're repeating, go back to the start.
-		// next up, if we're yet to hit the end of the playlist AND we're not repeating the same track, simply increment the index.
-		else if (index < tracks.size - 1 && repeat != RepeatMode.REPEAT_ONE) index++
-
-		else if (repeat == RepeatMode.ACTIVE) index = 0
-
-		// if we did hit the end, and we're not repeating, we look into the onComplete argument:
-		// if it is true, meaning that we're looking for the next track after finishing playing the current one, we'll stop.
-		// otherwise, it means that the user clicked the Next button, so, we'll return the first track index.
-		else if (repeat == RepeatMode.INACTIVE) index = if (onComplete) -1 else 0
-
-		// finally, if the index isn't invalid, we return the track.
 		return if (index != -1) tracks[index] else null
 	}
 
@@ -90,9 +85,8 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 	}
 
 	// sets the index of the current track - isStart indicates whether the current track should be treated as the starting index in the current playlist
-	fun setTrack(currentTrackPath: String, isStart: Boolean = true) {
+	fun setTrack(currentTrackPath: String) {
 		index = tracks.indexOf(currentTrackPath)
-		if (isStart) start = index
 	}
 
 	fun toggleShuffle() {

@@ -17,7 +17,7 @@ object Const {
 
 	object Dimen {
 		const val FIRST_ITEM = 80F
-		const val LAST_ITEM = 20F
+		const val LAST_ITEM = 62F
 		const val ALBUM_ART_COLLAPSED = 84
 	}
 }

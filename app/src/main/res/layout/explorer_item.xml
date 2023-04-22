@@ -13,7 +13,7 @@
 		android:id="@+id/frameLayoutCurrent"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_margin="6dp"
+		android:layout_margin="@dimen/spacingSmallMedium"
 		android:alpha="@dimen/transparent"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		app:fillColor="@color/explorerSelection"
@@ -24,7 +24,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
-		android:padding="@dimen/spacingSmall"
+		android:paddingVertical="@dimen/spacingSmall"
+		android:paddingHorizontal="@dimen/spacingMedium"
 		android:orientation="horizontal"
 		>
 

@@ -17,7 +17,6 @@ import mohsen.muhammad.minimalist.data.files.getNextChapter
 import mohsen.muhammad.minimalist.data.files.getPrevChapter
 import java.lang.IllegalStateException
 import java.util.*
-import kotlin.math.abs
 
 
 /**
@@ -211,7 +210,7 @@ class PlaybackManager :
 	// on playback completion
 	override fun onCompletion(mp: MediaPlayer) {
 		// sometimes onComplete is called when it's not actually on complete!!
-		if (abs(mp.duration - mp.currentPositionSafe) > ON_COMPLETION_THRESHOLD) return
+		if (mp.currentPositionSafe + ON_COMPLETION_THRESHOLD < mp.duration) return
 
 		var nextTrack = State.playlist.getNextTrack(true)
 

@@ -1,6 +1,5 @@
 package mohsen.muhammad.minimalist.app.breadcrumb
 
-import android.view.View
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnListItemClickListener
@@ -23,7 +22,7 @@ import java.io.File
 
 class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber, OnListItemClickListener<File> {
 
-	private val b = BreadcrumbBarBinding.bind(mainBinding.layoutBreadcrumbs.root as View)
+	private val b = BreadcrumbBarBinding.bind(mainBinding.layoutBreadcrumbs.root)
 
 	private val breadcrumbAdapter: BreadcrumbAdapter
 		get() = b.recyclerViewBreadcrumbs.adapter as BreadcrumbAdapter
@@ -118,15 +117,22 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		val selectionCount = State.selectedTracks.count()
 		val isActive = selectionCount > 0
 
+		// this is currently just sad at the moment
 		if (isActive && !isCurrentlyActive) {
 			b.breadcrumbBarContainer.fadeOut(200L)
 			b.multiSelectBarContainer.fadeIn(200L)
-			b.breadcrumbs.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingLarge, 150L)
+			b.multiSelectMask.fadeIn(200L)
+			b.breadcrumbBarContainer.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingLarge, 150L)
+			b.multiSelectBarContainer.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingLarge, 150L)
+			b.multiSelectMask.animateLayoutMargins(R.dimen.spacingZero, 150L)
 
 		} else if (!isActive && isCurrentlyActive) {
 			b.breadcrumbBarContainer.fadeIn(200L)
 			b.multiSelectBarContainer.fadeOut(200L)
-			b.breadcrumbs.animateLayoutMargins(R.dimen.spacingLarge, 150L)
+			b.multiSelectMask.fadeOut(200L)
+			b.breadcrumbBarContainer.animateLayoutMargins(R.dimen.spacingLarge, 150L)
+			b.multiSelectBarContainer.animateLayoutMargins(R.dimen.spacingLarge, 150L)
+			b.multiSelectMask.animateLayoutMargins(R.dimen.spacingLarge, 150L)
 		}
 
 		b.textViewSelectionCount.setText(b.resources.getQuantityString(R.plurals.selectedCount, selectionCount, selectionCount))

@@ -6,9 +6,7 @@
 	android:id="@+id/breadcrumbs"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:layout_margin="@dimen/spacingLarge"
 	app:fillColor="@color/transparent"
-	android:clipChildren="false"
 	>
 
 	<!--breadcrumb bar-->
@@ -16,6 +14,7 @@
 		android:id="@+id/breadcrumbBarContainer"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/spacingLarge"
 		android:gravity="center_vertical"
 		android:orientation="horizontal"
 		android:elevation="@dimen/elevationMedium"
@@ -23,6 +22,7 @@
 		app:strokeColor="@color/breadcrumbBorder"
 		app:strokeWidth="1dp"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
+		tools:visibility="gone"
 		>
 
 		<!--back button-->
@@ -51,25 +51,29 @@
 
 	</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
 
+	<!--much like position sticky in css, we slap on some empty view to cover the list when it's scrolled-->
+	<View
+		android:id="@+id/multiSelectMask"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/breadcrumbBarHeight"
+		android:layout_marginHorizontal="@dimen/spacingLarge"
+		android:clickable="true"
+		android:background="@color/mainBackground"
+		/>
+
 	<!--multi-select bar-->
 	<FrameLayout
 		android:id="@+id/multiSelectBarContainer"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/spacingLarge"
 		android:background="@color/mainBackground"
 		android:alpha="@dimen/transparent"
 		android:visibility="gone"
-		android:clipChildren="false"
+		android:clickable="true"
+		tools:visibility="visible"
+		tools:alpha="@dimen/opaque"
 		>
-
-		<!--much like position sticky in css, we slap on some empty view to cover the list when it's scrolled-->
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/breadcrumbBarHeight"
-			android:translationY="-24dp"
-			android:layout_gravity="bottom"
-			android:background="@color/mainBackground"
-			/>
 
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -77,6 +81,7 @@
 			android:layout_gravity="bottom"
 			android:gravity="center_vertical"
 			android:orientation="horizontal"
+			android:background="@color/mainBackground"
 			>
 
 			<!--cancel button-->
@@ -147,7 +152,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
 			android:layout_gravity="bottom"
-			android:background="@color/breadcrumbBorder"
+			android:background="@color/multiSelectBorder"
 			/>
 
 	</FrameLayout>

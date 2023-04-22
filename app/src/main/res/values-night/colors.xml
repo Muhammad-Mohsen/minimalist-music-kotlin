@@ -11,6 +11,7 @@
 	<color name="breadcrumbForeground">#DDD</color>
 	<color name="breadcrumbForegroundDark">#DDD</color>
 	<color name="breadcrumbBorder">#080808</color>
+	<color name="multiSelectBorder">#080808</color>
 
 	<color name="seekProgress">#7444</color>
 	<color name="seekBackground">#060606</color>

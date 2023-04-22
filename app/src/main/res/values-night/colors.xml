@@ -6,10 +6,11 @@
 	<color name="explorerForegroundLight">#555</color>
 	<color name="explorerSelection">#111</color>
 
-	<color name="breadcrumbBackground">#050505</color>
+	<!-- <color name="breadcrumbBackground">#050505</color> -->
+	<color name="breadcrumbBackground">#000</color>
 	<color name="breadcrumbForeground">#DDD</color>
 	<color name="breadcrumbForegroundDark">#DDD</color>
-	<color name="breadcrumbBorder">#050505</color>
+	<color name="breadcrumbBorder">#080808</color>
 
 	<color name="seekProgress">#7444</color>
 	<color name="seekBackground">#060606</color>

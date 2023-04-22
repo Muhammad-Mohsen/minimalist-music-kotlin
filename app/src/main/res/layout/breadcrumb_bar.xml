@@ -20,6 +20,8 @@
 		android:orientation="horizontal"
 		android:elevation="@dimen/elevationMedium"
 		app:fillColor="@color/breadcrumbBackground"
+		app:strokeColor="@color/breadcrumbBorder"
+		app:strokeWidth="1dp"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		>
 
@@ -28,6 +30,7 @@
 			android:id="@+id/buttonBack"
 			style="@style/floatingButtonOmniStyle2"
 			android:src="@drawable/anim_back_root"
+			android:layout_margin="1dp"
 			app:fillColor="@color/breadcrumbBackground"
 			android:tint="@color/breadcrumbForeground"
 			app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"

@@ -15,7 +15,7 @@
 	<color name="breadcrumbBackground">#FFF</color>
 	<color name="breadcrumbForeground">#333</color>
 	<color name="breadcrumbForegroundDark">#111</color>
-	<color name="breadcrumbBorder">#CCC</color>
+	<color name="breadcrumbBorder">#FFF</color>
 
 	<color name="controlsChapters">#444</color>
 	<color name="seekProgress">#5CCC</color>

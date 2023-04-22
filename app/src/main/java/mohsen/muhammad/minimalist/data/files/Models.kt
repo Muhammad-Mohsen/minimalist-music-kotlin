@@ -34,7 +34,7 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 	companion object {
 
 		val ROOT: String = Environment.getExternalStorageDirectory().path // root directory
-		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg") // supported media extensions
+		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg", "opus") // supported media extensions
 
 		private val filter = ExplorerFileFilter()
 

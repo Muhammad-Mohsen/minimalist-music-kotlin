@@ -17,6 +17,7 @@ import mohsen.muhammad.minimalist.data.files.getNextChapter
 import mohsen.muhammad.minimalist.data.files.getPrevChapter
 import java.lang.IllegalStateException
 import java.util.*
+import kotlin.math.abs
 
 
 /**
@@ -209,15 +210,23 @@ class PlaybackManager :
 
 	// on playback completion
 	override fun onCompletion(mp: MediaPlayer) {
-		if (mp.duration > mp.currentPositionSafe) return // sometimes onComplete is called when it's not actually on complete!!
+		// sometimes onComplete is called when it's not actually on complete!!
+		if (abs(mp.duration - mp.currentPositionSafe) > ON_COMPLETION_THRESHOLD) return
 
-		val nextTrack = State.playlist.getNextTrack(true)
+		var nextTrack = State.playlist.getNextTrack(true)
 
-		if (nextTrack != null) {
-			playTrack(nextTrack, false)
-			EventBus.send(SystemEvent(EVENT_SOURCE, EventType.PLAY_ITEM, nextTrack))
+		// at the end of the playlist, getNextTrack returns null if not on repeat, so the nextTrack is set manually to the starting track...
+		val playlistEnd = nextTrack == null
+		if (playlistEnd) nextTrack = State.playlist.getTrackByIndex(0)
 
-		} else {
+		if (nextTrack == null) return
+
+		playTrack(nextTrack, false)
+		EventBus.send(SystemEvent(EVENT_SOURCE, EventType.PLAY_ITEM, nextTrack))
+
+		// ...and then paused immediately
+		if (playlistEnd) {
+			playPause(false)
 			EventBus.send(SystemEvent(EVENT_SOURCE, EventType.PAUSE))
 		}
 	}
@@ -253,6 +262,7 @@ class PlaybackManager :
 		private const val EVENT_SOURCE = EventSource.SERVICE
 		private const val SEEK_JUMP = 60000 // one minute jump to FF or rewind
 		private const val SEEK_UPDATE_PERIOD = 1000L
+		private const val ON_COMPLETION_THRESHOLD = 250L
 
 		private var instance: PlaybackManager? = null
 

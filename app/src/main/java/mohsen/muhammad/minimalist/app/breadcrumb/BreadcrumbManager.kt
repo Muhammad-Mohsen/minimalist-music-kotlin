@@ -36,10 +36,11 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		val breadcrumbAdapter = BreadcrumbAdapter(currentDirectory, this)
 		b.recyclerViewBreadcrumbs.adapter = breadcrumbAdapter
 
-		// set back button icon
-		val animationResourceId = if (ExplorerFile.isAtRoot(currentDirectory.absolutePath)) R.drawable.anim_root_back else R.drawable.anim_back_root
-		val drawable = ContextCompat.getDrawable(b.buttonBack.context, animationResourceId)
-		b.buttonBack.setImageDrawable(drawable)
+		// set back button icon and tag
+		val atRoot = ExplorerFile.isAtRoot(currentDirectory.absolutePath)
+		val animationResourceId = if (atRoot) R.drawable.anim_root_back else R.drawable.anim_back_root
+		b.buttonBack.setImageDrawable(ContextCompat.getDrawable(b.buttonBack.context, animationResourceId))
+		b.buttonBack.tag = if (atRoot) R.drawable.anim_back_root else R.drawable.anim_root_back // notice it's inverted!
 
 		// scroll to end
 		b.recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)

@@ -10,8 +10,8 @@ android {
         minSdkVersion 27
         targetSdkVersion 33
 
-        versionCode 9
-        versionName "2.0"
+        versionCode 13
+        versionName "2.3"
     }
 
     bundle {
@@ -38,6 +38,14 @@ android {
                 debugSymbolLevel 'SYMBOL_TABLE'
             }
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
     ndkVersion '22.0.7026061'

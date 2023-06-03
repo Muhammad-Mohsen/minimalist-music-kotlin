@@ -59,6 +59,7 @@
 		android:layout_marginHorizontal="@dimen/spacingLarge"
 		android:clickable="true"
 		android:background="@color/mainBackground"
+		android:alpha="@dimen/transparent"
 		/>
 
 	<!--multi-select bar-->

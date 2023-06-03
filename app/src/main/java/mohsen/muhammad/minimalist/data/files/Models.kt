@@ -20,6 +20,7 @@ import kotlin.collections.ArrayList
  * Holds a file's metadata.
  * Offers no distinction between a music file and a directory...just like java
  * Metadata is obtained asynchronously via the MetadataAsyncTask (no longer the case)
+ * It also has a few utils for filtering/sorting and whatnot
  */
 class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artist: String = String.EMPTY, var duration: String = String.EMPTY, var trackCount: Int = 0)
 	: File(pathname) {
@@ -34,7 +35,7 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 	companion object {
 
 		val ROOT: String = Environment.getExternalStorageDirectory().path // root directory
-		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg", "opus") // supported media extensions
+		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg", "opus", "flac") // supported media extensions
 
 		private val filter = ExplorerFileFilter()
 

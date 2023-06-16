@@ -1,7 +1,6 @@
 package mohsen.muhammad.minimalist.app.main
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -32,8 +31,7 @@ class MainFragment : Fragment() {
 		super.onCreate(savedInstanceState)
 
 		// state - initializing the state in the permission callback sometimes threw "lateinit property sharedPreferences has not been initialized" exception!
-		val preferences = requireActivity().getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
-		State.initialize(preferences)
+		State.initialize(requireActivity().applicationContext)
 
 		// storage permission
 		permissionRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -119,6 +117,7 @@ class MainFragment : Fragment() {
 	companion object {
 		fun newInstance() = MainFragment()
 
-		val PERMISSION = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_AUDIO else Manifest.permission.READ_EXTERNAL_STORAGE
+		val PERMISSION = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_AUDIO
+		else Manifest.permission.READ_EXTERNAL_STORAGE
 	}
 }

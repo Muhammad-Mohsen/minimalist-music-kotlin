@@ -1,11 +1,16 @@
 package mohsen.muhammad.minimalist.data.files
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Environment
+import android.os.storage.StorageManager
 import android.util.Base64
+import androidx.annotation.RequiresApi
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.data.Const
+import mohsen.muhammad.minimalist.data.State
 import java.io.File
 import java.io.FileFilter
 import java.util.*
@@ -34,7 +39,13 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 
 	companion object {
 
-		val ROOT: String = Environment.getExternalStorageDirectory().path // root directory
+		val ROOT: String = Environment.getExternalStorageDirectory().path // root directory (actually the internal storage directory!)
+
+		// these consts help work around the nuisances of Android storage APIs
+		const val ACTUAL_ROOT = "/storage"
+		private const val EMULATED = "/storage/emulated"
+		private const val EMULATED_ZERO = "/storage/emulated/0"
+
 		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg", "opus", "flac") // supported media extensions
 
 		private val filter = ExplorerFileFilter()
@@ -50,10 +61,14 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 		fun listExplorerFiles(path: String): ArrayList<ExplorerFile> {
 			val fileModels = ArrayList<ExplorerFile>()
 
-		var files = File(path).listFiles(filter)
+			var files = File(path).listFiles(filter)
+
 			// just to make sure that we aren't trapped at the basement
-			if (path == "/storage/emulated" && files == null) files = arrayOf(File("/storage/emulated/0"))
-			else if (path == "/storage" && files == null) files = arrayOf(File("/storage/emulated"))
+			if (path == EMULATED && files == null) files = arrayOf(File(EMULATED_ZERO))
+			else if (path == ACTUAL_ROOT && files == null) {
+				files = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) listVolumes()
+				else arrayOf(File(EMULATED))
+			}
 
 			if (files == null) return ArrayList()
 
@@ -67,8 +82,21 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 			for (f in files) fileModels.add(ExplorerFile(f.absolutePath))
 			return fileModels
 		}
-	}
 
+		// After the scoped storage changes, we can't access the SD card from "/storage".listFiles() anymore :)
+		// this little guy returns them nonetheless
+		@RequiresApi(Build.VERSION_CODES.R)
+		private fun listVolumes(): Array<File> {
+			val context = State.applicationContext
+
+			val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
+			return ArrayList(storageManager.storageVolumes.mapNotNull {
+				if (it.directory?.absolutePath == EMULATED_ZERO) File(EMULATED) // leaving this as is, causes a minor navigation problem...we end up with the breadcrumbs looking like storage/0/0 when navigating
+				else it.directory
+
+			}).toTypedArray()
+		}
+	}
 }
 
 /**

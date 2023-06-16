@@ -48,7 +48,7 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		// back button click listener
 		b.buttonBack.setOnClickListener {
 
-			if (State.currentDirectory.absolutePath != ExplorerFile.ROOT) {
+			if (State.currentDirectory.absolutePath != ExplorerFile.ACTUAL_ROOT) {
 				val dir = State.currentDirectory.parentFile ?: return@setOnClickListener
 
 				State.currentDirectory = dir

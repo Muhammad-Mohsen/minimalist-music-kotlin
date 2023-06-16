@@ -1,5 +1,6 @@
 package mohsen.muhammad.minimalist.data
 
+import android.content.Context
 import android.content.SharedPreferences
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
@@ -21,10 +22,12 @@ import java.io.File
 object State {
 
 	private lateinit var sharedPreferences: SharedPreferences
+	lateinit var applicationContext: Context
 
-	fun initialize(prefs: SharedPreferences) {
-		sharedPreferences = prefs
-		playlist = Playlist(prefs)
+	fun initialize(context: Context) {
+		applicationContext = context
+		sharedPreferences = context.getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+		playlist = Playlist(sharedPreferences)
 		Track.update()
 	}
 

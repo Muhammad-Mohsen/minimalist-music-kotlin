@@ -10,8 +10,8 @@ android {
         minSdkVersion 27
         targetSdkVersion 33
 
-        versionCode 13
-        versionName "2.3"
+        versionCode 14
+        versionName "2.4"
     }
 
     bundle {

@@ -3,7 +3,6 @@ package mohsen.muhammad.minimalist.app.explorer
 import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.*
@@ -34,7 +33,7 @@ class ExplorerManager(
 
 		val explorerAdapter = ExplorerAdapter(FileCache.getExplorerFilesByDirectory(currentDirectory), selectedTrack, this)
 		recyclerViewExplorer.adapter = explorerAdapter
-		recyclerViewExplorer.itemAnimator = SlideInLeftAnimator()
+		recyclerViewExplorer.itemAnimator = ExplorerItemAnimator()
 	}
 
 	// explorer item click

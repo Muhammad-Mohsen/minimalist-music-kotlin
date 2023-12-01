@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
 	<uses-feature android:name="android.hardware.screen.portrait"/>
 
@@ -14,9 +11,9 @@
 
 	<application
 		android:allowBackup="false"
-		android:icon="@mipmap/ic_launcher"
 		android:label="@string/appName"
-		android:roundIcon="@mipmap/ic_launcher_round"
+		android:icon="@drawable/ic_launcher"
+		android:roundIcon="@drawable/ic_launcher_round"
 		android:supportsRtl="false"
 		android:requestLegacyExternalStorage="true"
 		android:theme="@style/SplashTheme"
@@ -41,10 +38,10 @@
 
 		</activity>
 
-		<!--Playback Service-->
-		<service android:name=".app.player.PlaybackManager" android:stopWithTask="true" android:exported="false" />
+		<!-- Playback Service -->
+		<service android:name=".app.player.PlaybackManager" android:stopWithTask="true" android:exported="false" android:foregroundServiceType="mediaPlayback" />
 
-		<!--For the life of me I can't know why registering this receiver dynamically doesn't work!!!-->
+		<!-- For the life of me I can't know why registering this receiver dynamically doesn't work!!! -->
 		<receiver android:name=".app.player.MediaNotificationManager$NotificationActionHandler" />
 
 	</application>

@@ -9,6 +9,7 @@
 	<dimen name="fabMarginedSize">75dp</dimen>
 	<dimen name="chapterIndicatorWidth">1dp</dimen>
 	<dimen name="chapterIndicatorHeight">4dp</dimen>
+	<dimen name="settingsHiddenMargin">-300dp</dimen>
 
 	<integer name="fabMenuExpandedBackgroundScale">1</integer>
 	<dimen name="fabMenuExpandedBackgroundRadius">380dp</dimen>
@@ -21,8 +22,9 @@
 	<dimen name="spacingMediumLarge">12dp</dimen>
 	<dimen name="spacingExtraMediumLarge">14dp</dimen> <!-- :D :D -->
 	<dimen name="spacingLarge">16dp</dimen>
-	<dimen name="spacingExtraLarge">24dp</dimen>
-	<dimen name="spacingExtraExtraLarge">32dp</dimen>
+	<dimen name="spacingXLarge">24dp</dimen>
+	<dimen name="spacingXXLarge">32dp</dimen>
+	<dimen name="spacingXXXLarge">40dp</dimen>
 
 	<dimen name="textSmall">10sp</dimen>
 	<dimen name="textMedium">12sp</dimen>

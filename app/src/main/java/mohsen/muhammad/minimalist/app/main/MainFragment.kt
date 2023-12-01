@@ -1,7 +1,6 @@
 package mohsen.muhammad.minimalist.app.main
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +15,7 @@ import mohsen.muhammad.minimalist.app.breadcrumb.BreadcrumbManager
 import mohsen.muhammad.minimalist.app.explorer.ExplorerManager
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.app.player.PlayerControlsManager2
+import mohsen.muhammad.minimalist.app.settings.SettingsManager
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.*
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
@@ -30,17 +30,17 @@ class MainFragment : Fragment() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		// state - initializing the state in the permission callback sometimes threw "lateinit property sharedPreferences has not been initialized" exception!
-		State.initialize(requireActivity().applicationContext)
-
-		// storage permission
+		// storage permission...must be in onCreate
 		permissionRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
 			if (isGranted) {
 				initialize()
+				PlaybackManager.startSelf(requireActivity())
+
 			} else {
 				binding.layoutPermission.root.visibility = View.VISIBLE
 				binding.layoutPermission.buttonGrantPermission.setOnClickListener {
 					initialize()
+					PlaybackManager.startSelf(requireActivity())
 				}
 			}
 		}
@@ -60,14 +60,21 @@ class MainFragment : Fragment() {
 		return binding.root
 	}
 
+	override fun onStart() {
+		super.onStart()
+
+		// service - ensures that the service is started when app is foregrounded (ForegroundServiceStartNotAllowedException)
+		if (ContextCompat.checkSelfPermission(requireContext(), PERMISSION) == PackageManager.PERMISSION_GRANTED) PlaybackManager.startSelf(requireActivity())
+	}
+
+	// initializes everything except the service!
 	private fun initialize() {
 		when {
 			ContextCompat.checkSelfPermission(requireContext(), PERMISSION) == PackageManager.PERMISSION_GRANTED -> {
 				binding.layoutPermission.root.visibility = View.GONE
 
-				// service
-				val playerIntent = Intent(requireActivity(), PlaybackManager::class.java)
-				ContextCompat.startForegroundService(requireActivity(), playerIntent)
+				// state
+				State.initialize(requireActivity().applicationContext)
 
 				// breadcrumbs
 				val breadcrumbManager = BreadcrumbManager(binding)
@@ -81,8 +88,12 @@ class MainFragment : Fragment() {
 				val playerControlsManager = PlayerControlsManager2(binding)
 				playerControlsManager.initialize()
 
+				// settings
+				val settingsManager = SettingsManager(binding)
+				settingsManager.initialize()
+
 				// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't yet registered to the event bus!
-				if (State.Track.isInitialized) EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.METADATA_UPDATE))
+				if (State.Track.exists) EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.METADATA_UPDATE))
 			}
 			shouldShowRequestPermissionRationale(PERMISSION) -> {
 				permissionRequest.launch(PERMISSION)

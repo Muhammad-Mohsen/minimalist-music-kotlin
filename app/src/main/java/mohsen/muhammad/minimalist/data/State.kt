@@ -25,11 +25,17 @@ object State {
 	lateinit var applicationContext: Context
 
 	fun initialize(context: Context) {
+
+		if (initialized) return
+
 		applicationContext = context
 		sharedPreferences = context.getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
 		playlist = Playlist(sharedPreferences)
 		Track.update()
 	}
+
+	private val initialized: Boolean
+		get() = ::sharedPreferences.isInitialized
 
 	var currentDirectory: File
 		get() {
@@ -42,18 +48,23 @@ object State {
 	val isPlaying: Boolean
 		get() = PlaybackManager.isPlaying
 
+	var seekJump: Int
+		get() = sharedPreferences.getInt(Key.SEEK_JUMP, 60) // 1 minute default
+		set(value) = sharedPreferences.put(Key.SEEK_JUMP, value)
+
+	var nightMode: Int
+		get() = sharedPreferences.getInt(Key.NIGHT_MODE, 0)
+		set(value) = sharedPreferences.put(Key.NIGHT_MODE, value)
+
 	// current track state props
 	// because getting the metadata is expensive, they're obtained once and stored here
 	object Track {
 
-		val isInitialized
-			get() = path.isNotBlank()
+		val exists
+			get() = File(path).exists()
 
 		var path: String
-			get() {
-				// initialized check introduced to prevent an exception on Android8! where restoreState is called before sharedPrefs is initialized!!
-				return if (::sharedPreferences.isInitialized) sharedPreferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY else String.EMPTY
-			}
+			get() = sharedPreferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY
 			set(value) = sharedPreferences.put(Key.PATH, value)
 
 		var title= String.EMPTY
@@ -121,6 +132,8 @@ object State {
 		// const val PLAYLIST = "Playlist"
 		const val PATH = "CurrentTrack"
 		const val SEEK = "Seek"
+		const val SEEK_JUMP = "SeekJump"
+		const val NIGHT_MODE = "NightMode"
 
 		const val REPEAT = "Repeat"
 		const val SHUFFLE = "Shuffle"

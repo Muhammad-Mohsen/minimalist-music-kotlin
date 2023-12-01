@@ -57,7 +57,7 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 			else -> index = tracks.size - 1 // otherwise, rotate the index to the end of the list
 		}
 
-		return if (index != -1) tracks[index] else null
+		return tracks.getOrNull(index)
 	}
 
 	// the onComplete param indicates whether we're requesting the next track upon completion of playing the current track,
@@ -65,26 +65,27 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 	fun getNextTrack(onComplete: Boolean): String? {
 		if (tracks.size == 0) return null
 
-		// first, check the shuffle state
 		when {
+			// first, check the shuffle state
 			shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.
 
-			repeat == RepeatMode.REPEAT_ONE -> return tracks[index]
+			// then the repeat stuff
+			repeat == RepeatMode.REPEAT_ONE -> return tracks.getOrNull(index) // if the index was out-of-bounds, return null
 			repeat == RepeatMode.ACTIVE -> index = (index + 1) % tracks.size
 			repeat == RepeatMode.INACTIVE -> {
 				index = (index + 1) % tracks.size
-				if (index == 0 && onComplete) return null
+				if (index == 0 && onComplete) return null // at the end of the playlist
 			}
 		}
 
-		return if (index != -1) tracks[index] else null
+		return tracks.getOrNull(index)
 	}
 
 	fun getTrackByIndex(index: Int): String? {
-		return if (index < tracks.size) tracks[index] else null
+		return tracks.getOrNull(index)
 	}
 
-	// sets the index of the current track - isStart indicates whether the current track should be treated as the starting index in the current playlist
+	// sets the index of the current track (may return -1 if the track was deleted for example)
 	fun setTrack(currentTrackPath: String) {
 		index = tracks.indexOf(currentTrackPath)
 	}

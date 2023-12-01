@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	>
+
+	<View
+		android:id="@+id/viewScrim"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:alpha="0"
+		android:visibility="gone"
+		/>
+
+	<mohsen.muhammad.minimalist.core.ExtendedConstraintLayout
+		android:id="@+id/settingsSheet"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:layout_marginBottom="@dimen/settingsHiddenMargin"
+		android:paddingBottom="@dimen/spacingMedium"
+		android:clipToPadding="false"
+		app:fillColor="@color/mainBackground"
+		>
+
+		<!-- Top Border -->
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:background="@color/multiSelectBorder"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+
+		<!-- Theme -->
+		<androidx.appcompat.widget.LinearLayoutCompat
+			android:id="@+id/themeBar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			>
+
+			<mohsen.muhammad.minimalist.core.ExtendedButton
+				android:id="@+id/buttonThemeSystem"
+				android:layout_width="0dp"
+				android:layout_height="64dp"
+				android:layout_weight="1"
+				android:gravity="center"
+				android:layout_marginStart="@dimen/spacingLarge"
+				android:layout_marginTop="@dimen/spacingLarge"
+				android:layout_marginEnd="@dimen/spacingSmall"
+				android:layout_marginBottom="@dimen/spacingLarge"
+				android:text="@string/system"
+				android:textColor="@color/mainForeground"
+				app:cornerRadius="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/mainBackground"
+				app:strokeColor="@color/subSettingsBorder"
+				app:strokeWidth="0dp"
+				/>
+
+			<View
+				android:layout_width="1dp"
+				android:layout_height="match_parent"
+				android:layout_marginTop="@dimen/spacingXXXLarge"
+				android:layout_marginBottom="@dimen/spacingXXXLarge"
+				android:layout_marginEnd="@dimen/spacingSmall"
+				android:layout_marginStart="@dimen/spacingSmall"
+				android:background="@color/subSettingsBorder"
+				/>
+
+			<mohsen.muhammad.minimalist.core.ExtendedButton
+				android:id="@+id/buttonThemeLight"
+				android:layout_width="0dp"
+				android:layout_height="64dp"
+				android:layout_weight="1"
+				android:gravity="center"
+				android:layout_marginTop="@dimen/spacingLarge"
+				android:layout_marginBottom="@dimen/spacingLarge"
+				android:layout_marginStart="@dimen/spacingSmall"
+				android:layout_marginEnd="@dimen/spacingSmall"
+				android:text="@string/light"
+				android:textColor="@color/mainForeground"
+				app:cornerRadius="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/mainBackground"
+				app:strokeColor="@color/subSettingsBorder"
+				app:strokeWidth="0dp"
+				/>
+
+			<View
+				android:layout_width="1dp"
+				android:layout_height="match_parent"
+				android:layout_marginTop="@dimen/spacingXXXLarge"
+				android:layout_marginBottom="@dimen/spacingXXXLarge"
+				android:layout_marginEnd="@dimen/spacingSmall"
+				android:layout_marginStart="@dimen/spacingSmall"
+				android:background="@color/subSettingsBorder"
+				/>
+
+			<mohsen.muhammad.minimalist.core.ExtendedButton
+				android:id="@+id/buttonThemeDark"
+				android:layout_width="0dp"
+				android:layout_height="64dp"
+				android:layout_weight="1"
+				android:layout_marginTop="@dimen/spacingLarge"
+				android:layout_marginEnd="@dimen/spacingLarge"
+				android:layout_marginBottom="@dimen/spacingLarge"
+				android:layout_marginStart="@dimen/spacingSmall"
+				android:gravity="center"
+				android:text="@string/dark"
+				android:textColor="@color/mainForeground"
+				app:cornerRadius="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/mainBackground"
+				app:strokeColor="@color/subSettingsBorder"
+				app:strokeWidth="0dp"
+				/>
+
+		</androidx.appcompat.widget.LinearLayoutCompat>
+
+		<!-- Seek Jump -->
+		<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+			android:id="@+id/seekJumpBar"
+			android:layout_width="match_parent"
+			android:layout_height="64dp"
+			android:layout_marginStart="@dimen/spacingLarge"
+			android:layout_marginEnd="@dimen/spacingLarge"
+			android:layout_marginBottom="@dimen/seekBarMargin"
+			android:animateLayoutChanges="true"
+			android:clickable="false"
+			android:elevation="@dimen/elevationMedium"
+			app:cornerRadius="@dimen/cornerRadiusLarge"
+			app:fillColor="@color/alwaysBlack"
+			app:layout_constraintTop_toBottomOf="@id/themeBar"
+			>
+
+			<SeekBar
+				android:id="@+id/seekJump"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:max="300"
+
+				android:maxHeight="900dp"
+				android:padding="0dp"
+				android:progressDrawable="@drawable/style_seek_bar_progress_settings"
+				android:thumb="@null"
+				tools:progress="100"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center|start"
+				android:layout_marginStart="@dimen/spacingLarge"
+				android:text="@string/seekJump"
+				android:textColor="@color/alwaysWhite"
+				android:textSize="@dimen/textLarge"
+				/>
+
+			<TextView
+				android:id="@+id/seekJumpText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center|end"
+				android:layout_marginEnd="@dimen/spacingLarge"
+				android:textColor="@color/alwaysWhite"
+				android:textSize="@dimen/textLarge"
+				tools:text="60"
+				/>
+
+		</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>
+
+		<!-- Shuffle / Repeat -->
+		<androidx.appcompat.widget.LinearLayoutCompat
+			android:id="@+id/shuffleRepeatBar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/spacingLarge"
+			android:clipToPadding="false"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/seekJumpBar"
+			>
+
+			<!--Shuffle-->
+			<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
+				android:id="@+id/buttonShuffle"
+				android:layout_width="0dp"
+				android:layout_height="64dp"
+				android:layout_weight="1"
+				android:layout_marginEnd="@dimen/spacingMedium"
+				android:paddingStart="@dimen/spacingLarge"
+				android:paddingEnd="@dimen/spacingSmall"
+				android:elevation="@dimen/elevationMedium"
+				app:cornerRadius="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/alwaysBlack"
+				app:strokeColor="@color/mainSettingsBorder"
+				app:strokeWidth="1dp"
+				>
+
+				<TextView
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:layout_gravity="center|start"
+					android:text="@string/shuffle"
+					android:textColor="@color/alwaysWhite"
+					android:textSize="@dimen/textLarge"
+					/>
+
+				<mohsen.muhammad.minimalist.core.ExtendedImageButton
+					android:id="@+id/iconShuffle"
+					style="@style/floatingButtonOmniStyle2"
+					android:layout_marginTop="@dimen/spacingMedium"
+					android:src="@drawable/shuffle031"
+					android:contentDescription="@string/shuffle"
+					app:cornerRadius="@dimen/cornerRadiusLarge"
+					android:tint="@color/alwaysWhite"
+					app:fillColor="@color/alwaysBlack"
+					app:layout_constraintEnd_toEndOf="@id/mainPanel"
+					app:layout_constraintTop_toBottomOf="@id/mainPanel"
+					/>
+
+			</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
+
+			<!--Repeat-->
+			<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
+				android:id="@+id/buttonRepeat"
+				android:layout_width="0dp"
+				android:layout_height="64dp"
+				android:layout_weight="1"
+				android:layout_marginStart="@dimen/spacingMedium"
+				android:paddingStart="@dimen/spacingLarge"
+				android:paddingEnd="@dimen/spacingSmall"
+				android:elevation="@dimen/elevationMedium"
+				app:cornerRadius="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/alwaysBlack"
+				app:strokeColor="@color/mainSettingsBorder"
+				app:strokeWidth="1dp"
+				>
+
+				<TextView
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:layout_gravity="center|start"
+					android:text="@string/repeat"
+					android:textColor="@color/alwaysWhite"
+					android:textSize="@dimen/textLarge"
+					/>
+
+				<mohsen.muhammad.minimalist.core.ExtendedImageButton
+					android:id="@+id/iconRepeat"
+					style="@style/floatingButtonOmniStyle2"
+					android:layout_marginTop="@dimen/spacingMedium"
+					android:elevation="0dp"
+					android:src="@drawable/repeat040"
+					android:contentDescription="@string/repeat"
+					android:tint="@color/alwaysWhite"
+					app:fillColor="@color/alwaysBlack"
+					app:cornerRadius="@dimen/cornerRadiusLarge"
+					app:layout_constraintStart_toStartOf="@id/mainPanel"
+					app:layout_constraintTop_toBottomOf="@id/mainPanel"
+					/>
+
+			</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
+
+		</androidx.appcompat.widget.LinearLayoutCompat>
+
+		<!-- Privacy Policy -->
+		<mohsen.muhammad.minimalist.core.ExtendedButton
+			android:id="@+id/buttonPrivacyPolicy"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toBottomOf="@id/shuffleRepeatBar"
+			app:layout_constraintStart_toStartOf="@id/shuffleRepeatBar"
+			app:layout_constraintEnd_toEndOf="@id/shuffleRepeatBar"
+			android:padding="@dimen/spacingMedium"
+			android:text="@string/privacyPolicy"
+			android:textColor="@color/explorerForegroundLight"
+			android:textSize="@dimen/textMedium"
+			app:cornerRadius="@dimen/cornerRadiusLarge"
+			/>
+
+	</mohsen.muhammad.minimalist.core.ExtendedConstraintLayout>
+
+</FrameLayout>

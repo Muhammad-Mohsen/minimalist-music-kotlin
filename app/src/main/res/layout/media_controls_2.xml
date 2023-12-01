@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+	android:id="@+id/controls_2"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/controls_2"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical"
 	android:clipChildren="false"
-	tools:layout_gravity="bottom"
 	>
 
-	<!--Main Panel-->
+	<!-- Main Panel -->
 	<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 		android:id="@+id/mainPanel"
 		android:layout_width="match_parent"
@@ -59,7 +57,7 @@
 			app:fillColor="@color/transparent"
 			/>
 
-		<!--track title-->
+		<!-- track title -->
 		<TextSwitcher
 			android:id="@+id/textViewTitle"
 			android:layout_width="match_parent"
@@ -98,7 +96,7 @@
 
 		</TextSwitcher>
 
-		<!--album/artist-->
+		<!-- album/artist -->
 		<TextSwitcher
 			android:id="@+id/textViewSubtitle"
 			android:layout_width="match_parent"
@@ -151,11 +149,12 @@
 		app:fillColor="@color/alwaysWhite"
 		>
 
-		<!--Previous-->
+		<!-- Previous -->
 		<mohsen.muhammad.minimalist.core.ExtendedImageButton
 			android:id="@+id/buttonPrev"
 			style="@style/floatingButtonOmniStyle2"
 			android:tint="@color/alwaysOffBlack"
+			android:contentDescription="@string/previousButtonContentDescription"
 			app:fillColor="@color/alwaysWhite"
 			android:src="@drawable/next000"
 			android:rotation="180"
@@ -163,20 +162,22 @@
 			app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
 			/>
 
-		<!--Omni button-->
+		<!-- Omni button -->
 		<mohsen.muhammad.minimalist.core.ExtendedImageButton
 			android:id="@+id/buttonOmni"
 			style="@style/floatingButtonOmniStyle2"
+			android:contentDescription="@string/playPauseButtonContentDescription"
 			android:tint="@color/alwaysOffBlack"
 			app:fillColor="@color/alwaysWhite"
 			android:src="@drawable/anim_play_pause"
 			/>
 
-		<!--Next-->
+		<!-- Next -->
 		<mohsen.muhammad.minimalist.core.ExtendedImageButton
 			android:id="@+id/buttonNext"
 			style="@style/floatingButtonOmniStyle2"
 			android:tint="@color/alwaysOffBlack"
+			android:contentDescription="@string/nextButtonContentDescription"
 			app:fillColor="@color/alwaysWhite"
 			android:src="@drawable/next000"
 			app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
@@ -186,7 +187,7 @@
 
 	</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
 
-	<!--Seek Text-->
+	<!-- Seek Text -->
 	<TextView
 		android:id="@+id/textViewSeek"
 		android:layout_width="wrap_content"
@@ -203,7 +204,7 @@
 		tools:text="02:35"
 		/>
 
-	<!--Seek Text-->
+	<!-- Seek Text -->
 	<TextView
 		android:id="@+id/textViewDuration"
 		android:layout_width="wrap_content"
@@ -219,34 +220,7 @@
 		tools:text="4:08"
 		/>
 
-	<!--Repeat-->
-	<mohsen.muhammad.minimalist.core.ExtendedImageButton
-		android:id="@+id/buttonRepeat"
-		android:src="@drawable/repeat040"
-		style="@style/floatingButtonOmniStyle2"
-		android:layout_marginTop="@dimen/spacingMedium"
-		android:elevation="0dp"
-		android:tint="@color/mainForeground"
-		app:layout_constraintStart_toStartOf="@id/mainPanel"
-		app:layout_constraintTop_toBottomOf="@id/mainPanel"
-		app:fillColor="@color/mainBackground"
-		app:cornerRadius="@dimen/cornerRadiusLarge"
-		/>
-
-	<!--Shuffle-->
-	<mohsen.muhammad.minimalist.core.ExtendedImageButton
-		android:id="@+id/buttonShuffle"
-		android:src="@drawable/shuffle031"
-		style="@style/floatingButtonOmniStyle2"
-		android:layout_marginTop="@dimen/spacingMedium"
-		android:tint="@color/mainForeground"
-		app:layout_constraintEnd_toEndOf="@id/mainPanel"
-		app:layout_constraintTop_toBottomOf="@id/mainPanel"
-		app:fillColor="@color/mainBackground"
-		app:cornerRadius="@dimen/cornerRadiusLarge"
-		/>
-
-	<!--Expand/Collapse-->
+	<!-- Expand/Collapse -->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonAlbumArt"
 		android:src="@drawable/expand_collapse000"
@@ -254,8 +228,24 @@
 		android:layout_marginEnd="@dimen/spacingMediumLarge"
 		android:visibility="gone"
 		android:tint="@color/mainForeground"
-		app:layout_constraintEnd_toStartOf="@id/buttonShuffle"
-		app:layout_constraintBottom_toBottomOf="@id/buttonShuffle"
+		android:contentDescription="@string/albumArtButtonContentDescription"
+		app:layout_constraintEnd_toStartOf="@id/buttonSettings"
+		app:layout_constraintBottom_toBottomOf="@id/buttonSettings"
+		app:fillColor="@color/mainBackground"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
+		tools:visibility="visible"
+		/>
+
+	<!-- Shuffle -->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonSettings"
+		android:src="@drawable/ic_settings"
+		style="@style/floatingButtonOmniStyle2"
+		android:layout_marginTop="@dimen/spacingMedium"
+		android:tint="@color/mainForeground"
+		android:contentDescription="@string/settingsButtonContentDescription"
+		app:layout_constraintEnd_toEndOf="@id/mainPanel"
+		app:layout_constraintTop_toBottomOf="@id/mainPanel"
 		app:fillColor="@color/mainBackground"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
 		/>

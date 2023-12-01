@@ -10,7 +10,6 @@ import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
-import mohsen.muhammad.minimalist.databinding.BreadcrumbBarBinding
 import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
 import java.io.File
 
@@ -22,10 +21,10 @@ import java.io.File
 
 class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber, OnListItemClickListener<File> {
 
-	private val b = BreadcrumbBarBinding.bind(mainBinding.layoutBreadcrumbs.root)
+	private val binding = mainBinding.layoutBreadcrumbs
 
 	private val breadcrumbAdapter: BreadcrumbAdapter
-		get() = b.recyclerViewBreadcrumbs.adapter as BreadcrumbAdapter
+		get() = binding.recyclerViewBreadcrumbs.adapter as BreadcrumbAdapter
 
 	fun initialize() {
 		// event bus subscription
@@ -34,19 +33,19 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		val currentDirectory = State.currentDirectory
 
 		val breadcrumbAdapter = BreadcrumbAdapter(currentDirectory, this)
-		b.recyclerViewBreadcrumbs.adapter = breadcrumbAdapter
+		binding.recyclerViewBreadcrumbs.adapter = breadcrumbAdapter
 
 		// set back button icon and tag
 		val atRoot = ExplorerFile.isAtRoot(currentDirectory.absolutePath)
 		val animationResourceId = if (atRoot) R.drawable.anim_root_back else R.drawable.anim_back_root
-		b.buttonBack.setImageDrawable(ContextCompat.getDrawable(b.buttonBack.context, animationResourceId))
-		b.buttonBack.tag = if (atRoot) R.drawable.anim_back_root else R.drawable.anim_root_back // notice it's inverted!
+		binding.buttonBack.setImageDrawable(ContextCompat.getDrawable(binding.buttonBack.context, animationResourceId))
+		binding.buttonBack.tag = if (atRoot) R.drawable.anim_back_root else R.drawable.anim_root_back // notice it's inverted!
 
 		// scroll to end
-		b.recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
+		binding.recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
 
 		// back button click listener
-		b.buttonBack.setOnClickListener {
+		binding.buttonBack.setOnClickListener {
 
 			if (State.currentDirectory.absolutePath != ExplorerFile.ACTUAL_ROOT) {
 				val dir = State.currentDirectory.parentFile ?: return@setOnClickListener
@@ -58,13 +57,13 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 		}
 
 		// set the cancel multi-select button listener
-		b.buttonCancel.setOnClickListener {
+		binding.buttonCancel.setOnClickListener {
 			State.selectedTracks.clear() // update the state
 			onSelectModeChange()
 			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.SELECT_MODE_INACTIVE))
 		}
 		// set the add to playlist button listener
-		b.buttonAddSelection.setOnClickListener {
+		binding.buttonAddSelection.setOnClickListener {
 			// update state
 			State.playlist.updateItems(State.selectedTracks, true)
 			State.selectedTracks.clear()
@@ -72,7 +71,7 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.SELECT_MODE_INACTIVE))
 		}
 		// set the play playlist button listener
-		b.buttonPlaySelected.setOnClickListener {
+		binding.buttonPlaySelected.setOnClickListener {
 			// update state
 			State.playlist.updateItems(State.selectedTracks)
 			State.selectedTracks.clear()
@@ -109,42 +108,42 @@ class BreadcrumbManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber,
 
 	private fun onDirectoryChange(currentDirectory: File) {
 		breadcrumbAdapter.update(currentDirectory)
-		b.recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
+		binding.recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
 		animateBackButton(!ExplorerFile.isAtRoot(currentDirectory.absolutePath)) // animate the back button icon depending on the current directory
 	}
 
 	private fun onSelectModeChange() {
-		val isCurrentlyActive = b.breadcrumbBarContainer.alpha != 1F
+		val isCurrentlyActive = binding.breadcrumbBarContainer.alpha != 1F
 		val selectionCount = State.selectedTracks.count()
 		val isActive = selectionCount > 0
 
 		// this is currently just sad at the moment
 		if (isActive && !isCurrentlyActive) {
-			b.breadcrumbBarContainer.fadeOut(200L)
-			b.multiSelectBarContainer.fadeIn(200L)
-			b.multiSelectMask.fadeIn(200L)
-			b.breadcrumbBarContainer.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingLarge, 150L)
-			b.multiSelectBarContainer.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingLarge, 150L)
-			b.multiSelectMask.animateLayoutMargins(R.dimen.spacingZero, 150L)
+			binding.breadcrumbBarContainer.fadeOut(200L)
+			binding.multiSelectBarContainer.fadeIn(200L)
+			binding.multiSelectMask.fadeIn(200L)
+			binding.breadcrumbBarContainer.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingLarge, 150L)
+			binding.multiSelectBarContainer.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingLarge, 150L)
+			binding.multiSelectMask.animateLayoutMargins(R.dimen.spacingZero, 150L)
 
 		} else if (!isActive && isCurrentlyActive) {
-			b.breadcrumbBarContainer.fadeIn(200L)
-			b.multiSelectBarContainer.fadeOut(200L)
-			b.multiSelectMask.fadeOut(200L)
-			b.breadcrumbBarContainer.animateLayoutMargins(R.dimen.spacingLarge, 150L)
-			b.multiSelectBarContainer.animateLayoutMargins(R.dimen.spacingLarge, 150L)
-			b.multiSelectMask.animateLayoutMargins(R.dimen.spacingLarge, 150L)
+			binding.breadcrumbBarContainer.fadeIn(200L)
+			binding.multiSelectBarContainer.fadeOut(200L)
+			binding.multiSelectMask.fadeOut(200L)
+			binding.breadcrumbBarContainer.animateLayoutMargins(R.dimen.spacingLarge, 150L)
+			binding.multiSelectBarContainer.animateLayoutMargins(R.dimen.spacingLarge, 150L)
+			binding.multiSelectMask.animateLayoutMargins(R.dimen.spacingLarge, 150L)
 		}
 
-		b.textViewSelectionCount.setText(b.resources.getQuantityString(R.plurals.selectedCount, selectionCount, selectionCount))
+		binding.textViewSelectionCount.setText(binding.resources.getQuantityString(R.plurals.selectedCount, selectionCount, selectionCount))
 	}
 
 	// forward means that we're going deeper into the directory hierarchy
 	private fun animateBackButton(forward: Boolean) {
 		val anim = if (forward) R.drawable.anim_root_back else R.drawable.anim_back_root
-		if (b.buttonBack.tag == anim) return
+		if (binding.buttonBack.tag == anim) return
 
-		b.buttonBack.tag = anim
-		b.buttonBack.animateDrawable(anim)
+		binding.buttonBack.tag = anim
+		binding.buttonBack.animateDrawable(anim)
 	}
 }

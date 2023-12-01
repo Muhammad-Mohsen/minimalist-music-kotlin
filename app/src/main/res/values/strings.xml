@@ -17,6 +17,18 @@
 	<string name="notificationChannelName">Playback Notification</string>
 	<string name="notificationChannelDescription">Displays the app\'s playback notification</string>
 	<string name="album_art">Album Art</string>
+	<string name="system">SYSTEM</string>
+	<string name="dark">DARK</string>
+	<string name="light">LIGHT</string>
+	<string name="seekJump">Seek Jump (Sec)</string>
+	<string name="shuffle">Shuffle</string>
+	<string name="repeat">Repeat</string>
+	<string name="privacyPolicy">Privacy Policy</string>
+	<string name="settingsButtonContentDescription">Settings</string>
+	<string name="albumArtButtonContentDescription">Expand Collapse Album Art</string>
+	<string name="previousButtonContentDescription">Previous</string>
+	<string name="playPauseButtonContentDescription">Play Pause</string>
+	<string name="nextButtonContentDescription">Next</string>
 
 	<plurals name="selectedCount">
 		<item quantity="one">%1$d Track Selected</item>

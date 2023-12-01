@@ -1,6 +1,7 @@
 package mohsen.muhammad.minimalist.data
 
 import android.view.ViewConfiguration
+import androidx.core.view.animation.PathInterpolatorCompat
 
 /**
  * Created by muhammad.mohsen on 11/3/2018.
@@ -9,6 +10,10 @@ import android.view.ViewConfiguration
 object Const {
 	const val MINIMALIST_SHARED_PREFERENCES = "Minimalist"
 	const val PREV_THRESHOLD = 5000L
+
+	const val PRIVACY_POLICY_URL = "https://muhammad-mohsen.github.io/minimalist-music-kotlin/"
+
+	val exponentialInterpolator = PathInterpolatorCompat.create(.19F, 1F, .22F, 1F)
 
 	object Alpha {
 		const val OPAQUE = 1F

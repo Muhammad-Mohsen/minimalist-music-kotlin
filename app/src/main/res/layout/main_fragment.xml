@@ -8,7 +8,7 @@
 	android:background="@drawable/background_app"
 	>
 
-	<!--Explorer-->
+	<!-- Explorer -->
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/recyclerViewExplorer"
 		android:layout_width="match_parent"
@@ -20,13 +20,13 @@
 		tools:listitem="@layout/explorer_item"
 		/>
 
-	<!--Breadcrumb bar-->
+	<!-- Breadcrumb bar -->
 	<include
 		android:id="@+id/layoutBreadcrumbs"
 		layout="@layout/breadcrumb_bar"
 		/>
 
-	<!--Controls-->
+	<!-- Controls -->
 	<include
 		android:id="@+id/layoutControls2"
 		layout="@layout/media_controls_2"
@@ -35,7 +35,16 @@
 		android:layout_gravity="bottom"
 		/>
 
-	<!--Permission denied layout-->
+	<!-- Settings -->
+	<include
+		android:id="@+id/layoutSettings"
+		layout="@layout/settings_sheet"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_gravity="bottom"
+		/>
+
+	<!-- Permission denied layout -->
 	<include
 		android:id="@+id/layoutPermission"
 		layout="@layout/permission_request"

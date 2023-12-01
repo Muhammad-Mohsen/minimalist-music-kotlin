@@ -4,9 +4,7 @@
 	android:opacity="opaque"
 	>
 
-	<item
-		android:drawable="@color/alwaysBlack"
-		/>
+	<item android:drawable="@color/alwaysBlack" />
 
 	<item>
 		<bitmap

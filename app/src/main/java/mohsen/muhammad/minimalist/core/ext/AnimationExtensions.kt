@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
+import android.view.animation.Interpolator
 import android.view.animation.Transformation
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -15,6 +16,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import mohsen.muhammad.minimalist.data.Const
 
 
 /**
@@ -112,11 +114,11 @@ fun View.animateHeight(to: Int, duration: Long) {
 		layoutParams.height = valueAnimator.animatedValue as Int
 		this.layoutParams = layoutParams
 	}
-
+	valueAnimator.interpolator = Const.exponentialInterpolator
 	valueAnimator.start()
 }
 
-fun View.animateLayoutMargins(@DimenRes left: Int, @DimenRes top: Int, @DimenRes right: Int, @DimenRes bottom: Int, duration: Long) {
+fun View.animateLayoutMargins(@DimenRes left: Int, @DimenRes top: Int, @DimenRes right: Int, @DimenRes bottom: Int, duration: Long, interpolator: Interpolator? = null) {
 	val anim = object : Animation() {
 
 		val params = when (parent) {
@@ -146,11 +148,13 @@ fun View.animateLayoutMargins(@DimenRes left: Int, @DimenRes top: Int, @DimenRes
 		}
 	}
 	anim.duration = duration
+	if (interpolator != null) anim.interpolator = interpolator
+
 	startAnimation(anim)
 }
-fun View.animateLayoutMargins(@DimenRes horizontal: Int, @DimenRes vertical: Int, duration: Long) {
-	animateLayoutMargins(horizontal, vertical, horizontal, vertical, duration)
+fun View.animateLayoutMargins(@DimenRes horizontal: Int, @DimenRes vertical: Int, duration: Long, interpolator: Interpolator? = null) {
+	animateLayoutMargins(horizontal, vertical, horizontal, vertical, duration, interpolator)
 }
-fun View.animateLayoutMargins(@DimenRes margin: Int, duration: Long) {
-	animateLayoutMargins(margin, margin, duration)
+fun View.animateLayoutMargins(@DimenRes margin: Int, duration: Long, interpolator: Interpolator? = null) {
+	animateLayoutMargins(margin, margin, duration, interpolator)
 }

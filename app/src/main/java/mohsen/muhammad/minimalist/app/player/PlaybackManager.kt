@@ -10,6 +10,7 @@ import android.media.MediaPlayer
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
+import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.*
 import mohsen.muhammad.minimalist.data.*
@@ -55,6 +56,8 @@ class PlaybackManager :
 	override fun onCreate() {
 		super.onCreate()
 
+		State.initialize(applicationContext) // make sure that the state is initialized (the store reports an uninitialized property exception "sharedPreferences" in State)
+
 		audioFocusHandler = AudioFocusHandler(this, this) // audio focus loss
 		sessionManager = MediaSessionManager(applicationContext)
 		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
@@ -63,10 +66,11 @@ class PlaybackManager :
 		registerSelf(this)
 		EventBus.subscribe(this)
 
+		// moved this earlier in the function as a possible fix for "Context.startForegroundService() did not then call Service.startForeground()"
+		startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
+
 		player.setOnCompletionListener(this) //Set up MediaPlayer event listeners
 		player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK) // acquire a wake lock so that the system won't shut us down
-
-		startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 
 		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched to which the response would be to call restoreState
 		// so a manual call is necessary
@@ -88,7 +92,9 @@ class PlaybackManager :
 
 	// restores state (from the State object) from a previous session
 	private fun restoreState() {
-		if (State.Track.path.isBlank()) return
+		State.initialize(applicationContext) // make sure that the state is initialized (the store reports an uninitialized property exception "sharedPreferences" in State)
+
+		if (!State.Track.exists) return
 
 		setTrack(State.Track.path)
 		updateSeek(State.Track.seek)
@@ -174,11 +180,11 @@ class PlaybackManager :
 	}
 
 	private fun fastForward() {
-		player.seekTo(player.currentPositionSafe + SEEK_JUMP)
+		player.seekTo(player.currentPositionSafe + State.seekJump * 1000)
 		sendSingleSeekUpdate()
 	}
 	private fun rewind() {
-		player.seekTo(player.currentPositionSafe - SEEK_JUMP)
+		player.seekTo(player.currentPositionSafe - State.seekJump * 1000)
 		sendSingleSeekUpdate()
 	}
 
@@ -259,7 +265,6 @@ class PlaybackManager :
 	companion object {
 
 		private const val EVENT_SOURCE = EventSource.SERVICE
-		private const val SEEK_JUMP = 60000 // one minute jump to FF or rewind
 		private const val SEEK_UPDATE_PERIOD = 1000L
 		private const val ON_COMPLETION_THRESHOLD = 250L
 
@@ -274,6 +279,14 @@ class PlaybackManager :
 
 		fun stopSelf() {
 			instance?.stopSelf()
+			instance = null
+		}
+
+		fun startSelf(context: Context) {
+			if (instance != null) return
+
+			val playerIntent = Intent(context, PlaybackManager::class.java)
+			ContextCompat.startForegroundService(context, playerIntent)
 		}
 	}
 }

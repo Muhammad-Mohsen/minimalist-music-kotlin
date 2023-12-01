@@ -2,8 +2,6 @@
 
 A light weight, folder-based clean music player made in WPF (although there's no MVVM involved). It's by no means a fleshed-out player; There's no playlist management, no equalizer, etc.
 
-A minimalist, folder-based music player that is open-source, and ad-free
-
 ## Features
 - Supports pretty much all audio file formats (has nothing to do with me, that's just the native Android MediaPlayer)
 - Built-in explorer
@@ -14,7 +12,7 @@ A minimalist, folder-based music player that is open-source, and ad-free
 - Remembers playback state between runs
 
 ## Run & Build
-Simply install Android Studio, and click the play button!  
+Simply install Android Studio, and click the play button!
 
 ### RoadMap
 - IN PROGRESS settings popup

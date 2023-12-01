@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/remote.iml" filepath="$PROJECT_DIR$/remote.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/remote.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/remote.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/remote.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/remote.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/remote.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/remote.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/remote.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/remote.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minimalist-music-kotlin.iml" filepath="$PROJECT_DIR$/.idea/modules/minimalist-music-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.unitTest.iml" />
     </modules>
   </component>
 </project>

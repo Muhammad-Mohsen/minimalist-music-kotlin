@@ -19,8 +19,8 @@ import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.coroutines.EmptyCoroutineContext
 
 
 /**
@@ -89,16 +89,18 @@ fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?) {
 		return
 	}
 
-	MainScope().launch {
-		val bitmap = withContext(Dispatchers.Default) {
-			BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
-		}
+	// decode the bitmap on a background thread
+	Dispatchers.Default.dispatch(EmptyCoroutineContext) {
+		val bitmap = BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
 
-		setImageBitmap(bitmap)
-		val matrix = ColorMatrix().apply {
-			setSaturation(0f)
+		// when it's ready, set it on the image view on main...hope this works!
+		MainScope().launch {
+			setImageBitmap(bitmap)
+			val matrix = ColorMatrix().apply {
+				setSaturation(0f)
+			}
+			colorFilter = ColorMatrixColorFilter(matrix)
 		}
-		colorFilter = ColorMatrixColorFilter(matrix)
 	}
 }
 fun MediaMetadataCompat.Builder.putEncodedBitmap(key: String, encodedBitmap: ByteArray?) {

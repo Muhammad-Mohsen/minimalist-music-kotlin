@@ -9,9 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.ExtendedFrameLayout
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
-import mohsen.muhammad.minimalist.core.ext.setLayoutMargins
-import mohsen.muhammad.minimalist.core.ext.toDip
-import mohsen.muhammad.minimalist.data.Const
 import mohsen.muhammad.minimalist.data.ItemType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
@@ -49,11 +46,6 @@ class ExplorerAdapter(
 		val file = files[position]
 		with(holder) {
 
-			// set the margins on the first and last items in the list (they are different than the rest)
-			val topMargin = if (position == 0) Const.Dimen.FIRST_ITEM.toDip(itemView.context) else 0f
-			val bottomMargin = if (position == files.lastIndex) Const.Dimen.LAST_ITEM.toDip(itemView.context) else 0f
-			itemView.setLayoutMargins(0, topMargin.toInt(), 0, bottomMargin.toInt()) // TODO possible performance issue
-
 			icon.setColorFilter(R.color.mainBackground)
 			icon.setImageResource(if (file.isDirectory) R.mipmap.ic_directory else R.mipmap.ic_track)
 			title.text = file.name
@@ -65,9 +57,9 @@ class ExplorerAdapter(
 			title.setTextColor(itemColor)
 
 			// selection states
-			currentlyPlayingView.alpha = if (isSelected(file)) Const.Alpha.OPAQUE else Const.Alpha.TRANSPARENT
+			currentlyPlayingView.alpha = if (isSelected(file)) OPAQUE else TRANSPARENT
 
-			selectedView.alpha = if (State.selectedTracks.contains(file.absolutePath)) Const.Alpha.OPAQUE else Const.Alpha.TRANSPARENT
+			selectedView.alpha = if (State.selectedTracks.contains(file.absolutePath)) OPAQUE else TRANSPARENT
 
 			// listeners
 			val itemType = if (file.isDirectory) ItemType.DIRECTORY else ItemType.TRACK
@@ -127,5 +119,10 @@ class ExplorerAdapter(
 
 		// val subtitle: TextView = binding.textViewSubtitle
 		val duration: TextView = binding.textViewDuration
+	}
+
+	companion object {
+		const val OPAQUE = 1F
+		const val TRANSPARENT = 0F
 	}
 }

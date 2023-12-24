@@ -4,11 +4,12 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.text.SpannableStringBuilder
 import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
-import mohsen.muhammad.minimalist.R
+import androidx.core.text.bold
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.*
@@ -125,9 +126,10 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 		binding?.textViewTitle?.setText(State.Track.title)
 
 		// if the artist exists, set both album and artist (we're guaranteed album info in the form of the parent dir name)
-		if (State.Track.artist.isNotEmpty()) binding?.textViewSubtitle?.setText(controls?.context?.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
-		// if there's no artist info, only set the album
-		else binding?.textViewSubtitle?.setText(State.Track.album)
+		binding?.textViewSubtitle?.setText(
+			SpannableStringBuilder()
+			.bold { append(State.Track.album) }
+			.append(if (State.Track.artist.isNotEmpty()) " | ${State.Track.artist}" else ""))
 
 		binding?.textViewDuration?.text = State.Track.readableDuration
 

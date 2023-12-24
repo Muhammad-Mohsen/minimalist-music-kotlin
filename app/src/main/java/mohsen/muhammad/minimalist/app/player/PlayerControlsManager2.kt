@@ -1,8 +1,10 @@
 package mohsen.muhammad.minimalist.app.player
 
 import android.graphics.drawable.BitmapDrawable
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.SeekBar
+import androidx.core.text.bold
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
@@ -19,6 +21,7 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 
 	private val binding = mainBinding.layoutControls2
 
+	// registers event handlers
 	fun initialize() {
 
 		// event bus subscription
@@ -60,7 +63,7 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 				val animId = if (it.tag == R.drawable.anim_collapse_expand) R.drawable.anim_expand_collapse else R.drawable.anim_collapse_expand
 
 				val art = (binding.imageViewAlbumArt.drawable as BitmapDrawable).bitmap
-				val height = if (it.tag == R.drawable.anim_collapse_expand) Const.Dimen.ALBUM_ART_COLLAPSED.toDip(it.context)
+				val height = if (it.tag == R.drawable.anim_collapse_expand) ALBUM_ART_COLLAPSED_HEIGHT.toDip(it.context)
 				else art.height * (binding.imageViewAlbumArt.width) / art.width
 
 				it.tag = animId
@@ -74,9 +77,9 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 		binding.textViewTitle.setText(State.Track.title)
 
 		// if the artist exists, set both album and artist (we're guaranteed album info in the form of the parent dir name)
-		if (State.Track.artist.isNotEmpty()) binding.textViewSubtitle.setText(binding.resources.getString(R.string.trackAlbumArtist, State.Track.album, State.Track.artist))
-		// if there's no artist info, only set the album
-		else binding.textViewSubtitle.setText(State.Track.album)
+		binding.textViewSubtitle.setText(SpannableStringBuilder()
+			.bold { append(State.Track.album) }
+			.append(if (State.Track.artist.isNotEmpty()) " | ${State.Track.artist}" else ""))
 
 		binding.textViewDuration.text = State.Track.readableDuration
 
@@ -92,7 +95,7 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 			binding.buttonAlbumArt.let {
 				it.tag = R.drawable.anim_expand_collapse
 				it.animateDrawable(R.drawable.anim_expand_collapse)
-				binding.mainPanel.animateHeight(Const.Dimen.ALBUM_ART_COLLAPSED.toDip(it.context).toInt(), 210)
+				binding.mainPanel.animateHeight(ALBUM_ART_COLLAPSED_HEIGHT.toDip(it.context).toInt(), ALBUM_ART_ANIM_DURATION)
 			}
 		}
 
@@ -120,19 +123,6 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 		binding.buttonOmni.animateDrawable(animId)
 		binding.buttonOmni.tag = animId // set the tag
 	}
-	private fun getButtonAnimationByIndex(buttonIndex: Int): Int {
-		return when (buttonIndex) {
-			FabMenu.BUTTON_NEXT -> R.drawable.anim_next
-			FabMenu.BUTTON_REPEAT -> {
-				repeatAnimations[(State.playlist.repeat + 1) % repeatAnimations.size]
-			}
-			FabMenu.BUTTON_SHUFFLE -> {
-				if (State.playlist.shuffle) R.drawable.anim_shuffle_inactive
-				else R.drawable.anim_shuffle_active
-			}
-			else -> R.drawable.anim_next // FabMenu.BUTTON_PREV
-		}
-	}
 
 	override fun receive(data: EventBus.EventData) {
 
@@ -149,6 +139,11 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 				EventType.SEEK_UPDATE -> updateSeek()
 			}
 		}
+	}
+
+	companion object {
+		private const val ALBUM_ART_ANIM_DURATION = 210L
+		private const val ALBUM_ART_COLLAPSED_HEIGHT = 84 // TODO should be dimen?
 	}
 
 }

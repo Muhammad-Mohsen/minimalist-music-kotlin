@@ -7,7 +7,6 @@
 	<string name="descriptionRecyclerItemTypeTrack">track</string>
 
 	<string name="blankTimestamp">--:--</string>
-	<string name="trackAlbumArtist">%1$s (%2$s)</string>
 
 	<string name="breadcrumbSeparator">/</string> <!-- other symbols to try out: ›> | -->
 
@@ -29,6 +28,10 @@
 	<string name="previousButtonContentDescription">Previous</string>
 	<string name="playPauseButtonContentDescription">Play Pause</string>
 	<string name="nextButtonContentDescription">Next</string>
+	<string name="selectedTracks">Play Selected Tracks</string>
+	<string name="backButton">Back</string>
+	<string name="addToSelected">Add To Selected</string>
+	<string name="cancelButton">Cancel</string>
 
 	<plurals name="selectedCount">
 		<item quantity="one">%1$d Track Selected</item>

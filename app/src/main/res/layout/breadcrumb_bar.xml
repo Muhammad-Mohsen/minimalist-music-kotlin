@@ -22,7 +22,6 @@
 		app:strokeColor="@color/breadcrumbBorder"
 		app:strokeWidth="1dp"
 		app:cornerRadius="@dimen/cornerRadiusLarge"
-		tools:visibility="gone"
 		>
 
 		<!--back button-->
@@ -31,6 +30,7 @@
 			style="@style/floatingButtonOmniStyle2"
 			android:src="@drawable/anim_back_root"
 			android:layout_margin="1dp"
+			android:contentDescription="@string/backButton"
 			app:fillColor="@color/breadcrumbBackground"
 			android:tint="@color/breadcrumbForeground"
 			app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
@@ -89,8 +89,10 @@
 			<mohsen.muhammad.minimalist.core.ExtendedImageButton
 				android:id="@+id/buttonCancel"
 				style="@style/floatingButtonOmniStyle2"
-				android:padding="@dimen/spacingMediumLarge"
+				android:layout_marginTop="1dp"
+				android:layout_marginBottom="1dp"
 				android:src="@drawable/ic_cancel"
+				android:contentDescription="@string/cancelButton"
 				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/mainBackground"
 				app:tint="@color/breadcrumbForegroundDark"
@@ -130,6 +132,7 @@
 				android:id="@+id/buttonAddSelection"
 				style="@style/floatingButtonOmniStyle2"
 				android:src="@drawable/ic_add"
+				android:contentDescription="@string/addToSelected"
 				app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
 				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/mainBackground"
@@ -141,6 +144,7 @@
 				android:id="@+id/buttonPlaySelected"
 				style="@style/floatingButtonOmniStyle2"
 				android:src="@drawable/ic_play_selected"
+				android:contentDescription="@string/selectedTracks"
 				app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/mainBackground"
 				app:tint="@color/breadcrumbForegroundDark"

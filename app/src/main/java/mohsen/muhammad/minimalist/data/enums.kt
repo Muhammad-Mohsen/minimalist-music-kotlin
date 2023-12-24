@@ -5,6 +5,7 @@ import androidx.core.view.animation.PathInterpolatorCompat
 
 /**
  * Created by muhammad.mohsen on 11/3/2018.
+ * just general constants
  */
 
 object Const {
@@ -14,17 +15,6 @@ object Const {
 	const val PRIVACY_POLICY_URL = "https://muhammad-mohsen.github.io/minimalist-music-kotlin/"
 
 	val exponentialInterpolator = PathInterpolatorCompat.create(.19F, 1F, .22F, 1F)
-
-	object Alpha {
-		const val OPAQUE = 1F
-		const val TRANSPARENT = 0F
-	}
-
-	object Dimen {
-		const val FIRST_ITEM = 80F
-		const val LAST_ITEM = 62F
-		const val ALBUM_ART_COLLAPSED = 84
-	}
 }
 
 // defines the explorer recycler view adapter view types

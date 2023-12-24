@@ -118,6 +118,19 @@ fun View.animateHeight(to: Int, duration: Long) {
 	valueAnimator.start()
 }
 
+fun View.slideY(delta: Int) {
+	val params = when (parent) {
+		is LinearLayoutCompat -> layoutParams as LinearLayoutCompat.LayoutParams
+		is ConstraintLayout -> layoutParams as ConstraintLayout.LayoutParams
+		else -> layoutParams as FrameLayout.LayoutParams
+	}
+
+	params.bottomMargin += delta
+	if (params.bottomMargin > 0) params.bottomMargin = 0
+
+	layoutParams = params
+}
+
 fun View.animateLayoutMargins(@DimenRes left: Int, @DimenRes top: Int, @DimenRes right: Int, @DimenRes bottom: Int, duration: Long, interpolator: Interpolator? = null) {
 	val anim = object : Animation() {
 

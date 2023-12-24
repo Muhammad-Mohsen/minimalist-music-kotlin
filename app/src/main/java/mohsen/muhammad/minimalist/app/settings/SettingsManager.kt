@@ -1,7 +1,10 @@
 package mohsen.muhammad.minimalist.app.settings
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.view.MotionEvent
+import android.widget.FrameLayout
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.startActivity
@@ -18,6 +21,7 @@ import mohsen.muhammad.minimalist.core.ext.fadeIn
 import mohsen.muhammad.minimalist.core.ext.fadeOut
 import mohsen.muhammad.minimalist.core.ext.setImageDrawable
 import mohsen.muhammad.minimalist.core.ext.setStroke
+import mohsen.muhammad.minimalist.core.ext.slideY
 import mohsen.muhammad.minimalist.data.Const
 import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
@@ -37,6 +41,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 	private val binding = mainBinding.layoutSettings
 	private val controls = mainBinding.layoutControls2
 
+	@SuppressLint("ClickableViewAccessibility")
 	fun initialize() {
 
 		// event bus subscription
@@ -44,13 +49,41 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 
 		controls.buttonSettings.setOnClickListener {
 			// show settings sheet
-			binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, 400L, Const.exponentialInterpolator)
-			binding.viewScrim.fadeIn(400L)
+			binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, ANIM_DURATION, Const.exponentialInterpolator)
+			binding.viewScrim.fadeIn(ANIM_DURATION)
+		}
+
+		var intermediateY = 0F
+		binding.viewScrim.setOnTouchListener { _, event ->
+			return@setOnTouchListener when (event.action) {
+				MotionEvent.ACTION_DOWN -> {
+					intermediateY = event.rawY
+					true
+				}
+				MotionEvent.ACTION_MOVE -> {
+					val delta = intermediateY - event.rawY // calculate the delta
+					intermediateY = event.rawY // and update the y
+
+					binding.settingsSheet.slideY(delta.toInt())
+
+					true
+				}
+				MotionEvent.ACTION_UP -> {
+					if ((binding.settingsSheet.layoutParams as FrameLayout.LayoutParams).bottomMargin < FLICK_THRESHOLD) {
+						binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingZero, R.dimen.spacingZero, R.dimen.settingsHiddenMargin, ANIM_DURATION, Const.exponentialInterpolator)
+						binding.viewScrim.fadeOut(ANIM_DURATION)
+
+					} else binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, ANIM_DURATION, Const.exponentialInterpolator)
+
+					true
+				}
+				else -> false
+			}
 		}
 
 		binding.viewScrim.setOnClickListener {
-			binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingZero, R.dimen.spacingZero, R.dimen.settingsHiddenMargin, 400L, Const.exponentialInterpolator)
-			binding.viewScrim.fadeOut(400L)
+			binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingZero, R.dimen.spacingZero, R.dimen.settingsHiddenMargin, ANIM_DURATION, Const.exponentialInterpolator)
+			binding.viewScrim.fadeOut(ANIM_DURATION)
 		}
 
 		binding.buttonThemeSystem.setOnClickListener {
@@ -71,7 +104,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
 				if (!p2) return // if not initiated by a user
 
-				val progress = ((p1.toDouble() / 5).roundToInt() * 5)
+				val progress = ((p1.toDouble() / SEEK_JUMP_STEP).roundToInt() * SEEK_JUMP_STEP)
 				p0?.progress = progress
 				State.seekJump = progress
 				binding.seekJumpText.text = progress.toString()
@@ -146,6 +179,13 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 				EventType.METADATA_UPDATE -> updateMetadata()
 			}
 		}
+	}
+
+	companion object {
+		const val ANIM_DURATION = 400L
+		const val FLICK_THRESHOLD = -200 // the settings sheet will hide if its bottom margin goes past this value
+		const val SEEK_JUMP_STEP = 5
+
 	}
 
 }

@@ -10,14 +10,14 @@
 	<color name="breadcrumbBackground">#000</color>
 	<color name="breadcrumbForeground">#DDD</color>
 	<color name="breadcrumbForegroundDark">#DDD</color>
-	<color name="breadcrumbBorder">#0B0B0B</color>
-	<color name="multiSelectBorder">#0B0B0B</color> <!-- #101010 used for select bar, and settings sheet border -->
+	<color name="breadcrumbBorder">#111</color>
+	<color name="multiSelectBorder">#111</color> <!-- #101010 used for select bar, and settings sheet border -->
 
 	<color name="seekProgress">#7444</color>
 	<color name="seekBackground">#060606</color>
 
-	<color name="mainSettingsBorder">#0B0B0B</color> <!-- used for black buttons -->
-	<color name="subSettingsBorder">#0B0B0B</color> <!-- used for theme buttons -->
+	<color name="mainSettingsBorder">#111</color> <!-- used for black buttons -->
+	<color name="subSettingsBorder">#111</color> <!-- used for theme buttons -->
 
 	<color name="ripple">#555</color>
 

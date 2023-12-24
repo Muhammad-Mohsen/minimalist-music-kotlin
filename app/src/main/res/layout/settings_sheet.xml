@@ -15,6 +15,7 @@
 		android:visibility="gone"
 		/>
 
+	<!-- 'clickable' to prevent clicks from going through it down to the scrim -->
 	<mohsen.muhammad.minimalist.core.ExtendedConstraintLayout
 		android:id="@+id/settingsSheet"
 		android:layout_width="match_parent"

@@ -22,10 +22,8 @@ import kotlin.collections.ArrayList
  */
 
 /**
- * Holds a file's metadata.
- * Offers no distinction between a music file and a directory...just like java
- * Metadata is obtained asynchronously via the MetadataAsyncTask (no longer the case)
- * It also has a few utils for filtering/sorting and whatnot
+ * not really useful as a model class anymore, honestly...at the start of development, I used to display the track count for folders and the album/artist for tracks
+ * now, only the statics are useful
  */
 class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artist: String = String.EMPTY, var duration: String = String.EMPTY, var trackCount: Int = 0)
 	: File(pathname) {

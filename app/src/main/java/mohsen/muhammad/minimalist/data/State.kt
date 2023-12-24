@@ -14,7 +14,7 @@ import java.io.File
 
 /**
  * Created by muhammad.mohsen on 11/3/2018.
- * holds application-wide state variables (such as current directory, shuffle/repeat states, etc.)
+ * holds application-wide state (such as current directory, shuffle/repeat states, etc.)
  * it's also responsible for persisting those variables (in shared preferences)
  * State should never be registered with the EventBus...the async nature of EventBus would prevent the State from being 'trustworthy'
  */
@@ -93,9 +93,8 @@ object State {
 			val f = File(path)
 			if (!ExplorerFile.isTrack(f)) return
 
-			// Play Store keeps saying that the ffmpeg.setDataSource throws an illegalArgumentException...to me the above check should, but it didn't
-			// so just try/catch the fucker
-			// I also updated the ffmpeg library from 1.0.16 to 1.0.19, but I didn't want to try it
+			// Play Store keeps saying that the ffmpeg.setDataSource throws an illegalArgumentException...to me the above check should fix that, but it didn't
+			// so I just try/catch the fucker
 			try {
 				val metadata = FileMetadata(f)
 				title = metadata.title

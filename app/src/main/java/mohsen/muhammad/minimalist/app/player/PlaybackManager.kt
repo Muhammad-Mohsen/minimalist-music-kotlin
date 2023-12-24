@@ -216,7 +216,8 @@ class PlaybackManager :
 	// on playback completion
 	override fun onCompletion(mp: MediaPlayer) {
 		// sometimes onComplete is called when it's not actually on complete!!
-		if (mp.currentPositionSafe + ON_COMPLETION_THRESHOLD < mp.duration) return
+		// I imagine that this happens due to some race condition where the next track is already loaded, then this hits!!
+		if (mp.currentPositionSafe <= ON_COMPLETION_THRESHOLD) return
 
 		var nextTrack = State.playlist.getNextTrack(true)
 
@@ -266,7 +267,7 @@ class PlaybackManager :
 
 		private const val EVENT_SOURCE = EventSource.SERVICE
 		private const val SEEK_UPDATE_PERIOD = 1000L
-		private const val ON_COMPLETION_THRESHOLD = 250L
+		private const val ON_COMPLETION_THRESHOLD = 1000L
 
 		private var instance: PlaybackManager? = null
 
@@ -282,6 +283,8 @@ class PlaybackManager :
 			instance = null
 		}
 
+		// implemented to be used in the fragment's onStart to make sure that the service is started when the app is foregrounded
+		// this was reported a couple of times on the store
 		fun startSelf(context: Context) {
 			if (instance != null) return
 

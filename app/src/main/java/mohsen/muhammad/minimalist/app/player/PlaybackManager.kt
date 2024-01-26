@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.IBinder
@@ -12,12 +13,20 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.core.ext.*
-import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.core.ext.cancelSafe
+import mohsen.muhammad.minimalist.core.ext.currentPositionSafe
+import mohsen.muhammad.minimalist.core.ext.isPlayingSafe
+import mohsen.muhammad.minimalist.core.ext.playPause
+import mohsen.muhammad.minimalist.core.ext.prepareSource
+import mohsen.muhammad.minimalist.core.ext.unregisterReceiverSafe
+import mohsen.muhammad.minimalist.data.EventSource
+import mohsen.muhammad.minimalist.data.EventType
+import mohsen.muhammad.minimalist.data.State
+import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.getNextChapter
 import mohsen.muhammad.minimalist.data.files.getPrevChapter
-import java.lang.IllegalStateException
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
 
 
 /**
@@ -31,10 +40,8 @@ class PlaybackManager :
 	MediaPlayer.OnCompletionListener,
 	AudioManager.OnAudioFocusChangeListener // audio focus loss
 {
-	private val player = MediaPlayer() // initialize the media player
-
+	private val player = MediaPlayer()
 	private lateinit var audioFocusHandler: AudioFocusHandler
-
 	private lateinit var notificationManager: MediaNotificationManager
 	private lateinit var sessionManager: MediaSessionManager
 
@@ -56,26 +63,31 @@ class PlaybackManager :
 	override fun onCreate() {
 		super.onCreate()
 
-		State.initialize(applicationContext) // make sure that the state is initialized (the store reports an uninitialized property exception "sharedPreferences" in State)
+		registerSelf(this)
+		EventBus.subscribe(this)
+
+		player.apply {// initialize the media player
+			setAudioAttributes(
+				AudioAttributes.Builder()
+					.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+					.setUsage(AudioAttributes.USAGE_MEDIA)
+					.build()
+			)
+
+			setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK) // acquire a wake lock so that the system won't shut us down
+			setOnCompletionListener(this@PlaybackManager) // set up MediaPlayer event listeners
+		}
 
 		audioFocusHandler = AudioFocusHandler(this, this) // audio focus loss
 		sessionManager = MediaSessionManager(applicationContext)
 		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
-	}
-	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-		registerSelf(this)
-		EventBus.subscribe(this)
-
-		// moved this earlier in the function as a possible fix for "Context.startForegroundService() did not then call Service.startForeground()"
-		startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
-
-		player.setOnCompletionListener(this) //Set up MediaPlayer event listeners
-		player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK) // acquire a wake lock so that the system won't shut us down
 
 		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched to which the response would be to call restoreState
 		// so a manual call is necessary
 		restoreState()
-
+	}
+	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+		startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 		return super.onStartCommand(intent, flags, startId)
 	}
 	override fun onDestroy() {
@@ -92,8 +104,6 @@ class PlaybackManager :
 
 	// restores state (from the State object) from a previous session
 	private fun restoreState() {
-		State.initialize(applicationContext) // make sure that the state is initialized (the store reports an uninitialized property exception "sharedPreferences" in State)
-
 		if (!State.Track.exists) return
 
 		setTrack(State.Track.path)

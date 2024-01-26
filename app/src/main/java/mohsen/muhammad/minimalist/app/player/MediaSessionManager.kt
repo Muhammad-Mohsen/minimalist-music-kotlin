@@ -1,17 +1,17 @@
 package mohsen.muhammad.minimalist.app.player
 
 import android.content.Context
+import android.os.Handler
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import kotlinx.coroutines.Dispatchers
+import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.putEncodedBitmap
 import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
-import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * Created by muhammad.mohsen on 5/11/2019.
@@ -22,9 +22,10 @@ import kotlin.coroutines.EmptyCoroutineContext
 class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), EventBus.Subscriber {
 
 	private var stateBuilder: PlaybackStateCompat.Builder
+	private var metadataBuilder: MediaMetadataCompat.Builder
 
 	private val mediaSession: MediaSessionCompat = MediaSessionCompat(context, MediaSessionManager::javaClass.name).apply {
-
+		metadataBuilder = MediaMetadataCompat.Builder()
 		stateBuilder = PlaybackStateCompat.Builder()
 		stateBuilder.setActions(SUPPORTED_ACTIONS) // actions
 
@@ -80,22 +81,16 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		}
 		mediaSession.setPlaybackState(stateBuilder.build())
 
-		// metadata
-		MediaMetadataCompat.Builder().apply {
-			putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.Track.title)
-			putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.Track.artist)
-			putString(MediaMetadataCompat.METADATA_KEY_ALBUM, State.Track.album)
-			putLong(MediaMetadataCompat.METADATA_KEY_DURATION, State.Track.duration)
+		// metadata (in a bg thread because of the bitmap
+		Handler(Moirai.BG.looper).run {
+			metadataBuilder.apply {
+				putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.Track.title)
+				putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.Track.artist)
+				putString(MediaMetadataCompat.METADATA_KEY_ALBUM, State.Track.album)
+				putLong(MediaMetadataCompat.METADATA_KEY_DURATION, State.Track.duration)
 
-			// run the bitmap encoding asynchronously
-			if (State.Track.albumArt != null) {
-				Dispatchers.Default.dispatch(EmptyCoroutineContext) {
-					putEncodedBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.Track.albumArt)
-					mediaSession.setMetadata(build()) // will this blow up in my face??
-				}
-
-			} else {
-				mediaSession.setMetadata(build())
+				putEncodedBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.Track.albumArt)
+				mediaSession.setMetadata(build()) // will this blow up in my face??...it didn't
 			}
 		}
 	}

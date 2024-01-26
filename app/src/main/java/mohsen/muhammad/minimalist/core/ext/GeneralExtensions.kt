@@ -7,6 +7,8 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.os.Handler
+import android.os.HandlerThread
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
 import android.util.TypedValue
@@ -16,11 +18,8 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.viewbinding.ViewBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.coroutines.EmptyCoroutineContext
+import mohsen.muhammad.minimalist.core.Moirai
+import java.util.Timer
 
 
 /**
@@ -82,19 +81,16 @@ val ViewBinding.context: Context
 val ViewBinding.resources: Resources
 	get() = this.root.resources
 
-// coroutines, yay!!
-fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?) {
+// coroutines, nay!!
+fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?, thread: HandlerThread = Moirai.BG) {
 	if (encodedBitmap == null) {
 		setImageResource(android.R.color.transparent)
 		return
 	}
 
-	// decode the bitmap on a background thread
-	Dispatchers.Default.dispatch(EmptyCoroutineContext) {
+	Handler(thread.looper).post {
 		val bitmap = BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
-
-		// when it's ready, set it on the image view on main...hope this works!
-		MainScope().launch {
+		post {
 			setImageBitmap(bitmap)
 			val matrix = ColorMatrix().apply {
 				setSaturation(0f)
@@ -104,8 +100,8 @@ fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?) {
 	}
 }
 fun MediaMetadataCompat.Builder.putEncodedBitmap(key: String, encodedBitmap: ByteArray?) {
-	if (encodedBitmap == null) return
-
-	val bitmap = BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
+	val bitmap = encodedBitmap?.let {
+		BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
+	}
 	this.putBitmap(key, bitmap)
 }

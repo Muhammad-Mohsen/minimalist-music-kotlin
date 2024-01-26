@@ -15,6 +15,19 @@ A light weight, folder-based clean music player made in WPF (although there's no
 Simply install Android Studio, and click the play button!
 
 ### RoadMap
+- use Media3 stuff!! MediaSessionService + MediaSession.Callback
+	- https://developer.android.com/media/implement/playback-app#playing_media_in_the_background
+	- https://developer.android.com/media/implement/surfaces/mobile
+	- exo chapter metadata??
+	- https://www.b4x.com/android/forum/threads/exoplayer-id3-metadata-how-to-get-data.112608/
+
+	- existing players
+		https://github.com/timusus/Shuttle
+		https://github.com/MuntashirAkon/Metro
+		https://github.com/ologe/canaree-music-player
+		https://github.com/enricocid/Music-Player-GO
+
+
 - DONE - settings sheet gesture handling
 - DONE - compare perf of service start up: in onStart vs as before + with/without the theme change possible overhead
 - DONE - colors of borders similar to inactive text
@@ -37,7 +50,4 @@ Simply install Android Studio, and click the play button!
 		- DONE - privacy policy link
 			- Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 			  startActivity(browserIntent);
-- Exo Player
-	- metadata (has chapters?)
-	- replace MediaPlayer
 - Compose instead of XML

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minimalist-music-kotlin.iml" filepath="$PROJECT_DIR$/.idea/modules/minimalist-music-kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/minimalist-music-kotlin.app.unitTest.iml" />
     </modules>

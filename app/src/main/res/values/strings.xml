@@ -16,10 +16,11 @@
 	<string name="notificationChannelName">Playback Notification</string>
 	<string name="notificationChannelDescription">Displays the app\'s playback notification</string>
 	<string name="album_art">Album Art</string>
-	<string name="system">SYSTEM</string>
-	<string name="dark">DARK</string>
-	<string name="light">LIGHT</string>
-	<string name="seekJump">Seek Jump (Sec)</string>
+	<string name="system">System</string>
+	<string name="dark">Dark</string>
+	<string name="light">Light</string>
+	<string name="seekJump">Seek Jump</string>
+	<string name="seekJumpDescription">In seconds - long press on the Next/Prev buttons</string>
 	<string name="shuffle">Shuffle</string>
 	<string name="repeat">Repeat</string>
 	<string name="privacyPolicy">Privacy Policy</string>
@@ -32,10 +33,12 @@
 	<string name="backButton">Back</string>
 	<string name="addToSelected">Add To Selected</string>
 	<string name="cancelButton">Cancel</string>
+	<string name="search">Search</string>
 
 	<plurals name="selectedCount">
 		<item quantity="one">%1$d Track Selected</item>
 		<item quantity="other">%1$d Tracks Selected</item>
 	</plurals>
+	<string name="selectedCount">(%1$d)</string>
 
 </resources>

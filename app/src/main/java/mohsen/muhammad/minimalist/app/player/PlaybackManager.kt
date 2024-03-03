@@ -11,7 +11,6 @@ import android.media.MediaPlayer
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
-import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.cancelSafe
 import mohsen.muhammad.minimalist.core.ext.currentPositionSafe
@@ -291,15 +290,6 @@ class PlaybackManager :
 		fun stopSelf() {
 			instance?.stopSelf()
 			instance = null
-		}
-
-		// implemented to be used in the fragment's onStart to make sure that the service is started when the app is foregrounded
-		// this was reported a couple of times on the store
-		fun startSelf(context: Context) {
-			if (instance != null) return
-
-			val playerIntent = Intent(context, PlaybackManager::class.java)
-			ContextCompat.startForegroundService(context, playerIntent)
 		}
 	}
 }

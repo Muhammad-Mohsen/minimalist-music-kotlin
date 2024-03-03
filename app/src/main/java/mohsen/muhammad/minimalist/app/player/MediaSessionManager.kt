@@ -82,7 +82,7 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		mediaSession.setPlaybackState(stateBuilder.build())
 
 		// metadata (in a bg thread because of the bitmap
-		Handler(Moirai.BG.looper).run {
+		Moirai.BG.post {
 			metadataBuilder.apply {
 				putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.Track.title)
 				putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.Track.artist)

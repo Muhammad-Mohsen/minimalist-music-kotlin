@@ -15,6 +15,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.main.MainActivity
+import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.*
 
@@ -98,7 +99,7 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 
 	override fun receive(data: EventBus.EventData) {
 		if (data !is SystemEvent) return
-		EventBus.main.post { // post-ing here just to delay the notification creation long enough for the playback state to settle (without it, State.isPlaying reported the previous state!)
+		Moirai.MAIN.post { // post-ing here just to delay the notification creation long enough for the playback state to settle (without it, State.isPlaying reported the previous state!)
 			when (data.type) {
 				EventType.PLAY,
 				EventType.PAUSE,

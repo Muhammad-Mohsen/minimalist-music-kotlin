@@ -82,13 +82,13 @@ val ViewBinding.resources: Resources
 	get() = this.root.resources
 
 // coroutines, nay!!
-fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?, thread: HandlerThread = Moirai.BG) {
+fun AppCompatImageView.setEncodedBitmapAsync(encodedBitmap: ByteArray?, handler: Handler = Moirai.BG) {
 	if (encodedBitmap == null) {
 		setImageResource(android.R.color.transparent)
 		return
 	}
 
-	Handler(thread.looper).post {
+	handler.post {
 		val bitmap = BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
 		post {
 			setImageBitmap(bitmap)

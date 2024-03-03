@@ -125,6 +125,8 @@ object State {
 		}
 	}
 
+	var isSearchModeActive = false
+
 	// the shared preferences keys
 	internal object Key {
 		const val DIRECTORY = "CurrentDirectory"

@@ -9,7 +9,8 @@
 	<dimen name="fabMarginedSize">75dp</dimen>
 	<dimen name="chapterIndicatorWidth">1dp</dimen>
 	<dimen name="chapterIndicatorHeight">4dp</dimen>
-	<dimen name="settingsHiddenMargin">-300dp</dimen>
+	<dimen name="settingsHiddenMargin">-360dp</dimen>
+	<dimen name="albumArtCollapsedHeight">84dp</dimen>
 
 	<integer name="fabMenuExpandedBackgroundScale">1</integer>
 	<dimen name="fabMenuExpandedBackgroundRadius">380dp</dimen>
@@ -19,12 +20,13 @@
 	<dimen name="spacingSmall">4dp</dimen>
 	<dimen name="spacingSmallMedium">6dp</dimen>
 	<dimen name="spacingMedium">8dp</dimen>
+	<dimen name="spacingExtraMedium">10dp</dimen> <!-- :D :D -->
 	<dimen name="spacingMediumLarge">12dp</dimen>
-	<dimen name="spacingExtraMediumLarge">14dp</dimen> <!-- :D :D -->
+	<dimen name="spacingExtraMediumLarge">14dp</dimen>
 	<dimen name="spacingLarge">16dp</dimen>
 	<dimen name="spacingXLarge">24dp</dimen>
 	<dimen name="spacingXXLarge">32dp</dimen>
-	<dimen name="spacingXXXLarge">40dp</dimen>
+	<dimen name="spacingXXXLarge">44dp</dimen>
 
 	<dimen name="textSmall">10sp</dimen>
 	<dimen name="textMedium">12sp</dimen>
@@ -42,5 +44,10 @@
 
 	<dimen name="transparent">0</dimen>
 	<dimen name="opaque">1</dimen>
+
+	<dimen name="durationQuick">200</dimen>
+	<dimen name="durationQuicker">150</dimen>
+	<dimen name="durationSlow">500</dimen>
+
 	
 </resources>

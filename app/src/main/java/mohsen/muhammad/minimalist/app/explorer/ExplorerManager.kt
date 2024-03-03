@@ -3,6 +3,7 @@ package mohsen.muhammad.minimalist.app.explorer
 import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
+import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.*
@@ -69,13 +70,17 @@ class ExplorerManager(
 
 	override fun receive(data: EventBus.EventData) {
 		if (data is SystemEvent && data.source != EventSource.EXPLORER) {
-			EventBus.main.post {
+			Moirai.MAIN.post {
 
 				when (data.type) {
 					EventType.METADATA_UPDATE -> explorerAdapter.updateSelection(State.Track.path)
 					EventType.DIR_CHANGE -> onDirectoryChange(State.currentDirectory)
-					EventType.SELECT_MODE_INACTIVE -> explorerAdapter.notifyDataSetChanged() // the state should already be updated
 					EventType.PLAY_SELECTED -> explorerAdapter.updateSelection(State.Track.path)
+					EventType.SELECT_MODE_INACTIVE -> {
+						explorerAdapter.filter("") // clear the filter
+						explorerAdapter.notifyDataSetChanged() // the state should already be updated
+					}
+					EventType.SEARCH_QUERY -> explorerAdapter.filter(data.extras)
 				}
 			}
 		}

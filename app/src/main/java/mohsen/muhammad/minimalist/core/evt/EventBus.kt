@@ -11,8 +11,6 @@ import java.lang.ref.WeakReference
  */
 object EventBus {
 
-	val main = Handler(Looper.getMainLooper())
-
 	private val subscribers = ArrayList<WeakReference<Subscriber>>()
 
 	fun subscribe(subscriber: Subscriber) {

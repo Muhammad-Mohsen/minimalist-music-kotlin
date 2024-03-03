@@ -27,11 +27,10 @@ Simply install Android Studio, and click the play button!
 		https://github.com/ologe/canaree-music-player
 		https://github.com/enricocid/Music-Player-GO
 
+- Compose instead of XML
+- (dynamic colors)[https://developer.android.com/develop/ui/views/theming/dynamic-colors]
 
 - DONE - settings sheet gesture handling
-- DONE - compare perf of service start up: in onStart vs as before + with/without the theme change possible overhead
-- DONE - colors of borders similar to inactive text
-
 - DONE settings popup
 	- DONE - dark mode selection
 	- DONE - update mode on startup
@@ -40,14 +39,26 @@ Simply install Android Studio, and click the play button!
 		- determine the delta threshold to hide/slide up the thing
 	- DONE - interpolator
 	- DONE - theme select
-		- how to force theme
-			- setTheme()?
-		- pause music?
-			- it already pauses
-		- (dynamic colors)[https://developer.android.com/develop/ui/views/theming/dynamic-colors]
-		- DONE - seek jump amount
-		- DONE - shuffle/repeat
-		- DONE - privacy policy link
-			- Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-			  startActivity(browserIntent);
-- Compose instead of XML
+    - DONE - seek jump amount
+    - DONE - shuffle/repeat
+    - DONE - privacy policy link
+        - Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+          startActivity(browserIntent);
+  - DONE - compare perf of service start up: in onStart vs as before + with/without the theme change possible overhead
+  - DONE - colors of borders similar to inactive text
+
+- DONE - search mode
+  - DONE - update icon
+  - add exit animation sequence (flip of the original)
+  - when it activates
+    - breadcrumb bar mode changes
+    - track count, add, and play selected buttons should be hidden
+    - edit text should take focus
+    - controls should hide (explorer should extend all the way down)
+  - when it deactivates
+    - edit text should blur
+  - actual search function
+    - add hidden to file model
+    - if hidden, should animateItemRemoved
+  - if active and the multiselect mode is activated, the track count, add, and play selected buttons will be displayed and track count text should change from "x track(s) selected" to "(x)"
+  - if multiselect mode is active, the edit text will be displayed and track count text should change...

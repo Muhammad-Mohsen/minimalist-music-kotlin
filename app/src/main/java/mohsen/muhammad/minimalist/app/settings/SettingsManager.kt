@@ -12,6 +12,7 @@ import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.player.repeatAnimations
 import mohsen.muhammad.minimalist.app.player.repeatIcons
 import mohsen.muhammad.minimalist.app.player.shuffleIcons
+import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.animateDrawable
@@ -168,9 +169,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 	}
 
 	override fun receive(data: EventBus.EventData) {
-
-		// make sure we're running on main
-		EventBus.main.post {
+		Moirai.MAIN.post { // make sure we're running on main
 
 			if (data !is SystemEvent) return@post // not interested in event types other then SystemEvent
 			if (data.source == EventSource.CONTROLS) return@post // not interested in events that were sent from here
@@ -187,5 +186,4 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 		const val SEEK_JUMP_STEP = 5
 
 	}
-
 }

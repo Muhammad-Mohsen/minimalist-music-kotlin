@@ -43,4 +43,6 @@ object EventType {
     const val SELECT_MODE_ADD = 50 // add a track to the selected list (activate the mode if none were selected before)
     const val SELECT_MODE_SUB = 51 // remove a track from the selected list (deactivate the mode if none are selected now)
     const val SELECT_MODE_INACTIVE = 52 // deactivate select mode (press cancel from the breadcrumb bar)
+    const val SEARCH_MODE = 53 // can only be activated (uses 52 to deactivate)
+    const val SEARCH_QUERY = 54 // search the explorer with a query
 }

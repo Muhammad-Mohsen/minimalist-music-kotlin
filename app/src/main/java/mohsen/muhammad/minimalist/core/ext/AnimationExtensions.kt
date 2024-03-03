@@ -16,6 +16,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.data.Const
 
 
@@ -51,7 +52,7 @@ fun AnimationDrawable.start(endAction: (() -> Unit)? = null) {
 	start()
 
 	if (endAction == null) return
-	Handler(Looper.getMainLooper()).postDelayed({
+	Moirai.MAIN.postDelayed({
 		try {
 			endAction.invoke()
 
@@ -82,13 +83,13 @@ fun View.fadeIn(duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = nul
 			endAction?.invoke()
 		}
 }
-fun View.fadeOut(duration: Long, delay: Long = 0L) {
+fun View.fadeOut(duration: Long, delay: Long = 0L, endAction: (() -> Unit) = fun () { visibility = View.GONE }) {
 	ViewCompat.animate(this)
 		.setStartDelay(delay)
 		.setDuration(duration)
 		.alpha(0f)
 		.withEndAction {
-			visibility = View.GONE
+			endAction()
 		}
 }
 

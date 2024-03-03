@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/breadcrumbs"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	app:fillColor="@color/transparent"
+	>
+
+	<!-- breadcrumb bar -->
+	<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
+		android:id="@+id/breadcrumbBarContainer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/spacingLarge"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:elevation="@dimen/elevationMedium"
+		app:fillColor="@color/breadcrumbBackground"
+		app:strokeColor="@color/breadcrumbBorder"
+		app:strokeWidth="1dp"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
+		tools:visibility="gone"
+		>
+
+		<!--back button-->
+		<mohsen.muhammad.minimalist.core.ExtendedImageButton
+			android:id="@+id/buttonBack"
+			style="@style/floatingButtonOmniStyle2"
+			android:src="@drawable/anim_back_root"
+			android:layout_margin="1dp"
+			android:contentDescription="@string/backButton"
+			app:fillColor="@color/breadcrumbBackground"
+			android:tint="@color/breadcrumbForeground"
+			app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
+			app:cornerRadiusBottomLeft="@dimen/cornerRadiusLarge"
+			/>
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerViewBreadcrumbs"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:layout_marginBottom="1dp"
+			android:layout_marginEnd="@dimen/spacingMedium"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			android:orientation="horizontal"
+			tools:listitem="@layout/breadcrumb_bar_item"
+			/>
+
+	</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
+
+	<!-- multi-select/search bar -->
+	<FrameLayout
+		android:id="@+id/multiSelectBarContainer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingTop="@dimen/spacingLarge"
+		android:background="@color/mainBackground"
+		android:alpha="@dimen/transparent"
+		android:visibility="gone"
+		android:clickable="true"
+		android:clipChildren="false"
+		tools:visibility="visible"
+		tools:alpha="@dimen/opaque"
+		>
+
+		<!-- multi-select bar -->
+		<LinearLayout
+			android:id="@+id/multiSelectBar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:background="@color/mainBackground"
+			>
+
+			<!-- cancel button -->
+			<mohsen.muhammad.minimalist.core.ExtendedImageButton
+				android:id="@+id/buttonCancel"
+				style="@style/floatingButtonOmniStyle2"
+				android:layout_marginTop="1dp"
+				android:layout_marginBottom="1dp"
+				android:src="@drawable/ic_cancel"
+				android:contentDescription="@string/cancelButton"
+				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/mainBackground"
+				app:tint="@color/breadcrumbForegroundDark"
+				/>
+
+			<LinearLayout
+				android:id="@+id/textContainer"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:layout_marginStart="@dimen/spacingSmallMedium"
+				android:layout_marginEnd="@dimen/spacingSmallMedium"
+				android:layout_marginBottom="1dp"
+				android:gravity="center|start"
+				>
+
+				<!-- search -->
+				<androidx.appcompat.widget.AppCompatEditText
+					android:id="@+id/editTextQuery"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:textSize="@dimen/textLarge"
+					android:maxLines="1"
+					android:inputType="text"
+					android:hint="@string/search"
+					android:imeOptions="actionDone"
+					android:background="@null"
+					tools:ignore="NestedWeights"
+					/>
+
+				<!-- selected track count -->
+				<TextSwitcher
+					android:id="@+id/textViewSelectionCount"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:inAnimation="@android:anim/slide_in_left"
+					android:outAnimation="@android:anim/slide_out_right"
+					>
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textColor="@color/breadcrumbForeground"
+						android:textSize="@dimen/textLarge"
+						tools:text="2 Tracks Selected"
+						/>
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textColor="@color/breadcrumbForeground"
+						android:textSize="@dimen/textLarge"
+						/>
+
+				</TextSwitcher>
+
+			</LinearLayout>
+
+			<!-- add button -->
+			<mohsen.muhammad.minimalist.core.ExtendedImageButton
+				android:id="@+id/buttonAddSelection"
+				style="@style/floatingButtonOmniStyle2"
+				android:src="@drawable/ic_add"
+				android:contentDescription="@string/addToSelected"
+				app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
+				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/mainBackground"
+				app:tint="@color/breadcrumbForegroundDark"
+				/>
+
+			<!-- play selected button -->
+			<mohsen.muhammad.minimalist.core.ExtendedImageButton
+				android:id="@+id/buttonPlaySelected"
+				style="@style/floatingButtonOmniStyle2"
+				android:src="@drawable/ic_play_selected"
+				android:contentDescription="@string/selectedTracks"
+				app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/mainBackground"
+				app:tint="@color/breadcrumbForegroundDark"
+				/>
+
+		</LinearLayout>
+
+		<!-- separator -->
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_gravity="bottom"
+			android:background="@color/multiSelectBorder"
+			/>
+
+	</FrameLayout>
+
+</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>

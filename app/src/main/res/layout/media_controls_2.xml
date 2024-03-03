@@ -135,6 +135,37 @@
 
 		</TextSwitcher>
 
+		<!-- Seek Text -->
+		<TextView
+			android:id="@+id/textViewSeek"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="start|bottom"
+			android:layout_marginBottom="@dimen/spacingMedium"
+			android:layout_marginStart="@dimen/spacingLarge"
+			android:elevation="@dimen/elevationLarge"
+			android:textSize="@dimen/textMedium"
+			android:textColor="@color/alwaysWhite"
+			android:textStyle="bold"
+			android:text="@string/blankTimestamp"
+			tools:text="02:35"
+			/>
+
+		<!-- Seek Text -->
+		<TextView
+			android:id="@+id/textViewDuration"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="end|bottom"
+			android:layout_marginBottom="@dimen/spacingMedium"
+			android:layout_marginEnd="@dimen/spacingLarge"
+			android:elevation="@dimen/elevationLarge"
+			android:textSize="@dimen/textMedium"
+			android:textColor="@color/alwaysOffWhite"
+			android:text="@string/blankTimestamp"
+			tools:text="4:08"
+			/>
+
 	</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>
 
 	<mohsen.muhammad.minimalist.core.ExtendedLinearLayout
@@ -184,41 +215,7 @@
 			app:cornerRadiusBottomRight="@dimen/cornerRadiusLarge"
 			/>
 
-
 	</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
-
-	<!-- Seek Text -->
-	<TextView
-		android:id="@+id/textViewSeek"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/spacingMedium"
-		android:layout_marginStart="@dimen/spacingLarge"
-		android:elevation="@dimen/elevationLarge"
-		android:textSize="@dimen/textMedium"
-		android:textColor="@color/alwaysWhite"
-		android:textStyle="bold"
-		android:text="@string/blankTimestamp"
-		app:layout_constraintStart_toStartOf="@id/mainPanel"
-		app:layout_constraintBottom_toBottomOf="@id/mainPanel"
-		tools:text="02:35"
-		/>
-
-	<!-- Seek Text -->
-	<TextView
-		android:id="@+id/textViewDuration"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/spacingMedium"
-		android:layout_marginEnd="@dimen/spacingLarge"
-		android:elevation="@dimen/elevationLarge"
-		android:textSize="@dimen/textMedium"
-		android:textColor="@color/alwaysOffWhite"
-		android:text="@string/blankTimestamp"
-		app:layout_constraintEnd_toEndOf="@id/mainPanel"
-		app:layout_constraintBottom_toBottomOf="@id/mainPanel"
-		tools:text="4:08"
-		/>
 
 	<!-- Expand/Collapse -->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
@@ -236,7 +233,7 @@
 		tools:visibility="visible"
 		/>
 
-	<!-- Shuffle -->
+	<!-- settings -->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonSettings"
 		android:src="@drawable/ic_settings"
@@ -245,6 +242,21 @@
 		android:tint="@color/mainForeground"
 		android:contentDescription="@string/settingsButtonContentDescription"
 		app:layout_constraintEnd_toEndOf="@id/mainPanel"
+		app:layout_constraintTop_toBottomOf="@id/mainPanel"
+		app:fillColor="@color/mainBackground"
+		app:cornerRadius="@dimen/cornerRadiusLarge"
+		/>
+
+	<!-- search -->
+	<mohsen.muhammad.minimalist.core.ExtendedImageButton
+		android:id="@+id/buttonSearch"
+		android:src="@drawable/search"
+		style="@style/floatingButtonOmniStyle2"
+		android:layout_marginTop="@dimen/spacingMedium"
+		android:padding="@dimen/spacingExtraMedium"
+		android:tint="@color/mainForeground"
+		android:contentDescription="@string/search"
+		app:layout_constraintStart_toStartOf="@id/mainPanel"
 		app:layout_constraintTop_toBottomOf="@id/mainPanel"
 		app:fillColor="@color/mainBackground"
 		app:cornerRadius="@dimen/cornerRadiusLarge"

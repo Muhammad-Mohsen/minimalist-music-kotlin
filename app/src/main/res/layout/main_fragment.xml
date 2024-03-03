@@ -13,9 +13,9 @@
 		android:id="@+id/recyclerViewExplorer"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_marginBottom="98dp"
+		android:layout_marginBottom="64dp"
 		android:paddingTop="80dp"
-		android:paddingBottom="62dp"
+		android:paddingBottom="92dp"
 		android:clipToPadding="false"
 		android:scrollbars="vertical"
 		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -26,7 +26,7 @@
 	<!-- Breadcrumb bar -->
 	<include
 		android:id="@+id/layoutBreadcrumbs"
-		layout="@layout/breadcrumb_bar"
+		layout="@layout/app_bar"
 		/>
 
 	<!-- Controls -->
@@ -45,6 +45,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_gravity="bottom"
+		tools:visibility="gone"
 		/>
 
 	<!-- Permission denied layout -->
@@ -54,5 +55,15 @@
 		android:visibility="visible"
 		tools:visibility="gone"
 		/>
+
+	<!-- dynamic colors!!
+	<mohsen.muhammad.minimalist.core.ExtendedImageView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:src="@color/alwaysWhite"
+		android:clickable="false"
+		app:tint="#559C33BB"
+		/>
+	-->
 
 </FrameLayout>

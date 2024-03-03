@@ -12,7 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import mohsen.muhammad.minimalist.app.breadcrumb.BreadcrumbManager
+import mohsen.muhammad.minimalist.app.appbar.AppBarManager
 import mohsen.muhammad.minimalist.app.explorer.ExplorerManager
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.app.player.PlayerControlsManager2
@@ -73,8 +73,8 @@ class MainFragment : Fragment() {
 				ContextCompat.startForegroundService(requireActivity(), playerIntent)
 
 				// breadcrumbs
-				val breadcrumbManager = BreadcrumbManager(binding)
-				breadcrumbManager.initialize()
+				val appBarManager = AppBarManager(binding)
+				appBarManager.initialize()
 
 				// explorer
 				val explorerManager = ExplorerManager(binding.recyclerViewExplorer)
@@ -102,8 +102,9 @@ class MainFragment : Fragment() {
 
 	private fun onBackPressed() {
 		when {
-			State.isSelectModeActive -> {
+			State.isSelectModeActive or State.isSearchModeActive -> {
 				State.selectedTracks.clear() // update the state
+				State.isSearchModeActive = false
 				EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.SELECT_MODE_INACTIVE))
 			}
 			ExplorerFile.isAtRoot(State.currentDirectory.absolutePath) -> {

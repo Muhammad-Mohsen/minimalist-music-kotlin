@@ -8,7 +8,7 @@ import android.graphics.drawable.RippleDrawable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
-import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
@@ -169,7 +169,7 @@ fun View.applyPaddingAttr(attributes: AttributeSet?) {
 	paddingAttrTypedArray.recycle()
 }
 
-fun ImageButton.setImageDrawable(@DrawableRes d: Int) {
+fun ImageView.setImageDrawable(@DrawableRes d: Int) {
 	setImageDrawable(ContextCompat.getDrawable(context, d))
 }
 

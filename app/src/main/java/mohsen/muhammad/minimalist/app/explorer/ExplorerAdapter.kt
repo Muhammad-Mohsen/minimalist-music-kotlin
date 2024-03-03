@@ -31,6 +31,7 @@ class ExplorerAdapter(
 	// ArrayList has to be copied in order to separate the cache reference from the Adapter's data set reference
 	// otherwise, whatever cached list that was used to initialize the adapter will be changed whenever the data set is changed
 	private val files: ArrayList<ExplorerFile> = ArrayList(explorerFiles)
+	private var originals = ArrayList(files)
 
 	override fun getItemCount(): Int {
 		return files.size
@@ -84,6 +85,8 @@ class ExplorerAdapter(
 
 		for (file in files) this.files.add(file)
 		notifyItemRangeInserted(0, this.files.size)
+
+		originals = ArrayList(files)
 	}
 
 	// updates the selected item
@@ -95,6 +98,23 @@ class ExplorerAdapter(
 	internal fun updateMultiSelection(path: String) {
 		val position = getPositionByPath(path)
 		notifyItemChanged(position)
+	}
+
+	internal fun filter(q: String) {
+		for (i in files.indices.reversed()) {
+			if (files.elementAt(i).name.contains(q, true)) continue
+
+			files.removeAt(i)
+			notifyItemRemoved(i)
+		}
+
+		val toAdd = originals.filter { f -> q.isBlank() || f.name.contains(q, true) } // this collapses the indices so that...
+		for ((i, file) in toAdd.withIndex()) {
+			if (files.elementAtOrNull(i)?.name == file.name) continue
+
+			files.add(i, file) // ...these don't blow up with an IndexOutOfBounds...
+			notifyItemInserted(i) // ...for example "files" only has 3 elements, and there's a match on index 20 in "originals"
+		}
 	}
 
 	// gets item position by absolutePath
@@ -117,7 +137,6 @@ class ExplorerAdapter(
 		val currentlyPlayingView: ExtendedFrameLayout = binding.frameLayoutCurrent
 		val selectedView: ExtendedFrameLayout = binding.imageViewSelected
 
-		// val subtitle: TextView = binding.textViewSubtitle
 		val duration: TextView = binding.textViewDuration
 	}
 

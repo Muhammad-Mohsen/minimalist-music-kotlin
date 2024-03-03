@@ -6,10 +6,16 @@ import android.view.View
 import android.widget.SeekBar
 import androidx.core.text.bold
 import mohsen.muhammad.minimalist.R
+import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.core.ext.*
-import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.core.ext.animateDrawable
+import mohsen.muhammad.minimalist.core.ext.animateHeight
+import mohsen.muhammad.minimalist.core.ext.setEncodedBitmapAsync
+import mohsen.muhammad.minimalist.data.EventSource
+import mohsen.muhammad.minimalist.data.EventType
+import mohsen.muhammad.minimalist.data.State
+import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
 
 /**
@@ -48,7 +54,7 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 			binding.buttonPrev.animateDrawable(R.drawable.anim_next)
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.PLAY_PREVIOUS))
 		}
-		// quick and dirty, but it's better than nothing
+
 		binding.buttonNext.setOnLongClickListener {
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.FF))
 			return@setOnLongClickListener true
@@ -58,12 +64,16 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 			return@setOnLongClickListener true
 		}
 
+		binding.buttonSearch.setOnClickListener {
+			State.isSearchModeActive = true
+			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.SEARCH_MODE))
+		}
 		binding.buttonAlbumArt.setOnClickListener {
 			binding.buttonAlbumArt.let {
 				val animId = if (it.tag == R.drawable.anim_collapse_expand) R.drawable.anim_expand_collapse else R.drawable.anim_collapse_expand
 
 				val art = (binding.imageViewAlbumArt.drawable as BitmapDrawable).bitmap
-				val height = if (it.tag == R.drawable.anim_collapse_expand) ALBUM_ART_COLLAPSED_HEIGHT.toDip(it.context)
+				val height = if (it.tag == R.drawable.anim_collapse_expand) it.resources.getDimension(R.dimen.albumArtCollapsedHeight)
 				else art.height * (binding.imageViewAlbumArt.width) / art.width
 
 				it.tag = animId
@@ -90,12 +100,12 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 		binding.buttonAlbumArt.visibility = if (State.Track.albumArt != null) View.VISIBLE else View.GONE
 		binding.imageViewAlbumArt.setEncodedBitmapAsync(State.Track.albumArt) // album art
 
-		// collapse th album art panel if the new file doesn't have any
+		// collapse the album art panel if the new file doesn't have any
 		if (State.Track.albumArt == null && binding.buttonAlbumArt.tag == R.drawable.anim_collapse_expand) {
 			binding.buttonAlbumArt.let {
 				it.tag = R.drawable.anim_expand_collapse
 				it.animateDrawable(R.drawable.anim_expand_collapse)
-				binding.mainPanel.animateHeight(ALBUM_ART_COLLAPSED_HEIGHT.toDip(it.context).toInt(), ALBUM_ART_ANIM_DURATION)
+				binding.mainPanel.animateHeight(it.resources.getDimension(R.dimen.albumArtCollapsedHeight).toInt(), ALBUM_ART_ANIM_DURATION)
 			}
 		}
 
@@ -127,7 +137,7 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 	override fun receive(data: EventBus.EventData) {
 
 		// make sure we're running on main
-		EventBus.main.post {
+		Moirai.MAIN.post {
 
 			if (data !is SystemEvent) return@post // not interested in event types other then SystemEvent
 			if (data.source == EventSource.CONTROLS) return@post // not interested in events that were sent from here
@@ -143,7 +153,6 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 
 	companion object {
 		private const val ALBUM_ART_ANIM_DURATION = 210L
-		private const val ALBUM_ART_COLLAPSED_HEIGHT = 84 // TODO should be dimen?
 	}
 
 }

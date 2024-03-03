@@ -1,6 +1,8 @@
 package mohsen.muhammad.minimalist.core
 
+import android.os.Handler
 import android.os.HandlerThread
+import android.os.Looper
 
 /**
  * Created by muhammad.mohsen on 1/26/2024.
@@ -14,7 +16,10 @@ import android.os.HandlerThread
  */
 object Moirai {
 
-	val BG = HandlerThread("bg").apply {
+	private val bgHandlerThread = HandlerThread("bg").apply {
 		start()
 	}
+	val BG = Handler(bgHandlerThread.looper)
+
+	val MAIN = Handler(Looper.getMainLooper())
 }

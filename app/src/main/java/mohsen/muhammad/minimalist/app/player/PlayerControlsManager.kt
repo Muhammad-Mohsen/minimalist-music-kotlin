@@ -10,6 +10,7 @@ import android.view.ViewConfiguration
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.bold
+import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.OnSeekBarChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.data.*
@@ -173,7 +174,7 @@ class PlayerControlsManager(controlsStrongRef: ConstraintLayout) : EventBus.Subs
 	override fun receive(data: EventBus.EventData) {
 
 		// make sure we're running on main
-		EventBus.main.post {
+		Moirai.MAIN.post {
 
 			if (data !is SystemEvent) return@post // not interested in event types other then SystemEvent
 			if (data.source == EventSource.CONTROLS) return@post // not interested in events that were sent from here

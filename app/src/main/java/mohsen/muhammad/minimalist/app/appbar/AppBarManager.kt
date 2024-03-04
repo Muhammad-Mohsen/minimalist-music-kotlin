@@ -2,19 +2,21 @@ package mohsen.muhammad.minimalist.app.appbar
 
 import android.content.Context
 import android.text.Editable
-import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.OnListItemClickListener
 import mohsen.muhammad.minimalist.core.OnTextChangeListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.core.ext.*
+import mohsen.muhammad.minimalist.core.ext.EMPTY
+import mohsen.muhammad.minimalist.core.ext.animateDrawable
+import mohsen.muhammad.minimalist.core.ext.animateLayoutMargins
+import mohsen.muhammad.minimalist.core.ext.context
+import mohsen.muhammad.minimalist.core.ext.fadeIn
+import mohsen.muhammad.minimalist.core.ext.fadeOut
+import mohsen.muhammad.minimalist.core.ext.resources
 import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
@@ -80,6 +82,7 @@ class AppBarManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber, OnL
 		binding.buttonAddSelection.setOnClickListener {
 			// update state
 			State.playlist.updateItems(State.selectedTracks, true)
+			State.isSearchModeActive = false
 			State.selectedTracks.clear()
 			toggleEditMode(false)
 			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.SELECT_MODE_INACTIVE))
@@ -88,6 +91,7 @@ class AppBarManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber, OnL
 		binding.buttonPlaySelected.setOnClickListener {
 			// update state
 			State.playlist.updateItems(State.selectedTracks)
+			State.isSearchModeActive = false
 			State.selectedTracks.clear()
 
 			EventBus.send(SystemEvent(EventSource.BREADCRUMB, EventType.PLAY_SELECTED))
@@ -136,6 +140,10 @@ class AppBarManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber, OnL
 		breadcrumbAdapter.update(currentDirectory)
 		binding.recyclerViewBreadcrumbs.scrollToPosition(currentDirectory.absolutePath.split("/").size - 2)
 		animateBackButton(!ExplorerFile.isAtRoot(currentDirectory.absolutePath)) // animate the back button icon depending on the current directory
+
+		State.isSearchModeActive = false
+		State.selectedTracks.clear()
+		toggleEditMode(false)
 	}
 
 	private fun toggleSearchMode() {

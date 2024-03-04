@@ -84,9 +84,11 @@
 				style="@style/floatingButtonOmniStyle2"
 				android:layout_marginTop="1dp"
 				android:layout_marginBottom="1dp"
+				android:layout_marginStart="@dimen/spacingSmall"
 				android:src="@drawable/ic_cancel"
 				android:contentDescription="@string/cancelButton"
 				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
+				app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/mainBackground"
 				app:tint="@color/breadcrumbForegroundDark"
 				/>
@@ -162,8 +164,10 @@
 				android:id="@+id/buttonPlaySelected"
 				style="@style/floatingButtonOmniStyle2"
 				android:src="@drawable/ic_play_selected"
+				android:layout_marginEnd="@dimen/spacingSmall"
 				android:contentDescription="@string/selectedTracks"
 				app:cornerRadiusTopLeft="@dimen/cornerRadiusLarge"
+				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/mainBackground"
 				app:tint="@color/breadcrumbForegroundDark"
 				/>

@@ -53,7 +53,7 @@ object State {
 		set(value) = sharedPreferences.put(Key.SEEK_JUMP, value)
 
 	var nightMode: Int
-		get() = sharedPreferences.getInt(Key.NIGHT_MODE, 0)
+		get() = sharedPreferences.getInt(Key.NIGHT_MODE, -1) // default is FOLLOW_SYSTEM
 		set(value) = sharedPreferences.put(Key.NIGHT_MODE, value)
 
 	// current track state props

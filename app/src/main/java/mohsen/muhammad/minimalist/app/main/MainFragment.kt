@@ -117,11 +117,6 @@ class MainFragment : Fragment() {
 		}
 	}
 
-	override fun onDestroy() {
-		super.onDestroy()
-		PlaybackManager.stopSelf()
-	}
-
 	companion object {
 		fun newInstance() = MainFragment()
 

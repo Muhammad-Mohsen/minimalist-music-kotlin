@@ -286,10 +286,5 @@ class PlaybackManager :
 		private fun registerSelf(i: PlaybackManager) {
 			instance = i
 		}
-
-		fun stopSelf() {
-			instance?.stopSelf()
-			instance = null
-		}
 	}
 }

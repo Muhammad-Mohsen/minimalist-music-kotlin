@@ -5,9 +5,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
@@ -86,7 +88,9 @@ class PlaybackManager :
 		restoreState()
 	}
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-		startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+		else startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
+
 		return super.onStartCommand(intent, flags, startId)
 	}
 	override fun onDestroy() {

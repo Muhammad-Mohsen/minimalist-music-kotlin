@@ -25,7 +25,6 @@ object State {
 	lateinit var applicationContext: Context
 
 	fun initialize(context: Context) {
-
 		if (initialized) return
 
 		applicationContext = context

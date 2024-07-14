@@ -1,7 +1,6 @@
 package mohsen.muhammad.minimalist.app.player
 
 import android.content.Context
-import android.os.Handler
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat

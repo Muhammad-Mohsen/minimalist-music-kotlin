@@ -66,6 +66,7 @@ class PlaybackManager :
 
 		registerSelf(this)
 		EventBus.subscribe(this)
+		State.initialize(applicationContext) // the initialization call in MainActivity.onCreate is not enough...Store shows exceptions
 
 		player.apply {// initialize the media player
 			setAudioAttributes(

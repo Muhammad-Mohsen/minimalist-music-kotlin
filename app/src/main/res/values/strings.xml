@@ -6,9 +6,9 @@
 
 	<string name="descriptionRecyclerItemTypeTrack">track</string>
 
-	<string name="blankTimestamp">--:--</string>
+	<string name="blankTimestamp" translatable="false">--:--</string>
 
-	<string name="breadcrumbSeparator">/</string> <!-- other symbols to try out: ›> | -->
+	<string name="breadcrumbSeparator" translatable="false">/</string> <!-- other symbols to try out: ›> | -->
 
 	<string name="permissionMessage">Storage Permission is required</string>
 	<string name="permissionMessageSubtitle">Tap anywhere to grant the permission</string>
@@ -20,14 +20,13 @@
 	<string name="dark">Dark</string>
 	<string name="light">Light</string>
 	<string name="seekJump">Seek Jump</string>
-	<string name="seekJumpDescription">In seconds - long press on the Next/Prev buttons</string>
 	<string name="shuffle">Shuffle</string>
 	<string name="repeat">Repeat</string>
 	<string name="privacyPolicy">Privacy Policy</string>
 	<string name="settingsButtonContentDescription">Settings</string>
 	<string name="albumArtButtonContentDescription">Expand Collapse Album Art</string>
 	<string name="previousButtonContentDescription">Previous</string>
-	<string name="playPauseButtonContentDescription">Play Pause</string>
+	<string name="playPauseButtonContentDescription">Play/Pause</string>
 	<string name="nextButtonContentDescription">Next</string>
 	<string name="selectedTracks">Play Selected Tracks</string>
 	<string name="backButton">Back</string>
@@ -39,6 +38,6 @@
 		<item quantity="one">%1$d Track Selected</item>
 		<item quantity="other">%1$d Tracks Selected</item>
 	</plurals>
-	<string name="selectedCount">(%1$d)</string>
+	<string name="selectedCount" translatable="false">(%1$d)</string>
 
 </resources>

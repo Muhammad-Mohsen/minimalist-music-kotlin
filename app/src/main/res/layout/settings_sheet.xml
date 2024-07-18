@@ -226,9 +226,9 @@
 					/>
 
 				<androidx.appcompat.widget.AppCompatTextView
+					android:id="@+id/seekJumpTextActual"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/seekJumpDescription"
 					android:textColor="@color/alwaysOffWhite"
 					android:textSize="@dimen/textSmall"
 					/>

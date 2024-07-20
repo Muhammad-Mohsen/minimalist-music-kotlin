@@ -6,7 +6,6 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import java.util.ArrayList
 import kotlin.math.abs
 
 
@@ -62,6 +61,9 @@ abstract class BaseItemAnimator2 : SimpleItemAnimator() {
 	protected var removeAnimations = ArrayList<RecyclerView.ViewHolder>()
 	private val changeAnimations = ArrayList<RecyclerView.ViewHolder>()
 	protected var interpolator: Interpolator = DecelerateInterpolator()
+
+	// overrides the default delay for item additions so when we're scrolling to a certain position, it shows immediately
+	var addDelayPositionOverride = 0
 
 	companion object {
 		private const val DEBUG = false
@@ -265,7 +267,7 @@ abstract class BaseItemAnimator2 : SimpleItemAnimator() {
 	}
 
 	protected fun getAddDelay(holder: RecyclerView.ViewHolder): Long {
-		return abs(holder.bindingAdapterPosition * addDuration / 4)
+		return abs((holder.bindingAdapterPosition - addDelayPositionOverride) * addDuration / 4)
 	}
 
 	override fun animateMove(
@@ -634,6 +636,8 @@ abstract class BaseItemAnimator2 : SimpleItemAnimator() {
 		for (i in viewHolders.indices.reversed()) {
 			viewHolders[i].itemView.animate().cancel()
 		}
+
+		addDelayPositionOverride = 0
 	}
 
 	open class AnimatorListenerAdapter : Animator.AnimatorListener {

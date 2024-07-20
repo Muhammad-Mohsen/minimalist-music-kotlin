@@ -118,7 +118,7 @@ class ExplorerAdapter(
 	}
 
 	// gets item position by absolutePath
-	private fun getPositionByPath(path: String): Int {
+	internal fun getPositionByPath(path: String): Int {
 		return files.indexOfFirst { f -> f.absolutePath == path }
 	}
 

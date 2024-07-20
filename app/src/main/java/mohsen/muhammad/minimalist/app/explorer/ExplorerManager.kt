@@ -1,12 +1,19 @@
 package mohsen.muhammad.minimalist.app.explorer
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.OnListItemInteractionListener
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.data.EventSource
+import mohsen.muhammad.minimalist.data.EventType
+import mohsen.muhammad.minimalist.data.ItemType
+import mohsen.muhammad.minimalist.data.State
+import mohsen.muhammad.minimalist.data.SystemEvent
+import mohsen.muhammad.minimalist.data.files.ExplorerFile
 import mohsen.muhammad.minimalist.data.files.FileCache
 import java.io.File
 
@@ -35,6 +42,7 @@ class ExplorerManager(
 		val explorerAdapter = ExplorerAdapter(FileCache.getExplorerFilesByDirectory(currentDirectory), selectedTrack, this)
 		recyclerViewExplorer.adapter = explorerAdapter
 		recyclerViewExplorer.itemAnimator = ExplorerItemAnimator()
+		scrollToSelectedTrack()
 	}
 
 	// explorer item click
@@ -68,6 +76,7 @@ class ExplorerManager(
 		onMultiSelectionChange(data) // dispatch the select mode active
 	}
 
+	@SuppressLint("NotifyDataSetChanged")
 	override fun receive(data: EventBus.EventData) {
 		if (data is SystemEvent && data.source != EventSource.EXPLORER) {
 			Moirai.MAIN.post {
@@ -100,6 +109,7 @@ class ExplorerManager(
 		if (files.isNotEmpty()) {
 			toggleEmptyDirLayout(false)
 			explorerAdapter.update(files)
+			scrollToSelectedTrack()
 
 		} else {
 			toggleEmptyDirLayout(true)
@@ -114,5 +124,20 @@ class ExplorerManager(
 	private fun toggleEmptyDirLayout(show: Boolean) {
 		recyclerViewExplorer.visibility = if (show) View.GONE else View.VISIBLE
 		linearLayoutEmptyDir?.visibility = if (show) View.VISIBLE else View.GONE
+	}
+
+	private fun scrollToSelectedTrack() {
+		if (ExplorerFile(State.Track.path).parent != State.currentDirectory.absolutePath) return // if not at currently playing path, return
+
+		val position = explorerAdapter.getPositionByPath(State.Track.path)
+		val offset = recyclerViewExplorer.height / 3 // arbitrary offset to center the track item
+
+		(recyclerViewExplorer.itemAnimator as ExplorerItemAnimator).let {
+			it.addDelayPositionOverride = position
+			// reset the override because when the onAnimationFinished in the item animator is called twice (once before anything actually runs!! so I can't use it)
+			recyclerViewExplorer.postDelayed({ it.addDelayPositionOverride = 0 }, 500)
+		}
+
+		(recyclerViewExplorer.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, offset)
 	}
 }

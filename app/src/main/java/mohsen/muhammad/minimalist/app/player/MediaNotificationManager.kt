@@ -17,7 +17,10 @@ import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.main.MainActivity
 import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.evt.EventBus
-import mohsen.muhammad.minimalist.data.*
+import mohsen.muhammad.minimalist.data.EventSource
+import mohsen.muhammad.minimalist.data.EventType
+import mohsen.muhammad.minimalist.data.State
+import mohsen.muhammad.minimalist.data.SystemEvent
 
 /**
  * Created by muhammad.mohsen on 5/3/2019.
@@ -56,7 +59,7 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 			setSmallIcon(R.drawable.ic_notification)
 			setShowWhen(false)
 			setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-			priority = NotificationCompat.PRIORITY_DEFAULT // for versions prior to Oreo
+			priority = NotificationCompat.PRIORITY_HIGH // for versions prior to Oreo
 
 			setColorized(true)
 			color = ContextCompat.getColor(context, R.color.alwaysBlack)

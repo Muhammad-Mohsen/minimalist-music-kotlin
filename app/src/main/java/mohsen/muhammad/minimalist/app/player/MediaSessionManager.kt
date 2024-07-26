@@ -27,9 +27,9 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		metadataBuilder = MediaMetadataCompat.Builder()
 		stateBuilder = PlaybackStateCompat.Builder()
 		stateBuilder.setActions(SUPPORTED_ACTIONS) // actions
+		isActive = true
 
 		setCallback(this@MediaSessionManager)
-		isActive = true
 
 		EventBus.subscribe(this@MediaSessionManager)
 	}
@@ -71,26 +71,30 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 	private fun updatePlaybackState(state: Int, seek: Long = 0) {
 		// state
 		when (state) {
-			EventType.PLAY_NEXT,
-			EventType.PLAY_PREVIOUS,
+			EventType.PLAY_NEXT, // needs metadata update
+			EventType.PLAY_PREVIOUS, // needs metadata update
 			EventType.PLAY,
-			EventType.PLAY_ITEM -> stateBuilder.setState(PLAYING, State.Track.seek.toLong(), 1F)
+			EventType.PLAY_SELECTED,
+			EventType.PLAY_ITEM -> stateBuilder.setState(PLAYING, State.Track.seek.toLong(), 1F) // needs metadata update
 			EventType.PAUSE -> stateBuilder.setState(PAUSED, State.Track.seek.toLong(), 0F)
 			EventType.SEEK_UPDATE -> stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, seek, if (State.isPlaying) 1F else 0F)
 		}
 		mediaSession.setPlaybackState(stateBuilder.build())
 
-		// metadata (in a bg thread because of the bitmap
+		if (!intArrayOf(EventType.METADATA_UPDATE, EventType.PLAY).contains(state)) return // only update the metadata if necessary. EventType.PLAY is needed because on startup, the playback is stopped
+
+		// metadata (in a bg thread because of the bitmap)
 		Moirai.BG.post {
 			metadataBuilder.apply {
 				putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.Track.title)
 				putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.Track.artist)
 				putString(MediaMetadataCompat.METADATA_KEY_ALBUM, State.Track.album)
 				putLong(MediaMetadataCompat.METADATA_KEY_DURATION, State.Track.duration)
-
 				putEncodedBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.Track.albumArt)
-				mediaSession.setMetadata(build()) // will this blow up in my face??...it didn't
 			}
+
+			mediaSession.isActive = true
+			mediaSession.setMetadata(metadataBuilder.build()) // will this blow up in my face??...it didn't
 		}
 	}
 
@@ -102,6 +106,7 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 			EventType.PLAY_ITEM,
 			EventType.PLAY_NEXT,
 			EventType.PLAY_PREVIOUS,
+			EventType.PLAY_SELECTED,
 			EventType.METADATA_UPDATE -> updatePlaybackState(data.type)
 		}
 	}

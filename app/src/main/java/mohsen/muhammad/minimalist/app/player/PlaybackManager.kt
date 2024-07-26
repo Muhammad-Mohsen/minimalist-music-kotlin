@@ -110,14 +110,14 @@ class PlaybackManager :
 	private fun restoreState() {
 		if (!State.Track.exists) return
 
-		setTrack(State.Track.path)
+		setTrack(State.Track.path, false)
 		updateSeek(State.Track.seek)
 	}
 
 	// playback
 	private fun setTrack(path: String, updatePlaylist: Boolean = true) {
 		// update playlist
-		if (updatePlaylist) State.playlist.updateItems(path)
+		if (updatePlaylist || State.playlist.isEmpty()) State.playlist.updateItems(path)
 		State.playlist.setTrack(path)
 
 		player.prepareSource(path)

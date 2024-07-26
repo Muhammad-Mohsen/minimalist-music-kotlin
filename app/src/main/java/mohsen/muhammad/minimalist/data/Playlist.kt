@@ -11,25 +11,22 @@ import java.util.concurrent.ThreadLocalRandom
  * Holds playlist items, information about the playlist (shuffle, repeat modes, current index...
  */
 
-class Playlist(private val sharedPreferences: SharedPreferences) {
+class Playlist(private val preferences: SharedPreferences) {
 
-	private val tracks: ArrayList<String> = ArrayList()
-	/* get() {
-		val savedPlaylist = sharedPreferences.getString(Key.PLAYLIST, String.EMPTY) ?: String.EMPTY // get a semi colon-separated string
-		return ArrayList(savedPlaylist.split(";"))
-	}
-	set(value) = sharedPreferences.put(Key.PLAYLIST, value.joinToString(";")) */
+	private val tracks: ArrayList<String> = preferences.getString(State.Key.PLAYLIST, null)?.split(";")
+		?.let { ArrayList(it) }
+		?: ArrayList()
 
 	private var index: Int = 0 // current index
 
 	// stored attributes
 	var repeat: Int
-		get() = sharedPreferences.getInt(State.Key.REPEAT, RepeatMode.INACTIVE)
-		set(value) = sharedPreferences.put(State.Key.REPEAT, value)
+		get() = preferences.getInt(State.Key.REPEAT, RepeatMode.INACTIVE)
+		set(value) = preferences.put(State.Key.REPEAT, value)
 
 	var shuffle: Boolean
-		get() = sharedPreferences.getBoolean(State.Key.SHUFFLE, false)
-		set(value) = sharedPreferences.put(State.Key.SHUFFLE, value)
+		get() = preferences.getBoolean(State.Key.SHUFFLE, false)
+		set(value) = preferences.put(State.Key.SHUFFLE, value)
 
 	fun updateItems(trackPath: String) {
 		val tracks = FileCache.getMediaPathsByPath(trackPath)
@@ -42,6 +39,8 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 	fun updateItems(items: List<String>, append: Boolean = false) {
 		if (!append) tracks.clear()
 		tracks.addAll(items)
+
+		preferences.put(State.Key.PLAYLIST, items.joinToString(";"))
 	}
 
 	fun contains(track: String): Boolean {
@@ -96,6 +95,8 @@ class Playlist(private val sharedPreferences: SharedPreferences) {
 	fun cycleRepeatMode() {
 		repeat = RepeatMode.list[(repeat + 1) % RepeatMode.list.size]
 	}
+
+	fun isEmpty() = tracks.isEmpty()
 
 	object RepeatMode {
 		const val INACTIVE = 0 // inactive

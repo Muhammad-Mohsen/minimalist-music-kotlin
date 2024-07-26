@@ -2,8 +2,6 @@ package mohsen.muhammad.minimalist.core.ext
 
 import android.animation.ValueAnimator
 import android.graphics.drawable.AnimationDrawable
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
@@ -15,7 +13,6 @@ import androidx.annotation.DimenRes
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.data.Const
 
@@ -75,7 +72,7 @@ fun View.fadeIn(duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = nul
 		return
 	}
 
-	ViewCompat.animate(this)
+	animate()
 		.setStartDelay(delay)
 		.setDuration(duration)
 		.alpha(1F)
@@ -84,7 +81,7 @@ fun View.fadeIn(duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = nul
 		}
 }
 fun View.fadeOut(duration: Long, delay: Long = 0L, endAction: (() -> Unit) = fun () { visibility = View.GONE }) {
-	ViewCompat.animate(this)
+	animate()
 		.setStartDelay(delay)
 		.setDuration(duration)
 		.alpha(0f)
@@ -94,7 +91,7 @@ fun View.fadeOut(duration: Long, delay: Long = 0L, endAction: (() -> Unit) = fun
 }
 
 fun View.scale(to: Float, duration: Long, delay: Long = 0L, endAction: (() -> Unit)? = null) {
-	ViewCompat.animate(this)
+	animate()
 		.setStartDelay(delay)
 		.setDuration(duration)
 		.scaleX(to)

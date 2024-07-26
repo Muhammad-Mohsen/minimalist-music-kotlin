@@ -40,4 +40,9 @@
 	</plurals>
 	<string name="selectedCount" translatable="false">(%1$d)</string>
 
+	<string name="sleepTimer">Sleep Timer</string>
+	<string name="sleepTimerToggle">Toggle Sleep Timer</string>
+
+	<string name="seekJumpValue">%1$d Seconds</string>
+
 </resources>

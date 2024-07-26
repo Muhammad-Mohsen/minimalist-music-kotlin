@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="appName">Minimalista</string>
 	<string name="minimalistMusicPlayer">Player de Música Minimalista</string>
 	<string name="welcomeMessage">Bem-vindo!</string>
@@ -26,4 +26,15 @@
 	<string name="addToSelected">Adicionar aos selecionados</string>
 	<string name="cancelButton">Cancelar</string>
 	<string name="search">Pesquisar</string>
+
+	<plurals name="selectedCount" tools:ignore="MissingQuantity">
+		<item quantity="one">%1$d Faixas Selecionadas</item>
+		<item quantity="other">%1$d Faixa Selecionada</item>
+	</plurals>
+
+	<string name="sleepTimer">Temporizador</string>
+	<string name="sleepTimerToggle">Alternar Temporizador</string>
+
+	<string name="seekJumpValue">%1$d Segundas</string>
+
 </resources>

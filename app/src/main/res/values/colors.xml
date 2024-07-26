@@ -20,6 +20,7 @@
 
 	<color name="controlsChapters">#444</color>
 	<color name="seekProgress">#5CCC</color>
+	<color name="seekProgressSettings">#2CCC</color>
 	<color name="seekBackground">#000</color>
 
 	<color name="mainSettingsBorder">#000</color> <!-- used for black buttons -->

@@ -185,7 +185,7 @@ class PlaybackManager :
 		if (!toggleDispatch) return
 
 		timer = Timer()
-		timer?.scheduleAtFixedRate(object : TimerTask() {
+		timer?.schedule(object : TimerTask() {
 			override fun run() {
 				sendSingleSeekUpdate()
 			}
@@ -267,10 +267,10 @@ class PlaybackManager :
 				EventType.CYCLE_SHUFFLE -> { State.playlist.toggleShuffle() }
 				EventType.PLAY_PREVIOUS -> playPrev()
 				EventType.PLAY_NEXT -> playNext()
+				EventType.PLAY_SELECTED -> playTrack(State.playlist.getTrackByIndex(0), false)
 
 				EventType.METADATA_UPDATE -> restoreState()
-
-				EventType.PLAY_SELECTED -> playTrack(State.playlist.getTrackByIndex(0), false)
+				EventType.SLEEP_TIMER_FINISH -> playPause(false)
 			}
 		}
 	}

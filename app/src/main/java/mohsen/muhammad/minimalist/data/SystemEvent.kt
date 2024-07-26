@@ -45,4 +45,7 @@ object EventType {
     const val SELECT_MODE_INACTIVE = 52 // deactivate select mode (press cancel from the breadcrumb bar)
     const val SEARCH_MODE = 53 // can only be activated (uses 52 to deactivate)
     const val SEARCH_QUERY = 54 // search the explorer with a query
+
+    const val SLEEP_TIMER_TICK = 60
+    const val SLEEP_TIMER_FINISH = 61
 }

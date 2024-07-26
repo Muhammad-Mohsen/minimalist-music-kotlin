@@ -2,6 +2,7 @@ package mohsen.muhammad.minimalist.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import mohsen.muhammad.minimalist.app.player.PlaybackManager
 import mohsen.muhammad.minimalist.core.ext.EMPTY
 import mohsen.muhammad.minimalist.core.ext.formatMillis
@@ -50,6 +51,10 @@ object State {
 	var seekJump: Int
 		get() = sharedPreferences.getInt(Key.SEEK_JUMP, 60) // 1 minute default
 		set(value) = sharedPreferences.put(Key.SEEK_JUMP, value)
+
+	var sleepTimer: Int
+		get() = sharedPreferences.getInt(Key.SLEEP_TIMER, 60) // 1 hour default
+		set(value) = sharedPreferences.put(Key.SLEEP_TIMER, value)
 
 	var nightMode: Int
 		get() = sharedPreferences.getInt(Key.NIGHT_MODE, -1) // default is FOLLOW_SYSTEM
@@ -103,7 +108,7 @@ object State {
 				chapters = metadata.chapters
 				albumArt = metadata.albumArt
 
-			} catch (_: Exception) {}
+			} catch (ex: Exception) { Log.e("State", "State.Track.update", ex) }
 		}
 	}
 
@@ -129,10 +134,11 @@ object State {
 	// the shared preferences keys
 	internal object Key {
 		const val DIRECTORY = "CurrentDirectory"
-		// const val PLAYLIST = "Playlist"
+		const val PLAYLIST = "Playlist"
 		const val PATH = "CurrentTrack"
 		const val SEEK = "Seek"
 		const val SEEK_JUMP = "SeekJump"
+		const val SLEEP_TIMER = "SleepTimer"
 		const val NIGHT_MODE = "NightMode"
 
 		const val REPEAT = "Repeat"

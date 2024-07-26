@@ -23,11 +23,10 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="bottom"
 		android:layout_marginBottom="@dimen/settingsHiddenMargin"
-		android:paddingBottom="@dimen/spacingMedium"
 		android:clipToPadding="false"
+		android:paddingBottom="@dimen/spacingMedium"
 		app:fillColor="@color/mainBackground"
 		tools:layout_marginBottom="0dp"
-
 		>
 
 		<!-- Top Border -->
@@ -51,13 +50,13 @@
 				android:id="@+id/buttonThemeLight"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
+				android:layout_marginVertical="@dimen/spacingLarge"
 				android:layout_marginStart="@dimen/spacingLarge"
 				android:layout_marginEnd="@dimen/spacingSmall"
-				android:layout_marginVertical="@dimen/spacingLarge"
+				android:layout_weight="1"
+				android:elevation="@dimen/elevationMedium"
 				android:gravity="center"
 				android:orientation="vertical"
-				android:elevation="@dimen/elevationMedium"
 				app:cornerRadius="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/mainBackground"
 				app:strokeColor="@color/subSettingsBorder"
@@ -67,10 +66,10 @@
 				<mohsen.muhammad.minimalist.core.ExtendedImageView
 					android:layout_width="@dimen/imageButtonContainerSize2"
 					android:layout_height="@dimen/imageButtonContainerSize2"
+					android:contentDescription="@string/light"
 					android:padding="@dimen/spacingSmallMedium"
 					android:scaleType="fitCenter"
 					android:src="@drawable/ic_sun"
-					android:contentDescription="@string/light"
 					android:tint="@color/mainForeground"
 					/>
 
@@ -88,10 +87,10 @@
 			<View
 				android:layout_width="1dp"
 				android:layout_height="match_parent"
-				android:layout_marginTop="@dimen/spacingXXXLarge"
-				android:layout_marginBottom="@dimen/spacingXXXLarge"
-				android:layout_marginEnd="@dimen/spacingSmall"
 				android:layout_marginStart="@dimen/spacingSmall"
+				android:layout_marginTop="@dimen/spacingXXXLarge"
+				android:layout_marginEnd="@dimen/spacingSmall"
+				android:layout_marginBottom="@dimen/spacingXXXLarge"
 				android:background="@color/subSettingsBorder"
 				/>
 
@@ -99,12 +98,12 @@
 				android:id="@+id/buttonThemeSystem"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
 				android:layout_marginHorizontal="@dimen/spacingSmall"
 				android:layout_marginVertical="@dimen/spacingLarge"
+				android:layout_weight="1"
+				android:elevation="@dimen/elevationMedium"
 				android:gravity="center"
 				android:orientation="vertical"
-				android:elevation="@dimen/elevationMedium"
 				app:cornerRadius="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/mainBackground"
 				app:strokeColor="@color/subSettingsBorder"
@@ -114,10 +113,10 @@
 				<mohsen.muhammad.minimalist.core.ExtendedImageView
 					android:layout_width="@dimen/imageButtonContainerSize2"
 					android:layout_height="@dimen/imageButtonContainerSize2"
+					android:contentDescription="@string/system"
 					android:padding="@dimen/spacingSmallMedium"
 					android:scaleType="fitCenter"
 					android:src="@drawable/ic_sun_moon"
-					android:contentDescription="@string/system"
 					android:tint="@color/mainForeground"
 					/>
 
@@ -135,10 +134,10 @@
 			<View
 				android:layout_width="1dp"
 				android:layout_height="match_parent"
-				android:layout_marginTop="@dimen/spacingXXXLarge"
-				android:layout_marginBottom="@dimen/spacingXXXLarge"
-				android:layout_marginEnd="@dimen/spacingSmall"
 				android:layout_marginStart="@dimen/spacingSmall"
+				android:layout_marginTop="@dimen/spacingXXXLarge"
+				android:layout_marginEnd="@dimen/spacingSmall"
+				android:layout_marginBottom="@dimen/spacingXXXLarge"
 				android:background="@color/subSettingsBorder"
 				/>
 
@@ -146,13 +145,13 @@
 				android:id="@+id/buttonThemeDark"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
 				android:layout_marginVertical="@dimen/spacingLarge"
-				android:layout_marginEnd="@dimen/spacingLarge"
 				android:layout_marginStart="@dimen/spacingSmall"
+				android:layout_marginEnd="@dimen/spacingLarge"
+				android:layout_weight="1"
+				android:elevation="@dimen/elevationMedium"
 				android:gravity="center"
 				android:orientation="vertical"
-				android:elevation="@dimen/elevationMedium"
 				app:cornerRadius="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/mainBackground"
 				app:strokeColor="@color/subSettingsBorder"
@@ -162,9 +161,9 @@
 				<mohsen.muhammad.minimalist.core.ExtendedImageView
 					android:layout_width="@dimen/imageButtonContainerSize2"
 					android:layout_height="@dimen/imageButtonContainerSize2"
+					android:contentDescription="@string/dark"
 					android:padding="@dimen/spacingSmallMedium"
 					android:src="@drawable/ic_moon"
-					android:contentDescription="@string/dark"
 					android:tint="@color/mainForeground"
 					/>
 
@@ -178,8 +177,122 @@
 					/>
 
 			</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
-			
+
 		</androidx.appcompat.widget.LinearLayoutCompat>
+
+		<!-- Sleep Timer -->
+		<mohsen.muhammad.minimalist.core.ExtendedConstraintLayout
+			android:id="@+id/sleepTimerBar"
+			android:layout_width="match_parent"
+			android:layout_height="64dp"
+			android:layout_marginStart="@dimen/spacingLarge"
+			android:layout_marginEnd="@dimen/spacingLarge"
+			android:animateLayoutChanges="true"
+			android:clickable="false"
+			android:elevation="@dimen/elevationMedium"
+			app:cornerRadius="@dimen/cornerRadiusLarge"
+			app:fillColor="@color/alwaysBlack"
+			app:layout_constraintTop_toBottomOf="@id/themeBar"
+			app:strokeColor="@color/mainSettingsBorder"
+			app:strokeWidth="1dp"
+			>
+
+			<SeekBar
+				android:id="@+id/sleepTimerProgress"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginEnd="57dp"
+				android:max="180"
+				android:maxHeight="900dp"
+				android:padding="0dp"
+				android:progressDrawable="@drawable/style_seek_bar_progress_settings_2"
+				android:thumb="@null"
+				android:clickable="false"
+				tools:progress="130"
+				/>
+
+			<SeekBar
+				android:id="@+id/sleepTimerDuration"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginEnd="57dp"
+				android:max="180"
+				android:maxHeight="900dp"
+				android:padding="0dp"
+				android:progressDrawable="@drawable/style_seek_bar_progress_settings_2"
+				android:background="@null"
+				android:thumb="@null"
+				tools:progress="100"
+				/>
+
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/sleepTimerLabel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/spacingMediumLarge"
+				android:layout_marginStart="@dimen/spacingLarge"
+				android:text="@string/sleepTimer"
+				android:textColor="@color/alwaysWhite"
+				android:textSize="@dimen/textLarge"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				/>
+
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/sleepTimerTextProgress"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingEnd="@dimen/spacingSmallMedium"
+				android:textColor="@color/alwaysWhite"
+				android:textSize="@dimen/textMedium"
+				android:textStyle="bold"
+				android:visibility="gone"
+				app:layout_constraintStart_toStartOf="@id/sleepTimerLabel"
+				app:layout_constraintTop_toBottomOf="@id/sleepTimerLabel"
+				tools:text="01:40"
+				tools:visibility="visible"
+				/>
+
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/sleepTimerTextDuration"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/alwaysOffWhite"
+				android:textSize="@dimen/textMedium"
+				app:layout_constraintStart_toEndOf="@id/sleepTimerTextProgress"
+				app:layout_constraintTop_toBottomOf="@id/sleepTimerLabel"
+				tools:text="02:00"
+				/>
+
+			<View
+				android:layout_width="1dp"
+				android:layout_height="@dimen/spacingXLarge"
+				android:background="@color/subSettingsBorder"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/sleepTimerToggle"
+				app:layout_constraintTop_toTopOf="parent"
+				/>
+
+			<mohsen.muhammad.minimalist.core.ExtendedImageButton
+				android:id="@+id/sleepTimerToggle"
+				android:layout_width="@dimen/imageButtonContainerSize"
+				android:layout_height="match_parent"
+				android:layout_marginTop="1dp"
+				android:layout_marginEnd="1dp"
+				android:layout_marginBottom="1dp"
+				android:contentDescription="@string/sleepTimerToggle"
+				android:padding="@dimen/spacingExtraMediumLarge"
+				android:src="@drawable/anim_stopwatch"
+				android:tint="@color/mainForeground"
+				app:cornerRadiusBottomLeft="0dp"
+				app:cornerRadiusBottomRight="@dimen/cornerRadiusLarge"
+				app:cornerRadiusTopLeft="0dp"
+				app:cornerRadiusTopRight="@dimen/cornerRadiusLarge"
+				app:fillColor="@color/alwaysBlack"
+				app:layout_constraintEnd_toEndOf="parent"
+				/>
+
+		</mohsen.muhammad.minimalist.core.ExtendedConstraintLayout>
 
 		<!-- Seek Jump -->
 		<mohsen.muhammad.minimalist.core.ExtendedFrameLayout
@@ -187,14 +300,14 @@
 			android:layout_width="match_parent"
 			android:layout_height="64dp"
 			android:layout_marginStart="@dimen/spacingLarge"
+			android:layout_marginTop="@dimen/spacingLarge"
 			android:layout_marginEnd="@dimen/spacingLarge"
-			android:layout_marginBottom="@dimen/seekBarMargin"
 			android:animateLayoutChanges="true"
 			android:clickable="false"
 			android:elevation="@dimen/elevationMedium"
 			app:cornerRadius="@dimen/cornerRadiusLarge"
 			app:fillColor="@color/alwaysBlack"
-			app:layout_constraintTop_toBottomOf="@id/themeBar"
+			app:layout_constraintTop_toBottomOf="@id/sleepTimerBar"
 			>
 
 			<SeekBar
@@ -212,8 +325,8 @@
 			<LinearLayout
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/spacingLarge"
 				android:layout_gravity="center|start"
+				android:layout_marginStart="@dimen/spacingLarge"
 				android:orientation="vertical"
 				>
 
@@ -226,24 +339,24 @@
 					/>
 
 				<androidx.appcompat.widget.AppCompatTextView
-					android:id="@+id/seekJumpTextActual"
+					android:id="@+id/seekJumpText"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/alwaysOffWhite"
-					android:textSize="@dimen/textSmall"
+					android:textSize="@dimen/textMedium"
+					tools:text="100 Seconds"
 					/>
 
 			</LinearLayout>
 
-			<androidx.appcompat.widget.AppCompatTextView
-				android:id="@+id/seekJumpText"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+			<mohsen.muhammad.minimalist.core.ExtendedImageView
+				android:layout_width="@dimen/imageButtonContainerSize"
+				android:layout_height="@dimen/imageButtonContainerSize2"
 				android:layout_gravity="center|end"
-				android:layout_marginEnd="@dimen/spacingLarge"
-				android:textColor="@color/alwaysWhite"
-				android:textSize="@dimen/textLarge"
-				tools:text="60"
+				android:contentDescription="@string/dark"
+				android:padding="@dimen/spacingMediumLarge"
+				android:src="@drawable/ic_seek_jump"
+				android:tint="@color/mainForeground"
 				/>
 
 		</mohsen.muhammad.minimalist.core.ExtendedFrameLayout>
@@ -253,8 +366,8 @@
 			android:id="@+id/shuffleRepeatBar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:padding="@dimen/spacingLarge"
 			android:clipToPadding="false"
+			android:padding="@dimen/spacingLarge"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@id/seekJumpBar"
 			>
@@ -264,11 +377,11 @@
 				android:id="@+id/buttonShuffle"
 				android:layout_width="0dp"
 				android:layout_height="64dp"
-				android:layout_weight="1"
 				android:layout_marginEnd="@dimen/spacingMedium"
+				android:layout_weight="1"
+				android:elevation="@dimen/elevationMedium"
 				android:paddingStart="@dimen/spacingLarge"
 				android:paddingEnd="@dimen/spacingSmall"
-				android:elevation="@dimen/elevationMedium"
 				app:cornerRadius="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/alwaysBlack"
 				app:strokeColor="@color/mainSettingsBorder"
@@ -278,8 +391,8 @@
 				<androidx.appcompat.widget.AppCompatTextView
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:layout_weight="1"
 					android:layout_gravity="center|start"
+					android:layout_weight="1"
 					android:text="@string/shuffle"
 					android:textColor="@color/alwaysWhite"
 					android:textSize="@dimen/textLarge"
@@ -289,10 +402,10 @@
 					android:id="@+id/iconShuffle"
 					style="@style/floatingButtonOmniStyle2"
 					android:layout_marginTop="@dimen/spacingMedium"
-					android:src="@drawable/shuffle031"
 					android:contentDescription="@string/shuffle"
-					app:cornerRadius="@dimen/cornerRadiusLarge"
+					android:src="@drawable/shuffle031"
 					android:tint="@color/alwaysWhite"
+					app:cornerRadius="@dimen/cornerRadiusLarge"
 					app:fillColor="@color/alwaysBlack"
 					/>
 
@@ -303,11 +416,11 @@
 				android:id="@+id/buttonRepeat"
 				android:layout_width="0dp"
 				android:layout_height="64dp"
-				android:layout_weight="1"
 				android:layout_marginStart="@dimen/spacingMedium"
+				android:layout_weight="1"
+				android:elevation="@dimen/elevationMedium"
 				android:paddingStart="@dimen/spacingLarge"
 				android:paddingEnd="@dimen/spacingSmall"
-				android:elevation="@dimen/elevationMedium"
 				app:cornerRadius="@dimen/cornerRadiusLarge"
 				app:fillColor="@color/alwaysBlack"
 				app:strokeColor="@color/mainSettingsBorder"
@@ -317,8 +430,8 @@
 				<androidx.appcompat.widget.AppCompatTextView
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
-					android:layout_weight="1"
 					android:layout_gravity="center|start"
+					android:layout_weight="1"
 					android:text="@string/repeat"
 					android:textColor="@color/alwaysWhite"
 					android:textSize="@dimen/textLarge"
@@ -328,12 +441,12 @@
 					android:id="@+id/iconRepeat"
 					style="@style/floatingButtonOmniStyle2"
 					android:layout_marginTop="@dimen/spacingMedium"
+					android:contentDescription="@string/repeat"
 					android:elevation="0dp"
 					android:src="@drawable/repeat040"
-					android:contentDescription="@string/repeat"
 					android:tint="@color/alwaysWhite"
-					app:fillColor="@color/alwaysBlack"
 					app:cornerRadius="@dimen/cornerRadiusLarge"
+					app:fillColor="@color/alwaysBlack"
 					/>
 
 			</mohsen.muhammad.minimalist.core.ExtendedLinearLayout>
@@ -345,14 +458,14 @@
 			android:id="@+id/buttonPrivacyPolicy"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			app:layout_constraintTop_toBottomOf="@id/shuffleRepeatBar"
-			app:layout_constraintStart_toStartOf="@id/shuffleRepeatBar"
-			app:layout_constraintEnd_toEndOf="@id/shuffleRepeatBar"
 			android:padding="@dimen/spacingMedium"
 			android:text="@string/privacyPolicy"
 			android:textColor="@color/explorerForegroundLight"
 			android:textSize="@dimen/textMedium"
 			app:cornerRadius="@dimen/cornerRadiusLarge"
+			app:layout_constraintEnd_toEndOf="@id/shuffleRepeatBar"
+			app:layout_constraintStart_toStartOf="@id/shuffleRepeatBar"
+			app:layout_constraintTop_toBottomOf="@id/shuffleRepeatBar"
 			/>
 
 	</mohsen.muhammad.minimalist.core.ExtendedConstraintLayout>

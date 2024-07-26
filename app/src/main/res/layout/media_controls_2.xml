@@ -118,7 +118,7 @@
 				android:maxLines="1"
 				android:ellipsize="end"
 				android:text="@string/welcomeMessage"
-				tools:text="Song Album (Song Artist)"
+				tools:text="Song Album | Song Artist"
 				/>
 
 			<TextView

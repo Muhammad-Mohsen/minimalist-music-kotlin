@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:oneshot="true"
+	>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch012"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch011"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch010"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch009"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch008"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch007"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch006"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch005"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch004"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch003"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch002"
+		/>
+
+	<item
+		android:duration="40"
+		android:drawable="@drawable/stopwatch001"
+		/>
+
+
+</animation-list>

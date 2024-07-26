@@ -1,7 +1,5 @@
 package mohsen.muhammad.minimalist.core.evt
 
-import android.os.Handler
-import android.os.Looper
 import java.lang.ref.WeakReference
 
 /**

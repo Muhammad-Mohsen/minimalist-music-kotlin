@@ -152,7 +152,6 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 
 		binding.seekJump.progress = State.seekJump
 		binding.seekJumpText.text = binding.resources.getString(R.string.seekJumpValue, State.seekJump)
-		binding.sleepTimerProgress.visibility = View.GONE
 		binding.sleepTimerDuration.progress = State.sleepTimer
 		binding.sleepTimerTextDuration.text = formatTime(State.sleepTimer * 60)
 		binding.iconRepeat.setImageDrawable(repeatIcons[State.playlist.repeat])

@@ -46,7 +46,7 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 	// creates the notification, and displays it
 	// the MissingPermission suppression is because this notification should be exempt from this requirement according to:
 	// https://developer.android.com/develop/ui/views/notifications/notification-permission#exemptions
-	@SuppressLint("MissingPermission")
+	@SuppressLint("MissingPermission", "NotificationPermission")
 	fun createNotification(): Notification {
 
 		// click the notification, get the main activity!
@@ -57,7 +57,6 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 			setContentTitle(State.Track.title)
 			setContentText(State.Track.album)
 			setSmallIcon(R.drawable.ic_notification)
-			setShowWhen(false)
 			setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 			priority = NotificationCompat.PRIORITY_HIGH // for versions prior to Oreo
 

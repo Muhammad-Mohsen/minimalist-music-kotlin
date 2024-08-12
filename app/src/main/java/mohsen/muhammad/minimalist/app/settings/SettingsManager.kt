@@ -125,8 +125,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 			}
 		})
 		binding.sleepTimerToggle.setOnClickListener {
-			val isActive = binding.sleepTimerToggle.tag as? Boolean ?: false
-			setSleepTimerUi(isActive)
+			setSleepTimerUi(State.sleepTimerActive)
 		}
 
 		// repeat
@@ -144,6 +143,8 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 			val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Const.PRIVACY_POLICY_URL))
 			startActivity(binding.context, browserIntent, null)
 		}
+
+		updateMetadata()
 	}
 
 	private fun updateMetadata() {
@@ -198,7 +199,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 		if (isActive) SleepTimer.cancel()
 		else SleepTimer.start(State.sleepTimer)
 
-		binding.sleepTimerToggle.tag = !isActive // update the tag
+		State.sleepTimerActive = !isActive // update the tag
 	}
 	private fun formatTime(seconds: Int, withSeconds: Boolean = false): String {
 		fun pad(num: Int) = num.toString().padStart(2, '0')

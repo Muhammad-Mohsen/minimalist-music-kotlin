@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.os.Handler
-import android.os.HandlerThread
 import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
 import android.util.TypedValue
@@ -17,6 +16,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.app.NotificationCompat
 import androidx.viewbinding.ViewBinding
 import mohsen.muhammad.minimalist.core.Moirai
 import java.util.Timer
@@ -104,4 +104,10 @@ fun MediaMetadataCompat.Builder.putEncodedBitmap(key: String, encodedBitmap: Byt
 		BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
 	}
 	this.putBitmap(key, bitmap)
+}
+fun NotificationCompat.Builder.setLargeIcon(encodedBitmap: ByteArray?) {
+	val bitmap = encodedBitmap?.let {
+		BitmapFactory.decodeByteArray(encodedBitmap, 0, encodedBitmap.size)
+	}
+	this.setLargeIcon(bitmap)
 }

@@ -17,6 +17,7 @@ import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.app.main.MainActivity
 import mohsen.muhammad.minimalist.core.Moirai
 import mohsen.muhammad.minimalist.core.evt.EventBus
+import mohsen.muhammad.minimalist.core.ext.setLargeIcon
 import mohsen.muhammad.minimalist.data.EventSource
 import mohsen.muhammad.minimalist.data.EventType
 import mohsen.muhammad.minimalist.data.State
@@ -57,6 +58,7 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 			setContentTitle(State.Track.title)
 			setContentText(State.Track.album)
 			setSmallIcon(R.drawable.ic_notification)
+			setLargeIcon(State.Track.albumArt)
 			setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 			priority = NotificationCompat.PRIORITY_HIGH // for versions prior to Oreo
 
@@ -108,7 +110,11 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 				EventType.PLAY_ITEM,
 				EventType.PLAY_NEXT,
 				EventType.PLAY_PREVIOUS,
-				EventType.METADATA_UPDATE -> createNotification() // simply recreating the notification updates it
+				EventType.METADATA_UPDATE -> {
+					Moirai.BG.post {
+						createNotification() // simply recreating the notification updates it
+					}
+				}
 			}
 		}
 	}

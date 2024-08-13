@@ -52,11 +52,6 @@ object State {
 		get() = sharedPreferences.getInt(Key.SEEK_JUMP, 60) // 1 minute default
 		set(value) = sharedPreferences.put(Key.SEEK_JUMP, value)
 
-	var sleepTimerActive: Boolean = false
-	var sleepTimer: Int
-		get() = sharedPreferences.getInt(Key.SLEEP_TIMER, 60) // 1 hour default
-		set(value) = sharedPreferences.put(Key.SLEEP_TIMER, value)
-
 	var nightMode: Int
 		get() = sharedPreferences.getInt(Key.NIGHT_MODE, -1) // default is FOLLOW_SYSTEM
 		set(value) = sharedPreferences.put(Key.NIGHT_MODE, value)
@@ -131,6 +126,13 @@ object State {
 	}
 
 	var isSearchModeActive = false
+
+	var isSleepTimerActive = false
+	var sleepTimer: Int
+		get() = sharedPreferences.getInt(Key.SLEEP_TIMER, 60) // 1 hour default
+		set(value) = sharedPreferences.put(Key.SLEEP_TIMER, value)
+
+	var isSettingsSheetVisible = false
 
 	// the shared preferences keys
 	internal object Key {

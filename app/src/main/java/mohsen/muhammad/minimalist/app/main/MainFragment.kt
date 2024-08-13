@@ -102,6 +102,7 @@ class MainFragment : Fragment() {
 
 	private fun onBackPressed() {
 		when {
+			State.isSettingsSheetVisible -> EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.HIDE_SETTINGS))
 			State.isSelectModeActive or State.isSearchModeActive -> {
 				State.selectedTracks.clear() // update the state
 				State.isSearchModeActive = false

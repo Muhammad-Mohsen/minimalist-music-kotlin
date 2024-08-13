@@ -48,4 +48,5 @@ object EventType {
 
     const val SLEEP_TIMER_TICK = 60
     const val SLEEP_TIMER_FINISH = 61
+    const val HIDE_SETTINGS = 62
 }

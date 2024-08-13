@@ -52,8 +52,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 
 		// show settings sheet
 		controls.buttonSettings.setOnClickListener {
-			binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, ANIM_DURATION, Const.exponentialInterpolator)
-			binding.viewScrim.fadeIn(ANIM_DURATION)
+			toggleSettings(true)
 		}
 
 		// gesture recognizer
@@ -73,11 +72,8 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 					true
 				}
 				MotionEvent.ACTION_UP -> {
-					if ((binding.settingsSheet.layoutParams as FrameLayout.LayoutParams).bottomMargin < FLICK_THRESHOLD) {
-						binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, R.dimen.spacingZero, R.dimen.spacingZero, R.dimen.settingsHiddenMargin, ANIM_DURATION, Const.exponentialInterpolator)
-						binding.viewScrim.fadeOut(ANIM_DURATION)
-
-					} else binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, ANIM_DURATION, Const.exponentialInterpolator)
+					if ((binding.settingsSheet.layoutParams as FrameLayout.LayoutParams).bottomMargin < FLICK_THRESHOLD) toggleSettings(false)
+					else binding.settingsSheet.animateLayoutMargins(R.dimen.spacingZero, ANIM_DURATION, Const.exponentialInterpolator)
 
 					true
 				}
@@ -125,7 +121,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 			}
 		})
 		binding.sleepTimerToggle.setOnClickListener {
-			setSleepTimerUi(State.sleepTimerActive)
+			setSleepTimerUi(State.isSleepTimerActive)
 		}
 
 		// repeat
@@ -199,13 +195,27 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 		if (isActive) SleepTimer.cancel()
 		else SleepTimer.start(State.sleepTimer)
 
-		State.sleepTimerActive = !isActive // update the tag
+		State.isSleepTimerActive = !isActive // update the tag
 	}
 	private fun formatTime(seconds: Int, withSeconds: Boolean = false): String {
 		fun pad(num: Int) = num.toString().padStart(2, '0')
 
 		return if (withSeconds) "${pad(seconds / 60 / 60)}:${pad(seconds / 60 % 60)}:${pad(seconds % 60)}"
 		else "${pad(seconds / 60 / 60)}:${pad((seconds / 60 % 60))}"
+	}
+
+	private fun toggleSettings(force: Boolean = false) {
+		val zero = R.dimen.spacingZero
+		if (force) {
+			binding.settingsSheet.animateLayoutMargins(zero, ANIM_DURATION, Const.exponentialInterpolator)
+			binding.viewScrim.fadeIn(ANIM_DURATION)
+
+		} else {
+			binding.settingsSheet.animateLayoutMargins(zero, zero, zero, R.dimen.settingsHiddenMargin, ANIM_DURATION, Const.exponentialInterpolator)
+			binding.viewScrim.fadeOut(ANIM_DURATION)
+		}
+
+		State.isSettingsSheetVisible = force
 	}
 
 	override fun receive(data: EventBus.EventData) {
@@ -225,6 +235,9 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 				}
 				EventType.SLEEP_TIMER_FINISH -> {
 					setSleepTimerUi(true)
+				}
+				EventType.HIDE_SETTINGS -> {
+					toggleSettings(false)
 				}
 			}
 		}

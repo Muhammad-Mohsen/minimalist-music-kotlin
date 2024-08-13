@@ -147,7 +147,9 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 				EventType.PAUSE -> togglePlayPauseButton(false)
 				EventType.METADATA_UPDATE -> updateMetadata()
 				EventType.SEEK_UPDATE -> updateSeek()
-				EventType.SLEEP_TIMER_FINISH -> togglePlayPauseButton(false)
+				EventType.SLEEP_TIMER_FINISH -> {
+					if (State.isPlaying) binding.buttonOmni.performClick() // pause if playing
+				}
 			}
 		}
 	}

@@ -76,7 +76,6 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 			EventType.PLAY,
 			EventType.PLAY_SELECTED,
 			EventType.PLAY_ITEM -> stateBuilder.setState(PLAYING, State.Track.seek.toLong(), 1F) // needs metadata update
-			EventType.SLEEP_TIMER_FINISH,
 			EventType.PAUSE -> stateBuilder.setState(PAUSED, State.Track.seek.toLong(), 0F)
 			EventType.SEEK_UPDATE -> stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, seek, if (State.isPlaying) 1F else 0F)
 		}
@@ -108,7 +107,6 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 			EventType.PLAY_NEXT,
 			EventType.PLAY_PREVIOUS,
 			EventType.PLAY_SELECTED,
-			EventType.SLEEP_TIMER_FINISH,
 			EventType.METADATA_UPDATE -> updatePlaybackState(data.type)
 		}
 	}

@@ -270,7 +270,6 @@ class PlaybackManager :
 				EventType.PLAY_SELECTED -> playTrack(State.playlist.getTrackByIndex(0), false)
 
 				EventType.METADATA_UPDATE -> restoreState()
-				EventType.SLEEP_TIMER_FINISH -> playPause(false)
 			}
 		}
 	}

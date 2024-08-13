@@ -121,7 +121,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 			}
 		})
 		binding.sleepTimerToggle.setOnClickListener {
-			setSleepTimerUi(State.isSleepTimerActive)
+			toggleSleepTimerUi(State.isSleepTimerActive)
 		}
 
 		// repeat
@@ -184,7 +184,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 		AppCompatDelegate.setDefaultNightMode(mode)
 	}
 
-	private fun setSleepTimerUi(isActive: Boolean) {
+	private fun toggleSleepTimerUi(isActive: Boolean) {
 		val animId = if (!isActive) R.drawable.anim_stopwatch else R.drawable.anim_stopwatch_reverse
 		binding.sleepTimerToggle.animateDrawable(animId)
 
@@ -234,7 +234,7 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 					binding.sleepTimerTextProgress.text = formatTime(data.extras.toInt(), true)
 				}
 				EventType.SLEEP_TIMER_FINISH -> {
-					setSleepTimerUi(true)
+					toggleSleepTimerUi(true)
 				}
 				EventType.HIDE_SETTINGS -> {
 					toggleSettings(false)
@@ -247,6 +247,5 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 		const val ANIM_DURATION = 400L
 		const val FLICK_THRESHOLD = -200 // the settings sheet will hide if its bottom margin goes past this value
 		const val SEEK_JUMP_STEP = 5
-
 	}
 }

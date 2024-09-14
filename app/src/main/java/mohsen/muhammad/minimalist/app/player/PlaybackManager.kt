@@ -86,7 +86,7 @@ class PlaybackManager :
 
 		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched to which the response would be to call restoreState
 		// so a manual call is necessary
-		restoreState()
+		restoreState(true)
 	}
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
@@ -107,11 +107,12 @@ class PlaybackManager :
 	}
 
 	// restores state (from the State object) from a previous session
-	private fun restoreState() {
+	private fun restoreState(isBootstrapping: Boolean = false) {
 		if (!State.Track.exists) return
 
 		setTrack(State.Track.path, false)
 		updateSeek(State.Track.seek)
+		if (isBootstrapping) EventBus.send(SystemEvent(EventSource.SERVICE, EventType.SEEK_UPDATE_USER)) // notify the session
 	}
 
 	// playback

@@ -64,50 +64,43 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 	}
 
 	override fun onSeekTo(pos: Long) {
-		updatePlaybackState(EventType.SEEK_UPDATE, pos)
 		EventBus.send(SystemEvent(EventSource.SESSION, EventType.SEEK_UPDATE, pos.toString()))
+		receive(SystemEvent(EventSource.SESSION, EventType.SEEK_UPDATE_USER))
+
 	}
 
-	private fun updatePlaybackState(state: Int, seek: Long = 0) {
+	override fun receive(data: EventBus.EventData) {
+		if (data !is SystemEvent) return
+		if (!SUPPORTED_EVENTS.contains(data.type)) return
+
 		// state
-		when (state) {
-			EventType.PLAY_NEXT, // needs metadata update
-			EventType.PLAY_PREVIOUS, // needs metadata update
-			EventType.PLAY,
-			EventType.PLAY_SELECTED,
-			EventType.PLAY_ITEM -> stateBuilder.setState(PLAYING, State.Track.seek.toLong(), 1F) // needs metadata update
+		when (data.type) {
+			EventType.PLAY -> stateBuilder.setState(PLAYING, State.Track.seek.toLong(), 1F)
 			EventType.PAUSE -> stateBuilder.setState(PAUSED, State.Track.seek.toLong(), 0F)
-			EventType.SEEK_UPDATE -> stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, seek, if (State.isPlaying) 1F else 0F)
+
+			EventType.PLAY_NEXT, EventType.PLAY_PREVIOUS, EventType.PLAY_SELECTED, EventType.PLAY_ITEM ->
+				stateBuilder.setState(PLAYING, 0, 1F)
+
+			EventType.SEEK_UPDATE_USER ->
+				stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, State.Track.seek.toLong(), if (State.isPlaying) 1F else 0F)
 		}
 		mediaSession.setPlaybackState(stateBuilder.build())
 
-		if (!intArrayOf(EventType.METADATA_UPDATE, EventType.PLAY).contains(state)) return // only update the metadata if necessary. EventType.PLAY is needed because on startup, the playback is stopped
+		// only update the metadata if necessary. EventType.PLAY is needed because on startup, the playback is stopped
+		if (!intArrayOf(EventType.METADATA_UPDATE, EventType.PLAY).contains(data.type)) return
 
-		// metadata (in a bg thread because of the bitmap)
+		// metadata
 		Moirai.BG.post {
 			metadataBuilder.apply {
 				putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.Track.title)
 				putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.Track.artist)
 				putString(MediaMetadataCompat.METADATA_KEY_ALBUM, State.Track.album)
 				putLong(MediaMetadataCompat.METADATA_KEY_DURATION, State.Track.duration)
-				putEncodedBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.Track.albumArt)
+				putEncodedBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.Track.albumArt) // that's why a background thread is used
 			}
 
 			mediaSession.isActive = true
 			mediaSession.setMetadata(metadataBuilder.build()) // will this blow up in my face??...it didn't
-		}
-	}
-
-	override fun receive(data: EventBus.EventData) {
-		if (data !is SystemEvent) return
-		when (data.type) {
-			EventType.PLAY,
-			EventType.PAUSE,
-			EventType.PLAY_ITEM,
-			EventType.PLAY_NEXT,
-			EventType.PLAY_PREVIOUS,
-			EventType.PLAY_SELECTED,
-			EventType.METADATA_UPDATE -> updatePlaybackState(data.type)
 		}
 	}
 
@@ -122,5 +115,14 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 				PlaybackStateCompat.ACTION_SKIP_TO_NEXT or
 				PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
 				PlaybackStateCompat.ACTION_SEEK_TO
+
+		private val SUPPORTED_EVENTS = arrayOf(EventType.PLAY_NEXT,
+				EventType.METADATA_UPDATE,
+				EventType.PLAY_PREVIOUS,
+				EventType.PLAY_SELECTED,
+				EventType.PLAY_ITEM,
+				EventType.PLAY,
+				EventType.PAUSE,
+				EventType.SEEK_UPDATE_USER)
 	}
 }

@@ -88,7 +88,7 @@ class MainFragment : Fragment() {
 				val settingsManager = SettingsManager(binding)
 				settingsManager.initialize()
 
-				// after initializing everything, restore the state - at this point, the Playback service isn't started yet, so it hasn't yet registered to the event bus!
+				// restore the state, now that everything is initialized (except the service...which is why restoreState is manually called over there)
 				if (State.Track.exists) EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.METADATA_UPDATE))
 			}
 			shouldShowRequestPermissionRationale(DISK_PERMISSION) -> {

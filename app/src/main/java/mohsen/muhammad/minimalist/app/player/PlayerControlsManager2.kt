@@ -123,6 +123,7 @@ class PlayerControlsManager2(mainBinding: MainFragmentBinding) : EventBus.Subscr
 	}
 	private fun sendSeek(seek: Int) {
 		EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.SEEK_UPDATE, seek.toString()))
+		EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.SEEK_UPDATE_USER, seek.toString())) // TODO replace SEEK_UPDATE with this one
 	}
 
 	private fun togglePlayPauseButton(play: Boolean) {

@@ -32,6 +32,7 @@ object EventType {
     const val RW = 13
 
     const val SEEK_UPDATE = 14
+    const val SEEK_UPDATE_USER = 15 // a seek change that was initiated by the user (used to update the session playback state)
 
     const val CYCLE_SHUFFLE = 20
     const val CYCLE_REPEAT = 21

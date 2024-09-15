@@ -87,7 +87,8 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		mediaSession.setPlaybackState(stateBuilder.build())
 
 		// only update the metadata if necessary. EventType.PLAY is needed because on startup, the playback is stopped
-		if (!intArrayOf(EventType.METADATA_UPDATE, EventType.PLAY).contains(data.type)) return
+		// SEEK_UPDATE_USER is needed on startup...for tracks with art, setting the playback state without the metadata breaks the notification seekbar!!!
+		if (!intArrayOf(EventType.METADATA_UPDATE, EventType.PLAY, EventType.SEEK_UPDATE_USER).contains(data.type)) return
 
 		// metadata
 		Moirai.BG.post {

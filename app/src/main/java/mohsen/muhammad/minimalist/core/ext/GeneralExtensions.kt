@@ -69,6 +69,7 @@ fun SharedPreferences.put(key: String, value: Any) {
 		is String -> editor.putString(key, value)
 		is Int -> editor.putInt(key, value)
 		is Long -> editor.putLong(key, value)
+		is Float -> editor.putFloat(key, value)
 		is Boolean -> editor.putBoolean(key, value)
 	}
 

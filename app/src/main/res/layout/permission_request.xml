@@ -11,7 +11,6 @@
 	android:orientation="vertical"
 	app:fillColor="@color/mainBackground"
 	android:elevation="@dimen/elevationLarge"
-	tools:ignore="UseCompoundDrawables"
 	>
 
 	<ImageView

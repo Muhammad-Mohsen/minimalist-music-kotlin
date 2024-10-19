@@ -158,7 +158,12 @@ class PlaybackManager :
 	}
 
 	private fun updatePlaybackSpeed(speed: Float = 1F) {
+		val wasPaused = !player.isPlaying
 		player.playbackParams = player.playbackParams.setSpeed(speed)
+
+		// apparently, setting the playback speed while paused, resumes playback, so force it here.
+		// no need to send any further notifications/events, so directly call the player's pause function
+		if (wasPaused) player.playPause(false)
 	}
 
 	private fun playNext() {

@@ -29,6 +29,22 @@ Simply install Android Studio, and click the play button!
 
 - Compose instead of XML
 - (dynamic colors)[https://developer.android.com/develop/ui/views/theming/dynamic-colors]
+- equalizer
+  - issue with getting to the session ID from the controls
+  - issue with getting to the activity from the service!!
+  - so, put a reference to the activity in the state!
+    - replace the context with the activity
+    - can't because I'm sometimes initializing it from the service
+  - fuck this
+  - appears not to make any difference :D :D
+- DONE - playback rate
+  - a lot more straightforward
+  - need to update the state
+  - need to update the media session
+- DONE - icons
+  - DONE - eq icon 4 bars with increased spacing
+  - DONE - playback speed smaller play icon
+  - DONE - notification icon smaller
 
 - DONE - settings sheet gesture handling
 - DONE settings popup

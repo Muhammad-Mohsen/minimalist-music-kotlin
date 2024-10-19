@@ -36,5 +36,7 @@
 	<string name="sleepTimerToggle">Alternar Temporizador</string>
 
 	<string name="seekJumpValue">%1$d Segundas</string>
+	<string name="equalizer">Equalizador</string>
+	<string name="playbackSpeed">Velocidade de reprodução</string>
 
 </resources>

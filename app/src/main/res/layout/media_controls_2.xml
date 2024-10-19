@@ -250,7 +250,7 @@
 	<!-- search -->
 	<mohsen.muhammad.minimalist.core.ExtendedImageButton
 		android:id="@+id/buttonSearch"
-		android:src="@drawable/search"
+		android:src="@drawable/ic_search"
 		style="@style/floatingButtonOmniStyle2"
 		android:layout_marginTop="@dimen/spacingMedium"
 		android:padding="@dimen/spacingExtraMedium"

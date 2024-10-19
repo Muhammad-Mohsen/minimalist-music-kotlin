@@ -1,5 +1,6 @@
 package mohsen.muhammad.minimalist.data
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
@@ -11,6 +12,7 @@ import mohsen.muhammad.minimalist.data.files.Chapter
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
 import mohsen.muhammad.minimalist.data.files.FileMetadata
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 /**
@@ -24,6 +26,7 @@ object State {
 
 	private lateinit var sharedPreferences: SharedPreferences
 	lateinit var applicationContext: Context
+	lateinit var activity: WeakReference<Activity>
 
 	fun initialize(context: Context) {
 		if (initialized) return
@@ -52,9 +55,37 @@ object State {
 		get() = sharedPreferences.getInt(Key.SEEK_JUMP, 60) // 1 minute default
 		set(value) = sharedPreferences.put(Key.SEEK_JUMP, value)
 
+	var playbackSpeed: Float
+		get() = sharedPreferences.getFloat(Key.PLAYBACK_SPEED, 1F)
+		set(value) = sharedPreferences.put(Key.PLAYBACK_SPEED, value)
+
 	var nightMode: Int
 		get() = sharedPreferences.getInt(Key.NIGHT_MODE, -1) // default is FOLLOW_SYSTEM
 		set(value) = sharedPreferences.put(Key.NIGHT_MODE, value)
+
+	val isSelectModeActive: Boolean
+		get() = selectedTracks.isNotEmpty()
+
+	val selectedTracks = ArrayList<String>()
+	fun updateSelectedTracks(track: String): Int {
+		return if (selectedTracks.contains(track)) { // track already in the list, remove it
+			selectedTracks.remove(track)
+			if (selectedTracks.isEmpty()) EventType.SELECT_MODE_INACTIVE else EventType.SELECT_MODE_SUB // if the list is empty, deactivate the select mode
+
+		} else {
+			selectedTracks.add(track)
+			EventType.SELECT_MODE_ADD
+		}
+	}
+
+	var isSearchModeActive = false
+
+	var isSleepTimerActive = false
+	var sleepTimer: Int
+		get() = sharedPreferences.getInt(Key.SLEEP_TIMER, 60) // 1 hour default
+		set(value) = sharedPreferences.put(Key.SLEEP_TIMER, value)
+
+	var isSettingsSheetVisible = false
 
 	// current track state props
 	// because getting the metadata is expensive, they're obtained once and stored here
@@ -110,30 +141,6 @@ object State {
 
 	lateinit var playlist: Playlist
 
-	val isSelectModeActive: Boolean
-		get() = selectedTracks.isNotEmpty()
-
-	val selectedTracks = ArrayList<String>()
-	fun updateSelectedTracks(track: String): Int {
-		return if (selectedTracks.contains(track)) { // track already in the list, remove it
-			selectedTracks.remove(track)
-			if (selectedTracks.isEmpty()) EventType.SELECT_MODE_INACTIVE else EventType.SELECT_MODE_SUB // if the list is empty, deactivate the select mode
-
-		} else {
-			selectedTracks.add(track)
-			EventType.SELECT_MODE_ADD
-		}
-	}
-
-	var isSearchModeActive = false
-
-	var isSleepTimerActive = false
-	var sleepTimer: Int
-		get() = sharedPreferences.getInt(Key.SLEEP_TIMER, 60) // 1 hour default
-		set(value) = sharedPreferences.put(Key.SLEEP_TIMER, value)
-
-	var isSettingsSheetVisible = false
-
 	// the shared preferences keys
 	internal object Key {
 		const val DIRECTORY = "CurrentDirectory"
@@ -141,6 +148,7 @@ object State {
 		const val PATH = "CurrentTrack"
 		const val SEEK = "Seek"
 		const val SEEK_JUMP = "SeekJump"
+		const val PLAYBACK_SPEED = "PlaybackSpeed"
 		const val SLEEP_TIMER = "SleepTimer"
 		const val NIGHT_MODE = "NightMode"
 

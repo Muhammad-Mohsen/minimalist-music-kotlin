@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import mohsen.muhammad.minimalist.data.State
 import mohsen.muhammad.minimalist.data.SystemEvent
 import mohsen.muhammad.minimalist.data.files.ExplorerFile
 import mohsen.muhammad.minimalist.databinding.MainFragmentBinding
+import java.lang.ref.WeakReference
 
 
 class MainFragment : Fragment() {
@@ -57,9 +59,15 @@ class MainFragment : Fragment() {
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		binding = MainFragmentBinding.inflate(inflater, container, false)
-		initialize()
+		Log.i("MainFragment", "onCreateView: called") // to measure perf impact of moving init to onStart
+		initialize() // prevents ForegroundServiceStartNotAllowedException that sometimes raised if initialized in onCreateView
 
 		return binding.root
+	}
+
+	override fun onStart() {
+		super.onStart()
+		Log.i("MainFragment", "onStart: called")
 	}
 
 	// initializes everything except the service!
@@ -67,10 +75,6 @@ class MainFragment : Fragment() {
 		when {
 			ContextCompat.checkSelfPermission(requireContext(), DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED -> {
 				binding.layoutPermission.root.visibility = View.GONE
-
-				// service
-				val playerIntent = Intent(requireActivity(), PlaybackManager::class.java)
-				ContextCompat.startForegroundService(requireActivity(), playerIntent)
 
 				// breadcrumbs
 				val appBarManager = AppBarManager(binding)
@@ -88,8 +92,14 @@ class MainFragment : Fragment() {
 				val settingsManager = SettingsManager(binding)
 				settingsManager.initialize()
 
+				// service
+				val playerIntent = Intent(requireActivity(), PlaybackManager::class.java)
+				ContextCompat.startForegroundService(requireActivity(), playerIntent)
+
 				// restore the state, now that everything is initialized (except the service...which is why restoreState is manually called over there)
 				if (State.Track.exists) EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.METADATA_UPDATE))
+
+				State.activity = WeakReference(requireActivity())
 			}
 			shouldShowRequestPermissionRationale(DISK_PERMISSION) -> {
 				permissionRequest.launch(DISK_PERMISSION)

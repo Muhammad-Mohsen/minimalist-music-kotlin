@@ -75,19 +75,20 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 
 		// state
 		when (data.type) {
-			EventType.PLAY -> stateBuilder.setState(PLAYING, State.Track.seek.toLong(), 1F)
+			EventType.PLAY -> stateBuilder.setState(PLAYING, State.Track.seek.toLong(), State.playbackSpeed)
 			EventType.PAUSE -> stateBuilder.setState(PAUSED, State.Track.seek.toLong(), 0F)
 
 			EventType.PLAY_NEXT, EventType.PLAY_PREVIOUS, EventType.PLAY_SELECTED, EventType.PLAY_ITEM ->
-				stateBuilder.setState(PLAYING, 0, 1F)
+				stateBuilder.setState(PLAYING, 0, State.playbackSpeed)
 
-			EventType.SEEK_UPDATE_USER ->
-				stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, State.Track.seek.toLong(), if (State.isPlaying) 1F else 0F)
+			EventType.SEEK_UPDATE_USER, EventType.PLAYBACK_SPEED ->
+				stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, State.Track.seek.toLong(), if (State.isPlaying) State.playbackSpeed else 0F)
 		}
 		mediaSession.setPlaybackState(stateBuilder.build())
 
-		// only update the metadata if necessary. EventType.PLAY is needed because on startup, the playback is stopped
-		// SEEK_UPDATE_USER is needed on startup...for tracks with art, setting the playback state without the metadata breaks the notification seekbar!!!
+		// there was a check here that prevented updating the metadata except for a couple of events
+		// not updating the metadata, I think, causes an issue where the notification seekbar stops working (on Android 10, at least)
+		// to repro, select a track with album art, close the app, open it again, seek from the app's UI, play, check the notification
 		if (!intArrayOf(EventType.METADATA_UPDATE, EventType.PLAY, EventType.SEEK_UPDATE_USER).contains(data.type)) return
 
 		// metadata

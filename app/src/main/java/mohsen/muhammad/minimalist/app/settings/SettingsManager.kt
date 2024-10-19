@@ -124,6 +124,17 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 			toggleSleepTimerUi(State.isSleepTimerActive)
 		}
 
+		// playback speed
+		binding.playbackSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+			override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+				if (!p2) return // not initiated by user
+
+				State.playbackSpeed = (PLAYBACK_SPEED_STEP + p1 * PLAYBACK_SPEED_STEP)
+				binding.playbackSpeedText.text = binding.resources.getString(R.string.playbackSpeedValue, State.playbackSpeed)
+				EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.PLAYBACK_SPEED))
+			}
+		})
+
 		// repeat
 		binding.buttonRepeat.setOnClickListener {
 			binding.iconRepeat.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_REPEAT))
@@ -133,6 +144,10 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 		binding.buttonShuffle.setOnClickListener {
 			binding.iconShuffle.animateDrawable(getButtonAnimationByIndex(FabMenu.BUTTON_SHUFFLE))
 			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.CYCLE_SHUFFLE))
+		}
+		// eq
+		binding.buttonEq.setOnClickListener {
+			EventBus.send(SystemEvent(EventSource.CONTROLS, EventType.EQ))
 		}
 
 		binding.buttonPrivacyPolicy.setOnClickListener {
@@ -151,6 +166,8 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 		binding.seekJumpText.text = binding.resources.getString(R.string.seekJumpValue, State.seekJump)
 		binding.sleepTimerDuration.progress = State.sleepTimer
 		binding.sleepTimerTextDuration.text = formatTime(State.sleepTimer * 60)
+		binding.playbackSpeed.progress = ((State.playbackSpeed - PLAYBACK_SPEED_STEP) / PLAYBACK_SPEED_STEP).toInt()
+		binding.playbackSpeedText.text = binding.resources.getString(R.string.playbackSpeedValue, State.playbackSpeed)
 		binding.iconRepeat.setImageDrawable(repeatIcons[State.playlist.repeat])
 		binding.iconShuffle.setImageDrawable(if (State.playlist.shuffle) shuffleIcons[1] else shuffleIcons[0])
 	}
@@ -247,5 +264,6 @@ class SettingsManager(mainBinding: MainFragmentBinding) : EventBus.Subscriber {
 		const val ANIM_DURATION = 400L
 		const val FLICK_THRESHOLD = -200 // the settings sheet will hide if its bottom margin goes past this value
 		const val SEEK_JUMP_STEP = 5
+		const val PLAYBACK_SPEED_STEP = .25F
 	}
 }

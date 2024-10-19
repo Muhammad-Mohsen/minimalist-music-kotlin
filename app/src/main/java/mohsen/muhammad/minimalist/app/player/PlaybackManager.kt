@@ -9,10 +9,12 @@ import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.audiofx.AudioEffect
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
+import androidx.core.app.ActivityCompat.startActivityForResult
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.cancelSafe
 import mohsen.muhammad.minimalist.core.ext.currentPositionSafe
@@ -133,8 +135,8 @@ class PlaybackManager :
 
 		registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
 
-		player.start()
-
+		player.playPause(true)
+		sendAudioEffectControl(true)
 		sendMetadataUpdate(path)
 		sendSeekUpdates()
 	}
@@ -151,7 +153,12 @@ class PlaybackManager :
 		}
 
 		player.playPause(play)
+		sendAudioEffectControl(play)
 		sendSeekUpdates(play)
+	}
+
+	private fun updatePlaybackSpeed(speed: Float = 1F) {
+		player.playbackParams = player.playbackParams.setSpeed(speed)
 	}
 
 	private fun playNext() {
@@ -215,6 +222,24 @@ class PlaybackManager :
 		EventBus.send(SystemEvent(EVENT_SOURCE, EventType.METADATA_UPDATE))
 	}
 
+	private fun eq() {
+		val activity = State.activity.get() ?: return
+		val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
+		intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
+		intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)
+
+		startActivityForResult(activity, intent, 0, null)
+	}
+
+	private fun sendAudioEffectControl(play: Boolean = false) {
+		val action = if (play) AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION else AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION
+
+		val intent = Intent(action)
+		intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
+		intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)
+		sendBroadcast(intent)
+	}
+
 	// pause playback on audio focus loss
 	override fun onAudioFocusChange(focusChange: Int) {
 		if (focusChange != AudioManager.AUDIOFOCUS_GAIN) {
@@ -262,6 +287,8 @@ class PlaybackManager :
 				EventType.SEEK_UPDATE -> updateSeek(data.extras.toInt())
 				EventType.FF -> fastForward()
 				EventType.RW -> rewind()
+				EventType.PLAYBACK_SPEED -> updatePlaybackSpeed(State.playbackSpeed)
+				EventType.EQ -> eq()
 
 				// playlist stuff
 				EventType.CYCLE_REPEAT -> { State.playlist.cycleRepeatMode() }
@@ -278,7 +305,6 @@ class PlaybackManager :
 	override fun onBind(intent: Intent?): IBinder? { return null }
 
 	companion object {
-
 		private const val EVENT_SOURCE = EventSource.SERVICE
 		private const val SEEK_UPDATE_PERIOD = 1000L
 		private const val ON_COMPLETION_THRESHOLD = 1000L

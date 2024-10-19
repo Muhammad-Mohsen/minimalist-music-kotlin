@@ -9,7 +9,7 @@
 	<dimen name="fabMarginedSize">75dp</dimen>
 	<dimen name="chapterIndicatorWidth">1dp</dimen>
 	<dimen name="chapterIndicatorHeight">4dp</dimen>
-	<dimen name="settingsHiddenMargin">-400dp</dimen>
+	<dimen name="settingsHiddenMargin">-484dp</dimen>
 	<dimen name="albumArtCollapsedHeight">84dp</dimen>
 
 	<integer name="fabMenuExpandedBackgroundScale">1</integer>

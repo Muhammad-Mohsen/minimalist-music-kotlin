@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,15 +58,14 @@ class MainFragment : Fragment() {
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		binding = MainFragmentBinding.inflate(inflater, container, false)
-		Log.i("MainFragment", "onCreateView: called") // to measure perf impact of moving init to onStart
-		initialize() // prevents ForegroundServiceStartNotAllowedException that sometimes raised if initialized in onCreateView
+		initialize()
 
 		return binding.root
 	}
 
 	override fun onStart() {
 		super.onStart()
-		Log.i("MainFragment", "onStart: called")
+		EventBus.send(SystemEvent(EventSource.FRAGMENT, EventType.APP_FOREGROUNDED))
 	}
 
 	// initializes everything except the service!

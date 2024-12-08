@@ -61,8 +61,6 @@ class PlaybackManager :
 
 	private var timer: Timer? = null // a timer to update the seek
 
-	// some stuff need to be initialized early (sometimes the system calls onDestroy before calling onStartCommand!
-	// so we get a "lateinit property sessionManager has not been initialized" thrown at our face!!
 	override fun onCreate() {
 		super.onCreate()
 
@@ -90,12 +88,7 @@ class PlaybackManager :
 		// so a manual call is necessary
 		restoreState(true)
 	}
-	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
-		else startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 
-		return super.onStartCommand(intent, flags, startId)
-	}
 	override fun onDestroy() {
 		player.release() // destroy the Player instance
 		sessionManager.release() // and the media session
@@ -106,6 +99,12 @@ class PlaybackManager :
 
 		unregisterReceiverSafe(noisyReceiver)
 		EventBus.unsubscribe(this)
+	}
+
+	// explicitly called when the app is foregrounded which prevents ForegroundServiceStartNotAllowedException on Android S+
+	private fun startForeground() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+		else startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 	}
 
 	// restores state (from the State object) from a previous session
@@ -158,12 +157,16 @@ class PlaybackManager :
 	}
 
 	private fun updatePlaybackSpeed(speed: Float = 1F) {
-		val wasPaused = !player.isPlaying
-		player.playbackParams = player.playbackParams.setSpeed(speed)
+		// the store shows an IllegalStateException crashes over here, so try/catch that sumbitch!
+		try {
+			val wasPaused = !player.isPlaying
+			player.playbackParams = player.playbackParams.setSpeed(speed)
 
-		// apparently, setting the playback speed while paused, resumes playback, so force it here.
-		// no need to send any further notifications/events, so directly call the player's pause function
-		if (wasPaused) player.playPause(false)
+			// apparently, setting the playback speed while paused, resumes playback, so force it here.
+			// no need to send any further notifications/events, so directly call the player's pause function
+			if (wasPaused) player.playPause(false)
+		}
+		catch (_: Exception) {}
 	}
 
 	private fun playNext() {
@@ -286,6 +289,7 @@ class PlaybackManager :
 	override fun receive(data: EventBus.EventData) {
 		if (data is SystemEvent && data.source != EVENT_SOURCE) { // if we're not the source
 			when (data.type) {
+				EventType.APP_FOREGROUNDED -> startForeground()
 				EventType.PLAY_ITEM -> playTrack(data.extras)
 				EventType.PLAY -> playPause(true)
 				EventType.PAUSE -> playPause(false)

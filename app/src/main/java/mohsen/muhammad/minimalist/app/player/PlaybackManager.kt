@@ -1,5 +1,6 @@
 package mohsen.muhammad.minimalist.app.player
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -14,7 +15,9 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat.startActivityForResult
+import mohsen.muhammad.minimalist.R
 import mohsen.muhammad.minimalist.core.evt.EventBus
 import mohsen.muhammad.minimalist.core.ext.cancelSafe
 import mohsen.muhammad.minimalist.core.ext.currentPositionSafe
@@ -230,13 +233,15 @@ class PlaybackManager :
 		EventBus.send(SystemEvent(EVENT_SOURCE, EventType.METADATA_UPDATE))
 	}
 
+	@SuppressLint("QueryPermissionsNeeded")
 	private fun eq() {
 		val activity = State.activity.get() ?: return
 		val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
 		intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
 		intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)
 
-		startActivityForResult(activity, intent, 0, null)
+		if (intent.resolveActivity(packageManager) != null) startActivityForResult(activity, intent, 0, null)
+		else Toast.makeText(this,resources.getString(R.string.noEqualizer),Toast.LENGTH_SHORT).show()
 	}
 
 	private fun sendAudioEffectControl(play: Boolean = false) {
@@ -287,27 +292,27 @@ class PlaybackManager :
 
 	// event bus handler
 	override fun receive(data: EventBus.EventData) {
-		if (data is SystemEvent && data.source != EVENT_SOURCE) { // if we're not the source
-			when (data.type) {
-				EventType.APP_FOREGROUNDED -> startForeground()
-				EventType.PLAY_ITEM -> playTrack(data.extras)
-				EventType.PLAY -> playPause(true)
-				EventType.PAUSE -> playPause(false)
-				EventType.SEEK_UPDATE -> updateSeek(data.extras.toInt())
-				EventType.FF -> fastForward()
-				EventType.RW -> rewind()
-				EventType.PLAYBACK_SPEED -> updatePlaybackSpeed(State.playbackSpeed)
-				EventType.EQ -> eq()
+		if (data !is SystemEvent || data.source == EVENT_SOURCE) return
 
-				// playlist stuff
-				EventType.CYCLE_REPEAT -> { State.playlist.cycleRepeatMode() }
-				EventType.CYCLE_SHUFFLE -> { State.playlist.toggleShuffle() }
-				EventType.PLAY_PREVIOUS -> playPrev()
-				EventType.PLAY_NEXT -> playNext()
-				EventType.PLAY_SELECTED -> playTrack(State.playlist.getTrackByIndex(0), false)
+		when (data.type) {
+			EventType.APP_FOREGROUNDED -> startForeground()
+			EventType.PLAY_ITEM -> playTrack(data.extras)
+			EventType.PLAY -> playPause(true)
+			EventType.PAUSE -> playPause(false)
+			EventType.SEEK_UPDATE -> updateSeek(data.extras.toInt())
+			EventType.FF -> fastForward()
+			EventType.RW -> rewind()
+			EventType.PLAYBACK_SPEED -> updatePlaybackSpeed(State.playbackSpeed)
+			EventType.EQ -> eq()
 
-				EventType.METADATA_UPDATE -> restoreState()
-			}
+			// playlist stuff
+			EventType.CYCLE_REPEAT -> { State.playlist.cycleRepeatMode() }
+			EventType.CYCLE_SHUFFLE -> { State.playlist.toggleShuffle() }
+			EventType.PLAY_PREVIOUS -> playPrev()
+			EventType.PLAY_NEXT -> playNext()
+			EventType.PLAY_SELECTED -> playTrack(State.playlist.getTrackByIndex(0), false)
+
+			EventType.METADATA_UPDATE -> restoreState()
 		}
 	}
 

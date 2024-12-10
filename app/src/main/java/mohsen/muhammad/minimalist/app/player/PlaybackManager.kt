@@ -63,6 +63,7 @@ class PlaybackManager :
 	private val noisyIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
 
 	private var timer: Timer? = null // a timer to update the seek
+	private var foregrounded = false
 
 	override fun onCreate() {
 		super.onCreate()
@@ -104,10 +105,24 @@ class PlaybackManager :
 		EventBus.unsubscribe(this)
 	}
 
-	// explicitly called when the app is foregrounded which prevents ForegroundServiceStartNotAllowedException on Android S+
-	private fun startForeground() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
-		else startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
+	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+		startForegroundSafe()
+		return super.onStartCommand(intent, flags, startId)
+	}
+
+	// will be called from the fragment onStart to ensure that it's always started
+	private fun startForegroundSafe() {
+		if (foregrounded) return
+
+		// try/catch because the store reports a ForegroundServiceStartNotAllowedException!
+		try {
+			foregrounded = true
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+			else startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
+
+		} catch (_: Exception) {
+			foregrounded = false
+		}
 	}
 
 	// restores state (from the State object) from a previous session
@@ -160,7 +175,7 @@ class PlaybackManager :
 	}
 
 	private fun updatePlaybackSpeed(speed: Float = 1F) {
-		// the store shows an IllegalStateException crashes over here, so try/catch that sumbitch!
+		// the store reports an IllegalStateException crashes over here, so try/catch that sumbitch!
 		try {
 			val wasPaused = !player.isPlaying
 			player.playbackParams = player.playbackParams.setSpeed(speed)
@@ -169,7 +184,9 @@ class PlaybackManager :
 			// no need to send any further notifications/events, so directly call the player's pause function
 			if (wasPaused) player.playPause(false)
 		}
-		catch (_: Exception) {}
+		catch (e: Exception) {
+			Log.d(PlaybackManager::class.simpleName, "updatePlaybackSpeed: ${e.message}")
+		}
 	}
 
 	private fun playNext() {
@@ -295,7 +312,7 @@ class PlaybackManager :
 		if (data !is SystemEvent || data.source == EVENT_SOURCE) return
 
 		when (data.type) {
-			EventType.APP_FOREGROUNDED -> startForeground()
+			EventType.APP_FOREGROUNDED -> startForegroundSafe()
 			EventType.PLAY_ITEM -> playTrack(data.extras)
 			EventType.PLAY -> playPause(true)
 			EventType.PAUSE -> playPause(false)

@@ -13,8 +13,7 @@ import mohsen.muhammad.minimalist.data.Const
 import mohsen.muhammad.minimalist.data.State
 import java.io.File
 import java.io.FileFilter
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Arrays
 
 
 /**
@@ -44,7 +43,7 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 		private const val EMULATED = "/storage/emulated"
 		private const val EMULATED_ZERO = "/storage/emulated/0"
 
-		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg", "opus", "flac") // supported media extensions
+		val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg", "opus", "aac") // supported media extensions
 
 		private val filter = ExplorerFileFilter()
 
@@ -120,8 +119,8 @@ class Chapter(val index: Int, val startTime: Long) {
 	}
 }
 // the ArrayList is guaranteed to be sorted
-fun ArrayList<Chapter>.getNextChapter(currentSeek: Long): Chapter {
-	return this.first {
+fun ArrayList<Chapter>.getNextChapter(currentSeek: Long): Chapter? {
+	return this.firstOrNull {
 		it.startTime > currentSeek
 	}
 }

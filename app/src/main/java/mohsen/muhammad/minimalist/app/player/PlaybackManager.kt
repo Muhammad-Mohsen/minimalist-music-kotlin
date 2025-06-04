@@ -192,6 +192,10 @@ class PlaybackManager :
 	private fun playNext() {
 		if (State.Track.hasChapters) {
 			val nextChapter = State.Track.chapters.getNextChapter(player.currentPositionSafe.toLong())
+			if (nextChapter == null) { // already past the last chapter
+				playTrack(State.playlist.getNextTrack(false), false) // so get the next track as normal
+				return
+			}
 			updateSeek(nextChapter.startTime.toInt())
 			if (!player.isPlaying) playPause(true)
 

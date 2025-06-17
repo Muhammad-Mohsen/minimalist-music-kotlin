@@ -38,6 +38,7 @@
 	<string name="seekJumpValue">%1$d Segundas</string>
 	<string name="equalizer">Equalizador</string>
 	<string name="noEqualizer">Nenhum equalizador encontrado</string>
+	<string name="noBrowser">Nenhum navegador encontrado</string>
 	<string name="playbackSpeed">Velocidade de reprodução</string>
 
 </resources>

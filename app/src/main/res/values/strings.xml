@@ -46,6 +46,7 @@
 	<string name="seekJumpValue">%1$d Seconds</string>
 	<string name="equalizer">Equalizer</string>
 	<string name="noEqualizer">No equalizer found</string>
+	<string name="noBrowser">No browser found</string>
 	<string name="playbackSpeed">Playback Speed</string>
 	<string name="playbackSpeedValue" translatable="false">%1$.2fx</string>
 

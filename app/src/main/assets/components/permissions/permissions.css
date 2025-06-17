@@ -1,0 +1,37 @@
+music-permissions {
+
+	position: fixed;
+	inset: 0;
+	align-items: center;
+	justify-content: center;
+	background: var(--background);
+	z-index: 1;
+
+	display: none;
+
+	p {
+		color: var(--foreground-secondary);
+		line-height: 1.2rem;
+		text-align: center;
+
+		strong {
+			color: var(--foreground);
+			font-weight: 600;
+		}
+	}
+
+	button.ic-btn {
+		position: fixed;
+		inset: auto auto 32px 50%;
+		width: 96px;
+		translate: -50% 0;
+		color: var(--foreground);
+		background: radial-gradient(circle, #AAAA, transparent 70%) center no-repeat;
+		background-size: 0 0;
+		font-size: 28px;
+		transition: .5s ease-out;
+	}
+	button.ic-btn:active { background-size: 100% 100%; }
+}
+
+[mode="permission"] music-permissions { display: flex; }

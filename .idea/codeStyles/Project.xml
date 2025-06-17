@@ -1,81 +1,44 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
-    <option name="OTHER_INDENT_OPTIONS">
-      <value>
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </value>
-    </option>
-    <AndroidXmlCodeStyleSettings>
-      <option name="LAYOUT_SETTINGS">
+    <JavaCodeStyleSettings>
+      <option name="IMPORT_LAYOUT_TABLE">
         <value>
-          <option name="INSERT_LINE_BREAK_BEFORE_NAMESPACE_DECLARATION" value="true" />
-          <option name="INSERT_LINE_BREAK_AFTER_LAST_ATTRIBUTE" value="true" />
+          <package name="" withSubpackages="true" static="false" module="true" />
+          <package name="android" withSubpackages="true" static="true" />
+          <package name="androidx" withSubpackages="true" static="true" />
+          <package name="com" withSubpackages="true" static="true" />
+          <package name="junit" withSubpackages="true" static="true" />
+          <package name="net" withSubpackages="true" static="true" />
+          <package name="org" withSubpackages="true" static="true" />
+          <package name="java" withSubpackages="true" static="true" />
+          <package name="javax" withSubpackages="true" static="true" />
+          <package name="" withSubpackages="true" static="true" />
+          <emptyLine />
+          <package name="android" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="androidx" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="com" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="junit" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="net" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="org" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="java" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="javax" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="" withSubpackages="true" static="false" />
+          <emptyLine />
         </value>
       </option>
-      <option name="MANIFEST_SETTINGS">
-        <value>
-          <option name="INSERT_LINE_BREAK_BEFORE_NAMESPACE_DECLARATION" value="true" />
-          <option name="INSERT_LINE_BREAK_AFTER_LAST_ATTRIBUTE" value="true" />
-        </value>
-      </option>
-      <option name="OTHER_SETTINGS">
-        <value>
-          <option name="INSERT_LINE_BREAK_BEFORE_NAMESPACE_DECLARATION" value="true" />
-          <option name="INSERT_LINE_BREAK_AFTER_LAST_ATTRIBUTE" value="true" />
-        </value>
-      </option>
-    </AndroidXmlCodeStyleSettings>
-    <JetCodeStyleSettings>
-      <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
-    </JetCodeStyleSettings>
-    <codeStyleSettings language="CMake">
-      <indentOptions>
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="Groovy">
-      <indentOptions>
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="HTML">
-      <indentOptions>
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="JAVA">
-      <indentOptions>
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="JSON">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="4" />
-        <option name="USE_TAB_CHARACTER" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="Markdown">
-      <indentOptions>
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="ObjectiveC">
-      <indentOptions>
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
+    </JavaCodeStyleSettings>
     <codeStyleSettings language="XML">
+      <option name="FORCE_REARRANGE_MODE" value="1" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
       </indentOptions>
       <arrangement>
         <rules>
@@ -184,13 +147,6 @@
           </section>
         </rules>
       </arrangement>
-    </codeStyleSettings>
-    <codeStyleSettings language="kotlin">
-      <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
-      <indentOptions>
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
     </codeStyleSettings>
   </code_scheme>
 </component>

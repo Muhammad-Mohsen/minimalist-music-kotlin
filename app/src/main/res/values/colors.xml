@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<color name="alwaysBlack">#000</color>
-	<color name="alwaysOffBlack">#333</color>
-	<color name="alwaysWhite">#FFF</color>
-	<color name="alwaysOffWhite">#AAA</color>
-
-	<color name="mainBackground">#FFF0F0F0</color>
-	<color name="mainForeground">#333</color>
-
-	<color name="explorerForegroundLight">#666</color> <!-- used for explorer text -->
-	<color name="explorerSelection">#BBB</color>
-
-	<color name="breadcrumbBackground">#FFF</color>
-	<color name="breadcrumbForeground">#333</color>
-	<color name="breadcrumbForegroundDark">#111</color>
-	<color name="breadcrumbBorder">#FFF</color>
-	<color name="multiSelectBorder">#CCC</color> <!-- used for select bar, and settings sheet border -->
-
-	<color name="controlsChapters">#444</color>
-	<color name="seekProgress">#5CCC</color>
-	<color name="seekProgressSettings">#2CCC</color>
-	<color name="seekBackground">#000</color>
-
-	<color name="mainSettingsBorder">#000</color> <!-- used for black buttons -->
-	<color name="subSettingsBorder">#FFF0F0F0</color> <!-- used for theme buttons -->
-
-	<color name="scrollBar">#333</color>
-	<color name="ripple">#666</color>
-	<color name="transparent">#0FFF</color>
-
-	<!-- OLD -->
-	<color name="oldSeekThumb">#FFF</color>
+	<color name="black">#000000</color>
+	<color name="white">#FFFFFF</color>
+	<color name="transparent">#00000000</color>
 
 </resources>

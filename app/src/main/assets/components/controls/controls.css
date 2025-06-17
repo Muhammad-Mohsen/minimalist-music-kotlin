@@ -1,0 +1,85 @@
+music-controls {
+	position: fixed;
+	inset: auto 0 0;
+}
+
+.main-controls {
+	position: relative;
+	margin: 0 12px;
+
+	#seek-range {
+		--range-height: auto;
+		--range-border-width: 0;
+		--range-background: #33333380;
+		--range-progress-background: #74747433;
+
+		position: absolute;
+		inset: 0;
+
+		backdrop-filter: blur(16px);
+	}
+
+	#play-pause-button, #seek-current, #seek-duration, #chapters, #track-title, #track-album-artist {
+		color: var(--foreground);
+	}
+
+	#play-pause-button {
+		position: absolute;
+		inset: 0 50% auto auto;
+		width: 56px;
+		padding: 0;
+		translate: 50% -50%;
+
+		svg {
+			translate: calc(-50% + 28px) 0;
+			mask-image: linear-gradient(90deg, transparent 10%, var(--background) 40%, var(--background) 60%, transparent 90%);
+			pointer-events: none;
+		}
+
+		path {
+			transition: .3s ease-out;
+			&#pause-path { stroke-dasharray: 75; }
+			&#play-path { stroke-dasharray: 80; }
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: -8px;
+			background: radial-gradient(circle, #AAAA, transparent 70%) center -2px no-repeat;
+		}
+	}
+
+	.seek-text {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 12px 12px 8px;
+		pointer-events: none;
+	}
+	#seek-current { font: 600 .8rem / .8rem 'Segoe UI'; }
+	#seek-duration { font: 400 .8rem / .8rem 'Segoe UI'; }
+
+	#track-title {
+		position: relative;
+		padding: 4px;
+		text-align: center;
+		font: 400 1rem / 1rem 'Segoe UI';
+		pointer-events: none;
+	}
+	#track-album-artist {
+		position: relative;
+		padding: 4px 0 12px;
+		text-align: center;
+		color: var(--foreground-secondary);
+		font: 400 .8rem / .8rem 'Segoe UI';
+		pointer-events: none;
+	}
+}
+
+.secondary-controls {
+	display: flex;
+	justify-content: space-between;
+	margin: 0 12px;
+}

@@ -1,3 +1,23 @@
+const Path = (() => {
+	const SEPARATOR = /\\|\//g;
+
+	function join(segments) {
+		return segments.join('/');
+	}
+
+	function eq(one, other) {
+		return one.replace(/\/|\\/g, '') == other.replace(/\/|\\/g, '');
+	}
+
+	return {
+		SEPARATOR,
+
+		join,
+		eq,
+	}
+
+})();
+
 NodeList.prototype.toArray = function () {
 	return [...this];
 }

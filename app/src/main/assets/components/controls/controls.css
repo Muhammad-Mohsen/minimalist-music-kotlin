@@ -81,5 +81,9 @@ music-controls {
 .secondary-controls {
 	display: flex;
 	justify-content: space-between;
-	margin: 0 12px;
+	margin: 4px 12px;
+
+	.ic-close { color: red; }
+	.ic-chapters, .ic-lyrics { font-size: 22px; }
+	.ic-chapters::before { display: block; width: 21px; height: 21px; }
 }

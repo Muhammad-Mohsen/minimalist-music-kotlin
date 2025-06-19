@@ -4,32 +4,32 @@ class MusicControls extends HTMLElementBase {
 
 	connectedCallback() {
 		this.#render();
-		EventBus.subscribe(this.#handler);
+		EventBus.subscribe((event) => this.#handler(event));
 	}
 
 	#handler(event) {
-		if (event.target == SELF) return;
+		if (event.target == this.SELF) return;
 
 		when(event.type)
 			.is(EventBus.Type.PLAY_TRACK, async () => {
-				const path = State.get(State.StateKey.TRACK);
+				const path = State.get(State.Key.TRACK);
 
 				load(path, 'autoplay');
 				Playlist.set(await Explorer.listTracks());
 			})
 			.is(EventBus.Type.RESTORE_STATE, async () => {
-				const path = State.get(State.StateKey.TRACK);
-				const currentTime = parseInt(State.get(State.StateKey.SEEK)) || 0;
-				const duration = parseInt(State.get(State.StateKey.DURATION)) || 100;
+				// const path = State.get(State.Key.TRACK);
+				// const currentTime = parseInt(State.get(State.Key.SEEK)) || 0;
+				// const duration = parseInt(State.get(State.Key.DURATION)) || 100;
 
-				seek(currentTime, duration);
+				// seek(currentTime, duration);
 
-				onVolumeChange(parseFloat(State.get(State.StateKey.VOLUME)));
-				shuffle(State.get(State.StateKey.SHUFFLE));
-				repeat(State.get(State.StateKey.REPEAT));
+				// onVolumeChange(parseFloat(State.get(State.Key.VOLUME)));
+				// shuffle(State.get(State.Key.SHUFFLE));
+				// repeat(State.get(State.Key.REPEAT));
 
-				// loadeddata event, apparently, doesn't fire until the audio needs to be played! So if autoplay is false, it won't fire
-				MetadataWorker.postMessage(Native.FS.pathToSrc(path));
+				// // loadeddata event, apparently, doesn't fire until the audio needs to be played! So if autoplay is false, it won't fire
+				// MetadataWorker.postMessage(Native.FS.pathToSrc(path));
 			})
 			.is(EventBus.Type.PLAY, () => playPause(true, 'suppress'))
 			.is(EventBus.Type.PAUSE, () => playPause(false, 'suppress'))
@@ -78,6 +78,18 @@ class MusicControls extends HTMLElementBase {
 		type = force ? type : ''; // TODO if !force, invert the type
 		EventBus.dispatch({ type: type, target: this.SELF });
 	}
+	toggleMode(button) {
+		if (button.id == 'search-button') {
+			button.classList.toggle('ic-search');
+			button.classList.toggle('ic-close');
+
+			// clear the filtering
+			// EventBus.dispatch({ type: EventBus.Type.SEARCH, target: this.SELF, data: { value: search.value } });
+
+			if (button.classList.contains('ic-close')) document.body.setAttribute('mode', 'search');
+			else document.body.setAttribute('mode', 'normal');
+		}
+	}
 
 	#render() {
 		super.render(`
@@ -85,7 +97,7 @@ class MusicControls extends HTMLElementBase {
 			<div class="main-controls">
 				<input type="range" id="seek-range">
 
-				<button id="play-pause-button" class="ic-btn" aria-label="play/pause" l10n onclick="${this.handle}.playPause()">
+				<button id="play-pause-button" class="ic-btn" aria-label="play/pause" onclick="${this.handle}.playPause()">
 					<svg  width="180" height="15" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path id="pause-path" style="stroke-dashoffset: 75;" d="M94 15V7.5H180M85 0V7.5H0" stroke="var(--foreground)"/>
 						<path id="play-path" style="stroke-dashoffset: 0;" d="M83.0469 1L95.9531 7.5H180M83.0469 15V7.5H0" stroke="var(--foreground)"/>
@@ -103,12 +115,12 @@ class MusicControls extends HTMLElementBase {
 			</div>
 
 			<div class="secondary-controls">
-				<button id="search-button" class="ic-btn pressable ic-search" aria-label="search" l10n></button>
-				<button id="chapters-button" class="ic-btn pressable ic-chapters" aria-label="chapters" l10n></button>
-				<button id="previous-button" class="ic-btn pressable ic-previous" aria-label="previous" l10n></button>
-				<button id="next-button" class="ic-btn pressable ic-next" aria-label="next" l10n></button>
-				<button id="lyrics-button" class="ic-btn pressable ic-lyrics" aria-label="lyrics" l10n></button>
-				<button id="more-button" class="ic-btn pressable ic-more" aria-label="more" l10n></button>
+				<button id="search-button" class="ic-btn ic-search" aria-label="search" onclick="${this.handle}.toggleMode(this);"></button>
+				<button id="chapters-button" class="ic-btn ic-chapters" aria-label="chapters"></button>
+				<button id="previous-button" class="ic-btn ic-previous" aria-label="previous"></button>
+				<button id="next-button" class="ic-btn ic-next" aria-label="next"></button>
+				<button id="lyrics-button" class="ic-btn ic-lyrics" aria-label="lyrics"></button>
+				<button id="more-button" class="ic-btn ic-more" aria-label="more"></button>
 			</div>
 		`);
 	}
@@ -144,7 +156,7 @@ customElements.define('music-controls', MusicControls);
 // }
 
 function load(path, autoplay) {
-	if (!initialized()) return albumArtist(State.get(State.StateKey.ALBUM)); // show quote
+	if (!initialized()) return albumArtist(State.get(State.Key.ALBUM)); // show quote
 
 	loadingIndicator(true);
 	const src = Native.FS.pathToSrc(path);
@@ -175,7 +187,7 @@ function playNext(onComplete) {
 	const path = Playlist.getNext(onComplete);
 	if (!path) return;
 
-	State.set(State.StateKey.TRACK, path);
+	State.set(State.Key.TRACK, path);
 	load(path, 'autoplay');
 	EventBus.dispatch({ type: EventBus.Type.PLAY_TRACK, target: SELF });
 }
@@ -185,7 +197,7 @@ function playPrev() {
 	const path = Playlist.getPrev();
 	if (!path) return;
 
-	State.set(State.StateKey.TRACK, path);
+	State.set(State.Key.TRACK, path);
 	load(path, 'autoplay');
 	EventBus.dispatch({ type: EventBus.Type.PLAY_TRACK, target: SELF });
 }
@@ -216,7 +228,7 @@ function onVolumeChange(restoredVal) {
 	const val = (isNaN(restoredVal) || restoredVal == undefined) ? ui.volume.value : restoredVal;
 
 	if (restoredVal != undefined) ui.volume.value = val; // update the vol if restored
-	else State.set(State.StateKey.VOLUME, val); // update the state otherwise
+	else State.set(State.Key.VOLUME, val); // update the state otherwise
 
 	audio.volume = val;
 	if (val) audio.muted = false;
@@ -233,12 +245,12 @@ function seek(position, duration) {
 	if (duration) {
 		ui.seek.max = duration;
 		ui.duration.innerHTML = readableTime(duration);
-		State.set(State.StateKey.DURATION, duration);
+		State.set(State.Key.DURATION, duration);
 	}
 
 	ui.position.innerHTML = readableTime(position);
 	ui.seek.value = position;
-	State.set(State.StateKey.SEEK, position);
+	State.set(State.Key.SEEK, position);
 
 	progressBar();
 }
@@ -260,12 +272,12 @@ function onSeekMouseUp() {
 
 // UI STUFF
 function title(title) {
-	ui.title.innerHTML = title || Native.FS.readablePath(State.get(State.StateKey.TRACK));
+	ui.title.innerHTML = title || Native.FS.readablePath(State.get(State.Key.TRACK));
 	ui.title.setAttribute('title', ui.title.textContent);
 	Native.Window.title(ui.title.textContent);
 }
 function albumArtist(album, artist) {
-	album = album || Native.FS.readablePath(State.get(State.StateKey.CURRENT_DIR)); // default to current dir for no-album-in-metadata case
+	album = album || Native.FS.readablePath(State.get(State.Key.CURRENT_DIR)); // default to current dir for no-album-in-metadata case
 
 	ui.albumArtist.innerHTML = `<strong>${album}</strong> ${artist ? '| ' + artist : ''}`;
 	ui.albumArtist.setAttribute('title', ui.albumArtist.textContent);

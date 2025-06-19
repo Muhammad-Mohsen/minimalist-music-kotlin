@@ -2,6 +2,7 @@
 /* thanks - https://piccalil.li/blog/a-modern-css-reset/ */
 *, *::before, *::after {
 	margin: 0;
+	padding: 0;
 	box-sizing: border-box;
 	user-select: none;
 }
@@ -130,6 +131,7 @@ input, button, textarea, select { font: inherit; }
 	--foreground: #FFF;
 	--foreground-secondary: #828282; /* gray3 */
 	--border-color: #4F4F4F; /* gray2 */
+	--selection-background: #222;
 }
 
 @media (prefers-color-scheme: light) {
@@ -150,18 +152,18 @@ button {
 	border: none;
 	color: var(--foreground-secondary);
 	background: transparent;
+	transition: color .5s, background .8s;
 }
-
-.pressable { transition: color .2s, scale .05s; }
-.pressable:active {
+button:active {
 	color: var(--foreground);
-	scale: .9;
+	background: var(--selection-background);
+	transition: background .3s;
 }
 
 .ic-btn {
 	display: grid;
 	justify-items: center;
-	width: var(--button-width, 56px);
+	min-width: var(--button-width, 48px);
 	aspect-ratio: 1;
 	border-radius: 12px;
 	font-size: 24px;

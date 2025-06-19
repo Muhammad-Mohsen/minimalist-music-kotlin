@@ -1,47 +1,96 @@
 /* GENERAL LAYOUT */
 music-header {
 	position: fixed;
-	inset: 12px 12px auto;
+	inset: var(--inset-top, 12px) 12px auto;
 	display: grid;
 	border: 1px solid var(--border-color);
 	border-radius: 12px;
 	transition: .2s;
-}
-[mode="search"] music-header, [mode="select"] music-header {
-	inset: 12px 0 auto;
-	border-color: transparent transparent var(--border-color) transparent;
-	border-radius: 0;
-
+	z-index: 1;
 }
 #breadcrumb-bar, #search-bar, #select-bar {
 	grid-area: 1 / 1;
 	display: flex;
 	align-items: center;
-	transition: .2s;
+	opacity: 1;
+	transition: .2s, display .2s allow-discrete;
 }
-
+[mode="search"] music-header, [mode="select"] music-header {
+	inset: 12px 0 auto;
+	border-color: transparent transparent var(--border-color) transparent;
+	border-radius: 0;
+}
 /* STATE */
 [mode="normal"] :is(#search-bar, #select-bar),
 [mode="search"] :is(#breadcrumb-bar, #select-bar),
 [mode="select"] :is(#search-bar, #breadcrumb-bar) {
-	display: none; /* TODO animate display prop */
+	display: none;
+	opacity: 0;
+}
+
+@starting-style {
+	[mode="normal"] #breadcrumb-bar,
+	[mode="search"] #search-bar,
+	[mode="select"] #select-bar {
+		opacity: 0;
+	}
 }
 
 /* STYLES */
 music-header {
-	button { --button-width: 48px; }
-	input {
-		flex-grow: 1;
-		padding: 8px 12px 12px 8px;
-		border: none;
-		outline: none;
-		color: var(--foreground);
-		background: transparent;
+
+	/* BREADCRUMBS */
+	#breadcrumb-bar { overflow: hidden; }
+	#crumbs {
+		display: flex;
+		padding-right: 12px;
+		overflow-x: auto;
+		scroll-behavior: smooth;
+
+		button {
+			padding: 6px 4px 8px 10px;
+			border-radius: 6px;
+			font-size: 14px;
+			flex-shrink: 0;
+		}
+
+
+		button:first-child {
+			padding-left: 4px;
+			pointer-events: none;
+		}
+		button:last-child {
+			color: var(--foreground);
+			font-weight: bold;
+			pointer-events: none;
+		}
+
+		button:not(:last-child)::after {
+			content: '/';
+			margin-left: 12px;
+			font-weight: 400;
+		}
 	}
-	input::-webkit-search-cancel-button {
-		appearance: none;
-		height: 48px;
-		width: 48px;
-		background: url('data:image/svg+xml,<svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 5 5 19M5 5l14 14" stroke="%23666" /></svg>') center no-repeat;
+	#crumbs::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+	}
+
+	/* SEARCH */
+	#search-bar {
+		input {
+			flex-grow: 1;
+			padding: 8px 12px 12px 8px;
+			border: none;
+			outline: none;
+			color: var(--foreground);
+			background: transparent;
+		}
+		input::-webkit-search-cancel-button {
+			appearance: none;
+			height: 48px;
+			width: 48px;
+			background: url('data:image/svg+xml,<svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 5 5 19M5 5l14 14" stroke="%23666" /></svg>') center no-repeat;
+		}
 	}
 }

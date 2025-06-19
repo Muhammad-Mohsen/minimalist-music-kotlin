@@ -27,10 +27,10 @@
 
 ## Technical
 - DONE - edge to edge
-	- https://developer.android.com/develop/ui/views/layout/edge-to-edge-manually
-	- enable the thing
-	- set the system bars color to transparent
-    - inset handling
+	- DONE - https://developer.android.com/develop/ui/views/layout/edge-to-edge-manually
+	- DONE - enable the thing
+	- DONE - set the system bars color to transparent
+    - DONE - inset handling
 - DONE - js bridge (EventBus)
 	- js + css bundling: simple bat script :)
 	- font(s)
@@ -44,9 +44,6 @@
     ```
 	- DONE - posting messages
 - DONE - pulse animation
-- directory change animation
-	- new: slide + old: scale down + blur?
-	- https://css-tricks.com/different-approaches-for-creating-a-staggered-animation/
 - DONE - webview guides (not sure if any good! but it's a start)
 	- https://medium.com/@oktaygenc/integrating-webview-in-jetpack-compose-managing-web-content-in-modern-android-1803c56a2da7
 	- use onPageFinished
@@ -54,14 +51,6 @@
 	- https://medium.com/@midoripig1009/working-with-json-in-kotlin-parsing-and-serialization-a62300ec43b8
 	- JSONObject
 		- https://stackoverflow.com/questions/22685281/parsing-json-in-android-with-out-using-any-external-libraries
-- back navigation
-	- the native code will decide and send the parent dir to the webview if necessary
-	- need to check the mode first before changing dir
-- cheat off of kotlin / tauri code
-- move relevant stuff from settings to activity
-	- sleep timer start/stop
-	- privacy policy click
-	- eq click
 - DONE - need some res
 	- notification icons + colors (use the SVGs)
 	- some strings for notification channel name, description, etc
@@ -70,40 +59,41 @@
 	- DONE - `Track` object in `State` to be its own thing (similar to `Playlist`)
     - DONE - `bitmap` encoding
     - DONE - time formatting functions to `GeneralExtensions.kt`
+- DONE - move relevant stuff from settings to activity
+	- sleep timer start/stop
+	- privacy policy click
+	- eq click
 
-PERMISSION
-- update the mode on the document
+- develop UI using mock state
+	- header
+		- DONE - listing
+		- DONE - click handlers
+		- DONE - styling
+		- mode changes (at the end)
+	- explorer
+		- DONE - lising
+		- DONE - styling
+		- click handler
+		- long click handler
+		- mode changes
+		- filtering
 
-RESTORE_STATE
-- controls: title + album/artist + current position + duration + art
-- explorer: current directory + playlist
-- settings: shuffle + repeat + sort + theme + sleep timer + playback speed + seek jump
-  DIR_CHANGE
+- State management
+	- after native restore state, send one to JS
+		- settings + track + playlist
+	- controls: title + album/artist + current position + duration + art
+	- explorer: current directory + playlist
+	- settings: shuffle + repeat + sort + theme + sleep timer + playback speed + seek jump
 
-PLAY_TRACK
-PLAY_NEXT
-PLAY_PREVIOUS
-PLAY
-PAUSE
-SEEK_UPDATE
-VOLUME
-VOLUME_DOWN
-VOLUME_UP
-METADATA_UPDATE
-METADATA_FETCH
-METADATA_CLEAR
-TOGGLE_SHUFFLE
-TOGGLE_REPEAT
-FF
-RW
-PLAY_PAUSE
-FROM_THE_TOP
-SEARCH
-PLAY_SELECTED
-SELECT_MODE_ADD
-SELECT_MODE_SUB
-SELECT_MODE_INACTIVE
+- directory change animation
+	- new: slide + old: scale down + blur?
+	- https://css-tricks.com/different-approaches-for-creating-a-staggered-animation/
+- back navigation
+	- the native code will decide and send the parent dir to the webview if necessary
+	- need to check the mode first before changing dir
+- cheat off of kotlin / tauri code
 
+- PERMISSION - update the mode on the document
 
 ### RoadMap
 - use Media3 stuff!! MediaSessionService + MediaSession.Callback

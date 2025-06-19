@@ -1,6 +1,6 @@
 class MusicHeader extends HTMLElementBase {
 
-	SELF = EventBus.Target.HEADER;
+	#TARGET = EventBus.Target.HEADER;
 
 	connectedCallback() {
 		this.#render();
@@ -8,7 +8,7 @@ class MusicHeader extends HTMLElementBase {
 	}
 
 	handler(event) {
-		if (event.target == this.SELF) return;
+		if (event.target == this.#TARGET) return;
 
 		when(event.type)
 			.is(EventBus.Type.RESTORE_STATE, () => this.#renderCrumbs())
@@ -28,38 +28,35 @@ class MusicHeader extends HTMLElementBase {
 	onCrumbClick(crumb) {
 		state.currentDir = crumb.getAttribute('path');
 		this.#renderCrumbs();
-		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.SELF });
+		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { dir: state.currentDir } });
 	}
 	onBackClick() {
 		state.currentDir = Path.join(state.currentDir.split(Path.SEPARATOR).slice(0, -1));
 		this.#renderCrumbs();
-		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.SELF });
+		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { directory: state.currentDir } });
 	}
 
 	onCancelClick() {
+		// reset the query + selection
+		state.query = '';
+		state.selection = [];
+		this.searchInput.value = '';
+
 		// change mode to crumbs
-
-		// reset the selection
-
-		// reset the filtering
+		state.mode = state.Mode.NORMAL;
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
 	}
-	onSearchInput(search) {
+	onSearchInput(searchInput) {
 		// update the filtering
-		EventBus.dispatch({ type: EventBus.Type.SEARCH, target: this.SELF, data: { value: search.value } });
+		state.query = searchInput.value;
+		EventBus.dispatch({ type: EventBus.Type.SEARCH, target: this.#TARGET });
 	}
 	onAddToQueueClick() {
-		// change mode back to crumbs
-
-		// get items from explorer
-
-		// dispatch UPDATE_QUEUE with items
+		EventBus.dispatch({ type: EventBus.Type.UPDATE_QUEUE, target: this.#TARGET });
 	}
 	onPlaySelectedClick() {
-		// change mode back to crumbs
+		EventBus.dispatch({ type: EventBus.Type.QUEUE_PLAY_SELECTED, target: this.#TARGET });
 
-		// get items from explorer
-
-		// dispatch UPDATE_QUEUE with items (should exactly be the same as onAddToQueue except that, expectedly, it won't add)
 	}
 
 	// RENDERING
@@ -71,7 +68,7 @@ class MusicHeader extends HTMLElementBase {
 			</div>
 
 			<div id="search-bar">
-				<button id="search-cancel-button" class="ic-btn ic-arrow-left" aria-label="cancel"></button>
+				<button id="search-cancel-button" class="ic-btn ic-arrow-left" aria-label="cancel" onclick="${this.handle}.onCancelClick()"></button>
 				<input id="search-input" type="search" placeholder="Search" oninput="${this.handle}.onSearchInput(this);">
 			</div>
 

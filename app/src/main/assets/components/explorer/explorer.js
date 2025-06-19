@@ -1,6 +1,13 @@
 class MusicExplorer extends HTMLElementBase {
 
-	SELF = EventBus.Target.EXPLORER;
+	LONG_PRESS_THRESHOLD = 500;
+	Type = {
+		DIRECTORY: 'directory',
+		TRACK: 'track'
+	}
+
+	#TARGET = EventBus.Target.EXPLORER;
+
 
 	connectedCallback() {
 		this.#render();
@@ -8,7 +15,7 @@ class MusicExplorer extends HTMLElementBase {
 	}
 
 	#handler(event) {
-		if (event.target == this.SELF) return;
+		if (event.target == this.#TARGET) return;
 
 		when(event.type)
 			.is(EventBus.Type.DIR_CHANGE, () => this.#renderItems())
@@ -20,27 +27,55 @@ class MusicExplorer extends HTMLElementBase {
 				if (target) select(target);
 			})
 			.is(EventBus.Type.SEARCH, () => {
-				if (State.get(State.Key.EXPANDED) == 'true') toggleSearchMode(true);
-			});
+				this.search();
+			})
+			.is(EventBus.Type.MODE_CHANGE, () => {
+				this.search(); // clear the search
+			})
 	}
 
-	onItemClick(target) {
+	// HANDLERS
+	onItemTouchStart(target) { target.setAttribute('touch-start', Date.now()); }
+	onItemTouchEnd(target) {
 		const path = target.getAttribute('path');
 		const type = target.getAttribute('type');
 
-		if (isDir(target)) {
-			goto(path);
-
-		} else {
-			select(target);
-			State.set(State.Key.TRACK, target.getAttribute('path'));
-			EventBus.dispatch({ target: EventBus.Target.EXPLORER, type: EventBus.Type.PLAY_TRACK });
+		// DIRECTORY
+		if (type == this.Type.DIRECTORY) {
+			state.currentDir = path;
+			return EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { path } });
 		}
-	}
-	onItemLongClick() {
 
+		// TRACK
+		const touchStart = parseInt(target.getAttribute('touch-start')) || Date.now();
+
+		// LONG PRESS
+		if (Date.now() - touchStart > this.LONG_PRESS_THRESHOLD) {
+			// TODO
+			return;
+		}
+
+		select(target);
+		State.set(State.Key.TRACK, target.getAttribute('path'));
+		EventBus.dispatch({ target: EventBus.Target.EXPLORER, type: EventBus.Type.PLAY_TRACK });
 	}
 
+	// SEARCH
+	search() {
+		var val = state.query;
+		var explorer = document.querySelector('.explorer.current');
+
+		var items = explorer.querySelectorAll('button > span').toArray();
+		items.forEach(i => {
+			const matches = i.textContent.fuzzyCompare(val);
+			i.parentElement.classList.toggle('hidden', !matches);
+			if (matches) i.innerHTML = this.#highlightSearchMatches(i, matches);
+		});
+	}
+
+	//
+
+	// RENDERING
 	#render() {
 		super.render(`
 			<music-header id="header"></music-header>
@@ -69,11 +104,13 @@ class MusicExplorer extends HTMLElementBase {
 		// this is the actual important bit, everything else is just for the transition animation!
 		other.innerHTML = '';
 		files.forEach(file => other.insertAdjacentHTML('beforeend',
-			`<button path="${file.path}" onclick="${this.handle}.onItemClick(this);"
+			`<button path="${file.path}" ontouchstart="${this.handle}.onItemTouchStart(this)" ontouchend="${this.handle}.onItemTouchEnd(this);"
 					class="${file.type} ${state.playlist.tracks.includes(file.path) ? 'playlist' : ''} ${Path.eq(state.track.path, file.path) ? 'selected' : ''}">
 
+				<i class="selection"></i>
 				<i class="${file.type == 'directory' ? 'ic-directory' : 'ic-music-note'}"></i>
-				<span>${file.name}<span>
+				<span>${file.name}</span>
+				<i class="ic-mark"></i>
 			</button>`
 		));
 
@@ -82,6 +119,19 @@ class MusicExplorer extends HTMLElementBase {
 		current.className = 'explorer ' + (toInward ? 'out' : 'in');
 		other.className = 'explorer current';
 		otherOther.className = 'explorer ' + (toInward ? 'in' : 'out');
+	}
+
+	#select() {
+
+	}
+	#mark() {
+
+	}
+
+	#highlightSearchMatches(element, matches) {
+		let html = element.textContent;
+		for (let i = matches.length - 1; i >= 0; i--) html = html.replaceAt(matches[i], `<b>${html[matches[i]]}</b>`);
+		return html;
 	}
 }
 
@@ -99,7 +149,7 @@ function select(target) {
 	target.classList.add('selected');
 }
 
-// CLICK HANDLERS
+// HANDLERS
 function onItemClick(target) {
 	const path = target.getAttribute('path');
 

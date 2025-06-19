@@ -8,6 +8,8 @@ var EventBus = (() => {
     		DIR_CHANGE: 'dirChange',
 			INSETS: 'insets',
 
+			MODE_CHANGE: 'modeChange',
+
     		PLAY_TRACK: 'playTrack',
     		PLAY_NEXT: 'playNext',
     		PLAY_PREVIOUS: 'playPrev',
@@ -28,7 +30,8 @@ var EventBus = (() => {
 
     		SEARCH: 'search',
 
-    		PLAY_SELECTED: 'playSelected', // play the selected items (from breadcrumb bar)
+    		QUEUE_PLAY_SELECTED: 'queuePlaySelected', // play the selected items (from breadcrumb bar)
+			QUEUE_ADD_SELECTED: 'queueAddSelected',
     		SELECT_MODE_ADD: 'selectModeAdd', // add a track to the selected list (activate the mode if none were selected before)
     		SELECT_MODE_SUB: 'selectModeSub', // remove a track from the selected list (deactivate the mode if none are selected now)
     		SELECT_MODE_CANCEL: 'selectModeCancel', // deactivate select mode (press cancel from the breadcrumb bar)

@@ -29,24 +29,45 @@
 	button {
 		position: relative;
 		display: flex;
-		gap: 8px;
 		align-items: center;
+		gap: 8px;
 		padding: 16px 20px;
 		text-align: start;
+		transition: .2s, color .5s, background .8s;
+		overflow: hidden;
 
+		&.directory, &.playlist, .ic-mark { color: var(--foreground); }
+
+		span {
+			flex-grow: 1;
+			max-width: calc(100% - 64px);
+			overflow-wrap: break-word;
+		}
 		i { font-size: 24px; }
 
-		&.selected::before {
-			content: '';
+		/* SELECTION */
+		.selection {
 			position: absolute;
 			inset: 4px 12px;
 			border-radius: 12px;
 			background: var(--selection-background);
+			opacity: 0;
+			transition: opacity .5s;
 			z-index: -1;
 		}
+		&.selected .selection { opacity: 1; }
 
-		&.directory, &.playlist {
-			color: var(--foreground);
+		.ic-mark {
+			opacity: 0;
+			transition: .2s;
+		}
+		&.marked .ic-mark { opacity: 1; }
+
+		/* SEARCH */
+		&.hidden {
+			height: 0;
+			padding: 0 20px;
+			opacity: 0;
 		}
 	}
 }

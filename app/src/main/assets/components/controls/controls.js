@@ -1,6 +1,6 @@
 class MusicControls extends HTMLElementBase {
 
-	SELF = EventBus.Target.CONTROLS;
+	#TARGET = EventBus.Target.CONTROLS;
 
 	connectedCallback() {
 		this.#render();
@@ -8,9 +8,13 @@ class MusicControls extends HTMLElementBase {
 	}
 
 	#handler(event) {
-		if (event.target == this.SELF) return;
+		if (event.target == this.#TARGET) return;
 
 		when(event.type)
+			.is(EventBus.Type.MODE_CHANGE, () => {
+				this.searchButton.classList.remove('ic-close'); // TODO fugly shit
+				this.searchButton.classList.add('ic-search');
+			})
 			.is(EventBus.Type.PLAY_TRACK, async () => {
 				const path = State.get(State.Key.TRACK);
 
@@ -43,16 +47,16 @@ class MusicControls extends HTMLElementBase {
 	playPause(play) {
 		play = play != undefined ? play : !this.playPauseButton.hasAttribute('playing');
 		this.playPauseButton.toggleAttribute('playing', play);
-		EventBus.dispatch({ type: play ? EventBus.Type.PLAY : EventBus.Type.PAUSE, target: this.SELF });
+		EventBus.dispatch({ type: play ? EventBus.Type.PLAY : EventBus.Type.PAUSE, target: this.#TARGET });
 
 		setTimeout(() => this.pausePath.style.strokeDashoffset = parseInt(this.pausePath.style.strokeDashoffset) + 75, play ? 200 : 0);
 		setTimeout(() => this.playPath.style.strokeDashoffset = parseInt(this.playPath.style.strokeDashoffset) + 80, play ? 0 : 200);
 	}
 	playNext() {
-		EventBus.dispatch({ type: EventBus.Type.PLAY_NEXT, target: this.SELF });
+		EventBus.dispatch({ type: EventBus.Type.PLAY_NEXT, target: this.#TARGET });
 	}
 	playPrevious() {
-		EventBus.dispatch({ type: EventBus.Type.PLAY_PREVIOUS, target: this.SELF });
+		EventBus.dispatch({ type: EventBus.Type.PLAY_PREVIOUS, target: this.#TARGET });
 	}
 
 	updateMetadata(metadata) {
@@ -73,22 +77,12 @@ class MusicControls extends HTMLElementBase {
 
 	}
 
-	// search, chapters, lyrics, more
-	toggle(type, force) {
-		type = force ? type : ''; // TODO if !force, invert the type
-		EventBus.dispatch({ type: type, target: this.SELF });
-	}
-	toggleMode(button) {
-		if (button.id == 'search-button') {
-			button.classList.toggle('ic-search');
-			button.classList.toggle('ic-close');
+	toggleSearch() {
+		this.searchButton.classList.toggle('ic-search');
+		this.searchButton.classList.toggle('ic-close');
 
-			// clear the filtering
-			// EventBus.dispatch({ type: EventBus.Type.SEARCH, target: this.SELF, data: { value: search.value } });
-
-			if (button.classList.contains('ic-close')) document.body.setAttribute('mode', 'search');
-			else document.body.setAttribute('mode', 'normal');
-		}
+		state.mode = state.mode == state.Mode.NORMAL ? state.Mode.SEARCH : state.Mode.NORMAL;
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
 	}
 
 	#render() {
@@ -115,7 +109,7 @@ class MusicControls extends HTMLElementBase {
 			</div>
 
 			<div class="secondary-controls">
-				<button id="search-button" class="ic-btn ic-search" aria-label="search" onclick="${this.handle}.toggleMode(this);"></button>
+				<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch();" aria-label="search"></button>
 				<button id="chapters-button" class="ic-btn ic-chapters" aria-label="chapters"></button>
 				<button id="previous-button" class="ic-btn ic-previous" aria-label="previous"></button>
 				<button id="next-button" class="ic-btn ic-next" aria-label="next"></button>

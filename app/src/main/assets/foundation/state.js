@@ -30,11 +30,23 @@ class State {
 		CHAPTERS: 'track.chapters',
 	}
 
-	mode = 'normal';
+	Mode = {
+		PERMISSION: 'permission',
+		NORMAL: 'normal',
+		SELECT: 'select',
+		SEARCH: 'search',
+	}
+
+	get mode() { return document.body.getAttribute('mode') || this.Mode.NORMAL; }
+	set mode(val) { document.body.setAttribute('mode', val); }
+
 	rootDir = '';
 	currentDir = '';
+	files = [];
+
 	isPlaying = false;
 	selection = [];
+	query = '';
 
 	settings = {
 		theme: 'dark',
@@ -62,6 +74,7 @@ class State {
 		artist: '',
 		art: '',
 		chapters: [],
+		lyrics: '',
 	}
 
 	async restore() {

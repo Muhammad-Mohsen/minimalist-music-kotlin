@@ -37,7 +37,9 @@ class MockState {
 		SEARCH: 'search',
 	}
 
-	mode = this.Mode.NORMAL;
+	get mode() { return document.body.getAttribute('mode') || this.Mode.NORMAL; }
+	set mode(val) { document.body.setAttribute('mode', val); }
+
 	rootDir = 'D:\\Music + Audiobooks\\';
 	currentDir = 'D:\\Music + Audiobooks\\MISC\\Games\\Ace Combat 3';
 	files = [
@@ -76,6 +78,7 @@ class MockState {
 
 	isPlaying = false;
 	selection = [];
+	query = '';
 
 	settings = {
 		theme: 'dark',
@@ -107,6 +110,7 @@ class MockState {
 		artist: 'Tetsukazu Nakanishi',
 		art: '',
 		chapters: [],
+		lyrics: '',
 	}
 
 	async restore() {

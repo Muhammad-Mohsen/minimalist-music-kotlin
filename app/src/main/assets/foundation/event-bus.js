@@ -6,6 +6,7 @@ var EventBus = (() => {
 			PERMISSION_SETTINGS: 'permissionSettings',
     		RESTORE_STATE: 'restoreState',
     		DIR_CHANGE: 'dirChange',
+			INSETS: 'insets',
 
     		PLAY_TRACK: 'playTrack',
     		PLAY_NEXT: 'playNext',
@@ -31,6 +32,7 @@ var EventBus = (() => {
     		SELECT_MODE_ADD: 'selectModeAdd', // add a track to the selected list (activate the mode if none were selected before)
     		SELECT_MODE_SUB: 'selectModeSub', // remove a track from the selected list (deactivate the mode if none are selected now)
     		SELECT_MODE_CANCEL: 'selectModeCancel', // deactivate select mode (press cancel from the breadcrumb bar)
+    		SEARCH_MODE: 'searchMode',
     	}
 
 	// the event `target` (read: source)
@@ -54,6 +56,8 @@ var EventBus = (() => {
 	function dispatch(event, fromNative) {
 		subscribers.forEach(callback => callback(event));
 		if (!fromNative) window.IPC?.dispatch(JSON.stringify(event));
+
+		if (fromNative) console.log(event);
 	}
 
 	return {

@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		super.onCreate(savedInstanceState)
 		WindowCompat.setDecorFitsSystemWindows(window, false) // edge-to-edge (android 14-)
 		setContentView(R.layout.main_activity)
+
 		webView = findViewById<WebView>(R.id.webview)
 
 		// storage permission...must be in onCreate

@@ -1,43 +1,51 @@
 /* GENERAL LAYOUT */
 music-header {
 	position: fixed;
-	inset: var(--inset-top, 12px) 12px auto;
+	inset: calc(var(--inset-top, 4px) + 8px) 12px auto;
 	display: grid;
 	border: 1px solid var(--border-color);
 	border-radius: 12px;
 	transition: .2s;
 	z-index: 1;
 }
-#breadcrumb-bar, #search-bar, #select-bar {
+#breadcrumb-bar, #toolbar {
 	grid-area: 1 / 1;
 	display: flex;
 	align-items: center;
 	opacity: 1;
 	transition: .2s, display .2s allow-discrete;
 }
-[mode="search"] music-header, [mode="select"] music-header {
-	inset: 12px 0 auto;
+body:not([mode="normal"]) music-header {
+	inset-inline: 0;
 	border-color: transparent transparent var(--border-color) transparent;
 	border-radius: 0;
 }
+
 /* STATE */
-[mode="normal"] :is(#search-bar, #select-bar),
-[mode="search"] :is(#breadcrumb-bar, #select-bar),
-[mode="select"] :is(#search-bar, #breadcrumb-bar) {
+[mode="normal"] #toolbar,
+body:not([mode="normal"]) #breadcrumb-bar {
 	display: none;
 	opacity: 0;
 }
 
 @starting-style {
 	[mode="normal"] #breadcrumb-bar,
-	[mode="search"] #search-bar,
-	[mode="select"] #select-bar {
+	body:not([mode="normal"]) #toolbar {
 		opacity: 0;
 	}
+
+	#select-count, #select-add-button, #select-play-button { opacity: 0; }
+}
+
+body[mode="select"] #search-input { max-width: 0; }
+body:not(:is([mode="select"], [mode="searchSelect"])) {
+	#select-count, #select-add-button, #select-play-button { display: none; opacity: 0; }
 }
 
 /* STYLES */
 music-header {
+
+	color: var(--foreground-secondary);
 
 	/* BREADCRUMBS */
 	#breadcrumb-bar { overflow: hidden; }
@@ -48,12 +56,11 @@ music-header {
 		scroll-behavior: smooth;
 
 		button {
-			padding: 6px 4px 8px 10px;
+			padding: 8px 4px 8px 10px;
 			border-radius: 6px;
 			font-size: 14px;
 			flex-shrink: 0;
 		}
-
 
 		button:first-child {
 			padding-left: 4px;
@@ -76,21 +83,22 @@ music-header {
 		height: 0;
 	}
 
-	/* SEARCH */
-	#search-bar {
+	/* SEARCH + SELECT */
+	#toolbar {
 		input {
 			flex-grow: 1;
-			padding: 8px 12px 12px 8px;
+			max-width: 100%;
+			padding: 8px 0;
 			border: none;
 			outline: none;
 			color: var(--foreground);
 			background: transparent;
+			transition: max-width .2s;
 		}
-		input::-webkit-search-cancel-button {
-			appearance: none;
-			height: 48px;
-			width: 48px;
-			background: url('data:image/svg+xml,<svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 5 5 19M5 5l14 14" stroke="%23666" /></svg>') center no-repeat;
-		}
+		input::-webkit-search-cancel-button { display: none; }
 	}
+
+	#select-count { margin-inline-end: 16px; }
+	#select-count, #select-add-button, #select-play-button { transition: display .2s allow-discrete, opacity .2s, background .8s; }
+	#select-add-button { margin-inline-start: auto; }
 }

@@ -3,39 +3,39 @@ var EventBus = (() => {
 	// the event `type`
 	const Type = {
     		PERMISSION_REQUEST: 'permissionRequest',
-			PERMISSION_SETTINGS: 'permissionSettings',
+			PERMISSION_SETTINGS_REQUEST: 'permissionSettingsRequest',
     		RESTORE_STATE: 'restoreState',
+    		DIR_CHANGE_REQUEST: 'dirChangeRequest',
     		DIR_CHANGE: 'dirChange',
 			INSETS: 'insets',
 
 			MODE_CHANGE: 'modeChange',
 
+    		PLAY_TRACK_REQUEST: 'playTrackRequest',
     		PLAY_TRACK: 'playTrack',
+    		PLAY_NEXT_REQUEST: 'playNextRequest',
     		PLAY_NEXT: 'playNext',
-    		PLAY_PREVIOUS: 'playPrev',
+    		PLAY_PREV_REQUEST: 'playPrevRequest',
+    		PLAY_PREV: 'playPrev',
     		PLAY: 'play',
     		PAUSE: 'pause',
+    		PLAY_PAUSE: 'playPause',
     		SEEK_UPDATE: 'seekUpdate',
-    		VOLUME: 'volume',
-    		METADATA_UPDATE: 'metadataUpdate',
+    		FF: 'ff',
+    		RW: 'rw',
+
+			METADATA_UPDATE: 'metadataUpdate',
     		METADATA_FETCH: 'metadataFetch',
-    		METADATA_CLEAR: 'metadataClear',
 
     		TOGGLE_SHUFFLE: 'toggleShuffle',
     		TOGGLE_REPEAT: 'toggleRepeat',
-
-    		FF: 'ff',
-    		RW: 'rw',
-    		PLAY_PAUSE: 'playPause',
 
     		SEARCH: 'search',
 
     		QUEUE_PLAY_SELECTED: 'queuePlaySelected', // play the selected items (from breadcrumb bar)
 			QUEUE_ADD_SELECTED: 'queueAddSelected',
-    		SELECT_MODE_ADD: 'selectModeAdd', // add a track to the selected list (activate the mode if none were selected before)
-    		SELECT_MODE_SUB: 'selectModeSub', // remove a track from the selected list (deactivate the mode if none are selected now)
+    		SELECT_MODE_COUNT: 'selectModeCount', // select mode count change
     		SELECT_MODE_CANCEL: 'selectModeCancel', // deactivate select mode (press cancel from the breadcrumb bar)
-    		SEARCH_MODE: 'searchMode',
     	}
 
 	// the event `target` (read: source)

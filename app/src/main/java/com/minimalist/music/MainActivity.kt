@@ -16,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.graphics.Insets
 import com.minimalist.music.player.PlaybackManager
 import com.minimalist.music.data.Const
 import com.minimalist.music.data.state.State
@@ -31,8 +32,11 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
-	private lateinit var webView: WebView
 	private lateinit var permissionRequest: ActivityResultLauncher<String>
+	private lateinit var webView: WebView
+
+	private var windowInsets: Insets? = null
+	private var isWebViewReady = false
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		setTheme(R.style.AppTheme) // change from splash screen (android 11-)
@@ -57,8 +61,9 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 		// insets (edge to edge)
 		ViewCompat.setOnApplyWindowInsetsListener(webView) { v, insets ->
-			val actualInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-			EventBus.dispatch(Event(Type.INSETS, Target.ACTIVITY, mapOf("top" to actualInsets.top, "bottom" to actualInsets.bottom)))
+			windowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+			sendInsetsToWebView()
+
 			insets
 		}
 
@@ -92,7 +97,13 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
 
 		webView.apply {
-			webViewClient = WebViewClient()
+			webViewClient = object : WebViewClient() {
+				override fun onPageFinished(view: WebView?, url: String?) {
+					super.onPageFinished(view, url)
+					isWebViewReady = true
+					sendInsetsToWebView()
+				}
+			}
 
 			settings.apply {
 				javaScriptEnabled = true
@@ -163,6 +174,15 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 		} else {
 			EventBus.dispatch(Event(Type.UI_MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "permission")))
+		}
+	}
+
+	private fun sendInsetsToWebView() {
+		if (windowInsets != null && isWebViewReady) {
+			val top = windowInsets!!.top
+			val bottom = windowInsets!!.bottom
+
+			EventBus.dispatch(Event(Type.INSETS, Target.ACTIVITY, mapOf("top" to top, "bottom" to bottom)))
 		}
 	}
 

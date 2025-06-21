@@ -10,7 +10,7 @@
 	grid-area: 1 / 1;
 	display: flex;
 	flex-direction: column;
-	padding: 72px 0;
+	padding: calc(var(--inset-top, 0px) + 64px)  0;
 	opacity: 0;
 	transition: scale .3s, opacity .2s;
 	overflow: auto;
@@ -31,19 +31,20 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		padding: 16px 20px;
+		padding: 14px 20px;
 		text-align: start;
 		transition: .2s, color .5s, background .8s;
 		overflow: hidden;
 
-		&.directory, &.playlist, .ic-mark { color: var(--foreground); }
+		&[type="dir"], &.playlist, .ic-mark { color: var(--foreground); }
 
 		span {
 			flex-grow: 1;
-			max-width: calc(100% - 64px);
+			max-width: calc(100% - 56px);
 			overflow-wrap: break-word;
 		}
-		i { font-size: 24px; }
+		i { font-size: 20px; }
+		.ic-dir, .ic-music-note { margin-inline: 8px; }
 
 		/* SELECTION */
 		.selection {

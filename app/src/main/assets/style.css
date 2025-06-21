@@ -155,7 +155,7 @@ button {
 	transition: color .5s, background .8s;
 }
 button:active {
-	color: var(--foreground);
+	/* color: var(--foreground); */
 	background: var(--selection-background);
 	transition: background .3s;
 }

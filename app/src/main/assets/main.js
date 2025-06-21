@@ -10,6 +10,6 @@ const state = new MockState();
 EventBus.subscribe(event => {
 	when(event.type)
 		.is(EventBus.Type.INSETS, () => {
-			document.body.style = `--inset-top: ${event.data.top / devicePixelRatio}; --inset-bottom: ${event.data.bottom / devicePixelRatio};`;
+			document.body.style = `--inset-top: ${event.data.top / devicePixelRatio}px; --inset-bottom: ${event.data.bottom / devicePixelRatio}px;`;
 		});
 });

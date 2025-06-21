@@ -35,6 +35,7 @@ class MockState {
 		NORMAL: 'normal',
 		SELECT: 'select',
 		SEARCH: 'search',
+		SEARCH_SELECT: 'searchSelect',
 	}
 
 	get mode() { return document.body.getAttribute('mode') || this.Mode.NORMAL; }
@@ -44,7 +45,7 @@ class MockState {
 	currentDir = 'D:\\Music + Audiobooks\\MISC\\Games\\Ace Combat 3';
 	files = [
 		{
-			type: 'directory',
+			type: 'dir',
 			path: 'D:\\Music + Audiobooks\\MISC\\Games\\Ace Combat 3\\album art',
 			name: 'album art',
 		},

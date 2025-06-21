@@ -1,13 +1,14 @@
 class MusicExplorer extends HTMLElementBase {
 
 	LONG_PRESS_THRESHOLD = 500;
+	LONG_PRESS_MOVE_THRESHOLD = 10;
+
 	Type = {
-		DIRECTORY: 'directory',
+		DIR: 'dir',
 		TRACK: 'track'
 	}
 
 	#TARGET = EventBus.Target.EXPLORER;
-
 
 	connectedCallback() {
 		this.#render();
@@ -18,46 +19,98 @@ class MusicExplorer extends HTMLElementBase {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is(EventBus.Type.DIR_CHANGE, () => this.#renderItems())
-			.is(EventBus.Type.RESTORE_STATE, () => this.#renderItems())
+			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_CHANGE], () => {
+				this.#renderItems();
+				this.#scrollToSelected();
+			})
 			.is(EventBus.Type.PLAY_TRACK, () => {
-				const path = State.get(State.Key.TRACK);
-				// const target = document.querySelector(`[path="${path.replace(/\\\\/g, '\\')}"]`); // doesn't work
-				const target = document.querySelectorAll('explorer.current button').toArray().find(f => f.getAttribute('path') == path);
+				const path = state.track.path;
+				const target = document.querySelectorAll('.explorer.current button').toArray().find(f => f.getAttribute('path') == path);
 				if (target) select(target);
 			})
-			.is(EventBus.Type.SEARCH, () => {
-				this.search();
-			})
+			.is(EventBus.Type.SEARCH, () => this.search())
 			.is(EventBus.Type.MODE_CHANGE, () => {
-				this.search(); // clear the search
+				this.search(); // clear the search!
+				if (![state.Mode.SELECT, state.Mode.SEARCH_SELECT].includes(state.mode)) this.#clearMarks(); // cancel selection if out of select mode
 			})
 	}
 
 	// HANDLERS
-	onItemTouchStart(target) { target.setAttribute('touch-start', Date.now()); }
-	onItemTouchEnd(target) {
+	onItemTouchStart(event) {
+		const target = event.currentTarget;
+		if (target.getAttribute('type') == this.Type.DIR) return;
+
+		const timeout = setTimeout(() => this.onItemLongTouch(target), this.LONG_PRESS_THRESHOLD);
+		target.setAttribute('touch-start-ts', Date.now());
+		target.setAttribute('timeout', timeout);
+
+		target.setAttribute('touch-start-x', event.touches[0].clientX);
+		target.setAttribute('touch-start-y', event.touches[0].clientY);
+	}
+	onItemTouchCancel(event) {
+		clearTimeout(event.currentTarget.getAttribute('timeout'));
+	}
+	// cancel the long-press timeout if the user moves their finger
+	onItemTouchMove(event) {
+		const target = event.currentTarget;
+
+		if (Math.abs(event.touches[0].clientX - parseFloat(target.getAttribute('touch-start-x'))) > this.LONG_PRESS_MOVE_THRESHOLD
+				|| Math.abs(event.touches[0].clientY - parseFloat(target.getAttribute('touch-start-y'))) > this.LONG_PRESS_MOVE_THRESHOLD) {
+
+			clearTimeout(target.getAttribute('timeout'));
+		}
+	}
+	onItemTouchEnd(event) {
+		const target = event.currentTarget;
+		clearTimeout(target.getAttribute('timeout'));
+
 		const path = target.getAttribute('path');
 		const type = target.getAttribute('type');
 
 		// DIRECTORY
-		if (type == this.Type.DIRECTORY) {
+		if (type == this.Type.DIR) {
 			state.currentDir = path;
-			return EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { path } });
+			return EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE_REQUEST, target: this.#TARGET, data: { dir: state.currentDir } });
 		}
+
+		// LONG PRESS CHECK
+		const touchStart = parseInt(target.getAttribute('touch-start-ts')) || Date.now();
+		if (Date.now() - touchStart >= this.LONG_PRESS_THRESHOLD) return;
+
+		// if already in select mode, do exactly as the longTouch
+		if ([state.Mode.SELECT, state.Mode.SEARCH_SELECT].includes(state.mode)) return this.onItemLongTouch(target);
 
 		// TRACK
-		const touchStart = parseInt(target.getAttribute('touch-start')) || Date.now();
+		this.#select(target);
+		EventBus.dispatch({ target: this.#TARGET, type: EventBus.Type.PLAY_TRACK_REQUEST, data: { track: target.getAttribute('path') } });
+	}
+	onItemLongTouch(target) {
+		this.#mark(target);
 
-		// LONG PRESS
-		if (Date.now() - touchStart > this.LONG_PRESS_THRESHOLD) {
-			// TODO
-			return;
+		state.selection = this.querySelectorAll('.explorer.current .marked').toArray().map(i => i.getAttribute('path'));
+
+		const toSelect = state.selection.length;
+		if (toSelect) {
+			state.mode = when(state.mode)
+				.is([state.Mode.NORMAL, state.Mode.SELECT], () => state.Mode.SELECT)
+				.is([state.Mode.SEARCH, state.Mode.SEARCH_SELECT], () => state.Mode.SEARCH_SELECT)
+				.val();
+
+		} else {
+			state.mode = when(state.mode)
+				.is(state.Mode.SELECT, () => state.Mode.NORMAL)
+				.is(state.Mode.SEARCH_SELECT, () => state.Mode.SEARCH)
+				.val();
 		}
 
-		select(target);
-		State.set(State.Key.TRACK, target.getAttribute('path'));
-		EventBus.dispatch({ target: EventBus.Target.EXPLORER, type: EventBus.Type.PLAY_TRACK });
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
+		EventBus.dispatch({ type: EventBus.Type.SELECT_MODE_COUNT, target: this.#TARGET });
+	}
+
+	cancelSelectMode() {
+		this.querySelectorAll('.explorer.current .marked').forEach(i => i.classList.remove('marked'));
+		state.mode = state.Mode.NORMAL;
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
 	}
 
 	// SEARCH
@@ -80,9 +133,9 @@ class MusicExplorer extends HTMLElementBase {
 		super.render(`
 			<music-header id="header"></music-header>
 			<div class="explorer-container">
-				<ul class="explorer current" directory=""></ul>
-				<ul class="explorer out" directory=""></ul>
-				<ul class="explorer in" directory=""></ul>
+				<ul class="explorer current" dir=""></ul>
+				<ul class="explorer out" dir=""></ul>
+				<ul class="explorer in" dir=""></ul>
 			</div>
 		`);
 	}
@@ -94,7 +147,7 @@ class MusicExplorer extends HTMLElementBase {
 		const outward = this.querySelector('.explorer.out');
 		const inward = this.querySelector('.explorer.in');
 
-		const previousDir = current.getAttribute('directory');
+		const previousDir = current.getAttribute('dir');
 		const currentDir = state.currentDir;
 		const toInward = currentDir.length > previousDir.length;
 
@@ -104,28 +157,33 @@ class MusicExplorer extends HTMLElementBase {
 		// this is the actual important bit, everything else is just for the transition animation!
 		other.innerHTML = '';
 		files.forEach(file => other.insertAdjacentHTML('beforeend',
-			`<button path="${file.path}" ontouchstart="${this.handle}.onItemTouchStart(this)" ontouchend="${this.handle}.onItemTouchEnd(this);"
-					class="${file.type} ${state.playlist.tracks.includes(file.path) ? 'playlist' : ''} ${Path.eq(state.track.path, file.path) ? 'selected' : ''}">
+			`<button type="${file.type}" path="${file.path}"
+					ontouchstart="${this.handle}.onItemTouchStart(event)" ontouchmove="${this.handle}.onItemTouchMove(event)" ontouchend="${this.handle}.onItemTouchEnd(event);" ontouchcanceled="${this.handle}.onItemTouchCancel(event);"
+					class="${state.playlist.tracks.includes(file.path) ? 'playlist' : ''} ${Path.eq(state.track.path, file.path) ? 'selected' : ''}">
 
 				<i class="selection"></i>
-				<i class="${file.type == 'directory' ? 'ic-directory' : 'ic-music-note'}"></i>
+				<i class="${file.type == 'dir' ? 'ic-dir' : 'ic-music-note'}"></i>
 				<span>${file.name}</span>
 				<i class="ic-mark"></i>
 			</button>`
 		));
 
-		other.setAttribute('directory', currentDir);
+		other.setAttribute('dir', currentDir);
 
 		current.className = 'explorer ' + (toInward ? 'out' : 'in');
 		other.className = 'explorer current';
 		otherOther.className = 'explorer ' + (toInward ? 'in' : 'out');
 	}
 
-	#select() {
-
+	#select(target) {
+		this.querySelector('.selected')?.classList?.remove('selected'); // deselect previous (if any)
+		target.classList.add('selected');
 	}
-	#mark() {
-
+	#mark(target) {
+		target.classList.toggle('marked');
+	}
+	#clearMarks() {
+		this.querySelectorAll('.marked').forEach(i => i.classList.remove('marked'));
 	}
 
 	#highlightSearchMatches(element, matches) {
@@ -133,99 +191,10 @@ class MusicExplorer extends HTMLElementBase {
 		for (let i = matches.length - 1; i >= 0; i--) html = html.replaceAt(matches[i], `<b>${html[matches[i]]}</b>`);
 		return html;
 	}
+
+	#scrollToSelected() {
+		this.querySelector('.current .selected')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+	}
 }
 
 customElements.define('music-explorer', MusicExplorer);
-
-// IMPORTS
-const cache = new Map();
-
-const searchContainer = document.querySelector('search-bar');
-const searchInput = document.querySelector('search-bar input');
-
-// UI
-function select(target) {
-	document.querySelector('explorer .selected')?.classList?.remove('selected'); // deselect previous (if any)
-	target.classList.add('selected');
-}
-
-// HANDLERS
-function onItemClick(target) {
-	const path = target.getAttribute('path');
-
-	if (isDir(target)) {
-		goto(path);
-
-	} else {
-		select(target);
-		State.set(State.Key.TRACK, target.getAttribute('path'));
-		EventBus.dispatch({ target: EventBus.Target.EXPLORER, type: EventBus.Type.PLAY_TRACK });
-	}
-}
-
-// SEARCH
-function toggleSearchMode(force) {
-	searchContainer.classList.toggle('show', force);
-	searchInput.value = '';
-	if (force) searchInput.focus();
-
-	search();
-}
-function search() {
-	var val = searchInput.value;
-	var container = document.querySelector('explorer.current');
-
-	var entries = container.querySelectorAll('button > span').toArray();
-	entries.forEach(e => {
-		const matches = e.textContent.fuzzyCompare(val);
-		e.parentElement.classList.toggle('hidden', !matches);
-		if (matches) e.innerHTML = highlightMatches(e, matches);
-	});
-}
-function highlightMatches(element, matches) {
-	let html = element.textContent;
-
-	for (let i = matches.length - 1; i >= 0; i--) html = html.replaceAt(matches[i], `<b>${html[matches[i]]}</b>`);
-	return html;
-}
-
-// SCROLL
-async function scrollToSelected() {
-	// navigate to selected dir
-	const track = State.get(State.Key.TRACK);
-	const dir = track.split(Native.FS.PATH_SEPARATOR).slice(0, -1).join(Native.FS.PATH_SEPARATOR);
-	await goto(dir);
-
-	document.querySelector('.selected')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-// FS
-function goto(dir) {
-	const current = State.get(State.Key.CURRENT_DIR);
-	if (dir == current) return;
-
-	State.set(State.Key.CURRENT_DIR, dir);
-	EventBus.dispatch({ target: SELF, type: EventBus.Type.DIR_CHANGE });
-	return update();
-}
-async function listFiles() {
-	const current = State.get(State.Key.CURRENT_DIR);
-	let files = cache.get(current);
-
-	if (!files) {
-		files = await Native.FS.listFiles(current);
-		cache.set(current, files);
-	}
-
-	return files;
-}
-async function listTracks() {
-	const files = await listFiles();
-	return files.filter(f => Native.FS.isAudio(f)).map(f => f.path);
-}
-function isAtRoot() {
-	return State.get(State.Key.CURRENT_DIR).length <= State.get(State.Key.ROOT_DIR).length;
-}
-function isDir(target) {
-	return target.querySelector('i').innerHTML == 'folder';
-}

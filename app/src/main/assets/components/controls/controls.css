@@ -1,6 +1,6 @@
 music-controls {
 	position: fixed;
-	inset: auto 0 0;
+	inset: auto 0 var(--inset-bottom, 0px);
 }
 
 .main-controls {
@@ -45,8 +45,20 @@ music-controls {
 		&::after {
 			content: '';
 			position: absolute;
-			inset: -8px;
-			background: radial-gradient(circle, #AAAA, transparent 70%) center -2px no-repeat;
+			/* inset: -8px;
+			background: radial-gradient(circle, #AAAA, transparent 70%) center -2px no-repeat; */
+			inset: 0;
+			border: 2px solid var(--foreground-secondary);
+			border-width: 2px 3px 5px 0;
+			border-radius: 50px;
+			filter: blur(4px);
+			transition: filter .5s, border-width .2s ease-in;
+		}
+
+		&:active { background: transparent; }
+		&:active::after {
+			border-width: 3px;
+			filter: blur(2px);
 		}
 	}
 
@@ -84,6 +96,4 @@ music-controls {
 	margin: 4px 12px;
 
 	.ic-close { color: red; }
-	.ic-chapters, .ic-lyrics { font-size: 22px; }
-	.ic-chapters::before { display: block; width: 21px; height: 21px; }
 }

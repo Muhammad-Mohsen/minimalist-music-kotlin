@@ -1,35 +1,5 @@
 class State {
 
-	Key = {
-		MODE: 'mode',
-		CURRENT_DIR: 'currentDir',
-		IS_PLAYING: 'isPlaying',
-		SELECTION: 'selection',
-
-		SETTINGS: 'settings',
-
-		THEME: 'settings.theme',
-		SHUFFLE: 'settings.shuffle',
-		REPEAT: 'settings.repeat',
-		SORT: 'settings.sort',
-
-		PLAYBACK_SPEED: 'settings.playbackSpeed',
-		SLEEP_TIMER: 'settings.sleepTimer',
-		SEEK_JUMP: 'settings.seekJump',
-
-		PLAYLIST: 'playlist',
-		TRACKS: 'playlist.tracks',
-		INDEX: 'playlist.index',
-
-		TRACK: 'track',
-		PATH: 'track.path',
-		DURATION: 'track.duration',
-		SEEK: 'track.seek',
-		ARTIST: 'track.artist',
-		ART: 'track.art',
-		CHAPTERS: 'track.chapters',
-	}
-
 	Mode = {
 		PERMISSION: 'permission',
 		NORMAL: 'normal',

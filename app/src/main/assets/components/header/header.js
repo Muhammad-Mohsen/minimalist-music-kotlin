@@ -11,29 +11,27 @@ class MusicHeader extends HTMLElementBase {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is(EventBus.Type.RESTORE_STATE, () => this.#renderCrumbs())
-			.is(EventBus.Type.DIR_CHANGE, () => this.#renderCrumbs())
-			.is(EventBus.Type.SELECT_MODE_ADD, () => {})
-			.is(EventBus.Type.SELECT_MODE_SUB, () => {})
-			.is(EventBus.Type.SELECT_MODE_CANCEL, () => {})
-			.is(EventBus.Type.SEARCH_MODE, () => {});
-				/*
-				toggleEditMode(State.isSelectModeActive || State.isSearchModeActive)
-				toggleSelectMode()
-				toggleSearchMode()
-				*/
+			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_CHANGE], () => this.#renderCrumbs())
+			.is(EventBus.Type.SELECT_MODE_COUNT, () => {
+				this.selectCount.innerHTML = `${state.selection.length} selected`;
+			})
+			/*
+			toggleEditMode(State.isSelectModeActive || State.isSearchModeActive)
+			toggleSelectMode()
+			toggleSearchMode()
+			*/
 	}
 
 	// UI HANDLERS
 	onCrumbClick(crumb) {
 		state.currentDir = crumb.getAttribute('path');
 		this.#renderCrumbs();
-		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { dir: state.currentDir } });
+		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE_REQUEST, target: this.#TARGET, data: { dir: state.currentDir } });
 	}
 	onBackClick() {
 		state.currentDir = Path.join(state.currentDir.split(Path.SEPARATOR).slice(0, -1));
 		this.#renderCrumbs();
-		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { directory: state.currentDir } });
+		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE_REQUEST, target: this.#TARGET, data: { dir: state.currentDir } });
 	}
 
 	onCancelClick() {
@@ -67,16 +65,12 @@ class MusicHeader extends HTMLElementBase {
 				<ul id="crumbs"></ul>
 			</div>
 
-			<div id="search-bar">
-				<button id="search-cancel-button" class="ic-btn ic-arrow-left" aria-label="cancel" onclick="${this.handle}.onCancelClick()"></button>
+			<div id="toolbar">
+				<button id="toolbar-cancel-button" class="ic-btn ic-arrow-left" aria-label="cancel" onclick="${this.handle}.onCancelClick()"></button>
 				<input id="search-input" type="search" placeholder="Search" oninput="${this.handle}.onSearchInput(this);">
-			</div>
-
-			<div id="select-bar">
-				<button id="select-cancel-button" class="ic-btn ic-arrow-left" aria-label="cancel"></button>
 				<span id="select-count" l10n></span>
-				<button id="select-add-button" class="ic-btn ic-play" aria-label="add to queue"></button>
-				<button id="select-play-button" class="ic-btn ic-play" aria-label="play selection"></button>
+				<button id="select-add-button" class="ic-btn ic-add" aria-label="add to queue"></button>
+				<button id="select-play-button" class="ic-btn ic-play-selected" aria-label="play selection"></button>
 			</div>
 		`);
 	}

@@ -69,14 +69,17 @@
 		- DONE - listing
 		- DONE - click handlers
 		- DONE - styling
-		- mode changes (at the end)
+		- DONE - mode changes (at the end)
 	- explorer
 		- DONE - lising
 		- DONE - styling
-		- click handler
-		- long click handler
-		- mode changes
-		- filtering
+		- DONE - filtering
+		- DONE - touch handler
+		- DONE - mode changes
+	- controls
+		- metadata
+			- title + album + artist + duration + seek + chapters + art
+		- dialogs
 
 - State management
 	- after native restore state, send one to JS
@@ -95,6 +98,27 @@
 
 - PERMISSION - update the mode on the document
 
+## Chromatic Aberration
+can look cool with the `play-pause` button
+```html
+<svg width="0" height="0">
+	<filter id="kill">
+		<feColorMatrix type="matrix" result="red_" values="4 0 0 0 0
+					0 0 0 0 0
+					0 0 0 0 0
+					0 0 0 1 0" />
+		<feOffset in="red_" dx="2" dy="0" result="red" />
+		<feColorMatrix type="matrix" in="SourceGraphic" result="blue_" values="0 0 0 0 0
+					0 3 0 0 0
+					0 0 10 0 0
+					0 0 0 1 0" />
+		<feOffset in="blue_" dx="-3" dy="0" result="blue" />
+		<feBlend mode="screen" in="red" in2="blue" />
+
+	</filter>
+</svg>
+```
+
 ### RoadMap
 - use Media3 stuff!! MediaSessionService + MediaSession.Callback
 	- https://developer.android.com/media/implement/playback-app#playing_media_in_the_background
@@ -108,8 +132,7 @@
 	  https://github.com/ologe/canaree-music-player
 	  https://github.com/enricocid/Music-Player-GO
 
-- Compose instead of XML
-- (dynamic colors)[https://developer.android.com/develop/ui/views/theming/dynamic-colors]
+- [dynamic colors](https://developer.android.com/develop/ui/views/theming/dynamic-colors)
 - equalizer
 	- issue with getting to the session ID from the controls
 	- issue with getting to the activity from the service!!

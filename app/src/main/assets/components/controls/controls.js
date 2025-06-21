@@ -16,10 +16,10 @@ class MusicControls extends HTMLElementBase {
 				this.searchButton.classList.add('ic-search');
 			})
 			.is(EventBus.Type.PLAY_TRACK, async () => {
-				const path = State.get(State.Key.TRACK);
+				// const path = State.get(State.Key.TRACK);
 
-				load(path, 'autoplay');
-				Playlist.set(await Explorer.listTracks());
+				// load(path, 'autoplay');
+				// Playlist.set(await Explorer.listTracks());
 			})
 			.is(EventBus.Type.RESTORE_STATE, async () => {
 				// const path = State.get(State.Key.TRACK);
@@ -38,7 +38,7 @@ class MusicControls extends HTMLElementBase {
 			.is(EventBus.Type.PLAY, () => playPause(true, 'suppress'))
 			.is(EventBus.Type.PAUSE, () => playPause(false, 'suppress'))
 			.is(EventBus.Type.PLAY_NEXT, () => playNext(false))
-			.is(EventBus.Type.PLAY_PREVIOUS, () => playPrev())
+			.is(EventBus.Type.PLAY_PREV, () => playPrev())
 			.is(EventBus.Type.PLAY_PAUSE, () => playPause())
 			.is(EventBus.Type.FF, () => ff())
 			.is(EventBus.Type.RW, () => rw());
@@ -56,7 +56,7 @@ class MusicControls extends HTMLElementBase {
 		EventBus.dispatch({ type: EventBus.Type.PLAY_NEXT, target: this.#TARGET });
 	}
 	playPrevious() {
-		EventBus.dispatch({ type: EventBus.Type.PLAY_PREVIOUS, target: this.#TARGET });
+		EventBus.dispatch({ type: EventBus.Type.PLAY_PREV, target: this.#TARGET });
 	}
 
 	updateMetadata(metadata) {
@@ -81,7 +81,13 @@ class MusicControls extends HTMLElementBase {
 		this.searchButton.classList.toggle('ic-search');
 		this.searchButton.classList.toggle('ic-close');
 
-		state.mode = state.mode == state.Mode.NORMAL ? state.Mode.SEARCH : state.Mode.NORMAL;
+		state.mode = when(state.mode)
+			.is(state.Mode.NORMAL, () => state.Mode.SEARCH)
+			.is(state.Mode.SEARCH, () => state.Mode.NORMAL)
+			.is(state.Mode.SELECT, () => state.Mode.SEARCH_SELECT)
+			.is(state.Mode.SEARCH_SELECT, () => state.Mode.SELECT)
+			.val();
+
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
 	}
 
@@ -111,7 +117,7 @@ class MusicControls extends HTMLElementBase {
 			<div class="secondary-controls">
 				<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch();" aria-label="search"></button>
 				<button id="chapters-button" class="ic-btn ic-chapters" aria-label="chapters"></button>
-				<button id="previous-button" class="ic-btn ic-previous" aria-label="previous"></button>
+				<button id="previous-button" class="ic-btn ic-prev" aria-label="previous"></button>
 				<button id="next-button" class="ic-btn ic-next" aria-label="next"></button>
 				<button id="lyrics-button" class="ic-btn ic-lyrics" aria-label="lyrics"></button>
 				<button id="more-button" class="ic-btn ic-more" aria-label="more"></button>

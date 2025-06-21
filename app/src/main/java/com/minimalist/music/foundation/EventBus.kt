@@ -74,7 +74,6 @@ object EventBus {
 		const val SELECT_MODE_ADD = "selectModeAdd" // add a track to the selected list (activate the mode if none were selected before)
 		const val SELECT_MODE_SUB = "selectModeSub" // remove a track from the selected list (deactivate the mode if none are selected now)
 		const val SELECT_MODE_CANCEL = "selectModeCancel" // deactivate select mode (press cancel from the breadcrumb bar)
-		const val SEARCH_MODE = "searchMode" // can only be activated (uses 52 to deactivate)
 		const val SEARCH_QUERY = "searchQuery" // search the explorer with a query
 
 		const val SLEEP_TIMER_TICK = "sleepTimerTick"

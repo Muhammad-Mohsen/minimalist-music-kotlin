@@ -63,6 +63,7 @@ String.prototype.replaceAt = function (index, replacement) {
 // "when"
 class WhenExpression {
 
+	#done;
 	#result;
 
 	constructor(param) {
@@ -70,9 +71,15 @@ class WhenExpression {
 	}
 
 	is = (val, callback) => {
-		if (this.#result != undefined) return this;
+		if (this.#result != undefined || this.#done) return this;
 
-		if (this.param == val) this.#result = callback();
+		if (this.param == val // simple value
+			|| (Array.isArray(val) && val.includes(this.param)) // array
+			|| val === true // expression
+		) {
+			this.#result = callback();
+			this.#done = true;
+		}
 		return this;
 	}
 

@@ -60,6 +60,16 @@ String.prototype.replaceAt = function (index, replacement) {
 	return this.substring(0, index) + replacement + this.substring(index + 1);
 }
 
+function readableTime(seconds) {
+	const ss = parseInt(seconds % 60).toString().padStart(2, '0');
+	const mm = parseInt((seconds / 60) % 60).toString().padStart(2, '0');
+	const hh = parseInt(seconds / 60 / 60).toString().padStart(2, '0');
+
+	// const hhMax = parseInt(duration / 60 / 60).toString().padStart(2, '0');
+
+	return hh == '00' ? `${mm}:${ss}` : `${hh}:${mm}:${ss}`;
+}
+
 // "when"
 class WhenExpression {
 

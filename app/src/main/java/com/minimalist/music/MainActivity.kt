@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 					super.onPageFinished(view, url)
 					isWebViewReady = true
 					sendInsetsToWebView()
+					EventBus.dispatch(Event(Type.RESTORE_STATE, Target.ACTIVITY, State.serialize()))
 				}
 			}
 

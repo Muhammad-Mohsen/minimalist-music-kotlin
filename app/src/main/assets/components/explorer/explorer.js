@@ -23,6 +23,9 @@ class MusicExplorer extends HTMLElementBase {
 				this.#renderItems();
 				this.#scrollToSelected();
 			})
+			.is([EventBus.Type.QUEUE_ADD_SELECTED, EventBus.Type.QUEUE_PLAY_SELECTED], () => {
+				this.#updateItems();
+			})
 			.is(EventBus.Type.PLAY_TRACK, () => {
 				const path = state.track.path;
 				const target = document.querySelectorAll('.explorer.current button').toArray().find(f => f.getAttribute('path') == path);
@@ -141,8 +144,6 @@ class MusicExplorer extends HTMLElementBase {
 	}
 
 	#renderItems() {
-		const files = state.files;
-
 		const current = this.querySelector('.explorer.current');
 		const outward = this.querySelector('.explorer.out');
 		const inward = this.querySelector('.explorer.in');
@@ -154,9 +155,20 @@ class MusicExplorer extends HTMLElementBase {
 		const other = toInward ? inward : outward;
 		const otherOther = toInward ? outward : inward;
 
-		// this is the actual important bit, everything else is just for the transition animation!
-		other.innerHTML = '';
-		files.forEach(file => other.insertAdjacentHTML('beforeend',
+		this.#updateItems(other);
+
+		other.setAttribute('dir', currentDir);
+
+		current.className = 'explorer ' + (toInward ? 'out' : 'in');
+		other.className = 'explorer current';
+		otherOther.className = 'explorer ' + (toInward ? 'in' : 'out');
+	}
+	#updateItems(explorer) {
+		explorer ||= this.querySelector('.explorer.current');
+
+		const files = state.files;
+		explorer.innerHTML = '';
+		files.forEach(file => explorer.insertAdjacentHTML('beforeend',
 			`<button type="${file.type}" path="${file.path}"
 					ontouchstart="${this.handle}.onItemTouchStart(event)" ontouchmove="${this.handle}.onItemTouchMove(event)" ontouchend="${this.handle}.onItemTouchEnd(event);" ontouchcanceled="${this.handle}.onItemTouchCancel(event);"
 					class="${state.playlist.tracks.includes(file.path) ? 'playlist' : ''} ${Path.eq(state.track.path, file.path) ? 'selected' : ''}">
@@ -167,12 +179,6 @@ class MusicExplorer extends HTMLElementBase {
 				<i class="ic-mark"></i>
 			</button>`
 		));
-
-		other.setAttribute('dir', currentDir);
-
-		current.className = 'explorer ' + (toInward ? 'out' : 'in');
-		other.className = 'explorer current';
-		otherOther.className = 'explorer ' + (toInward ? 'in' : 'out');
 	}
 
 	#select(target) {

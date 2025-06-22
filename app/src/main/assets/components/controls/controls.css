@@ -19,7 +19,7 @@ music-controls {
 		backdrop-filter: blur(16px);
 	}
 
-	#play-pause-button, #seek-current, #seek-duration, #chapters, #track-title, #track-album-artist {
+	#play-pause-button, #seek-current, #seek-duration, #chapters, #track-name, #track-album-artist {
 		color: var(--foreground);
 	}
 
@@ -67,17 +67,17 @@ music-controls {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 12px 12px 8px;
+		padding: 12px;
 		pointer-events: none;
 	}
-	#seek-current { font: 600 .8rem / .8rem 'Segoe UI'; }
-	#seek-duration { font: 400 .8rem / .8rem 'Segoe UI'; }
+	#seek-current { font: 600 .8rem / .8rem system-ui; }
+	#seek-duration { font: 400 .8rem / .8rem system-ui; }
 
-	#track-title {
+	#track-name {
 		position: relative;
 		padding: 4px;
 		text-align: center;
-		font: 400 1rem / 1rem 'Segoe UI';
+		font: 400 1rem / 1rem system-ui;
 		pointer-events: none;
 	}
 	#track-album-artist {
@@ -85,7 +85,7 @@ music-controls {
 		padding: 4px 0 12px;
 		text-align: center;
 		color: var(--foreground-secondary);
-		font: 400 .8rem / .8rem 'Segoe UI';
+		font: 400 .8rem / .8rem system-ui;
 		pointer-events: none;
 	}
 }
@@ -97,3 +97,16 @@ music-controls {
 
 	.ic-close { color: red; }
 }
+
+#art {
+	position: fixed;
+	inset: 0 auto auto 0;
+	max-width: 100vw;
+	max-height: 100vh;
+	mask-image: radial-gradient(at 20% 0%, black 40%, transparent 70%);
+	opacity: .25;
+	z-index: 1;
+	pointer-events: none;
+	transition: opacity .3s;
+}
+#art.hidden { opacity: 0; }

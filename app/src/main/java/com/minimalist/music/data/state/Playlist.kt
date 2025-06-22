@@ -19,6 +19,7 @@ class Playlist(private val preferences: SharedPreferences) {
 
 	private var index: Int = 0 // current index
 
+	// TODO move to root (settings)
 	// stored attributes
 	var repeat: Int
 		get() = preferences.getInt(State.Key.REPEAT, RepeatMode.INACTIVE)

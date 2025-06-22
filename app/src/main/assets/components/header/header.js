@@ -50,11 +50,14 @@ class MusicHeader extends HTMLElementBase {
 		EventBus.dispatch({ type: EventBus.Type.SEARCH, target: this.#TARGET });
 	}
 	onAddToQueueClick() {
-		EventBus.dispatch({ type: EventBus.Type.UPDATE_QUEUE, target: this.#TARGET });
+		state.playlist.tracks = state.playlist.tracks.concat(state.selection);
+		EventBus.dispatch({ type: EventBus.Type.QUEUE_ADD_SELECTED, target: this.#TARGET, data: { selection: state.selection } });
+		this.onCancelClick();
 	}
 	onPlaySelectedClick() {
-		EventBus.dispatch({ type: EventBus.Type.QUEUE_PLAY_SELECTED, target: this.#TARGET });
-
+		state.playlist.tracks = state.selection;
+		EventBus.dispatch({ type: EventBus.Type.QUEUE_PLAY_SELECTED, target: this.#TARGET, data: { selection: state.selection } });
+		this.onCancelClick();
 	}
 
 	// RENDERING
@@ -69,8 +72,8 @@ class MusicHeader extends HTMLElementBase {
 				<button id="toolbar-cancel-button" class="ic-btn ic-arrow-left" aria-label="cancel" onclick="${this.handle}.onCancelClick()"></button>
 				<input id="search-input" type="search" placeholder="Search" oninput="${this.handle}.onSearchInput(this);">
 				<span id="select-count" l10n></span>
-				<button id="select-add-button" class="ic-btn ic-add" aria-label="add to queue"></button>
-				<button id="select-play-button" class="ic-btn ic-play-selected" aria-label="play selection"></button>
+				<button id="select-add-button" class="ic-btn ic-add" aria-label="add to queue" onclick="${this.handle}.onAddToQueueClick()"></button>
+				<button id="select-play-button" class="ic-btn ic-play-selected" aria-label="play selection" onclick="${this.handle}.onPlaySelectedClick()"></button>
 			</div>
 		`);
 	}

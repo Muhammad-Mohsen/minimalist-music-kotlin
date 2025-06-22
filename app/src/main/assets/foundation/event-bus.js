@@ -2,41 +2,42 @@ var EventBus = (() => {
 
 	// the event `type`
 	const Type = {
-    		PERMISSION_REQUEST: 'permissionRequest',
-			PERMISSION_SETTINGS_REQUEST: 'permissionSettingsRequest',
-    		RESTORE_STATE: 'restoreState',
-    		DIR_CHANGE_REQUEST: 'dirChangeRequest',
-    		DIR_CHANGE: 'dirChange',
-			INSETS: 'insets',
+		PERMISSION_REQUEST: 'permissionRequest',
+		PERMISSION_SETTINGS_REQUEST: 'permissionSettingsRequest',
+		RESTORE_STATE: 'restoreState',
+		DIR_CHANGE_REQUEST: 'dirChangeRequest',
+		DIR_CHANGE: 'dirChange',
+		INSETS: 'insets',
 
-			MODE_CHANGE: 'modeChange',
+		MODE_CHANGE: 'modeChange',
 
-    		PLAY_TRACK_REQUEST: 'playTrackRequest',
-    		PLAY_TRACK: 'playTrack',
-    		PLAY_NEXT_REQUEST: 'playNextRequest',
-    		PLAY_NEXT: 'playNext',
-    		PLAY_PREV_REQUEST: 'playPrevRequest',
-    		PLAY_PREV: 'playPrev',
-    		PLAY: 'play',
-    		PAUSE: 'pause',
-    		PLAY_PAUSE: 'playPause',
-    		SEEK_UPDATE: 'seekUpdate',
-    		FF: 'ff',
-    		RW: 'rw',
+		PLAY_TRACK_REQUEST: 'playTrackRequest',
+		PLAY_TRACK: 'playTrack',
+		PLAY_NEXT_REQUEST: 'playNextRequest',
+		PLAY_NEXT: 'playNext',
+		PLAY_PREV_REQUEST: 'playPrevRequest',
+		PLAY_PREV: 'playPrev',
+		PLAY: 'play',
+		PAUSE: 'pause',
+		PLAY_PAUSE: 'playPause',
+		SEEK_UPDATE: 'seekUpdate',
+		SEEKING: 'seeking',
+		FF: 'ff',
+		RW: 'rw',
 
-			METADATA_UPDATE: 'metadataUpdate',
-    		METADATA_FETCH: 'metadataFetch',
+		METADATA_UPDATE: 'metadataUpdate',
+		METADATA_FETCH: 'metadataFetch',
 
-    		TOGGLE_SHUFFLE: 'toggleShuffle',
-    		TOGGLE_REPEAT: 'toggleRepeat',
+		TOGGLE_SHUFFLE: 'toggleShuffle',
+		TOGGLE_REPEAT: 'toggleRepeat',
 
-    		SEARCH: 'search',
+		SEARCH: 'search',
 
-    		QUEUE_PLAY_SELECTED: 'queuePlaySelected', // play the selected items (from breadcrumb bar)
-			QUEUE_ADD_SELECTED: 'queueAddSelected',
-    		SELECT_MODE_COUNT: 'selectModeCount', // select mode count change
-    		SELECT_MODE_CANCEL: 'selectModeCancel', // deactivate select mode (press cancel from the breadcrumb bar)
-    	}
+		QUEUE_PLAY_SELECTED: 'queuePlaySelected', // play the selected items (from breadcrumb bar)
+		QUEUE_ADD_SELECTED: 'queueAddSelected',
+		SELECT_MODE_COUNT: 'selectModeCount', // select mode count change
+		SELECT_MODE_CANCEL: 'selectModeCancel', // deactivate select mode (press cancel from the breadcrumb bar)
+	}
 
 	// the event `target` (read: source)
 	const Target = {

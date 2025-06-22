@@ -55,6 +55,9 @@ object EventBus {
 	class Event(val type: String, val target: String, val data: Map<String, Any> = emptyMap())
 
 	object Type {
+		const val RESTORE_STATE = "restoreState"
+		const val INSETS = "insets"
+
 		const val PLAY_TRACK = "playTrack"
 		const val PLAY_NEXT = "playNext"
 		const val PLAY_PREVIOUS = "playPrev"
@@ -89,7 +92,6 @@ object EventBus {
 
 		const val UI_MODE_CHANGE = "uiModeChange"
 		const val PERMISSION_REQUEST = "permissionRequest"
-		const val INSETS = "insets"
 
 		const val APP_FOREGROUNDED = "appForegrounded"
 	}
@@ -99,10 +101,6 @@ object EventBus {
 		const val NOTIFICATION = "notification"
 		const val ACTIVITY = "activity"
 		const val SESSION = "session"
-
-		const val EXPLORER = "explorer"
-		const val CONTROLS = "controls"
 		const val TIMER = "timer"
-		const val HEADER = "header"
 	}
 }

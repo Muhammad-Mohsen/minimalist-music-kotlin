@@ -44,7 +44,7 @@
 			overflow-wrap: break-word;
 		}
 		i { font-size: 20px; }
-		.ic-dir, .ic-music-note { margin-inline: 8px; }
+		.ic-dir, .ic-music-note, .ic-mark { margin-inline: 8px; }
 
 		/* SELECTION */
 		.selection {

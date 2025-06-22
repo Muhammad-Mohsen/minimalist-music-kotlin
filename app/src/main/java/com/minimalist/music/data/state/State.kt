@@ -39,6 +39,38 @@ object State {
 		track.update()
 	}
 
+	fun serialize(): Map<String, Any> {
+		return mapOf(
+			"currentDir" to currentDirectory,
+			"isPlaying" to isPlaying,
+			"selection" to selectedTracks,
+			"isSleepTimerActive" to isSleepTimerActive,
+			"repeat" to playlist.repeat,
+			"shuffle" to playlist.shuffle,
+			// TODO sort
+
+			// track
+			"path" to track.path,
+			"album" to track.album,
+			"artist" to track.artist,
+			"seek" to track.seek,
+			"duration" to track.duration,
+			"albumArt" to track.albumArt, // TODO encode to base64
+			"chapters" to track.chapters,
+			// TODO lyrics
+
+			// playlist
+			"tracks" to playlist.tracks,
+			"index" to playlist.index,
+
+			// settings
+			"seekJump" to seekJump,
+			"playbackSpeed" to playbackSpeed,
+			"nightMode" to nightMode,
+			"sleepTimer" to sleepTimer,
+		)
+	}
+
 	private val initialized: Boolean
 		get() = ::sharedPreferences.isInitialized
 

@@ -47,10 +47,6 @@
 - DONE - webview guides (not sure if any good! but it's a start)
 	- https://medium.com/@oktaygenc/integrating-webview-in-jetpack-compose-managing-web-content-in-modern-android-1803c56a2da7
 	- use onPageFinished
-- DONE - serialization
-	- https://medium.com/@midoripig1009/working-with-json-in-kotlin-parsing-and-serialization-a62300ec43b8
-	- JSONObject
-		- https://stackoverflow.com/questions/22685281/parsing-json-in-android-with-out-using-any-external-libraries
 - DONE - need some res
 	- notification icons + colors (use the SVGs)
 	- some strings for notification channel name, description, etc
@@ -65,32 +61,57 @@
 	- eq click
 
 - develop UI using mock state
-	- header
+	- DONE - header
 		- DONE - listing
 		- DONE - click handlers
 		- DONE - styling
 		- DONE - mode changes (at the end)
-	- explorer
+	- DONE - explorer
 		- DONE - lising
 		- DONE - styling
 		- DONE - filtering
 		- DONE - touch handler
 		- DONE - mode changes
-	- controls
-		- metadata
-			- title + album + artist + duration + seek + chapters + art
-		- dialogs
+	- DONE - controls
+		- title + album + artist + duration + seek + chapters + art
+	- dialogs
+		- chapters
+		- lyrics
+		- settings
+- serialization
+	- https://medium.com/@midoripig1009/working-with-json-in-kotlin-parsing-and-serialization-a62300ec43b8
+	- JSONObject
+		- https://stackoverflow.com/questions/22685281/parsing-json-in-android-with-out-using-any-external-libraries
 
-- State management
-	- after native restore state, send one to JS
-		- settings + track + playlist
-	- controls: title + album/artist + current position + duration + art
-	- explorer: current directory + playlist
-	- settings: shuffle + repeat + sort + theme + sleep timer + playback speed + seek jump
-
-- directory change animation
+- DONE - directory change animation
 	- new: slide + old: scale down + blur?
 	- https://css-tricks.com/different-approaches-for-creating-a-staggered-animation/
+
+- serialize the state
+	- move shuffle/repeat to root state object
+	- add sort to root state object
+	- add lyrics
+	- add full chapter info
+	- encode art to base64
+
+	- BIG MILESTONE - handle the serialized state in the UI
+
+- update eventbus events in native
+- implement sort comparer
+- implement dialog UI
+	- chapters -> needs a seek to event (already exists)
+	- lyrics
+	- settings -> a lot of events :D
+
+- BIG MILESTONE - test-run the communication...directory change
+
+- app launch
+	- init the state
+	- init webview
+	- check storage permission
+	- init native
+	- serialize the state and send it to webview
+
 - back navigation
 	- the native code will decide and send the parent dir to the webview if necessary
 	- need to check the mode first before changing dir

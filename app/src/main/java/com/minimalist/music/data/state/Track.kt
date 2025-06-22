@@ -20,7 +20,7 @@ class Track(private val preferences: SharedPreferences) {
 	val exists
 		get() = File(path).exists()
 
-	var title= String.EMPTY
+	var title = String.EMPTY
 	var album = String.EMPTY
 	var artist = String.EMPTY
 	var duration = 0L

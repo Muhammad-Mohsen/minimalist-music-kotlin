@@ -19,7 +19,7 @@ class State {
 	query = '';
 
 	settings = {
-		theme: 'dark',
+		nightMode: true,
 
 		shuffle: false,
 		repeat: RepeatMode.NO_REPEAT,

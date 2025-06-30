@@ -1,23 +1,22 @@
 # Minimalist Music
 
-A light weight, folder-based clean music player made in WPF (although there's no MVVM involved). It's by no means a fleshed-out player; There's no playlist management, no equalizer, etc.
+A light weight, folder-based clean music player built with a combination of Kotlin for the Android native backend and Vanilla JavaScript/HTML/CSS for the frontend. It integrates native Android features with a web-based UI rendered in a WebView.
 
 - TODO badges
 
 ## Features
-- Supports pretty much all audio file formats (has nothing to do with me, that's just the native Android MediaPlayer)
-- Built-in explorer
-- Dynamic queues (long-press a music file)
+- Supports `mp3`, `wav`, `m4b`, `m4a`, `flac`, `midi`, `ogg`, `opus`, `aac` files
+- Built-in folder explorer
+- Dynamic queues (long-press a track item)
 - Audiobook chapters
-- Lyrics
+- Metadata lyrics (`UNSYNCEDLYRICS` tag)
 - Lock screen + Bluetooth controls
-- Light/Dark themes
+- Light + Dark modes
 - Change playback speed
 - Sleep timer
-- Remembers playback state between launches
+- Persists playback position, speed, shuffle, and repeat states, etc.
 
 ## Screenshots
 TODO
 
-## Links
-- TODO google play button
+[![Play Store Badge](other/play-store-badge.png)](https://play.google.com/store/apps/details?id=mohsen.muhammad.minimalist)

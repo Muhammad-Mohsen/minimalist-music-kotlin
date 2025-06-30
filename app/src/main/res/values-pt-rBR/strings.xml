@@ -1,44 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 	<string name="appName">Minimalista</string>
-	<string name="minimalistMusicPlayer">Player de Música Minimalista</string>
-	<string name="welcomeMessage">Bem-vindo!</string>
-	<string name="descriptionRecyclerItemTypeTrack">faixa de áudio</string>
-	<string name="permissionMessage">É necessária permissão de armazenamento</string>
-	<string name="permissionMessageSubtitle">Toque em qualquer lugar para conceder a permissão</string>
+	<string name="hi">Olá!</string>
+	<string name="welcomeMessage">bem-vindo ao Player de Música Minimalista</string>
 	<string name="notificationChannelName">Notificação de reprodução</string>
 	<string name="notificationChannelDescription">Exibe a notificação de reprodução do aplicativo</string>
-	<string name="album_art">Arte do álbum</string>
-	<string name="system">Sistema</string>
-	<string name="dark">Escuro</string>
-	<string name="light">Claro</string>
-	<string name="seekJump">Período de Salto de Busca</string>
-	<string name="shuffle">Misturar</string>
-	<string name="repeat">Repetir</string>
-	<string name="privacyPolicy">Política de Privacidade</string>
-	<string name="settingsButtonContentDescription">Configurações</string>
-	<string name="albumArtButtonContentDescription">Expandir Recolher arte do álbum</string>
-	<string name="previousButtonContentDescription">Anterior</string>
-	<string name="playPauseButtonContentDescription">Reproduzir/Pausar</string>
-	<string name="nextButtonContentDescription">Próxima</string>
-	<string name="selectedTracks">Reproduzir faixas selecionadas</string>
-	<string name="backButton">Voltar</string>
-	<string name="addToSelected">Adicionar aos selecionados</string>
-	<string name="cancelButton">Cancelar</string>
-	<string name="search">Pesquisar</string>
-
-	<plurals name="selectedCount" tools:ignore="MissingQuantity">
-		<item quantity="one">%1$d Faixas Selecionadas</item>
-		<item quantity="other">%1$d Faixa Selecionada</item>
-	</plurals>
-
-	<string name="sleepTimer">Temporizador</string>
-	<string name="sleepTimerToggle">Alternar Temporizador</string>
-
-	<string name="seekJumpValue">%1$d Segundas</string>
-	<string name="equalizer">Equalizador</string>
 	<string name="noEqualizer">Nenhum equalizador encontrado</string>
 	<string name="noBrowser">Nenhum navegador encontrado</string>
-	<string name="playbackSpeed">Velocidade de reprodução</string>
-
 </resources>

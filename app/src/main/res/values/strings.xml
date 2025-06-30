@@ -1,53 +1,9 @@
 <resources>
-
 	<string name="appName">Minimalist</string>
-	<string name="minimalistMusicPlayer">Minimalist Music Player</string>
-	<string name="welcomeMessage">Welcome!</string>
-
-	<string name="descriptionRecyclerItemTypeTrack">track</string>
-
-	<string name="blankTimestamp" translatable="false">--:--</string>
-
-	<string name="breadcrumbSeparator" translatable="false">/</string> <!-- other symbols to try out: ›> | -->
-
-	<string name="permissionMessage">Storage Permission is required</string>
-	<string name="permissionMessageSubtitle">Tap anywhere to grant the permission</string>
-
+	<string name="hi">Hi!</string>
+	<string name="welcomeMessage">Welcome to Minimalist Music Player</string>
 	<string name="notificationChannelName">Playback Notification</string>
 	<string name="notificationChannelDescription">Displays the app\'s playback notification</string>
-	<string name="album_art">Album Art</string>
-	<string name="system">System</string>
-	<string name="dark">Dark</string>
-	<string name="light">Light</string>
-	<string name="seekJump">Seek Jump</string>
-	<string name="shuffle">Shuffle</string>
-	<string name="repeat">Repeat</string>
-	<string name="privacyPolicy">Privacy Policy</string>
-	<string name="settingsButtonContentDescription">Settings</string>
-	<string name="albumArtButtonContentDescription">Expand Collapse Album Art</string>
-	<string name="previousButtonContentDescription">Previous</string>
-	<string name="playPauseButtonContentDescription">Play/Pause</string>
-	<string name="nextButtonContentDescription">Next</string>
-	<string name="selectedTracks">Play Selected Tracks</string>
-	<string name="backButton">Back</string>
-	<string name="addToSelected">Add To Selected</string>
-	<string name="cancelButton">Cancel</string>
-	<string name="search">Search</string>
-
-	<plurals name="selectedCount">
-		<item quantity="one">%1$d Track Selected</item>
-		<item quantity="other">%1$d Tracks Selected</item>
-	</plurals>
-	<string name="selectedCount" translatable="false">(%1$d)</string>
-
-	<string name="sleepTimer">Sleep Timer</string>
-	<string name="sleepTimerToggle">Toggle Sleep Timer</string>
-
-	<string name="seekJumpValue">%1$d Seconds</string>
-	<string name="equalizer">Equalizer</string>
 	<string name="noEqualizer">No equalizer found</string>
 	<string name="noBrowser">No browser found</string>
-	<string name="playbackSpeed">Playback Speed</string>
-	<string name="playbackSpeedValue" translatable="false">%1$.2fx</string>
-
 </resources>

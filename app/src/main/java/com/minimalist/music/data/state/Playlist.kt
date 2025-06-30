@@ -13,21 +13,11 @@ import java.util.concurrent.ThreadLocalRandom
 
 class Playlist(private val preferences: SharedPreferences) {
 
-	private val tracks: ArrayList<String> = preferences.getString(State.Key.PLAYLIST, null)?.split(";")
+	val tracks: ArrayList<String> = preferences.getString(State.Key.PLAYLIST, null)?.split(";")
 		?.let { ArrayList(it) }
 		?: ArrayList()
 
-	private var index: Int = 0 // current index
-
-	// TODO move to root (settings)
-	// stored attributes
-	var repeat: Int
-		get() = preferences.getInt(State.Key.REPEAT, RepeatMode.INACTIVE)
-		set(value) = preferences.put(State.Key.REPEAT, value)
-
-	var shuffle: Boolean
-		get() = preferences.getBoolean(State.Key.SHUFFLE, false)
-		set(value) = preferences.put(State.Key.SHUFFLE, value)
+	var index: Int = 0 // current index
 
 	fun updateItems(trackPath: String) {
 		val tracks = FileCache.getMediaPathsByPath(trackPath)
@@ -36,12 +26,16 @@ class Playlist(private val preferences: SharedPreferences) {
 
 		updateItems(tracks)
 	}
-
 	fun updateItems(items: List<String>, append: Boolean = false) {
 		if (!append) tracks.clear()
 		tracks.addAll(items)
 
 		preferences.put(State.Key.PLAYLIST, items.joinToString(";"))
+	}
+	// sets the index of the current track (may return -1 if the track was deleted for example)
+
+	fun updateIndex(currentTrackPath: String) {
+		index = tracks.indexOf(currentTrackPath)
 	}
 
 	fun contains(track: String): Boolean {
@@ -49,10 +43,10 @@ class Playlist(private val preferences: SharedPreferences) {
 	}
 
 	fun getPreviousTrack(): String? {
-		if (tracks.size == 0) return null
+		if (tracks.isEmpty()) return null
 
 		when {
-			shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // first, check the shuffle state
+			State.settings.shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // first, check the shuffle state
 			index > 0 -> index-- // then, if we're not at the first track of the playlist, decrement by one!
 			else -> index = tracks.size - 1 // otherwise, rotate the index to the end of the list
 		}
@@ -63,16 +57,16 @@ class Playlist(private val preferences: SharedPreferences) {
 	// the onComplete param indicates whether we're requesting the next track upon completion of playing the current track,
 	// or by clicking the "Next" button
 	fun getNextTrack(onComplete: Boolean): String? {
-		if (tracks.size == 0) return null
+		if (tracks.isEmpty()) return null
 
 		when {
 			// first, check the shuffle state
-			shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.
+			State.settings.shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.
 
 			// then the repeat stuff
-			repeat == RepeatMode.REPEAT_ONE -> return tracks.getOrNull(index) // if the index was out-of-bounds, return null
-			repeat == RepeatMode.ACTIVE -> index = (index + 1) % tracks.size
-			repeat == RepeatMode.INACTIVE -> {
+			State.settings.repeat == RepeatMode.REPEAT_ONE -> return tracks.getOrNull(index) // if the index was out-of-bounds, return null
+			State.settings.repeat == RepeatMode.ACTIVE -> index = (index + 1) % tracks.size
+			State.settings.repeat == RepeatMode.INACTIVE -> {
 				index = (index + 1) % tracks.size
 				if (index == 0 && onComplete) return null // at the end of the playlist
 			}
@@ -85,19 +79,21 @@ class Playlist(private val preferences: SharedPreferences) {
 		return tracks.getOrNull(index)
 	}
 
-	// sets the index of the current track (may return -1 if the track was deleted for example)
-	fun setTrack(currentTrackPath: String) {
-		index = tracks.indexOf(currentTrackPath)
-	}
-
 	fun toggleShuffle() {
-		shuffle = !shuffle
+		State.settings.shuffle = !State.settings.shuffle
 	}
 	fun cycleRepeatMode() {
-		repeat = RepeatMode.list[(repeat + 1) % RepeatMode.list.size]
+		State.settings.repeat = RepeatMode.list[(State.settings.repeat + 1) % RepeatMode.list.size]
 	}
 
 	fun isEmpty() = tracks.isEmpty()
+
+	fun serialize(): Map<String, Any> {
+		return mapOf(
+			"tracks" to tracks,
+			"index" to index
+		)
+	}
 
 	object RepeatMode {
 		const val INACTIVE = 0 // inactive

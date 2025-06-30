@@ -2,17 +2,12 @@ package com.minimalist.music.data.state
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.util.Log
 import com.minimalist.music.data.Const
-import com.minimalist.music.player.PlaybackManager
-import com.minimalist.music.foundation.ext.EMPTY
-import com.minimalist.music.foundation.ext.formatMillis
-import com.minimalist.music.foundation.ext.put
-import com.minimalist.music.data.files.Chapter
 import com.minimalist.music.data.files.ExplorerFile
-import com.minimalist.music.data.files.FileMetadata
-import com.minimalist.music.foundation.EventBus.Type
+import com.minimalist.music.data.files.FileCache
+import com.minimalist.music.data.files.serializeFiles
+import com.minimalist.music.foundation.ext.put
+import com.minimalist.music.player.PlaybackManager
 import java.io.File
 
 
@@ -28,6 +23,36 @@ object State {
 	private lateinit var sharedPreferences: SharedPreferences
 	lateinit var applicationContext: Context
 
+	private val initialized: Boolean
+		get() = ::sharedPreferences.isInitialized
+
+	var currentDirectory: File
+		get() {
+			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: ExplorerFile.ROOT
+			val savedFile = File(savedPath)
+			return if (savedFile.exists()) savedFile else File(ExplorerFile.ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
+		}
+		set(value) = sharedPreferences.put(Key.DIRECTORY, value.absolutePath)
+
+	val files: ArrayList<ExplorerFile>
+		get() = FileCache.getExplorerFilesByDirectory(currentDirectory)
+
+	var mode = "normal"
+
+	val isPlaying: Boolean
+		get() = PlaybackManager.isPlaying
+
+	val audioSessionId: Int
+		get() = PlaybackManager.audioSessionId
+
+	val selectedTracks = ArrayList<String>()
+
+	var isSleepTimerActive = false
+
+	lateinit var track: Track
+	lateinit var playlist: Playlist
+	lateinit var settings: Settings
+
 	fun initialize(context: Context) {
 		if (initialized) return
 
@@ -42,90 +67,18 @@ object State {
 	fun serialize(): Map<String, Any> {
 		return mapOf(
 			"currentDir" to currentDirectory,
-			"isPlaying" to isPlaying,
+			"files" to files.serializeFiles(),
 			"selection" to selectedTracks,
+			"isPlaying" to isPlaying,
 			"isSleepTimerActive" to isSleepTimerActive,
-			"repeat" to playlist.repeat,
-			"shuffle" to playlist.shuffle,
-			// TODO sort
 
-			// track
-			"path" to track.path,
-			"album" to track.album,
-			"artist" to track.artist,
-			"seek" to track.seek,
-			"duration" to track.duration,
-			"albumArt" to track.albumArt, // TODO encode to base64
-			"chapters" to track.chapters,
-			// TODO lyrics
-
-			// playlist
-			"tracks" to playlist.tracks,
-			"index" to playlist.index,
-
-			// settings
-			"seekJump" to seekJump,
-			"playbackSpeed" to playbackSpeed,
-			"nightMode" to nightMode,
-			"sleepTimer" to sleepTimer,
+			"track" to track.serialize(),
+			"playlist" to playlist.serialize(),
+			"settings" to settings.serialize()
 		)
 	}
 
-	private val initialized: Boolean
-		get() = ::sharedPreferences.isInitialized
-
-	var currentDirectory: File
-		get() {
-			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: ExplorerFile.ROOT
-			val savedFile = File(savedPath)
-			return if (savedFile.exists()) savedFile else File(ExplorerFile.ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
-		}
-		set(value) = sharedPreferences.put(Key.DIRECTORY, value.absolutePath)
-
-	val isPlaying: Boolean
-		get() = PlaybackManager.isPlaying
-
-	val audioSessionId: Int
-		get() = PlaybackManager.audioSessionId
-
-	var seekJump: Int
-		get() = sharedPreferences.getInt(Key.SEEK_JUMP, 60) // 1 minute default
-		set(value) = sharedPreferences.put(Key.SEEK_JUMP, value)
-
-	var playbackSpeed: Float
-		get() = sharedPreferences.getFloat(Key.PLAYBACK_SPEED, 1F)
-		set(value) = sharedPreferences.put(Key.PLAYBACK_SPEED, value)
-
-	var nightMode: Int
-		get() = sharedPreferences.getInt(Key.NIGHT_MODE, -1) // default is FOLLOW_SYSTEM
-		set(value) = sharedPreferences.put(Key.NIGHT_MODE, value)
-
-	val isSelectModeActive: Boolean
-		get() = selectedTracks.isNotEmpty()
-
-	val selectedTracks = ArrayList<String>()
-	fun updateSelectedTracks(track: String): String {
-		return if (selectedTracks.contains(track)) { // track already in the list, remove it
-			selectedTracks.remove(track)
-			if (selectedTracks.isEmpty()) Type.SELECT_MODE_CANCEL else Type.SELECT_MODE_SUB // if the list is empty, deactivate the select mode
-
-		} else {
-			selectedTracks.add(track)
-			Type.SELECT_MODE_ADD
-		}
-	}
-
-	var isSearchModeActive = false
-
-	var isSleepTimerActive = false
-	var sleepTimer: Int
-		get() = sharedPreferences.getInt(Key.SLEEP_TIMER, 60) // 1 hour default
-		set(value) = sharedPreferences.put(Key.SLEEP_TIMER, value)
-
-	lateinit var track: Track
-	lateinit var playlist: Playlist
-
-	// the shared preferences keys
+	// shared preferences keys
 	internal object Key {
 		const val DIRECTORY = "CurrentDirectory"
 		const val PLAYLIST = "Playlist"
@@ -135,7 +88,7 @@ object State {
 		const val PLAYBACK_SPEED = "PlaybackSpeed"
 		const val SLEEP_TIMER = "SleepTimer"
 		const val NIGHT_MODE = "NightMode"
-
+		const val SORT = "Sort"
 		const val REPEAT = "Repeat"
 		const val SHUFFLE = "Shuffle"
 	}

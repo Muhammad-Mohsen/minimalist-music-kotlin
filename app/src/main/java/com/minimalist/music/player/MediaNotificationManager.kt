@@ -53,10 +53,10 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 
 		val notification = NotificationCompat.Builder(context, CHANNEL_ID).apply {
 			setContentIntent(contentIntent)
-			setContentTitle(State.track.title)
+			setContentTitle(State.track.name)
 			setContentText(State.track.album)
 			setSmallIcon(R.drawable.ic_notification)
-			setLargeIcon(State.track.albumArtBitmap)
+			setLargeIcon(State.track.albumArt?.decoded)
 			setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 			priority = NotificationCompat.PRIORITY_HIGH // for versions prior to Oreo
 

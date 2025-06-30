@@ -24,6 +24,12 @@ NodeList.prototype.toArray = function () {
 HTMLCollection.prototype.toArray = function () {
 	return [...this];
 }
+HTMLElement.prototype.replayAnimations = function () {
+	this.getAnimations().forEach(anim => anim.play());
+}
+HTMLElement.prototype.cancelAnimations = function () {
+	this.getAnimations().forEach(anim => anim.cancel());
+}
 
 /**
  * @param {int} steps rotation steps (+ve for right rotations, -ve for left)

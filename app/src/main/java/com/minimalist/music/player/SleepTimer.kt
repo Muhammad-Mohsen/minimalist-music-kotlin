@@ -1,12 +1,10 @@
 package com.minimalist.music.player
 
 import android.os.CountDownTimer
-import android.widget.FrameLayout
 import com.minimalist.music.foundation.EventBus
 import com.minimalist.music.foundation.EventBus.Event
 import com.minimalist.music.foundation.EventBus.Target
 import com.minimalist.music.foundation.EventBus.Type
-import com.minimalist.music.foundation.Moirai
 
 object SleepTimer {
 

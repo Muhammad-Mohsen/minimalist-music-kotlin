@@ -1,33 +1,29 @@
 /* GENERAL LAYOUT */
 music-header {
 	position: fixed;
-	inset: calc(var(--inset-top, 4px) + 8px) 12px auto;
 	display: grid;
-	border: 1px solid var(--border-color);
-	border-radius: 12px;
+	background: var(--background);
 	transition: .2s;
 	z-index: 1;
 }
-#breadcrumb-bar, #toolbar {
-	grid-area: 1 / 1;
-	display: flex;
-	align-items: center;
-	opacity: 1;
-	transition: .2s, display .2s allow-discrete;
+body[mode="normal"] music-header {
+	inset: calc(var(--inset-top, 4px) + 8px) 12px auto;
+	border: 1px solid var(--border-color);
+	border-radius: 12px;
 }
-body:not([mode="normal"]) music-header {
-	inset-inline: 0;
+body:is([mode="select"], [mode="search"], [mode="searchSelect"]) music-header {
+	inset: calc(var(--inset-top, 4px) + 8px) 0 auto;
+	border: 1px solid;
 	border-color: transparent transparent var(--border-color) transparent;
 	border-radius: 0;
 }
-
-/* STATE */
-[mode="normal"] #toolbar,
-body:not([mode="normal"]) #breadcrumb-bar {
+#breadcrumb-bar, #toolbar {
+	grid-area: 1 / 1;
 	display: none;
+	align-items: center;
 	opacity: 0;
+	transition: .2s, display .2s allow-discrete;
 }
-
 @starting-style {
 	[mode="normal"] #breadcrumb-bar,
 	body:not([mode="normal"]) #toolbar {
@@ -35,6 +31,13 @@ body:not([mode="normal"]) #breadcrumb-bar {
 	}
 
 	#select-count, #select-add-button, #select-play-button { opacity: 0; }
+}
+
+/* STATE */
+[mode="normal"] #breadcrumb-bar,
+body:is([mode="select"], [mode="search"], [mode="searchSelect"]) #toolbar {
+	display: flex;
+	opacity: 1;
 }
 
 body[mode="select"] #search-input { max-width: 0; }
@@ -85,9 +88,12 @@ music-header {
 
 	/* SEARCH + SELECT */
 	#toolbar {
+        overflow: hidden;
+
 		input {
 			flex-grow: 1;
 			max-width: 100%;
+			min-width: 0;
 			padding: 8px 0;
 			border: none;
 			outline: none;
@@ -98,7 +104,10 @@ music-header {
 		input::-webkit-search-cancel-button { display: none; }
 	}
 
-	#select-count { margin-inline-end: 16px; }
+	#select-count {
+		flex-shrink: 0;
+	    margin-inline-end: 16px;
+	}
 	#select-count, #select-add-button, #select-play-button { transition: display .2s allow-discrete, opacity .2s, background .8s; }
 	#select-add-button { margin-inline-start: auto; }
 }

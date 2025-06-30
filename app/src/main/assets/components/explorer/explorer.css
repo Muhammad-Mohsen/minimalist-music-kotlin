@@ -1,16 +1,9 @@
-#art { transition: opacity .2s; }
-#art:not([src]) { opacity: 0; }
-
-.explorer-container {
-	display: grid;
-	overflow: hidden;
-}
-
 .explorer {
-	grid-area: 1 / 1;
+	position: fixed;
+	inset: calc(var(--inset-top, 0px) + 24px) 0 calc(var(--inset-bottom, 0px) + 64px);
+	padding: 56px 0 112px;
 	display: flex;
 	flex-direction: column;
-	padding: calc(var(--inset-top, 0px) + 64px)  0;
 	opacity: 0;
 	transition: scale .3s, opacity .2s;
 	overflow: auto;
@@ -25,50 +18,49 @@
 	pointer-events: all; /* only the active is clickable (others can be in front but transparent) */
 }
 
-.explorer {
-	button {
-		position: relative;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 14px 20px;
-		text-align: start;
-		transition: .2s, color .5s, background .8s;
-		overflow: hidden;
+.explorer button {
+	position: relative;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	padding: 14px 20px;
+	text-align: start;
+	transition: .2s, color .5s, background .8s;
+	overflow: hidden;
 
-		&[type="dir"], &.playlist, .ic-mark { color: var(--foreground); }
+	&[type="dir"], &.playlist, .ic-mark { color: var(--foreground); }
 
-		span {
-			flex-grow: 1;
-			max-width: calc(100% - 56px);
-			overflow-wrap: break-word;
-		}
-		i { font-size: 20px; }
-		.ic-dir, .ic-music-note, .ic-mark { margin-inline: 8px; }
+	span {
+		flex-grow: 1;
+		max-width: calc(100% - 56px);
+		overflow-wrap: break-word;
+	}
+	i { font-size: 20px; }
+	.ic-dir, .ic-music-note { margin-inline: 8px 16px; }
+	.ic-mark { margin-inline-end: 8px; }
 
-		/* SELECTION */
-		.selection {
-			position: absolute;
-			inset: 4px 12px;
-			border-radius: 12px;
-			background: var(--selection-background);
-			opacity: 0;
-			transition: opacity .5s;
-			z-index: -1;
-		}
-		&.selected .selection { opacity: 1; }
+	/* SELECTION */
+	.selection {
+		position: absolute;
+		inset: 4px 12px;
+		border-radius: 12px;
+		background: var(--selection-background);
+		opacity: 0;
+		transition: opacity .5s;
+		z-index: -1;
+	}
+	&.selected .selection { opacity: 1; }
 
-		.ic-mark {
-			opacity: 0;
-			transition: .2s;
-		}
-		&.marked .ic-mark { opacity: 1; }
+	.ic-mark {
+		opacity: 0;
+		transition: .2s;
+	}
+	&.marked .ic-mark { opacity: 1; }
 
-		/* SEARCH */
-		&.hidden {
-			height: 0;
-			padding: 0 20px;
-			opacity: 0;
-		}
+	/* SEARCH */
+	&.hidden {
+		height: 0;
+		padding: 0 20px;
+		opacity: 0;
 	}
 }

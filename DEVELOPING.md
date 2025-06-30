@@ -59,42 +59,37 @@
 	- sleep timer start/stop
 	- privacy policy click
 	- eq click
-
-- develop UI using mock state
+- DONE - develop UI using mock state
 	- DONE - header
 		- DONE - listing
 		- DONE - click handlers
 		- DONE - styling
 		- DONE - mode changes (at the end)
 	- DONE - explorer
-		- DONE - lising
+		- DONE - listing
 		- DONE - styling
 		- DONE - filtering
 		- DONE - touch handler
 		- DONE - mode changes
 	- DONE - controls
 		- title + album + artist + duration + seek + chapters + art
-	- dialogs
-		- chapters
-		- lyrics
-		- settings
-- serialization
-	- https://medium.com/@midoripig1009/working-with-json-in-kotlin-parsing-and-serialization-a62300ec43b8
-	- JSONObject
-		- https://stackoverflow.com/questions/22685281/parsing-json-in-android-with-out-using-any-external-libraries
+- DONE - serialization
+	- https://stackoverflow.com/questions/22685281/parsing-json-in-android-with-out-using-any-external-libraries
 
 - DONE - directory change animation
 	- new: slide + old: scale down + blur?
 	- https://css-tricks.com/different-approaches-for-creating-a-staggered-animation/
 
-- serialize the state
+- DONE - serialize the state
 	- move shuffle/repeat to root state object
 	- add sort to root state object
 	- add lyrics
 	- add full chapter info
 	- encode art to base64
+	- DONE - BIG MILESTONE - handle the serialized state in the UI
+	- DONE - make more granular state update functions: track, playlist, setting(s), mode change (needed for back nav)
 
-	- BIG MILESTONE - handle the serialized state in the UI
+- DONE - hide header in permission ui
 
 - update eventbus events in native
 - implement sort comparer
@@ -103,7 +98,12 @@
 	- lyrics
 	- settings -> a lot of events :D
 
-- BIG MILESTONE - test-run the communication...directory change
+- DONE - BIG MILESTONE - test-run the communication...directory change
+
+- BIG MILESTONE - playback
+	- refactor PlaybackManager :(
+		- playTrack event -> playTrack function
+			- setTrack:
 
 - app launch
 	- init the state
@@ -119,23 +119,41 @@
 
 - PERMISSION - update the mode on the document
 
+- chapter titles
+```kotlin
+val test: Uri = Uri.parse("/storage/emulated/0/Download/Star Wars_ A New Hope.m4b")
+mmr = FFmpegMediaMetadataRetriever()
+mmr.setDataSource(this, test)
+val chapterCount = Integer.parseInt(mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT))
+
+for (i in 0 until chapterCount) {
+    val title = mmr.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_TITLE, i)
+}
+```
+- lyrics
+```kotlin
+retriever.Metadata().all // look for UNSYNCEDLYRICS ??
+```
+
 ## Chromatic Aberration
 can look cool with the `play-pause` button
+```css
+	filter: url(#chromatic-aberration);
+```
 ```html
 <svg width="0" height="0">
-	<filter id="kill">
+	<filter id="chromatic-aberration">
 		<feColorMatrix type="matrix" result="red_" values="4 0 0 0 0
-					0 0 0 0 0
-					0 0 0 0 0
-					0 0 0 1 0" />
+				0 0 0 0 0
+				0 0 0 0 0
+				0 0 0 1 0" />
 		<feOffset in="red_" dx="2" dy="0" result="red" />
 		<feColorMatrix type="matrix" in="SourceGraphic" result="blue_" values="0 0 0 0 0
-					0 3 0 0 0
-					0 0 10 0 0
-					0 0 0 1 0" />
-		<feOffset in="blue_" dx="-3" dy="0" result="blue" />
+				0 3 0 0 0
+				0 0 10 0 0
+				0 0 0 1 0" />
+		<feOffset in="blue_" dx="-2" dy="0" result="blue" />
 		<feBlend mode="screen" in="red" in2="blue" />
-
 	</filter>
 </svg>
 ```

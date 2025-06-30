@@ -58,6 +58,7 @@ object EventBus {
 		const val RESTORE_STATE = "restoreState"
 		const val INSETS = "insets"
 
+		const val PLAY_TRACK_REQUEST = "playTrackRequest"
 		const val PLAY_TRACK = "playTrack"
 		const val PLAY_NEXT = "playNext"
 		const val PLAY_PREVIOUS = "playPrev"
@@ -68,6 +69,7 @@ object EventBus {
 		const val FF = "ff"
 		const val RW = "rw"
 
+		const val DIR_CHANGE_REQUEST = "dirChangeRequest"
 		const val DIR_CHANGE = "dirChange"
 		const val METADATA_UPDATE = "metadataUpdate" // event to update the metadata (album|artist|total duration)
 
@@ -90,8 +92,10 @@ object EventBus {
 		const val CYCLE_SHUFFLE = "toggleShuffle"
 		const val CYCLE_REPEAT = "toggleRepeat"
 
-		const val UI_MODE_CHANGE = "uiModeChange"
+		const val MODE_CHANGE = "modeChange"
+		const val MODE_NORMAL = "modeNormal"
 		const val PERMISSION_REQUEST = "permissionRequest"
+		const val PERMISSION_RESPONSE = "permissionResponse"
 
 		const val APP_FOREGROUNDED = "appForegrounded"
 	}

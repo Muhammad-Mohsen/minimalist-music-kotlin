@@ -16,23 +16,26 @@ class MusicControls extends HTMLElementBase {
 				this.searchButton.classList.remove('ic-close'); // TODO fugly shit
 				this.searchButton.classList.add('ic-search');
 			})
-			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.METADATA_UPDATE], () => this.#updateMetadata())
+			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.METADATA_UPDATE], () => this.#updateMetadata(event.type == EventBus.Type.RESTORE_STATE))
 			.is(EventBus.Type.PLAY, () => playPause(true, 'suppress'))
 			.is(EventBus.Type.PAUSE, () => playPause(false, 'suppress'))
 			.is(EventBus.Type.PLAY_PAUSE, () => playPause())
 	}
 
-	#updateMetadata() {
+	#updateMetadata(onStart) {
 		this.#updateSeekUI();
 
-		this.trackName.innerHTML = state.track.name;
-		const dir = state.currentDir.split(Path.SEPARATOR).pop();
-		this.trackAlbumArtist.innerHTML = `<strong>${state.track.album || dir}</strong> ${state.track.artist ? ' | ' : ''} ${state.track.artist}`;
+		// replace name animation
+		this.#replaceAnimation(this.trackName, 300, onStart, state.track.name);
 
-		this.chapters.innerHTML = ''; // TODO
+		// replace album | artist animation
+		this.#replaceAnimation(this.trackAlbumArtist, 400, onStart, `<strong>${state.track.album}</strong> ${state.track.artist ? ' | ' : ''} ${state.track.artist}`);
 
-		if (state.track.art) this.art.setAttribute('src', state.track.art);
-		this.art.classList.toggle('hidden', !state.track.art);
+		// TODO
+		this.chapters.innerHTML = '';
+
+		if (state.track.albumArt) this.albumArt.setAttribute('src', state.track.albumArt);
+		else this.albumArt.removeAttribute('src');
 	}
 
 	// UI HANDLERS
@@ -78,24 +81,25 @@ class MusicControls extends HTMLElementBase {
 			.is(state.Mode.SEARCH_SELECT, () => state.Mode.SELECT)
 			.val();
 
-		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
+		// mode needs to be transfered to native for back navigation (to figure out if the mode should be changed to normal vs actually back up the currentDir)
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 	}
 
 	// RENDERING
 	#render() {
 		super.render(`
-			<img alt="Album Art" id="art">
+			<img alt="Album Art" id="album-art">
 			<div class="main-controls">
 				<input type="range" id="seek-range" value="0" ontouchstart="${this.handle}.onSeekTouchStart()" ontouchend="${this.handle}.onSeekTouchEnd()" oninput="${this.handle}.onSeekChange(this)">
 
-				<button id="play-pause-button" class="ic-btn" aria-label="play/pause" onclick="${this.handle}.playPause()">
+				<button id="play-pause-button" class="ic-btn main-character" aria-label="play/pause" onclick="${this.handle}.playPause()">
 					<svg  width="180" height="15" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path id="pause-path" style="stroke-dashoffset: 75;" d="M94 15V7.5H180M85 0V7.5H0" stroke="var(--foreground)"/>
 						<path id="play-path" style="stroke-dashoffset: 0;" d="M83.0469 1L95.9531 7.5H180M83.0469 15V7.5H0" stroke="var(--foreground)"/>
 					</svg>
 				</button>
 
-				<div class="seek-text">
+				<div class="seek-text-container">
 					<output id="seek-current"></output>
 					<output id="seek-duration">&nbsp</output>
 				</div>
@@ -127,6 +131,13 @@ class MusicControls extends HTMLElementBase {
 		if (this.seekRange.max == state.track.duration) return;
 		this.seekDuration.innerHTML = readableTime(state.track.duration);
 		this.seekRange.max = state.track.duration;
+	}
+	#replaceAnimation(elem, delay, onStart, val) {
+		if (onStart) elem.cancelAnimations();
+		else elem.replayAnimations();
+
+		if (onStart) elem.innerHTML = val;
+		else setTimeout(() => elem.innerHTML = val, delay);
 	}
 }
 

@@ -27,7 +27,8 @@
 	<script src="foundation/html-element-base.js"></script>
 	<script src="foundation/models.js"></script>
 	<script src="foundation/state.js"></script>
-	<script src="foundation/mock.js"></script>
+
+	<script src="main.js"></script>
 
 	<script src="components/permissions/permissions.js"></script>
 	<script src="components/header/header.js"></script>
@@ -35,7 +36,21 @@
 	<script src="components/dialog/dialog.js"></script>
 	<script src="components/controls/controls.js"></script>
 
-	<script src="main.js"></script>
+	<svg width="0" height="0">
+		<filter id="chromatic-aberration">
+			<feColorMatrix type="matrix" result="red_" values="4 0 0 0 0
+					0 0 0 0 0
+					0 0 0 0 0
+					0 0 0 1 0" />
+			<feOffset in="red_" dx="2" dy="0" result="red" />
+			<feColorMatrix type="matrix" in="SourceGraphic" result="blue_" values="0 0 0 0 0
+					0 3 0 0 0
+					0 0 10 0 0
+					0 0 0 1 0" />
+			<feOffset in="blue_" dx="-2" dy="0" result="blue" />
+			<feBlend mode="screen" in="red" in2="blue" />
+		</filter>
+	</svg>
 
 </body>
 </html>

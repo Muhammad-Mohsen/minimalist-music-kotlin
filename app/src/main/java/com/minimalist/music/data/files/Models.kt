@@ -11,6 +11,8 @@ import androidx.annotation.RequiresApi
 import com.minimalist.music.foundation.ext.EMPTY
 import com.minimalist.music.data.Const
 import com.minimalist.music.data.state.State
+import org.json.JSONObject
+import wseemann.media.FFmpegMediaMetadataRetriever
 import java.io.File
 import java.io.FileFilter
 import java.util.Arrays
@@ -24,8 +26,10 @@ import java.util.Arrays
  * not really useful as a model class anymore, honestly...at the start of development, I used to display the track count for folders and the album/artist for tracks
  * now, only the statics are useful
  */
-class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artist: String = String.EMPTY, var duration: String = String.EMPTY, var trackCount: Int = 0)
+class ExplorerFile(pathname: String)
 	: File(pathname) {
+
+	val type = if (isDirectory) "dir" else "track"
 
 	// FileFilter implementation that accepts directory/media files.
 	private class ExplorerFileFilter : FileFilter {
@@ -38,7 +42,7 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 
 		val ROOT: String = Environment.getExternalStorageDirectory().path // root directory (actually the internal storage directory!)
 
-		// these consts help work around the nuisances of Android storage APIs
+		// these const's help work around the nuisances of Android storage APIs
 		const val ACTUAL_ROOT = "/storage"
 		private const val EMULATED = "/storage/emulated"
 		private const val EMULATED_ZERO = "/storage/emulated/0"
@@ -55,7 +59,7 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 			return f.exists() && MEDIA_EXTENSIONS.contains(f.extension.lowercase())
 		}
 
-		fun listExplorerFiles(path: String): ArrayList<ExplorerFile> {
+		fun listByPath(path: String): ArrayList<ExplorerFile> {
 			val fileModels = ArrayList<ExplorerFile>()
 
 			var files = File(path).listFiles(filter)
@@ -97,27 +101,37 @@ class ExplorerFile(pathname: String, var album: String = String.EMPTY, var artis
 }
 
 /**
- * Holds a track's chapter info
+ * uses ffmpeg metadata retriever because it can list chapters
  */
-class Chapter(val index: Int, val startTime: Long) {
+class FileMetadata(file: File) {
+	init {
+		retriever.setDataSource(file.path)
+	}
+
+	val title: String = file.name
+	val artist = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST) ?: String.EMPTY
+	val album = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM) ?: file.parentFile?.name ?: String.EMPTY
+	val duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+	val albumArtBitmap = SerializableBitmap(retriever.embeddedPicture)
+
+	private val chapterCount = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
+	val chapters = ArrayList((0 until chapterCount).map {
+		Chapter(it,
+			retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_CHAPTER_START_TIME, it)?.toLong() ?: 0,
+			retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_TITLE, it),
+		)
+	})
+
 	companion object {
-		fun serialize(chapters: ArrayList<Chapter>): String {
-			return chapters.joinToString(separator = "&&", transform = {
-				it.index.toString() + "," + it.startTime.toString()
-			})
-		}
-
-		fun deserialize(s: String?): ArrayList<Chapter> {
-			if (s.isNullOrBlank()) return ArrayList()
-			val chapters = s.split("&&").map {
-				val props = it.split(",")
-				Chapter(props.first().toInt(), props.last().toLong())
-			}
-
-			return ArrayList(chapters)
-		}
+		private val retriever = FFmpegMediaMetadataRetriever()
 	}
 }
+
+/**
+ * Holds a track's chapter info
+ */
+data class Chapter(val index: Int, val startTime: Long, val title: String)
+
 // the ArrayList is guaranteed to be sorted
 fun ArrayList<Chapter>.getNextChapter(currentSeek: Long): Chapter? {
 	return this.firstOrNull {
@@ -129,11 +143,29 @@ fun ArrayList<Chapter>.getPrevChapter(currentSeek: Long): Chapter {
 		it.startTime < currentSeek - Const.PREV_THRESHOLD // less than 5 seconds since the chapter began
 	}
 }
+fun ArrayList<Chapter>.serializeChapters(): List<JSONObject> {
+	return this.map {
+		val obj = JSONObject()
+		obj.put("index", it.index)
+		obj.put("startTime", it.startTime)
+		obj.put("title", it.title)
+
+		obj
+	}
+}
+
+fun ArrayList<ExplorerFile>.serializeFiles(): List<JSONObject> {
+	return this.map {
+		val obj = JSONObject()
+		obj.put("type", if (it.isDirectory) "dir" else "track")
+		obj.put("path", it.absolutePath)
+		obj.put("name", it.name)
+
+		obj
+	}
+}
 
 class SerializableBitmap(val data: ByteArray?) {
-	private val decoded = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)
-	private val encoded = Base64.encodeToString(data, Base64.DEFAULT)
-
-	val bitmap: Bitmap? = decoded
-	val serialize: String = encoded
+	val decoded: Bitmap? = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)
+	val encoded: String? = Base64.encodeToString(data, Base64.DEFAULT)
 }

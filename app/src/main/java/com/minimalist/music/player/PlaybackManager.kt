@@ -133,10 +133,11 @@ class PlaybackManager :
 	private fun setTrack(path: String, updatePlaylist: Boolean = true) {
 		// update playlist
 		if (updatePlaylist || State.playlist.isEmpty()) State.playlist.updateItems(path)
-		State.playlist.setTrack(path)
+		State.playlist.updateIndex(path)
 
 		player.prepareSource(path)
 	}
+
 	private fun playTrack(path: String?, updatePlaylist: Boolean = true) {
 		if (path == null) return
 
@@ -229,11 +230,11 @@ class PlaybackManager :
 	}
 
 	private fun fastForward() {
-		player.seekTo(player.currentPositionSafe + State.seekJump * 1000)
+		player.seekTo(player.currentPositionSafe + State.settings.seekJump * 1000)
 		sendSingleSeekUpdate()
 	}
 	private fun rewind() {
-		player.seekTo(player.currentPositionSafe - State.seekJump * 1000)
+		player.seekTo(player.currentPositionSafe - State.settings.seekJump * 1000)
 		sendSingleSeekUpdate()
 	}
 
@@ -307,7 +308,7 @@ class PlaybackManager :
 			Type.SEEK_UPDATE -> updateSeek(event.data["seek"].toString().toInt())
 			Type.FF -> fastForward()
 			Type.RW -> rewind()
-			Type.PLAYBACK_SPEED -> updatePlaybackSpeed(State.playbackSpeed)
+			Type.PLAYBACK_SPEED -> updatePlaybackSpeed(State.settings.playbackSpeed)
 
 			// playlist stuff
 			Type.CYCLE_REPEAT -> { State.playlist.cycleRepeatMode() }

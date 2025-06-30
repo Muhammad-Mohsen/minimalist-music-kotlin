@@ -3,24 +3,11 @@ package com.minimalist.music.foundation.ext
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.BitmapFactory
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
-import android.os.Handler
-import android.support.v4.media.MediaMetadataCompat
 import android.util.Log
-import android.util.TypedValue
-import android.view.View
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.app.NotificationCompat
-import com.minimalist.music.foundation.Moirai
-import java.util.Timer
 import androidx.core.content.edit
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.Timer
 
 
 /**
@@ -54,20 +41,6 @@ fun Int.toReadableTime(withSeconds: Boolean = false): String {
 
 	return if (withSeconds) "${pad(this / 60 / 60)}:${pad(this / 60 % 60)}:${pad(this % 60)}"
 	else "${pad(this / 60 / 60)}:${pad((this / 60 % 60))}"
-}
-
-fun Number.toDip(context: Context): Float {
-	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics)
-}
-fun View.setLayoutMargins(left: Number, top: Number, right: Number, bottom: Number) {
-	val params = when (this.layoutParams) {
-		is FrameLayout.LayoutParams -> FrameLayout.LayoutParams(this.layoutParams.width, this.layoutParams.height)
-		is LinearLayoutCompat.LayoutParams -> LinearLayoutCompat.LayoutParams(this.layoutParams.width, this.layoutParams.height)
-		else -> LinearLayout.LayoutParams(this.layoutParams.width, this.layoutParams.height) // default to LinearLayout
-	}
-
-	params.setMargins(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
-	this.layoutParams = params
 }
 
 fun SharedPreferences.put(key: String, value: Any) {

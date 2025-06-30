@@ -74,14 +74,14 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 
 		// state
 		when (event.type) {
-			EventBus.Type.PLAY -> stateBuilder.setState(PLAYING, State.track.seek.toLong(), State.playbackSpeed)
+			EventBus.Type.PLAY -> stateBuilder.setState(PLAYING, State.track.seek.toLong(), State.settings.playbackSpeed)
 			EventBus.Type.PAUSE -> stateBuilder.setState(PAUSED, State.track.seek.toLong(), 0F)
 
 			EventBus.Type.PLAY_NEXT, EventBus.Type.PLAY_PREVIOUS, EventBus.Type.PLAY_SELECTED, EventBus.Type.PLAY_TRACK ->
-				stateBuilder.setState(PLAYING, 0, State.playbackSpeed)
+				stateBuilder.setState(PLAYING, 0, State.settings.playbackSpeed)
 
 			EventBus.Type.SEEK_UPDATE_USER, EventBus.Type.PLAYBACK_SPEED ->
-				stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, State.track.seek.toLong(), if (State.isPlaying) State.playbackSpeed else 0F)
+				stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, State.track.seek.toLong(), if (State.isPlaying) State.settings.playbackSpeed else 0F)
 		}
 		mediaSession.setPlaybackState(stateBuilder.build())
 
@@ -92,11 +92,11 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 
 		// metadata
 		metadataBuilder.apply {
-			putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.track.title)
+			putString(MediaMetadataCompat.METADATA_KEY_TITLE, State.track.name)
 			putString(MediaMetadataCompat.METADATA_KEY_ARTIST, State.track.artist)
 			putString(MediaMetadataCompat.METADATA_KEY_ALBUM, State.track.album)
 			putLong(MediaMetadataCompat.METADATA_KEY_DURATION, State.track.duration)
-			putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.track.albumArtBitmap)
+			putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, State.track.albumArt?.decoded)
 		}
 
 		mediaSession.isActive = true

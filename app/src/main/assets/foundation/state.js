@@ -5,16 +5,19 @@ class State {
 		NORMAL: 'normal',
 		SELECT: 'select',
 		SEARCH: 'search',
+		SEARCH_SELECT: 'searchSelect',
 	}
 
 	get mode() { return document.body.getAttribute('mode') || this.Mode.NORMAL; }
 	set mode(val) { document.body.setAttribute('mode', val); }
 
-	rootDir = '';
 	currentDir = '';
-	files = [];
+	files = []; // { type, path, name }
+	get currentDirName() { return this.currentDir.split(Path.SEPARATOR).pop() }
 
-	isPlaying = false;
+	get isPlaying() { return document.body.getAttribute('is-playing') == 'true' }
+	set isPlaying(val) { document.body.setAttribute('is-playing', val) }
+
 	selection = [];
 	query = '';
 
@@ -42,35 +45,48 @@ class State {
 		seek: '',
 		album: '',
 		artist: '',
-		art: '',
+		albumArt: '',
 		chapters: [],
 		lyrics: '',
 	}
 
-	async restore() {
-		const rootDir = Prefs.read(State.Key.ROOT_DIR);
-		if (rootDir) set(State.Key.ROOT_DIR, rootDir, true);
+	restore(serializedState) {
+		this.currentDir = serializedState.currentDir;
+		this.files = serializedState.files;
+		this.isPlaying = false;
 
-		const currentDir = Prefs.read(State.Key.CURRENT_DIR) || rootDir || await Native.FS.audioDir();
-		set(State.Key.CURRENT_DIR, currentDir, true);
-		set(State.Key.MODE, Prefs.read(State.Key.MODE), 'normal');
-		set(State.Key.SEEK, Prefs.read(State.Key.SEEK), true);
-		set(State.Key.SHUFFLE, Prefs.read(State.Key.SHUFFLE), true);
-		set(State.Key.REPEAT, Prefs.read(State.Key.REPEAT), true);
-
-		set(State.Key.PAUSED, true, true);
-		set(State.Key.TRACK, Prefs.read(State.Key.TRACK), true);
-		set(State.Key.DURATION, Prefs.read(State.Key.DURATION), true);
-		set(State.Key.ALBUM, Prefs.read(State.Key.ALBUM) || quotes[Math.randomInt(0, 99)], true);
-		set(State.Key.ARTIST, Prefs.read(State.Key.ARTIST), true);
+		this.updateSettings(serializedState.settings);
+		this.updatePlaylist(serializedState.playlist);
+		this.updateTrack(serializedState.track);
 	}
+	updateSettings(settings) {
+		this.settings.nightMode = settings.nightMode;
 
-	set(key, val, noSave) {
-		holder.setAttribute(key, val);
-		if (!noSave) Prefs.write(key, val);
+		this.settings.shuffle = settings.shuffle;
+		this.settings.repeat = settings.repeat;
+		this.settings.sort = settings.sort;
+
+		this.settings.playbackSpeed = settings.playbackSpeed;
+		this.settings.sleepTimer = settings.sleepTimer;
+		this.settings.seekJump = settings.seekJump;
 	}
+	updateTrack(track) {
+		this.track.path = track.path;
+		this.track.name = track.name;
+		this.track.duration = track.duration;
+		this.track.seek = track.seek;
+		this.track.album = track.album;
+		this.track.artist = track.artist;
+		this.track.albumArt = track.albumArt;
+		this.track.chapters = track.chapters;
 
-	get(key) {
-		return holder.getAttribute(key);
+		if (!track.name) {
+			this.track.name = 'Hi,',
+			this.track.album = 'welcome to Minimalist Music'
+		}
+	}
+	updatePlaylist(playlist) {
+		this.playlist.tracks = playlist.tracks;
+		this.playlist.index = playlist.index;
 	}
 }

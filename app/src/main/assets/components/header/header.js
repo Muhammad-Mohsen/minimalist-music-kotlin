@@ -15,11 +15,7 @@ class MusicHeader extends HTMLElementBase {
 			.is(EventBus.Type.SELECT_MODE_COUNT, () => {
 				this.selectCount.innerHTML = `${state.selection.length} selected`;
 			})
-			/*
-			toggleEditMode(State.isSelectModeActive || State.isSearchModeActive)
-			toggleSelectMode()
-			toggleSearchMode()
-			*/
+			.is(EventBus.Type.MODE_NORMAL, () => this.onCancelClick())
 	}
 
 	// UI HANDLERS
@@ -42,7 +38,7 @@ class MusicHeader extends HTMLElementBase {
 
 		// change mode to crumbs
 		state.mode = state.Mode.NORMAL;
-		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 	}
 	onSearchInput(searchInput) {
 		// update the filtering
@@ -81,7 +77,7 @@ class MusicHeader extends HTMLElementBase {
 	#renderCrumbs() {
 		const dir = state.currentDir;
 
-		this.backButton.toggleAttribute('disabled', Path.eq(state.rootDir, dir));
+		// this.backButton.toggleAttribute('disabled', Path.eq(state.rootDir, dir));
 
 		this.crumbs.innerHTML = '';
 		dir.split(Path.SEPARATOR).reduce((path, seg) => {

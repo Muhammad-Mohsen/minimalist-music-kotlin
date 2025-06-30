@@ -13,16 +13,16 @@ object FileCache {
 	private val lastModifiedCache = HashMap<String, Long>()
 
 	// cache API
-	fun getExplorerFilesByDirectory(f: File): ArrayList<ExplorerFile> {
-		val path = f.absolutePath
+	fun getExplorerFilesByDirectory(dir: File): ArrayList<ExplorerFile> {
+		val path = dir.absolutePath
 		var files = fileCache[path]
 
 		// if not cached, or directory was modified more recently than the cache
-		if (files == null || f.lastModified() > (lastModifiedCache[path] ?: 0L)) {
-			files = ExplorerFile.listExplorerFiles(path)
+		if (files == null || dir.lastModified() > (lastModifiedCache[path] ?: 0L)) {
+			files = ExplorerFile.listByPath(path)
 			fileCache[path] = files
 
-			lastModifiedCache[path] = f.lastModified()
+			lastModifiedCache[path] = dir.lastModified()
 		}
 
 		return files
@@ -36,7 +36,7 @@ object FileCache {
 
 		// if not cached, or directory was modified more recently than the cache
 		if (files == null || parentDir.lastModified() > (lastModifiedCache[parentDirPath] ?: 0L)) {
-			files = ExplorerFile.listExplorerFiles(parentDirPath)
+			files = ExplorerFile.listByPath(parentDirPath)
 			fileCache[parentDirPath] = files
 
 			lastModifiedCache[parentDirPath] = parentDir.lastModified()

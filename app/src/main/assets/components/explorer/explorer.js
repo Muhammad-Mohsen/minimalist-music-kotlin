@@ -2,6 +2,7 @@ class MusicExplorer extends HTMLElementBase {
 
 	LONG_PRESS_THRESHOLD = 500;
 	LONG_PRESS_MOVE_THRESHOLD = 10;
+	SAFE_AREA_TOUCH_THRESHOLD = 20;
 
 	Type = {
 		DIR: 'dir',
@@ -41,14 +42,21 @@ class MusicExplorer extends HTMLElementBase {
 	// HANDLERS
 	onItemTouchStart(event) {
 		const target = event.currentTarget;
+
+		// ignore touches in the near the edges -- sometimes, the long-press handler incorrectly fired during the back gesture
+		const touchX = event.touches[0].clientX;
+		if (touchX <= this.SAFE_AREA_TOUCH_THRESHOLD || touchX >= (target.clientWidth - this.SAFE_AREA_TOUCH_THRESHOLD)) return;
+
+		// for scrolling
+		target.setAttribute('touch-start-x', event.touches[0].clientX);
+		target.setAttribute('touch-start-y', event.touches[0].clientY);
+
 		if (target.getAttribute('type') == this.Type.DIR) return;
 
+		// for long press
 		const timeout = setTimeout(() => this.onItemLongTouch(target), this.LONG_PRESS_THRESHOLD);
 		target.setAttribute('touch-start-ts', Date.now());
 		target.setAttribute('timeout', timeout);
-
-		target.setAttribute('touch-start-x', event.touches[0].clientX);
-		target.setAttribute('touch-start-y', event.touches[0].clientY);
 	}
 	onItemTouchCancel(event) {
 		clearTimeout(event.currentTarget.getAttribute('timeout'));
@@ -58,14 +66,17 @@ class MusicExplorer extends HTMLElementBase {
 		const target = event.currentTarget;
 
 		if (Math.abs(event.touches[0].clientX - parseFloat(target.getAttribute('touch-start-x'))) > this.LONG_PRESS_MOVE_THRESHOLD
-				|| Math.abs(event.touches[0].clientY - parseFloat(target.getAttribute('touch-start-y'))) > this.LONG_PRESS_MOVE_THRESHOLD) {
+		|| Math.abs(event.touches[0].clientY - parseFloat(target.getAttribute('touch-start-y'))) > this.LONG_PRESS_MOVE_THRESHOLD) {
 
+			target.setAttribute('moved', ''); // mark the touch event as moved (to cancel it on touchup)
 			clearTimeout(target.getAttribute('timeout'));
 		}
 	}
 	onItemTouchEnd(event) {
 		const target = event.currentTarget;
 		clearTimeout(target.getAttribute('timeout'));
+
+		if (target.hasAttribute('moved')) return target.removeAttribute('moved');
 
 		const path = target.getAttribute('path');
 		const type = target.getAttribute('type');
@@ -76,7 +87,7 @@ class MusicExplorer extends HTMLElementBase {
 			return EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE_REQUEST, target: this.#TARGET, data: { dir: state.currentDir } });
 		}
 
-		// LONG PRESS CHECK
+		// LONG PRESS (already handled)
 		const touchStart = parseInt(target.getAttribute('touch-start-ts')) || Date.now();
 		if (Date.now() - touchStart >= this.LONG_PRESS_THRESHOLD) return;
 
@@ -85,7 +96,7 @@ class MusicExplorer extends HTMLElementBase {
 
 		// TRACK
 		this.#select(target);
-		EventBus.dispatch({ target: this.#TARGET, type: EventBus.Type.PLAY_TRACK_REQUEST, data: { track: target.getAttribute('path') } });
+		EventBus.dispatch({ target: this.#TARGET, type: EventBus.Type.PLAY_TRACK_REQUEST, data: { path: target.getAttribute('path') } });
 	}
 	onItemLongTouch(target) {
 		this.#mark(target);
@@ -101,19 +112,19 @@ class MusicExplorer extends HTMLElementBase {
 
 		} else {
 			state.mode = when(state.mode)
-				.is(state.Mode.SELECT, () => state.Mode.NORMAL)
+				.is([state.Mode.SELECT, state.Mode.NORMAL], () => state.Mode.NORMAL)
 				.is(state.Mode.SEARCH_SELECT, () => state.Mode.SEARCH)
 				.val();
 		}
 
-		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 		EventBus.dispatch({ type: EventBus.Type.SELECT_MODE_COUNT, target: this.#TARGET });
 	}
 
 	cancelSelectMode() {
 		this.querySelectorAll('.explorer.current .marked').forEach(i => i.classList.remove('marked'));
 		state.mode = state.Mode.NORMAL;
-		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET });
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 	}
 
 	// SEARCH

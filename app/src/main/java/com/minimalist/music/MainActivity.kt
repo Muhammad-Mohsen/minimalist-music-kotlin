@@ -28,6 +28,9 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.minimalist.music.data.files.ExplorerFile
+import com.minimalist.music.data.files.serializeFiles
+import java.io.File
 
 
 class MainActivity : AppCompatActivity(), EventBus.Subscriber {
@@ -71,11 +74,16 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		initWebView()
 		initNative()
 	}
+	override fun onResume() {
+		super.onResume()
+		EventBus.dispatch(Event(Type.PERMISSION_RESPONSE, Target.ACTIVITY, mapOf("mode" to
+				if (checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED) "normal" else "permission"
+		)))
+	}
 
 	private fun initNative() {
 		when {
 			checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED -> {
-
 				State.initialize(applicationContext)
 
 				// service
@@ -86,7 +94,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 				if (State.track.exists) EventBus.dispatch(Event(Type.METADATA_UPDATE, Target.ACTIVITY))
 			}
 			else -> {
-				EventBus.dispatch(Event(Type.UI_MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "permission")))
+				EventBus.dispatch(Event(Type.MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "permission")))
 			}
 		}
 	}
@@ -94,6 +102,8 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 	@SuppressLint("SetJavaScriptEnabled")
 	@Suppress("DEPRECATION")
 	private fun initWebView() {
+		State.initialize(applicationContext)
+
 		WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
 
 		webView.apply {
@@ -119,25 +129,24 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			val mode = if (checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED) "normal" else "permission"
 			loadUrl("file:///android_asset/index.html?mode=$mode") // here we go!
 
-			EventBus.subscribe(this)
+			EventBus.subscribe(this) // this is the webview (IPC) subscription
 		}
 	}
 
-	// TODO handle webview dialogs
 	private fun onBackPress() {
 		when {
-//			State.isSettingsSheetVisible -> EventBus.dispatch(Event(Type.HIDE_SETTINGS, Target.ACTIVITY))
-//			State.isSelectModeActive or State.isSearchModeActive -> {
-//				State.selectedTracks.clear() // update the state
-//				State.isSearchModeActive = false
-//				EventBus.dispatch(Event(Type.SELECT_MODE_CANCEL, Target.ACTIVITY))
-//			}
-//			ExplorerFile.isAtRoot(State.currentDirectory.absolutePath) -> {
-//				this.moveTaskToBack(true)
-//			}
+			State.mode != "normal" -> {
+				EventBus.dispatch(Event(Type.MODE_NORMAL, Target.ACTIVITY)) // simulates "cancel" click from the header
+			}
+			ExplorerFile.isAtRoot(State.currentDirectory.absolutePath) -> {
+				this.moveTaskToBack(true)
+			}
 			else -> {
 				State.currentDirectory = State.currentDirectory.parentFile!! // don't worry about it
-				EventBus.dispatch(Event(Type.DIR_CHANGE, Target.ACTIVITY, mapOf("currentDirectory" to State.currentDirectory.absolutePath)))
+				EventBus.dispatch(Event(Type.DIR_CHANGE, Target.ACTIVITY, mapOf(
+					"currentDir" to State.currentDirectory.absolutePath,
+					"files" to State.files.serializeFiles()
+				)))
 			}
 		}
 	}
@@ -171,10 +180,10 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 	private fun onPermissionResult(isGranted: Boolean) {
 		if (isGranted) {
 			initNative()
-			EventBus.dispatch(Event(Type.UI_MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "normal")))
+			EventBus.dispatch(Event(Type.MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "normal")))
 
 		} else {
-			EventBus.dispatch(Event(Type.UI_MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "permission")))
+			EventBus.dispatch(Event(Type.MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "permission")))
 		}
 	}
 
@@ -194,6 +203,15 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			Type.PERMISSION_REQUEST -> requestPermission()
 			Type.EQ -> eq()
 			Type.PRIVACY_POLICY -> privacyPolicy()
+			Type.MODE_CHANGE -> State.mode = event.data["mode"].toString()
+			Type.DIR_CHANGE_REQUEST -> {
+				State.currentDirectory = File(event.data["dir"].toString())
+				EventBus.dispatch(Event(Type.DIR_CHANGE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
+			}
+			Type.PLAY_TRACK_REQUEST -> {
+				State.track.path = event.data["path"].toString()
+				EventBus.dispatch(Event(Type.PLAY_TRACK, Target.ACTIVITY, mapOf("path" to State.track.path)))
+			}
 		}
 	}
 

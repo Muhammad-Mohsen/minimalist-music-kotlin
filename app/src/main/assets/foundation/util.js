@@ -66,7 +66,9 @@ String.prototype.replaceAt = function (index, replacement) {
 	return this.substring(0, index) + replacement + this.substring(index + 1);
 }
 
-function readableTime(seconds) {
+function readableTime(millis) {
+	const seconds = millis / 1000;
+
 	const ss = parseInt(seconds % 60).toString().padStart(2, '0');
 	const mm = parseInt((seconds / 60) % 60).toString().padStart(2, '0');
 	const hh = parseInt(seconds / 60 / 60).toString().padStart(2, '0');

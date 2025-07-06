@@ -190,7 +190,7 @@ class MusicExplorer extends HTMLElementBase {
 		));
 	}
 	#updateItems() {
-		this.querySelectorAll('.explorer.current [type="track"]')forEach(t => {
+		this.querySelectorAll('.explorer.current [type="track"]').forEach(t => {
 			const path = t.getAttribute('path');
 			t.className = `${state.playlist.tracks.includes(path) ? 'playlist' : ''} ${Path.eq(state.track.path, path) ? 'selected' : ''}`
 		});

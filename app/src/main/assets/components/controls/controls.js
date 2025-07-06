@@ -111,13 +111,13 @@ class MusicControls extends HTMLElementBase {
 		this.#updateSeekUI();
 
 		// replace name animation
-		this.#replaceAnimation(this.trackName, 300, state.track.name);
+		this.#updateTrackText(this.trackName, 300, state.track.name);
 
 		// replace album | artist animation
-		this.#replaceAnimation(this.trackAlbumArtist, 400, `<strong>${state.track.album}</strong> ${state.track.artist ? ' | ' : ''} ${state.track.artist}`);
+		this.#updateTrackText(this.trackAlbumArtist, 400, `<strong>${state.track.album}</strong> ${state.track.artist ? ' | ' : ''} ${state.track.artist}`);
 
-		this.#replaceChatpers();
-		this.#replaceAlbumArt();
+		this.#updateChapters();
+		this.#updateAlbumArt();
 	}
 	#updateSeekUI() {
 		// max needs to be set before the value
@@ -128,16 +128,17 @@ class MusicControls extends HTMLElementBase {
 		this.seekCurrent.innerHTML = readableTime(state.track.seek);
 		this.seekRange.value = state.track.seek;
 	}
-	#replaceAnimation(elem, delay, val) {
+	#updateTrackText(elem, delay, val) {
 		elem.replayAnimations();
 		setTimeout(() => elem.innerHTML = val, delay);
 	}
-	#replaceAlbumArt() {
+	#updateAlbumArt() {
 		if (state.track.albumArt) this.albumArt.setAttribute('src', 'data:image/png;base64, ' + state.track.albumArt.replace('file:///android_asset/', ''));
 		this.albumArt.classList.toggle('hidden', !state.track.albumArt);
 	}
-	#replaceChatpers() {
-		this.chapters.innerHTML = state.track.chapters
+	#updateChapters() {
+		// drop the first chapter rendering
+		this.chapters.slice(1).innerHTML = state.track.chapters
 			?.map(c => `<li style="inset-inline-start:${c.startTime / state.track.duration * this.chapters.clientWidth}px"></li>`)
 			?.join('') || '';
 	}

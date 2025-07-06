@@ -1,0 +1,11 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "android-webview",
+			"request": "attach",
+			"name": "Attach to Android WebView",
+			"application": "mohsen.muhammad.minimalist.debug",
+		}
+	]
+}

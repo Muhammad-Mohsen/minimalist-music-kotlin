@@ -143,7 +143,6 @@ class MusicExplorer extends HTMLElementBase {
 	// RENDERING
 	#render() {
 		super.render(`
-			<music-header id="header"></music-header>
 			<div class="explorer-container">
 				<ul class="explorer current" dir=""></ul>
 				<ul class="explorer out" dir=""></ul>

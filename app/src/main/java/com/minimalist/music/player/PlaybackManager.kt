@@ -86,7 +86,7 @@ class PlaybackManager :
 
 		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched to which the response would be to call restoreState
 		// so a manual call is necessary
-		restoreState(true)
+		updateState(isBootstrapping = true)
 	}
 
 	override fun onDestroy() {
@@ -121,27 +121,27 @@ class PlaybackManager :
 	}
 
 	// restores state (from the State object) from a previous session
-	private fun restoreState(isBootstrapping: Boolean = false) {
+	private fun updateState(isBootstrapping: Boolean = false) {
 		if (!State.track.exists) return
 
-		setTrack(State.track.path, false)
+		sendTrackUpdate(State.track.path, false)
 		updateSeek(State.track.seek)
-		if (isBootstrapping) EventBus.dispatch(Event(Type.SEEK_UPDATE_USER, Target.SERVICE)) // notify the session
+		if (isBootstrapping) EventBus.dispatch(Event(Type.SEEK_UPDATE, TARGET)) // notify the session
+	}
+	private fun sendTrackUpdate(path: String, updatePlaylist: Boolean = true) {
+		player.prepareSource(path)
+
+		// update playlist
+		if (updatePlaylist || State.playlist.isEmpty()) State.playlist.update(path)
+		State.playlist.updateIndex(path)
+		EventBus.dispatch(Event(Type.PLAYLIST_UPDATE, TARGET, State.playlist.serialize()))
 	}
 
 	// playback
-	private fun setTrack(path: String, updatePlaylist: Boolean = true) {
-		// update playlist
-		if (updatePlaylist || State.playlist.isEmpty()) State.playlist.updateItems(path)
-		State.playlist.updateIndex(path)
-
-		player.prepareSource(path)
-	}
-
 	private fun playTrack(path: String?, updatePlaylist: Boolean = true) {
 		if (path == null) return
 
-		setTrack(path, updatePlaylist)
+		sendTrackUpdate(path, updatePlaylist)
 
 		val focusResult = audioFocusHandler.request()
 		if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
@@ -151,7 +151,7 @@ class PlaybackManager :
 		player.playPause(true)
 		sendAudioEffectControl(true)
 		sendMetadataUpdate(path)
-		sendSeekUpdates()
+		sendPeriodicSeekUpdates()
 	}
 	private fun playPause(play: Boolean) {
 		if (play) {
@@ -167,24 +167,8 @@ class PlaybackManager :
 
 		player.playPause(play)
 		sendAudioEffectControl(play)
-		sendSeekUpdates(play)
+		sendPeriodicSeekUpdates(play)
 	}
-
-	private fun updatePlaybackSpeed(speed: Float = 1F) {
-		// the store reports an IllegalStateException crashes over here, so try/catch that sumbitch!
-		try {
-			val wasPaused = !player.isPlaying
-			player.playbackParams = player.playbackParams.setSpeed(speed)
-
-			// apparently, setting the playback speed while paused, resumes playback, so force it here.
-			// no need to send any further notifications/events, so directly call the player's pause function
-			if (wasPaused) player.playPause(false)
-		}
-		catch (e: Exception) {
-			Log.d(PlaybackManager::class.simpleName, "updatePlaybackSpeed: ${e.message}")
-		}
-	}
-
 	private fun playNext() {
 		if (State.track.hasChapters) {
 			val nextChapter = State.track.chapters.getNextChapter(player.currentPositionSafe.toLong())
@@ -215,18 +199,23 @@ class PlaybackManager :
 		player.seekTo(mils)
 		sendSingleSeekUpdate()
 	}
-	private fun sendSeekUpdates(toggleDispatch: Boolean = true) {
+	private fun sendPeriodicSeekUpdates(toggle: Boolean = true) {
 		timer.cancelSafe()
 
-		if (!toggleDispatch) return
+		if (!toggle) return
 
-		timer = Timer()
-		timer?.schedule(object : TimerTask() {
-			override fun run() {
-				sendSingleSeekUpdate()
-			}
+		timer = Timer().apply {
+			schedule(object : TimerTask() {
+				override fun run() {
+					sendSingleSeekUpdate()
+				}
 
-		}, 0L, SEEK_UPDATE_PERIOD)
+			}, 0L, SEEK_UPDATE_PERIOD)
+		}
+	}
+	private fun sendSingleSeekUpdate() {
+		State.track.seek = player.currentPositionSafe
+		EventBus.dispatch(Event(Type.SEEK_TICK, TARGET, mapOf("seek" to State.track.seek)))
 	}
 
 	private fun fastForward() {
@@ -238,18 +227,28 @@ class PlaybackManager :
 		sendSingleSeekUpdate()
 	}
 
-	// used to update the seek (used for when the playback is stopped but the user changes seek)
-	private fun sendSingleSeekUpdate() {
-		State.track.seek = player.currentPositionSafe
-		EventBus.dispatch(Event(Type.SEEK_UPDATE, TARGET))
+	private fun updatePlaybackSpeed(speed: Float = 1F) {
+		// the store reports an IllegalStateException crashes over here, so try/catch that sumbitch!
+		try {
+			val wasPaused = !player.isPlaying
+			player.playbackParams = player.playbackParams.setSpeed(speed)
+
+			// apparently, setting the playback speed while paused, resumes playback, so force it here.
+			// no need to send any further notifications/events, so directly call the player's pause function
+			if (wasPaused) player.playPause(false)
+		}
+		catch (e: Exception) {
+			Log.d(PlaybackManager::class.simpleName, "updatePlaybackSpeed: ${e.message}")
+		}
 	}
 
 	// metadata
 	private fun sendMetadataUpdate(path: String) {
 		State.track.update(path)
-		EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET))
+		EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET, State.track.serialize()))
 	}
 
+	// equalizer
 	private fun sendAudioEffectControl(play: Boolean = false) {
 		val action = if (play) AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION else AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION
 
@@ -297,12 +296,13 @@ class PlaybackManager :
 	}
 
 	// event bus handler
+	@Suppress("UNCHECKED_CAST")
 	override fun handle(event: Event) {
 		if (event.target == TARGET) return
 
 		when (event.type) {
 			Type.APP_FOREGROUNDED -> startForegroundSafe()
-			Type.PLAY_TRACK -> playTrack(event.data["track"].toString())
+			Type.PLAY_TRACK -> playTrack(event.data["path"].toString())
 			Type.PLAY -> playPause(true)
 			Type.PAUSE -> playPause(false)
 			Type.SEEK_UPDATE -> updateSeek(event.data["seek"].toString().toInt())
@@ -315,9 +315,18 @@ class PlaybackManager :
 			Type.CYCLE_SHUFFLE -> { State.playlist.toggleShuffle() }
 			Type.PLAY_PREVIOUS -> playPrev()
 			Type.PLAY_NEXT -> playNext()
-			Type.PLAY_SELECTED -> playTrack(State.playlist.getTrackByIndex(0), false)
 
-			Type.METADATA_UPDATE -> restoreState()
+			Type.QUEUE_PLAY_SELECTED -> {
+				State.playlist.update(event.data["tracks"] as ArrayList<String>)
+				EventBus.dispatch(Event(Type.PLAYLIST_UPDATE, Target.ACTIVITY, mapOf("files" to State.playlist.serialize())))
+				playTrack(State.playlist.getTrackByIndex(0), false)
+			}
+			Type.QUEUE_ADD_SELECTED -> {
+				State.playlist.update(event.data["tracks"] as ArrayList<String>, true)
+				EventBus.dispatch(Event(Type.PLAYLIST_UPDATE, Target.ACTIVITY, State.playlist.serialize()))
+			}
+
+			Type.METADATA_UPDATE -> updateState()
 		}
 	}
 

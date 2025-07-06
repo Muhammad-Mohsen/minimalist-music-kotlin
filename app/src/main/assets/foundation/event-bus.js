@@ -5,37 +5,33 @@ var EventBus = (() => {
 		PERMISSION_REQUEST: 'permissionRequest',
 		PERMISSION_RESPONSE: 'permissionResponse',
 
-		DIR_CHANGE_REQUEST: 'dirChangeRequest',
 		DIR_CHANGE: 'dirChange',
+		DIR_UPDATE: 'dirUpdate',
+
 		MODE_CHANGE: 'modeChange',
 		MODE_NORMAL: 'modeNormal',
 
 		INSETS: 'insets',
-		STATE_UPDATE_REQUEST: 'stateUpdateRequest',
 		RESTORE_STATE: 'restoreState',
 
-		TOGGLE_SHUFFLE: 'toggleShuffle',
-		TOGGLE_REPEAT: 'toggleRepeat',
-
-		PLAY_TRACK_REQUEST: 'playTrackRequest',
+		METADATA_UPDATE: 'metadataUpdate',
 		PLAY_TRACK: 'playTrack',
-		PLAY_NEXT_REQUEST: 'playNextRequest',
 		PLAY_NEXT: 'playNext',
-		PLAY_PREV_REQUEST: 'playPrevRequest',
 		PLAY_PREV: 'playPrev',
 		PLAY: 'play',
 		PAUSE: 'pause',
 		PLAY_PAUSE: 'playPause',
 		SEEK_UPDATE: 'seekUpdate',
-		SEEKING: 'seeking',
+		SEEK_TICK: 'seekTick',
 		FF: 'ff',
 		RW: 'rw',
 
-		METADATA_UPDATE: 'metadataUpdate',
-		METADATA_FETCH: 'metadataFetch',
+		TOGGLE_SHUFFLE: 'toggleShuffle',
+		TOGGLE_REPEAT: 'toggleRepeat',
 
 		SEARCH: 'search',
 
+		PLAYLIST_UPDATE: 'playlistUpdate',
 		QUEUE_PLAY_SELECTED: 'queuePlaySelected', // play the selected items (from breadcrumb bar)
 		QUEUE_ADD_SELECTED: 'queueAddSelected',
 		SELECT_MODE_COUNT: 'selectModeCount', // select mode count change

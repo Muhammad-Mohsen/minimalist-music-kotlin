@@ -20,17 +20,17 @@ class MusicExplorer extends HTMLElementBase {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_CHANGE], () => {
-				this.#renderItems();
+			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => {
+				this.#renderExplorer();
 				this.#scrollToSelected();
 			})
-			.is([EventBus.Type.QUEUE_ADD_SELECTED, EventBus.Type.QUEUE_PLAY_SELECTED], () => {
+			.is([EventBus.Type.PLAYLIST_UPDATE, EventBus.Type.QUEUE_ADD_SELECTED, EventBus.Type.QUEUE_PLAY_SELECTED], () => {
 				this.#updateItems();
 			})
-			.is(EventBus.Type.PLAY_TRACK, () => {
+			.is([EventBus.Type.PLAY_TRACK, EventBus.Type.METADATA_UPDATE], () => {
 				const path = state.track.path;
 				const target = document.querySelectorAll('.explorer.current button').toArray().find(f => f.getAttribute('path') == path);
-				if (target) select(target);
+				if (target) this.#select(target);
 			})
 			.is(EventBus.Type.SEARCH, () => this.search())
 			.is(EventBus.Type.MODE_CHANGE, () => {
@@ -84,7 +84,7 @@ class MusicExplorer extends HTMLElementBase {
 		// DIRECTORY
 		if (type == this.Type.DIR) {
 			state.currentDir = path;
-			return EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE_REQUEST, target: this.#TARGET, data: { dir: state.currentDir } });
+			return EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { dir: state.currentDir } });
 		}
 
 		// LONG PRESS (already handled)
@@ -96,7 +96,7 @@ class MusicExplorer extends HTMLElementBase {
 
 		// TRACK
 		this.#select(target);
-		EventBus.dispatch({ target: this.#TARGET, type: EventBus.Type.PLAY_TRACK_REQUEST, data: { path: target.getAttribute('path') } });
+		EventBus.dispatch({ target: this.#TARGET, type: EventBus.Type.PLAY_TRACK, data: { path: target.getAttribute('path') } });
 	}
 	onItemLongTouch(target) {
 		this.#mark(target);
@@ -140,8 +140,6 @@ class MusicExplorer extends HTMLElementBase {
 		});
 	}
 
-	//
-
 	// RENDERING
 	#render() {
 		super.render(`
@@ -154,7 +152,7 @@ class MusicExplorer extends HTMLElementBase {
 		`);
 	}
 
-	#renderItems() {
+	#renderExplorer() {
 		const current = this.querySelector('.explorer.current');
 		const outward = this.querySelector('.explorer.out');
 		const inward = this.querySelector('.explorer.in');
@@ -166,7 +164,7 @@ class MusicExplorer extends HTMLElementBase {
 		const other = toInward ? inward : outward;
 		const otherOther = toInward ? outward : inward;
 
-		this.#updateItems(other);
+		this.#renderItems(other);
 
 		other.setAttribute('dir', currentDir);
 
@@ -174,7 +172,7 @@ class MusicExplorer extends HTMLElementBase {
 		other.className = 'explorer current';
 		otherOther.className = 'explorer ' + (toInward ? 'in' : 'out');
 	}
-	#updateItems(explorer) {
+	#renderItems(explorer) {
 		explorer ||= this.querySelector('.explorer.current');
 
 		const files = state.files;
@@ -190,6 +188,12 @@ class MusicExplorer extends HTMLElementBase {
 				<i class="ic-mark"></i>
 			</button>`
 		));
+	}
+	#updateItems() {
+		this.querySelectorAll('.explorer.current [type="track"]')forEach(t => {
+			const path = t.getAttribute('path');
+			t.className = `${state.playlist.tracks.includes(path) ? 'playlist' : ''} ${Path.eq(state.track.path, path) ? 'selected' : ''}`
+		});
 	}
 
 	#select(target) {
@@ -210,7 +214,7 @@ class MusicExplorer extends HTMLElementBase {
 	}
 
 	#scrollToSelected() {
-		this.querySelector('.current .selected')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		this.querySelector('.current .selected')?.scrollIntoView({ block: 'center' });
 	}
 }
 

@@ -1,29 +1,17 @@
 # Dev Guide | Minimalist Music Kotling - Hybrid
 
 ## General
-- use a webview for the UI
-	- webview will only be responsible for the UI. i.e. playback, metadata, notification, media session management, etc. will still be managed natively
-	- this greatly facilitates adding new features and also keeping the code modern without resorting to jetpack compose :D
-- DONE - design the new UI
-- DONE - create a new Android project using the latest project template (check online to see if there are better templates than the ones in Android Studio)
-- DONE - use edge to edge + fallback gracefully
-- implement a 'decent' JS bridge
-- implement the UI!
-	- start with interactions
-		- DONE - pulse animation for the play/pause button
-		- DONE - subtle scale animation for everything else (.9x scale should be good enough)
-		- maybe a ripple as well?
-		- DONE - the interaction should be on the :active state, not hover/focus
-	- if art,
-		- playing: full-color | paused: grayscale!
-		- fade in/out when changing
-	- create a smooth progressbar animation?
-		- can be done with typed css variables?
-	- then, there's the state!
-		- title + subtitle
-		- current time + duration
-		- active queue
-		- mode (normal/selection/search/selection+search)
+- DONE - chapters
+- DONE - play selected
+- DONE - add to selection
+- ff/rw
+- chapters dialog
+- settings dialog
+- sort
+- customization
+- equalizer
+- DONE - instant scroll-to-selected
+- DONE - optimize renderItems on PLAYLIST_UPDATE
 
 ## Technical
 - DONE - edge to edge
@@ -97,27 +85,26 @@
 	- chapters -> needs a seek to event (already exists)
 	- lyrics
 	- settings -> a lot of events :D
+- implement equalizer
+	- https://stackoverflow.com/questions/41196054/how-to-implement-the-equalizer-with-my-mediaplayer-activity
 
 - DONE - BIG MILESTONE - test-run the communication...directory change
 
-- BIG MILESTONE - playback
-	- refactor PlaybackManager :(
-		- playTrack event -> playTrack function
-			- setTrack:
+- DONE - BIG MILESTONE - playback
 
-- app launch
+- DONE - app launch
 	- init the state
 	- init webview
 	- check storage permission
 	- init native
 	- serialize the state and send it to webview
 
-- back navigation
+- DONE - back navigation
 	- the native code will decide and send the parent dir to the webview if necessary
 	- need to check the mode first before changing dir
 - cheat off of kotlin / tauri code
 
-- PERMISSION - update the mode on the document
+- DONE - PERMISSION - update the mode on the document
 
 - chapter titles
 ```kotlin

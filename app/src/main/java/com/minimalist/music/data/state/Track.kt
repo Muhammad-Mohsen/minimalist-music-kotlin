@@ -8,16 +8,21 @@ import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.data.files.SerializableBitmap
 import com.minimalist.music.data.files.serializeChapters
 import com.minimalist.music.data.state.State.Key
-import com.minimalist.music.data.state.State.track
 import com.minimalist.music.foundation.ext.EMPTY
-import com.minimalist.music.foundation.ext.formatMillis
 import com.minimalist.music.foundation.ext.put
 import java.io.File
 
 class Track(private val preferences: SharedPreferences) {
+	private var _path: String? = null
 	var path: String
-		get() = preferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY
-		set(value) = preferences.put(Key.PATH, value)
+		get() {
+			if (_path == null) _path = preferences.getString(Key.PATH, String.EMPTY) ?: String.EMPTY
+			return _path!!
+		}
+		set(value) {
+			_path = value
+			preferences.put(Key.PATH, value)
+		}
 
 	val exists
 		get() = File(path).exists()
@@ -28,21 +33,22 @@ class Track(private val preferences: SharedPreferences) {
 	var duration = 0L
 	var albumArt: SerializableBitmap? = null
 
+	private var _seek: Int? = null
 	var seek: Int
-		get() = preferences.getInt(Key.SEEK, 0)
-		set(value) = preferences.put(Key.SEEK, value)
+		get() {
+			if (_seek == null) _seek = preferences.getInt(Key.SEEK, 0)
+			return _seek!!
+		}
+		set(value) {
+			_seek = value
+			preferences.put(Key.SEEK, value)
+		}
 
 	var chapters: ArrayList<Chapter> = ArrayList()
 	val hasChapters: Boolean
 		get() = chapters.size > 1
 
 	var lyrics = String.EMPTY
-
-	val readableSeek: String
-		get() = formatMillis(seek.toLong())
-
-	val readableDuration: String
-		get() = formatMillis(duration)
 
 	fun update(filePath: String = String.EMPTY) {
 		path = filePath.ifBlank { path }

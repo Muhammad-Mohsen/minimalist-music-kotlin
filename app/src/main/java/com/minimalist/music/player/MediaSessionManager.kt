@@ -7,6 +7,8 @@ import android.support.v4.media.session.PlaybackStateCompat
 import com.minimalist.music.foundation.EventBus
 import com.minimalist.music.data.state.State
 import com.minimalist.music.foundation.EventBus.Event
+import com.minimalist.music.foundation.EventBus.Type
+import com.minimalist.music.foundation.EventBus.Target
 
 /**
  * Created by muhammad.mohsen on 5/11/2019.
@@ -40,47 +42,47 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 	// media button callbacks
 	override fun onPlay() {
 		super.onPlay()
-		EventBus.dispatch(Event(EventBus.Target.SESSION, EventBus.Type.PLAY))
+		EventBus.dispatch(Event(Type.PLAY, Target.SESSION))
 	}
 	override fun onPause() {
 		super.onPause()
-		EventBus.dispatch(Event(EventBus.Target.SESSION, EventBus.Type.PAUSE))
+		EventBus.dispatch(Event(Type.PAUSE, Target.SESSION))
 	}
 	override fun onStop() {
 		super.onStop()
-		EventBus.dispatch(Event(EventBus.Target.SESSION, EventBus.Type.PAUSE))
+		EventBus.dispatch(Event(Type.PAUSE, Target.SESSION))
 	}
 	override fun onSkipToNext() {
 		super.onSkipToNext()
-		EventBus.dispatch(Event(EventBus.Target.SESSION, EventBus.Type.PLAY_NEXT))
+		EventBus.dispatch(Event(Type.PLAY_NEXT, Target.SESSION))
 	}
 	override fun onSkipToPrevious() {
 		super.onSkipToPrevious()
-		EventBus.dispatch(Event(EventBus.Target.SESSION, EventBus.Type.PLAY_PREVIOUS))
+		EventBus.dispatch(Event(Type.PLAY_PREVIOUS, Target.SESSION))
+	}
+
+	override fun onFastForward() {
+		super.onFastForward()
+	}
+
+	override fun onRewind() {
+		super.onRewind()
 	}
 
 	override fun onSeekTo(pos: Long) {
-		EventBus.dispatch(Event(
-			EventBus.Type.SEEK_UPDATE,
-			EventBus.Target.SESSION,
-			mapOf("seek" to pos)
-		))
-		handle(Event(EventBus.Target.SESSION, EventBus.Type.SEEK_UPDATE_USER))
-
+		EventBus.dispatch(Event(Type.SEEK_UPDATE, Target.SESSION, mapOf("seek" to pos)))
 	}
 
 	override fun handle(event: Event) {
-		if (!SUPPORTED_EVENTS.contains(event.type)) return
-
 		// state
 		when (event.type) {
-			EventBus.Type.PLAY -> stateBuilder.setState(PLAYING, State.track.seek.toLong(), State.settings.playbackSpeed)
-			EventBus.Type.PAUSE -> stateBuilder.setState(PAUSED, State.track.seek.toLong(), 0F)
+			Type.PLAY -> stateBuilder.setState(PLAYING, State.track.seek.toLong(), State.settings.playbackSpeed)
+			Type.PAUSE -> stateBuilder.setState(PAUSED, State.track.seek.toLong(), 0F)
 
-			EventBus.Type.PLAY_NEXT, EventBus.Type.PLAY_PREVIOUS, EventBus.Type.PLAY_SELECTED, EventBus.Type.PLAY_TRACK ->
+			Type.PLAY_NEXT, Type.PLAY_PREVIOUS, Type.QUEUE_PLAY_SELECTED, Type.PLAY_TRACK ->
 				stateBuilder.setState(PLAYING, 0, State.settings.playbackSpeed)
 
-			EventBus.Type.SEEK_UPDATE_USER, EventBus.Type.PLAYBACK_SPEED ->
+			Type.SEEK_UPDATE, Type.PLAYBACK_SPEED ->
 				stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, State.track.seek.toLong(), if (State.isPlaying) State.settings.playbackSpeed else 0F)
 		}
 		mediaSession.setPlaybackState(stateBuilder.build())
@@ -88,7 +90,7 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 		// there was a check here that prevented updating the metadata except for a couple of events
 		// not updating the metadata, I think, causes an issue where the notification seekbar stops working (on Android 10, at least)
 		// to repro, select a track with album art, close the app, open it again, seek from the app's UI, play, check the notification
-		if (!arrayOf(EventBus.Type.METADATA_UPDATE, EventBus.Type.PLAY, EventBus.Type.SEEK_UPDATE_USER).contains(event.type)) return
+		if (!arrayOf(Type.METADATA_UPDATE, Type.PLAY, Type.SEEK_UPDATE, Type.SEEK_UPDATE).contains(event.type)) return
 
 		// metadata
 		metadataBuilder.apply {
@@ -113,15 +115,8 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 				PlaybackStateCompat.ACTION_STOP or
 				PlaybackStateCompat.ACTION_SKIP_TO_NEXT or
 				PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
-				PlaybackStateCompat.ACTION_SEEK_TO
-
-		private val SUPPORTED_EVENTS = arrayOf(EventBus.Type.PLAY_NEXT,
-				EventBus.Type.METADATA_UPDATE,
-				EventBus.Type.PLAY_PREVIOUS,
-				EventBus.Type.PLAY_SELECTED,
-				EventBus.Type.PLAY_TRACK,
-				EventBus.Type.PLAY,
-				EventBus.Type.PAUSE,
-				EventBus.Type.SEEK_UPDATE_USER)
+				PlaybackStateCompat.ACTION_SEEK_TO or
+				PlaybackStateCompat.ACTION_FAST_FORWARD or
+				PlaybackStateCompat.ACTION_REWIND
 	}
 }

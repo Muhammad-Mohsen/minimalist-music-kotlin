@@ -1,8 +1,6 @@
 package com.minimalist.music.foundation.ext
 
 import android.media.MediaPlayer
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by muhammad.mohsen on 2/17/2019.
@@ -38,6 +36,7 @@ val MediaPlayer?.isPlayingSafe: Boolean
 			isPlaying
 
 		} catch (e: Exception) {
+			e.printStackTrace()
 			false
 		}
 	}
@@ -47,15 +46,7 @@ val MediaPlayer.currentPositionSafe: Int
 		return try {
 			currentPosition
 		} catch (e: Exception) {
+			e.printStackTrace()
 			0
 		}
 	}
-
-fun formatMillis(durationMillis: Long): String {
-	val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
-	val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis) % 60
-	val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis) % 60
-
-	return if (hours > 0) String.format(Locale("US"), "%02d:%02d:%02d", hours, minutes, seconds)
-	else String.format(Locale("US"), "%02d:%02d", minutes, seconds)
-}

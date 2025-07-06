@@ -19,19 +19,10 @@ EventBus.subscribe((event, native) => {
 			else if (event.data.mode == state.Mode.PERMISSION && state.mode != state.Mode.PERMISSION) state.mode = state.Mode.PERMISSION;
 		})
 		.is(EventBus.Type.RESTORE_STATE, () => state.restore(event.data))
-		.is(EventBus.Type.DIR_CHANGE, () => {
+		.is(EventBus.Type.DIR_UPDATE, () => {
 			if (event.data.currentDir) state.currentDir = event.data.currentDir;
 			state.files = event.data.files;
 		})
-
-		.is(EventBus.Type.PLAY, () => {
-			state.isPlaying = true;
-		})
-		.is(EventBus.Type.PAUSE, () => {
-			state.isPlaying = false;
-		})
-		// .is(EventBus.Type.PLAY_TRACK, () => {
-		// 	state.currentTrack = event.data.path;
-		// 	state.isPlaying = true;
-		// })
+		.is(EventBus.Type.PLAYLIST_UPDATE, () => state.updatePlaylist(event.data)) // can be moved to explorer
+		.is(EventBus.Type.METADATA_UPDATE, () => state.updateTrack(event.data))
 });

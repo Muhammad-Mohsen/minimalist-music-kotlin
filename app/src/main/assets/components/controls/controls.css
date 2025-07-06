@@ -1,6 +1,7 @@
 music-controls {
 	position: fixed;
 	inset: auto 0 var(--inset-bottom, 0px);
+	z-index: 1;
 }
 
 #album-art {
@@ -9,12 +10,13 @@ music-controls {
 	max-width: 100vw;
 	max-height: 100vh;
 	mask-image: radial-gradient(at 20% 0%, black 40%, transparent 70%);
-	opacity: .25;
-	z-index: 1;
+	filter: grayscale();
+	opacity: .3;
 	pointer-events: none;
-	transition: opacity .3s;
+	transition: opacity .3s, filter .3s;
 }
-#album-art:not([src]) { opacity: 0; }
+#album-art.hidden { opacity: 0; }
+body[is-playing="true"] #album-art { filter: none; }
 
 .main-controls {
 	position: relative;
@@ -32,9 +34,7 @@ music-controls {
 		backdrop-filter: blur(16px);
 	}
 
-	#play-pause-button, #seek-current, #seek-duration, #chapters, #track-name, #track-album-artist {
-		color: var(--foreground);
-	}
+	#play-pause-button, #seek-current, #seek-duration, #track-name, #track-album-artist { color: var(--foreground); }
 
 	.seek-text-container {
 		position: relative;
@@ -47,23 +47,51 @@ music-controls {
 	#seek-current { font: 600 .8rem / .8rem system-ui; }
 	#seek-duration { font: 400 .8rem / .8rem system-ui; }
 
+	#chapters {
+		position: relative;
+        height: 5px;
+        transition: .2s;
+        pointer-events: none;
+        margin-block: 4px 8px;
+        opacity: .5;
+
+		li {
+			position: absolute;
+			inset: 0 auto 0 auto;
+			width: 1px;
+			height: 100%;
+			background: var(--foreground-secondary);
+		}
+
+		li span { display: block; }
+
+		&:empty {
+			height: 0;
+			margin-block: 0;
+		}
+	}
+
 	#track-name {
 		position: relative;
-		padding: 4px;
+		padding: 4px 24px;
 		text-align: center;
 		font: 400 1rem / 1rem system-ui;
-		animation: .8s switch .1s forwards;
-
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		animation: .7s switch forwards;
 		pointer-events: none;
 	}
 	#track-album-artist {
 		position: relative;
-		padding: 4px 0 12px;
+		padding: 4px 24px 12px;
 		text-align: center;
 		color: var(--foreground-secondary);
-		font: 400 .8rem / .8rem system-ui;
-		animation: .8s switch .2s forwards;
-
+		font: 400 .65rem / .65rem system-ui;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		animation: .7s switch .15s forwards;
 		pointer-events: none;
 	}
 }

@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			}
 			else -> {
 				State.currentDirectory = State.currentDirectory.parentFile!! // don't worry about it
-				EventBus.dispatch(Event(Type.DIR_CHANGE, Target.ACTIVITY, mapOf(
+				EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf(
 					"currentDir" to State.currentDirectory.absolutePath,
 					"files" to State.files.serializeFiles()
 				)))
@@ -203,14 +203,11 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			Type.PERMISSION_REQUEST -> requestPermission()
 			Type.EQ -> eq()
 			Type.PRIVACY_POLICY -> privacyPolicy()
-			Type.MODE_CHANGE -> State.mode = event.data["mode"].toString()
-			Type.DIR_CHANGE_REQUEST -> {
+			Type.MODE_CHANGE -> State.mode = event.data["mode"].toString() // only used for system back navigation logic
+
+			Type.DIR_CHANGE -> {
 				State.currentDirectory = File(event.data["dir"].toString())
-				EventBus.dispatch(Event(Type.DIR_CHANGE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
-			}
-			Type.PLAY_TRACK_REQUEST -> {
-				State.track.path = event.data["path"].toString()
-				EventBus.dispatch(Event(Type.PLAY_TRACK, Target.ACTIVITY, mapOf("path" to State.track.path)))
+				EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
 			}
 		}
 	}

@@ -27,7 +27,7 @@ object EventBus {
 	fun dispatch(event: Event) {
 		subscribers.forEach { sub -> sub.get()?.handle(event) }
 
-		val event = JSONObject(mapOf<String, Any>(
+		val event = JSONObject(mapOf(
 			"type" to event.type,
 			"target" to event.target,
 			"data" to event.data
@@ -58,33 +58,27 @@ object EventBus {
 		const val RESTORE_STATE = "restoreState"
 		const val INSETS = "insets"
 
-		const val PLAY_TRACK_REQUEST = "playTrackRequest"
 		const val PLAY_TRACK = "playTrack"
 		const val PLAY_NEXT = "playNext"
 		const val PLAY_PREVIOUS = "playPrev"
-		const val PLAY_SELECTED = "playSelected" // play the selected items (from breadcrumb bar)
+		const val QUEUE_PLAY_SELECTED = "queuePlaySelected" // play the selected items (from breadcrumb bar)
+		const val QUEUE_ADD_SELECTED = "queueAddSelected" // play the selected items (from breadcrumb bar)
 
 		const val PLAY = "play"
 		const val PAUSE = "pause"
 		const val FF = "ff"
 		const val RW = "rw"
 
-		const val DIR_CHANGE_REQUEST = "dirChangeRequest"
 		const val DIR_CHANGE = "dirChange"
+		const val DIR_UPDATE = "dirUpdate"
 		const val METADATA_UPDATE = "metadataUpdate" // event to update the metadata (album|artist|total duration)
+		const val PLAYLIST_UPDATE = "playlistUpdate"
 
+		const val SEEK_TICK = "seekTick"
 		const val SEEK_UPDATE = "seekUpdate"
-		const val SEEK_UPDATE_USER = "seekUpdateUser" // a seek change that was initiated by the user (used to update the session playback state)
-
-		const val SELECT_MODE_ADD = "selectModeAdd" // add a track to the selected list (activate the mode if none were selected before)
-		const val SELECT_MODE_SUB = "selectModeSub" // remove a track from the selected list (deactivate the mode if none are selected now)
-		const val SELECT_MODE_CANCEL = "selectModeCancel" // deactivate select mode (press cancel from the breadcrumb bar)
-		const val SEARCH_QUERY = "searchQuery" // search the explorer with a query
 
 		const val SLEEP_TIMER_TICK = "sleepTimerTick"
 		const val SLEEP_TIMER_FINISH = "sleepTimerFinish"
-
-		const val HIDE_SETTINGS = "hideSettings"
 
 		const val PLAYBACK_SPEED = "playbackSpeed"
 		const val EQ = "eq"

@@ -1,8 +1,8 @@
 package com.minimalist.music.data.state
 
 import android.content.SharedPreferences
-import com.minimalist.music.foundation.ext.put
 import com.minimalist.music.data.files.FileCache
+import com.minimalist.music.foundation.ext.put
 import java.util.Collections
 import java.util.concurrent.ThreadLocalRandom
 
@@ -19,21 +19,21 @@ class Playlist(private val preferences: SharedPreferences) {
 
 	var index: Int = 0 // current index
 
-	fun updateItems(trackPath: String) {
+	fun update(trackPath: String) {
 		val tracks = FileCache.getMediaPathsByPath(trackPath)
 		val start = tracks.indexOf(trackPath)
 		Collections.rotate(tracks, -start) // start where the user clicked
 
-		updateItems(tracks)
+		update(tracks)
 	}
-	fun updateItems(items: List<String>, append: Boolean = false) {
+	fun update(trackList: List<String>, append: Boolean = false) {
 		if (!append) tracks.clear()
-		tracks.addAll(items)
+		tracks.addAll(trackList)
 
-		preferences.put(State.Key.PLAYLIST, items.joinToString(";"))
+		preferences.put(State.Key.PLAYLIST, trackList.joinToString(";"))
 	}
-	// sets the index of the current track (may return -1 if the track was deleted for example)
 
+	// sets the index of the current track (may return -1 if the track was deleted for example)
 	fun updateIndex(currentTrackPath: String) {
 		index = tracks.indexOf(currentTrackPath)
 	}

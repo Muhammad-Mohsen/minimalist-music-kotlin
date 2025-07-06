@@ -24,7 +24,6 @@ import com.minimalist.music.data.state.State
 /**
  * Created by muhammad.mohsen on 5/3/2019.
  * Handles the display/control of the notification
- * P.S. the "NotificationManager" name is already taken!
  */
 
 class MediaNotificationManager(private val context: Context, sessionToken: MediaSessionCompat.Token) : EventBus.Subscriber {

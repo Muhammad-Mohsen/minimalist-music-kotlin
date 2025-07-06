@@ -11,7 +11,7 @@ class MusicHeader extends HTMLElementBase {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_CHANGE], () => this.#renderCrumbs())
+			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => this.#renderCrumbs())
 			.is(EventBus.Type.SELECT_MODE_COUNT, () => {
 				this.selectCount.innerHTML = `${state.selection.length} selected`;
 			})
@@ -22,12 +22,12 @@ class MusicHeader extends HTMLElementBase {
 	onCrumbClick(crumb) {
 		state.currentDir = crumb.getAttribute('path');
 		this.#renderCrumbs();
-		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE_REQUEST, target: this.#TARGET, data: { dir: state.currentDir } });
+		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { dir: state.currentDir } });
 	}
 	onBackClick() {
 		state.currentDir = Path.join(state.currentDir.split(Path.SEPARATOR).slice(0, -1));
 		this.#renderCrumbs();
-		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE_REQUEST, target: this.#TARGET, data: { dir: state.currentDir } });
+		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { dir: state.currentDir } });
 	}
 
 	onCancelClick() {
@@ -47,12 +47,12 @@ class MusicHeader extends HTMLElementBase {
 	}
 	onAddToQueueClick() {
 		state.playlist.tracks = state.playlist.tracks.concat(state.selection);
-		EventBus.dispatch({ type: EventBus.Type.QUEUE_ADD_SELECTED, target: this.#TARGET, data: { selection: state.selection } });
+		EventBus.dispatch({ type: EventBus.Type.QUEUE_ADD_SELECTED, target: this.#TARGET, data: { tracks: state.selection } });
 		this.onCancelClick();
 	}
 	onPlaySelectedClick() {
 		state.playlist.tracks = state.selection;
-		EventBus.dispatch({ type: EventBus.Type.QUEUE_PLAY_SELECTED, target: this.#TARGET, data: { selection: state.selection } });
+		EventBus.dispatch({ type: EventBus.Type.QUEUE_PLAY_SELECTED, target: this.#TARGET, data: { tracks: state.selection } });
 		this.onCancelClick();
 	}
 

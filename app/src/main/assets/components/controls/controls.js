@@ -16,26 +16,14 @@ class MusicControls extends HTMLElementBase {
 				this.searchButton.classList.remove('ic-close'); // TODO fugly shit
 				this.searchButton.classList.add('ic-search');
 			})
-			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.METADATA_UPDATE], () => this.#updateMetadata(event.type == EventBus.Type.RESTORE_STATE))
-			.is(EventBus.Type.PLAY, () => playPause(true, 'suppress'))
-			.is(EventBus.Type.PAUSE, () => playPause(false, 'suppress'))
-			.is(EventBus.Type.PLAY_PAUSE, () => playPause())
-	}
-
-	#updateMetadata(onStart) {
-		this.#updateSeekUI();
-
-		// replace name animation
-		this.#replaceAnimation(this.trackName, 300, onStart, state.track.name);
-
-		// replace album | artist animation
-		this.#replaceAnimation(this.trackAlbumArtist, 400, onStart, `<strong>${state.track.album}</strong> ${state.track.artist ? ' | ' : ''} ${state.track.artist}`);
-
-		// TODO
-		this.chapters.innerHTML = '';
-
-		if (state.track.albumArt) this.albumArt.setAttribute('src', state.track.albumArt);
-		else this.albumArt.removeAttribute('src');
+			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.METADATA_UPDATE], () => this.#updateMetadata())
+			.is([EventBus.Type.PLAY, EventBus.Type.PLAY_TRACK, EventBus.Type.QUEUE_PLAY_SELECTED], () => this.playPause(true, 'suppress'))
+			.is(EventBus.Type.PAUSE, () => this.playPause(false, 'suppress'))
+			.is(EventBus.Type.PLAY_PAUSE, () => this.playPause())
+			.is(EventBus.Type.SEEK_TICK, () => {
+				state.track.seek = event.data.seek;
+				this.#updateSeekUI();
+			})
 	}
 
 	// UI HANDLERS
@@ -58,16 +46,10 @@ class MusicControls extends HTMLElementBase {
 		EventBus.dispatch({ type: EventBus.Type.PLAY_PREV, target: this.#TARGET });
 	}
 
-	onSeekTouchStart() {
-		EventBus.dispatch({ type: EventBus.Type.SEEKING, target: this.#TARGET, data: { isSeeking: true } });
-	}
 	onSeekChange(target) {
 		state.track.seek = target.value;
 		this.#updateSeekUI();
-		EventBus.dispatch({ type: EventBus.Type.SEEK_UPDATE_REQUEST, target: this.#TARGET, data: { seek: state.track.seek } });
-	}
-	onSeekTouchEnd() {
-		EventBus.dispatch({ type: EventBus.Type.SEEKING, target: this.#TARGET, data: { isSeeking: false } });
+		EventBus.dispatch({ type: EventBus.Type.SEEK_UPDATE, target: this.#TARGET, data: { seek: state.track.seek } });
 	}
 
 	toggleSearch() {
@@ -90,7 +72,7 @@ class MusicControls extends HTMLElementBase {
 		super.render(`
 			<img alt="Album Art" id="album-art">
 			<div class="main-controls">
-				<input type="range" id="seek-range" value="0" ontouchstart="${this.handle}.onSeekTouchStart()" ontouchend="${this.handle}.onSeekTouchEnd()" oninput="${this.handle}.onSeekChange(this)">
+				<input type="range" id="seek-range" value="0" oninput="${this.handle}.onSeekChange(this)">
 
 				<button id="play-pause-button" class="ic-btn main-character" aria-label="play/pause" onclick="${this.handle}.playPause()">
 					<svg  width="180" height="15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -124,20 +106,40 @@ class MusicControls extends HTMLElementBase {
 		setTimeout(() => this.pausePath.style.strokeDashoffset = parseInt(this.pausePath.style.strokeDashoffset) + 75, play ? 200 : 0);
 		setTimeout(() => this.playPath.style.strokeDashoffset = parseInt(this.playPath.style.strokeDashoffset) + 80, play ? 0 : 200);
 	}
+
+	#updateMetadata() {
+		this.#updateSeekUI();
+
+		// replace name animation
+		this.#replaceAnimation(this.trackName, 300, state.track.name);
+
+		// replace album | artist animation
+		this.#replaceAnimation(this.trackAlbumArtist, 400, `<strong>${state.track.album}</strong> ${state.track.artist ? ' | ' : ''} ${state.track.artist}`);
+
+		this.#replaceChatpers();
+		this.#replaceAlbumArt();
+	}
 	#updateSeekUI() {
+		// max needs to be set before the value
+		if (this.seekRange.max != state.track.duration) {
+			this.seekDuration.innerHTML = readableTime(state.track.duration);
+			this.seekRange.max = state.track.duration;
+		}
 		this.seekCurrent.innerHTML = readableTime(state.track.seek);
 		this.seekRange.value = state.track.seek;
-
-		if (this.seekRange.max == state.track.duration) return;
-		this.seekDuration.innerHTML = readableTime(state.track.duration);
-		this.seekRange.max = state.track.duration;
 	}
-	#replaceAnimation(elem, delay, onStart, val) {
-		if (onStart) elem.cancelAnimations();
-		else elem.replayAnimations();
-
-		if (onStart) elem.innerHTML = val;
-		else setTimeout(() => elem.innerHTML = val, delay);
+	#replaceAnimation(elem, delay, val) {
+		elem.replayAnimations();
+		setTimeout(() => elem.innerHTML = val, delay);
+	}
+	#replaceAlbumArt() {
+		if (state.track.albumArt) this.albumArt.setAttribute('src', 'data:image/png;base64, ' + state.track.albumArt.replace('file:///android_asset/', ''));
+		this.albumArt.classList.toggle('hidden', !state.track.albumArt);
+	}
+	#replaceChatpers() {
+		this.chapters.innerHTML = state.track.chapters
+			?.map(c => `<li style="inset-inline-start:${c.startTime / state.track.duration * this.chapters.clientWidth}px"></li>`)
+			?.join('') || '';
 	}
 }
 

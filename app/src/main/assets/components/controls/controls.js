@@ -137,8 +137,8 @@ class MusicControls extends HTMLElementBase {
 		this.albumArt.classList.toggle('hidden', !state.track.albumArt);
 	}
 	#updateChapters() {
-		// drop the first chapter rendering
-		this.chapters.slice(1).innerHTML = state.track.chapters
+		this.chapters.innerHTML = state.track.chapters
+			?.slice(1) // drop the first chapter rendering
 			?.map(c => `<li style="inset-inline-start:${c.startTime / state.track.duration * this.chapters.clientWidth}px"></li>`)
 			?.join('') || '';
 	}

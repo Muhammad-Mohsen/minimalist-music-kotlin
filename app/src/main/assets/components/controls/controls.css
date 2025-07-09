@@ -1,4 +1,16 @@
 music-controls {
+	--range-height: auto;
+	--range-border-width: 0;
+	--range-background: #33333380;
+	--range-progress-background: #74747433;
+}
+
+body[theme="light"] music-controls {
+	--range-background: #99999980;
+	--range-progress-background: #66666633;
+}
+
+music-controls {
 	position: fixed;
 	inset: auto 0 var(--inset-bottom, 0px);
 	z-index: 2;
@@ -24,11 +36,6 @@ body[is-playing="true"] #album-art { filter: none; }
 	margin: 0 12px;
 
 	#seek-range {
-		--range-height: auto;
-		--range-border-width: 0;
-		--range-background: #33333380;
-		--range-progress-background: #74747433;
-
 		position: absolute;
 		inset: 0;
 

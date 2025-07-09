@@ -9,14 +9,18 @@
 - DONE - sleep timer
 	- toggling
 	- handling tick
+- DONE - sort
+- DONE - instant scroll-to-selected
+- DONE - optimize renderItems on PLAYLIST_UPDATE
+- back button when settings is open
+- shuffle/repeat bug?
+- player bug!!
 - chapters dialog
 - lyrics dialog
 - equalizer + dialog
-- sort
 - customization
-- DONE - instant scroll-to-selected
-- DONE - optimize renderItems on PLAYLIST_UPDATE
 - translations
+- DONE - light theme
 
 ## Technical
 - DONE - edge to edge
@@ -25,7 +29,6 @@
 	- DONE - set the system bars color to transparent
     - DONE - inset handling
 - DONE - js bridge (EventBus)
-	- js + css bundling: simple bat script :)
 	- font(s)
 	- sending album art
   ```java

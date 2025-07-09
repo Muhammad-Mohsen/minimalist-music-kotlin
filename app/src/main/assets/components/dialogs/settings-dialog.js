@@ -19,7 +19,7 @@ class SettingsDialog extends HTMLElementBase {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is(EventBus.Type.RESTORE_STATE, () => this.#restoreState())
+			.is(EventBus.Type.RESTORE_STATE, () => this.#restore())
 			.is(EventBus.Type.MODE_CHANGE, () => state.mode == state.Mode.SETTINGS ? this.open() : this.close())
 			.is(EventBus.Type.SLEEP_TIMER_TICK, () => {
 				this.countdown.value = event.data.tick;
@@ -37,10 +37,10 @@ class SettingsDialog extends HTMLElementBase {
 		this.lightThemeButton.classList.remove('selected');
 		this.darkThemeButton.classList.remove('selected');
 
-		state.theme = theme;
+		state.settings.theme = theme;
 		target.classList.add('selected');
 
-		EventBus.dispatch({ type: EventBus.Type.THEME_CHANGE, target: this.#TARGET, data: { value: state.theme } });
+		EventBus.dispatch({ type: EventBus.Type.THEME_CHANGE, target: this.#TARGET, data: { value: state.settings.theme } });
 	}
 
 	onSleepTimerChange() {
@@ -94,9 +94,9 @@ class SettingsDialog extends HTMLElementBase {
 
 	}
 
-	#restoreState() {
-		this.darkThemeButton.classList.toggle('selected', state.theme != state.Theme.LIGHT);
-		this.lightThemeButton.classList.toggle('selected', state.theme == state.Theme.LIGHT);
+	#restore() {
+		this.darkThemeButton.classList.toggle('selected', state.settings.theme != state.Theme.LIGHT);
+		this.lightThemeButton.classList.toggle('selected', state.settings.theme == state.Theme.LIGHT);
 
 		this.sleepTimer.value = state.settings.sleepTimer;
 		this.sleepTimerValue.innerHTML = readableTime(state.settings.sleepTimer, 'hh:mm');

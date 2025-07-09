@@ -1,15 +1,17 @@
+settings-dialog { background: #00000020; }
+body[theme="light"] settings-dialog { background: #FFFFFF20; }
+
 settings-dialog {
 	position: fixed;
 	inset: 0 0 calc(var(--inset-bottom, 0px) + 64px);
 	flex-direction: column;
 	gap: 12px;
 	padding: 12px 12px 124px;
-	background: #00000020;
 	backdrop-filter: blur(12px);
 	overflow: auto;
 	z-index: 2;
 
-	transition: translate .2s ease-out, opacity .4s, display .2s allow-discrete;
+	transition: translate .2s ease-out, opacity .4s, display .2s allow-discrete, background .2s;
 
 	display: none;
 	opacity: 0;

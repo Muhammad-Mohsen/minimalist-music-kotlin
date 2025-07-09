@@ -17,9 +17,6 @@ class State {
 	get mode() { return document.body.getAttribute('mode') || this.Mode.NORMAL; }
 	set mode(val) { document.body.setAttribute('mode', val); }
 
-	get theme() { return document.body.getAttribute('theme') || this.Theme.DARK; }
-	set theme(val) { document.body.setAttribute('theme', val); }
-
 	currentDir = '';
 	files = []; // { type, path, name }
 	get currentDirName() { return this.currentDir.split(Path.SEPARATOR).pop() }
@@ -31,7 +28,8 @@ class State {
 	query = '';
 
 	settings = {
-		nightMode: true,
+		get theme() { return document.body.getAttribute('theme') || this.Theme.DARK; },
+		set theme(val) { document.body.setAttribute('theme', val); },
 
 		shuffle: false,
 		repeat: RepeatMode.NO_REPEAT,
@@ -69,11 +67,11 @@ class State {
 		this.updateTrack(serializedState.track);
 	}
 	updateSettings(settings) {
-		this.settings.nightMode = settings.nightMode;
+		this.settings.theme = settings.theme;
 
 		this.settings.shuffle = settings.shuffle;
 		this.settings.repeat = settings.repeat;
-		this.settings.sortBy = settings.sort;
+		this.settings.sortBy = settings.sortBy;
 
 		this.settings.playbackSpeed = settings.playbackSpeed;
 		this.settings.sleepTimer = settings.sleepTimer;

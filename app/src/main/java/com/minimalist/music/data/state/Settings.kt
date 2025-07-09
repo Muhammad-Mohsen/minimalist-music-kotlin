@@ -89,9 +89,9 @@ class Settings(private val preferences: SharedPreferences) {
 		return mapOf(
 			"seekJump" to seekJump,
 			"playbackSpeed" to playbackSpeed,
-			"nightMode" to theme,
+			"theme" to theme,
 			"sleepTimer" to sleepTimer,
-			"sort" to sortBy,
+			"sortBy" to sortBy,
 			"repeat" to repeat,
 			"shuffle" to shuffle,
 		)

@@ -1,5 +1,4 @@
-/* RESET */
-/* thanks - https://piccalil.li/blog/a-modern-css-reset/ */
+/* RESET - thanks - https: //piccalil.li/blog/a-modern-css-reset/ */
 *, *::before, *::after {
 	margin: 0;
 	padding: 0;
@@ -73,61 +72,8 @@ input, button, textarea, select { font: inherit; }
 	/* unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; */
 }
 
-/* COLOR SCHEMES */
-
-/* LIGHT
-	<color name="alwaysBlack">#000</color>
-	<color name="alwaysOffBlack">#333</color>
-	<color name="alwaysWhite">#FFF</color>
-	<color name="alwaysOffWhite">#AAA</color>
-
-	<color name="mainBackground">#FFF0F0F0</color>
-	<color name="mainForeground">#333</color>
-
-	<color name="explorerForegroundLight">#666</color> <!-- used for explorer text -->
-	<color name="explorerSelection">#BBB</color>
-
-	<color name="breadcrumbBackground">#FFF</color>
-	<color name="breadcrumbForeground">#333</color>
-	<color name="breadcrumbForegroundDark">#111</color>
-	<color name="breadcrumbBorder">#FFF</color>
-	<color name="multiSelectBorder">#CCC</color> <!-- used for select bar, and settings sheet border -->
-
-	<color name="controlsChapters">#444</color>
-	<color name="seekProgress">#5CCC</color>
-	<color name="seekProgressSettings">#2CCC</color>
-	<color name="seekBackground">#000</color>
-
-	<color name="mainSettingsBorder">#000</color> <!-- used for black buttons -->
-	<color name="subSettingsBorder">#FFF0F0F0</color> <!-- used for theme buttons -->
-
-	<color name="scrollBar">#333</color>
-	<color name="ripple">#666</color>
-	<color name="transparent">#0FFF</color>
-*/
-/* DARK
-	<color name="mainBackground">#000</color>
-	<color name="mainForeground">#DDD</color>
-
-	<color name="explorerForegroundLight">#555</color>
-	<color name="explorerSelection">#222</color>
-
-	<color name="breadcrumbBackground">#000</color>
-	<color name="breadcrumbForeground">#DDD</color>
-	<color name="breadcrumbForegroundDark">#DDD</color>
-	<color name="breadcrumbBorder">#333</color>
-	<color name="multiSelectBorder">#333</color> <!-- #101010 used for select bar, and settings sheet border -->
-
-	<color name="seekProgress">#7555</color>
-	<color name="seekBackground">#161616</color>
-
-	<color name="mainSettingsBorder">#333</color> <!-- used for black buttons -->
-	<color name="subSettingsBorder">#333</color> <!-- used for theme buttons -->
-
-	<color name="ripple">#555</color>
-*/
-
-:root {
+/* THEMES */
+body {
 	--background: #000;
 	--foreground: #FFF;
 	--foreground-secondary: #828282; /* gray3 */
@@ -135,12 +81,12 @@ input, button, textarea, select { font: inherit; }
 	--selection-background: #222;
 }
 
-@media (prefers-color-scheme: light) {
-	:root {
-		--background: #FFF;
-		--foreground: #111;
-		--foreground-secondary: #444;
-	}
+body[theme="light"] {
+	--background: #FFF;
+	--foreground: #111;
+	--foreground-secondary: #444;
+	--border-color: #AAA;
+	--selection-background: #999;
 }
 
 body {

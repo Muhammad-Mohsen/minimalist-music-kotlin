@@ -59,7 +59,7 @@ class ExplorerFile(pathname: String)
 			return f.exists() && MEDIA_EXTENSIONS.contains(f.extension.lowercase())
 		}
 
-		fun listByPath(path: String): ArrayList<ExplorerFile> {
+		fun listFiles(path: String, sortBy: String): ArrayList<ExplorerFile> {
 			val fileModels = ArrayList<ExplorerFile>()
 
 			var files = File(path).listFiles(filter)
@@ -73,11 +73,36 @@ class ExplorerFile(pathname: String)
 
 			if (files == null) return ArrayList()
 
-			Arrays.sort(files) { o1, o2 ->
-				if (o1.isDirectory && o2.isDirectory) o1.name.compareTo(o2.name, true) // if both are directories, compare their names
-				else if (o1.isDirectory && !o2.isDirectory) -1 // if the first is a directory, it's always first
-				else if (o2.isDirectory) 1 // if the second is a directory, it's always first
-				else o1.name.compareTo(o2.name, true) // if both are tracks, compare their names
+			// this sucks!!
+			when (sortBy) {
+				SortBy.ZA -> {
+					Arrays.sort(files) { o2, o1 ->
+						if (o1.isDirectory && !o2.isDirectory) 1
+						else if (o2.isDirectory && !o1.isDirectory) -1
+						else o1.name.compareTo(o2.name, true)
+					}
+				}
+				SortBy.NEWEST -> {
+					Arrays.sort(files) { o2, o1 ->
+						if (o1.isDirectory && !o2.isDirectory) 1
+						else if (o2.isDirectory && !o1.isDirectory) -1
+						else (o1.lastModified() - o2.lastModified()).toInt()
+					}
+				}
+				SortBy.OLDEST -> {
+					Arrays.sort(files) { o1, o2 ->
+						if (o1.isDirectory && !o2.isDirectory) -1
+						else if (o2.isDirectory && !o1.isDirectory) 1
+						else (o1.lastModified() - o2.lastModified()).toInt()
+					}
+				}
+				else -> { // default (A to Z)
+					Arrays.sort(files) { o1, o2 ->
+						if (o1.isDirectory && !o2.isDirectory) -1 // if the first is a directory, it's always first
+						else if (o2.isDirectory && !o1.isDirectory) 1 // if the second is a directory, it's always first
+						else o1.name.compareTo(o2.name, true) // if both are tracks, compare their names
+					}
+				}
 			}
 
 			for (f in files) fileModels.add(ExplorerFile(f.absolutePath))

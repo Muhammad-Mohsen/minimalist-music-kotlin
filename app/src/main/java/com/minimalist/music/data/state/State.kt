@@ -35,7 +35,7 @@ object State {
 		set(value) = sharedPreferences.put(Key.DIRECTORY, value.absolutePath)
 
 	val files: ArrayList<ExplorerFile>
-		get() = FileCache.getExplorerFilesByDirectory(currentDirectory)
+		get() = FileCache.listFiles(currentDirectory, settings.sortBy)
 
 	var mode = "normal"
 

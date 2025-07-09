@@ -171,10 +171,10 @@ class SettingsDialog extends HTMLElementBase {
 
 			<div class="range-row select">
 				<select id="sort-by" onchange="${this.handle}.onSortByChange()">
-					<option l10n>Name (A to Z)</option>
-					<option l10n>Name (Z to A)</option>
-					<option l10n>Date (Most Recent First)</option>
-					<option l10n>Date (Oldest First)</option>
+					<option value="az" l10n>Name (A to Z)</option>
+					<option value="za" l10n>Name (Z to A)</option>
+					<option value="newest" l10n>Date (Newest First)</option>
+					<option value="oldest" l10n>Date (Oldest First)</option>
 				</select>
 				<div class="label">
 					<label for="sort-by" l10n>Sort By</label>

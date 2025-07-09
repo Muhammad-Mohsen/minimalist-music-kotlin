@@ -21,7 +21,7 @@ class Playlist(private val preferences: SharedPreferences) {
 	var index: Int = 0 // current index
 
 	fun update(trackPath: String) {
-		val tracks = FileCache.getMediaPathsByPath(trackPath)
+		val tracks = FileCache.listTracks(trackPath, State.settings.sortBy)
 		val start = tracks.indexOf(trackPath)
 		Collections.rotate(tracks, -start) // start where the user clicked
 

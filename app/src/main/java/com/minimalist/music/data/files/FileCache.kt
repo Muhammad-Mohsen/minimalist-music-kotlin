@@ -13,33 +13,33 @@ object FileCache {
 	private val lastModifiedCache = HashMap<String, Long>()
 
 	// cache API
-	fun getExplorerFilesByDirectory(dir: File): ArrayList<ExplorerFile> {
+	fun listFiles(dir: File, sortBy: String = SortBy.AZ): ArrayList<ExplorerFile> {
 		val path = dir.absolutePath
-		var files = fileCache[path]
+		var files = fileCache["$sortBy/$path"]
 
 		// if not cached, or directory was modified more recently than the cache
-		if (files == null || dir.lastModified() > (lastModifiedCache[path] ?: 0L)) {
-			files = ExplorerFile.listByPath(path)
-			fileCache[path] = files
+		if (files == null || dir.lastModified() > (lastModifiedCache["$sortBy/$path"] ?: 0L)) {
+			files = ExplorerFile.listFiles(path, sortBy)
+			fileCache["$sortBy/$path"] = files
 
-			lastModifiedCache[path] = dir.lastModified()
+			lastModifiedCache["$sortBy/$path"] = dir.lastModified()
 		}
 
 		return files
 	}
 
-	fun getMediaPathsByPath(path: String): List<String> {
+	fun listTracks(path: String, sortBy: String = SortBy.AZ): List<String> {
 		val parentDir = File(path).parentFile ?: return emptyList()
 		val parentDirPath = parentDir.absolutePath
 
-		var files = fileCache[parentDir.absolutePath]
+		var files = fileCache["$sortBy/$parentDirPath"]
 
 		// if not cached, or directory was modified more recently than the cache
-		if (files == null || parentDir.lastModified() > (lastModifiedCache[parentDirPath] ?: 0L)) {
-			files = ExplorerFile.listByPath(parentDirPath)
-			fileCache[parentDirPath] = files
+		if (files == null || parentDir.lastModified() > (lastModifiedCache["$sortBy/$parentDirPath"] ?: 0L)) {
+			files = ExplorerFile.listFiles(parentDirPath, sortBy)
+			fileCache["$sortBy/$parentDirPath"] = files
 
-			lastModifiedCache[parentDirPath] = parentDir.lastModified()
+			lastModifiedCache["$sortBy/$parentDirPath"] = parentDir.lastModified()
 		}
 
 		return files.filter { file -> !file.isDirectory }.map { file -> file.absolutePath }

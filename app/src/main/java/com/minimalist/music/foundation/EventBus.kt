@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference
 object EventBus {
 
 	private val subscribers = ArrayList<WeakReference<Subscriber>>()
-	private lateinit var ipc: WeakReference<WebView>
+	private var ipc: WeakReference<WebView>? = null
 
 	fun subscribe(subscriber: Subscriber) {
 		val ref = WeakReference(subscriber)
@@ -34,7 +34,7 @@ object EventBus {
 		)).toString()
 
 		Moirai.MAIN.post {
-			ipc.get()?.evaluateJavascript("EventBus.dispatch($event, 'fromNative')", null)
+			ipc?.get()?.evaluateJavascript("EventBus.dispatch($event, 'fromNative')", null)
 		}
 	}
 
@@ -55,43 +55,48 @@ object EventBus {
 	class Event(val type: String, val target: String, val data: Map<String, Any> = emptyMap())
 
 	object Type {
-		const val RESTORE_STATE = "restoreState"
-		const val INSETS = "insets"
+		const val PERMISSION_REQUEST = "permissionRequest"
+		const val PERMISSION_RESPONSE = "permissionResponse"
 
-		const val PLAY_TRACK = "playTrack"
-		const val PLAY_NEXT = "playNext"
-		const val PLAY_PREVIOUS = "playPrev"
+		const val INSETS = "insets"
+		const val RESTORE_STATE = "restoreState"
+
+		const val MODE_CHANGE = "modeChange"
+		const val MODE_NORMAL = "modeNormal"
+
+		const val PLAYLIST_UPDATE = "playlistUpdate"
 		const val QUEUE_PLAY_SELECTED = "queuePlaySelected" // play the selected items (from breadcrumb bar)
 		const val QUEUE_ADD_SELECTED = "queueAddSelected" // play the selected items (from breadcrumb bar)
 
+		const val DIR_CHANGE = "dirChange"
+		const val DIR_UPDATE = "dirUpdate"
+
+		const val METADATA_UPDATE = "metadataUpdate" // event to update the metadata (album|artist|total duration)
+		const val PLAY_TRACK = "playTrack"
+		const val PLAY_NEXT = "playNext"
+		const val PLAY_PREV = "playPrev"
 		const val PLAY = "play"
 		const val PAUSE = "pause"
 		const val FF = "ff"
 		const val RW = "rw"
-
-		const val DIR_CHANGE = "dirChange"
-		const val DIR_UPDATE = "dirUpdate"
-		const val METADATA_UPDATE = "metadataUpdate" // event to update the metadata (album|artist|total duration)
-		const val PLAYLIST_UPDATE = "playlistUpdate"
-
 		const val SEEK_TICK = "seekTick"
 		const val SEEK_UPDATE = "seekUpdate"
 
+		const val SLEEP_TIMER_TOGGLE = "sleepTimerToggle"
+		const val SLEEP_TIMER_CHANGE = "sleepTimerChange"
 		const val SLEEP_TIMER_TICK = "sleepTimerTick"
 		const val SLEEP_TIMER_FINISH = "sleepTimerFinish"
 
-		const val PLAYBACK_SPEED = "playbackSpeed"
-		const val EQ = "eq"
+		const val THEME_CHANGE = "themeChange"
+		const val PLAYBACK_SPEED_CHANGE = "playbackSpeedChange"
+		const val SEEK_JUMP_CHANGE = "seekJumpChange"
+		const val SORT_BY_CHANGE = "sortByChange"
+		const val TOGGLE_SHUFFLE = "toggleShuffle"
+		const val TOGGLE_REPEAT = "toggleRepeat"
+
 		const val PRIVACY_POLICY = "privacyPolicy"
-		const val CYCLE_SHUFFLE = "toggleShuffle"
-		const val CYCLE_REPEAT = "toggleRepeat"
-
-		const val MODE_CHANGE = "modeChange"
-		const val MODE_NORMAL = "modeNormal"
-		const val PERMISSION_REQUEST = "permissionRequest"
-		const val PERMISSION_RESPONSE = "permissionResponse"
-
-		const val APP_FOREGROUNDED = "appForegrounded"
+		const val EQ = "eq"
+		const val APP_FOREGROUNDED = "appForegrounded" // used in foreground service
 	}
 
 	object Target {
@@ -99,6 +104,5 @@ object EventBus {
 		const val NOTIFICATION = "notification"
 		const val ACTIVITY = "activity"
 		const val SESSION = "session"
-		const val TIMER = "timer"
 	}
 }

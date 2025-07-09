@@ -2,6 +2,7 @@ package com.minimalist.music.data.state
 
 import android.content.SharedPreferences
 import com.minimalist.music.data.files.FileCache
+import com.minimalist.music.data.files.RepeatMode
 import com.minimalist.music.foundation.ext.put
 import java.util.Collections
 import java.util.concurrent.ThreadLocalRandom
@@ -93,13 +94,5 @@ class Playlist(private val preferences: SharedPreferences) {
 			"tracks" to tracks,
 			"index" to index
 		)
-	}
-
-	object RepeatMode {
-		const val INACTIVE = 0 // inactive
-		const val ACTIVE = 1 // active
-		const val REPEAT_ONE = 2 // repeat-one
-
-		val list = arrayOf(INACTIVE, ACTIVE, REPEAT_ONE)
 	}
 }

@@ -4,6 +4,7 @@ class MusicControls extends HTMLElementBase {
 
 	connectedCallback() {
 		this.#render();
+		this.albumArt = document.querySelector('#album-art'); // outside of the component so it can appear below the dialogs
 		EventBus.subscribe((event) => this.#handler(event));
 	}
 
@@ -13,8 +14,7 @@ class MusicControls extends HTMLElementBase {
 
 		when(event.type)
 			.is(EventBus.Type.MODE_CHANGE, () => {
-				this.searchButton.classList.remove('ic-close'); // TODO fugly shit
-				this.searchButton.classList.add('ic-search');
+				this.querySelector('.secondary-controls [active]')?.removeAttribute('active');
 			})
 			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.METADATA_UPDATE], () => this.#updateMetadata())
 			.is([EventBus.Type.PLAY, EventBus.Type.PLAY_TRACK, EventBus.Type.QUEUE_PLAY_SELECTED], () => this.playPause(true, 'suppress'))
@@ -24,6 +24,7 @@ class MusicControls extends HTMLElementBase {
 				state.track.seek = event.data.seek;
 				this.#updateSeekUI();
 			})
+			.is(EventBus.Type.SLEEP_TIMER_FINISH, () => this.playPause(false))
 	}
 
 	// UI HANDLERS
@@ -45,6 +46,16 @@ class MusicControls extends HTMLElementBase {
 		this.playPause(true, 'suppress');
 		EventBus.dispatch({ type: EventBus.Type.PLAY_PREV, target: this.#TARGET });
 	}
+	rewind() {
+		state.track.seek -= state.settings.seekJump;
+		this.#updateSeekUI();
+		EventBus.dispatch({ type: EventBus.Type.SEEK_UPDATE, target: this.#TARGET, data: { seek: state.track.seek } });
+	}
+	fastForward() {
+		state.track.seek += state.settings.seekJump;
+		this.#updateSeekUI();
+		EventBus.dispatch({ type: EventBus.Type.SEEK_UPDATE, target: this.#TARGET, data: { seek: state.track.seek } });
+	}
 
 	onSeekChange(target) {
 		state.track.seek = target.value;
@@ -53,8 +64,7 @@ class MusicControls extends HTMLElementBase {
 	}
 
 	toggleSearch() {
-		this.searchButton.classList.toggle('ic-search');
-		this.searchButton.classList.toggle('ic-close');
+		this.searchButton.toggleAttribute('checked');
 
 		state.mode = when(state.mode)
 			.is(state.Mode.NORMAL, () => state.Mode.SEARCH)
@@ -67,10 +77,16 @@ class MusicControls extends HTMLElementBase {
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 	}
 
+	toggleSettings() {
+		this.moreButton.toggleAttribute('checked');
+
+		state.mode = state.mode == state.Mode.SETTINGS ? state.Mode.NORMAL : state.Mode.SETTINGS;
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
+	}
+
 	// RENDERING
 	#render() {
 		super.render(`
-			<img alt="Album Art" id="album-art">
 			<div class="main-controls">
 				<input type="range" id="seek-range" value="0" oninput="${this.handle}.onSeekChange(this)">
 
@@ -93,11 +109,17 @@ class MusicControls extends HTMLElementBase {
 
 			<div class="secondary-controls">
 				<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch();" aria-label="search"></button>
-				<button id="chapters-button" class="ic-btn ic-chapters" aria-label="chapters"></button>
+
+				<!-- <button id="chapters-button" class="ic-btn ic-chapters" aria-label="chapters"></button> -->
+				<button id="rw-button" class="ic-btn ic-rw" aria-label="Rewind" onclick="${this.handle}.rewind()"></button>
+
 				<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="previous"></button>
 				<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="next"></button>
-				<button id="lyrics-button" class="ic-btn ic-lyrics" aria-label="lyrics"></button>
-				<button id="more-button" class="ic-btn ic-more" aria-label="more"></button>
+
+				<!-- <button id="lyrics-button" class="ic-btn ic-lyrics" aria-label="lyrics"></button> -->
+				<button id="ff-button" class="ic-btn ic-ff" aria-label="Fast Forward" onclick="${this.handle}.fastForward()"></button>
+
+				<button id="more-button" class="ic-btn ic-more" aria-label="more" onclick="${this.handle}.toggleSettings()"></button>
 			</div>
 		`);
 	}

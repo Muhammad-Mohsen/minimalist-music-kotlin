@@ -43,7 +43,7 @@ class MusicHeader extends HTMLElementBase {
 	onSearchInput(searchInput) {
 		// update the filtering
 		state.query = searchInput.value;
-		EventBus.dispatch({ type: EventBus.Type.SEARCH, target: this.#TARGET });
+		EventBus.dispatch({ type: EventBus.Type.SEARCH_MODE, target: this.#TARGET });
 	}
 	onAddToQueueClick() {
 		state.playlist.tracks = state.playlist.tracks.concat(state.selection);

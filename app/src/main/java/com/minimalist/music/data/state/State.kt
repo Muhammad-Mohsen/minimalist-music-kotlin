@@ -89,7 +89,7 @@ object State {
 		const val SEEK_JUMP = "SeekJump"
 		const val PLAYBACK_SPEED = "PlaybackSpeed"
 		const val SLEEP_TIMER = "SleepTimer"
-		const val NIGHT_MODE = "NightMode"
+		const val THEME = "NightMode"
 		const val SORT = "Sort"
 		const val REPEAT = "Repeat"
 		const val SHUFFLE = "Shuffle"

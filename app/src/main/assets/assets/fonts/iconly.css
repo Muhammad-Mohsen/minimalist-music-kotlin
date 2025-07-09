@@ -123,3 +123,11 @@
 .ic-seek-jump-2:before {
 	content: "\e017";
 }
+
+.ic-rw:before {
+	content: "\e018";
+}
+
+.ic-ff:before {
+	content: "\e019";
+}

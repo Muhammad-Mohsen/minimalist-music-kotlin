@@ -66,16 +66,18 @@ String.prototype.replaceAt = function (index, replacement) {
 	return this.substring(0, index) + replacement + this.substring(index + 1);
 }
 
-function readableTime(millis) {
+function readableTime(millis, format) {
 	const seconds = millis / 1000;
 
-	const ss = parseInt(seconds % 60).toString().padStart(2, '0');
-	const mm = parseInt((seconds / 60) % 60).toString().padStart(2, '0');
-	const hh = parseInt(seconds / 60 / 60).toString().padStart(2, '0');
+	const parts = {
+		ss: parseInt(seconds % 60).toString().padStart(2, '0'),
+		mm: parseInt((seconds / 60) % 60).toString().padStart(2, '0'),
+		hh: parseInt(seconds / 60 / 60).toString().padStart(2, '0'),
+	}
 
-	// const hhMax = parseInt(duration / 60 / 60).toString().padStart(2, '0');
-
-	return hh == '00' ? `${mm}:${ss}` : `${hh}:${mm}:${ss}`;
+	return format
+		? format.replace(/hh|mm|ss/g, (match) => parts[match])
+		: parts.hh == '00' ? `${parts.mm}:${parts.ss}` : `${parts.hh}:${parts.mm}:${parts.ss}`;
 }
 
 // "when"

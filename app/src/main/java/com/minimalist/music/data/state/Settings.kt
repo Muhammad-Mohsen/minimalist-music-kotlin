@@ -1,9 +1,10 @@
 package com.minimalist.music.data.state
 
 import android.content.SharedPreferences
-import com.minimalist.music.data.state.Playlist.RepeatMode
+import com.minimalist.music.data.files.RepeatMode
+import com.minimalist.music.data.files.SortBy
+import com.minimalist.music.data.files.Theme
 import com.minimalist.music.data.state.State.Key
-import com.minimalist.music.data.state.State.playlist
 import com.minimalist.music.foundation.ext.put
 
 class Settings(private val preferences: SharedPreferences) {
@@ -29,21 +30,21 @@ class Settings(private val preferences: SharedPreferences) {
 			preferences.put(Key.PLAYBACK_SPEED, value)
 		}
 
-	private var _nightMode: Int? = null
-	var nightMode: Int
+	private var _theme: String? = null
+	var theme: String
 		get() {
-			if (_nightMode == null) _nightMode = preferences.getInt(Key.NIGHT_MODE, -1) // default is FOLLOW_SYSTEM
-			return _nightMode!!
+			if (_theme == null) _theme = preferences.getString(Key.THEME, Theme.DARK)
+			return _theme!!
 		}
 		set(value) {
-			_nightMode = value
-			preferences.put(Key.NIGHT_MODE, value)
+			_theme = value
+			preferences.put(Key.THEME, value)
 		}
 
 	private var _sleepTimer: Int? = null
 	var sleepTimer: Int
 		get() {
-			if (_sleepTimer == null) _sleepTimer = preferences.getInt(Key.SLEEP_TIMER, 60) // 1 hour default
+			if (_sleepTimer == null) _sleepTimer = preferences.getInt(Key.SLEEP_TIMER, 60 * 60 * 1000) // 1 hour default
 			return _sleepTimer!!
 		}
 		set(value) {
@@ -51,10 +52,10 @@ class Settings(private val preferences: SharedPreferences) {
 			preferences.put(Key.SLEEP_TIMER, value)
 		}
 
-	private var _sort: Int? = null
-	var sort: Int
+	private var _sort: String? = null
+	var sortBy: String
 		get() {
-			if (_sort == null) _sort = preferences.getInt(Key.SORT, 0) // Assuming 0 or a specific default for sort
+			if (_sort == null) _sort = preferences.getString(Key.SORT, SortBy.AZ)
 			return _sort!!
 		}
 		set(value) {
@@ -88,9 +89,9 @@ class Settings(private val preferences: SharedPreferences) {
 		return mapOf(
 			"seekJump" to seekJump,
 			"playbackSpeed" to playbackSpeed,
-			"nightMode" to nightMode,
+			"nightMode" to theme,
 			"sleepTimer" to sleepTimer,
-			"sort" to sort,
+			"sort" to sortBy,
 			"repeat" to repeat,
 			"shuffle" to shuffle,
 		)

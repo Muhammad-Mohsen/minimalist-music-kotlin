@@ -1,7 +1,7 @@
 music-controls {
 	position: fixed;
 	inset: auto 0 var(--inset-bottom, 0px);
-	z-index: 1;
+	z-index: 2;
 }
 
 #album-art {
@@ -14,6 +14,7 @@ music-controls {
 	opacity: .3;
 	pointer-events: none;
 	transition: opacity .3s, filter .3s;
+	z-index: 1;
 }
 #album-art.hidden { opacity: 0; }
 body[is-playing="true"] #album-art { filter: none; }
@@ -108,5 +109,35 @@ body[is-playing="true"] #album-art { filter: none; }
 	justify-content: space-between;
 	margin: 4px 12px;
 
-	.ic-close { color: red; }
+	button {
+		display: grid;
+		align-content: center;
+	}
+	button::before, button::after {
+		grid-area: 1 / 1;
+		transition: translate .2s, opacity .2s;
+	}
+
+	/* close icon */
+	button::after {
+		content: '\e015';
+		color: red;
+		opacity: 0;
+		translate: 0 10px;
+	}
+
+	[checked]::before {
+		opacity: 0;
+		translate: 0 -10px;
+	}
+
+	[checked]::after {
+		opacity: 1;
+		translate: 0;
+	}
+
+}
+.secondary-controls:has([checked]) button:not([checked]) {
+	opacity: .5;
+	pointer-events: none;
 }

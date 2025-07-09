@@ -1,0 +1,173 @@
+settings-dialog {
+	position: fixed;
+	inset: 0 0 calc(var(--inset-bottom, 0px) + 64px);
+	flex-direction: column;
+	gap: 12px;
+	padding: 12px 12px 124px;
+	background: #00000020;
+	backdrop-filter: blur(12px);
+	overflow: auto;
+	z-index: 2;
+
+	transition: translate .2s ease-out, opacity .4s, display .2s allow-discrete;
+
+	display: none;
+	opacity: 0;
+	translate: 0 8vh;
+	&[open] {
+		display: flex;
+		opacity: 1;
+		translate: 0;
+
+		@starting-style {
+			opacity: 0;
+			translate: 0 8vh;
+		}
+	}
+
+	* { flex-shrink: 0; } /* no shrinkage! */
+
+	.ic-header {
+		display: block;
+		margin-block: calc(var(--inset-top, 4px) + 16px) 24px;
+		color: var(--foreground-secondary);
+		text-align: center;
+		font-size: 28px;
+	}
+
+	.flex-row {
+		align-items: center;
+		gap: 6px;
+	}
+
+	separator { --separator-height: 16px; }
+
+	.settings-btn {
+		flex: 1 0 10%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		padding: 16px 12px 12px;
+		border: 1px solid transparent;
+		border-radius: 12px;
+		color: var(--foreground-secondary);
+
+		i { font-size: 24px; }
+
+		&.selected, &.outlined { border-color: var(--border-color); }
+		&.selected { color: var(--foreground); }
+	}
+
+	.range-row {
+		--subscript: .8rem;
+
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
+
+		border: 1px solid var(--border-color);
+		border-radius: 12px;
+
+		input[type="range"], select {
+			--range-height: 100%;
+			--range-border-width: 0;
+			--range-progress-background: #74747433;
+
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			border-radius: 11px;
+		}
+		#sleep-timer, #countdown {
+			right: calc(1rem + var(--subscript) + 32px); /* the height of the label + subscript + gap + padding */
+			width: auto;
+			border-radius: 11px 0 0 11px;
+		}
+
+		.label {
+			position: relative;
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			color: var(--foreground);
+			pointer-events: none;
+		}
+
+		.subscript {
+			display: flex;
+			gap: 8px;
+			color: var(--foreground-secondary);
+			font-size: var(--subscript);
+		}
+
+		i {
+			margin-inline-end: 6px;
+			color: var(--foreground-secondary);
+			font-size: 24px;
+		}
+		.ic-btn {
+			position: relative;
+			height: calc(100% + 16px);
+			margin: -8px -12px -8px -8px;
+			border-radius: 0 11px 11px 0;
+		}
+
+		&.select { padding-bottom: calc(var(--subscript) + 16px); }
+		select {
+			appearance: none;
+			padding: calc(1rem + 8px) 12px 0;
+			border-radius: 12px;
+			border: none;
+			color: var(--foreground-secondary);
+			background: transparent;
+			font-size: var(--subscript);
+			outline: none;
+		}
+		&.select i { translate: 0 calc(var(--subscript) - 4px); }
+
+		/* countdown */
+		#countdown-value {
+			width: fit-content;
+			transition: .2s;
+		}
+		#countdown-value:empty {
+			width: 0;
+			margin-inline-start: -8px; /* compensates for the flex gap */
+		}
+	}
+
+	/* close icon */
+	.toggle-btn {
+		display: grid;
+		align-content: center;
+	}
+	.toggle-btn::before, .toggle-btn::after {
+		grid-area: 1 / 1;
+		transition: translate .2s, opacity .2s;
+	}
+	.toggle-btn::after {
+		content: '\e015';
+		color: red;
+		opacity: 0;
+		translate: 0 10px;
+	}
+	.toggle-btn[checked]::before {
+		opacity: 0;
+		translate: 0 -10px;
+	}
+	.toggle-btn[checked]::after {
+		opacity: 1;
+		translate: 0;
+	}
+}
+
+@starting-style {
+	settings-dialog {
+		opacity: 0;
+		translate: 0 30vh;
+	}
+}

@@ -4,14 +4,19 @@
 - DONE - chapters
 - DONE - play selected
 - DONE - add to selection
-- ff/rw
+- DONE - settings dialog
+- DONE - ff/rw (jumps 10 : 300 secs)
+- DONE - sleep timer
+	- toggling
+	- handling tick
 - chapters dialog
-- settings dialog
+- lyrics dialog
+- equalizer + dialog
 - sort
 - customization
-- equalizer
 - DONE - instant scroll-to-selected
 - DONE - optimize renderItems on PLAYLIST_UPDATE
+- translations
 
 ## Technical
 - DONE - edge to edge
@@ -81,7 +86,7 @@
 
 - update eventbus events in native
 - implement sort comparer
-- implement dialog UI
+- DONE - implement dialog UI
 	- chapters -> needs a seek to event (already exists)
 	- lyrics
 	- settings -> a lot of events :D
@@ -106,7 +111,7 @@
 
 - DONE - PERMISSION - update the mode on the document
 
-- chapter titles
+- DONE - chapter titles
 ```kotlin
 val test: Uri = Uri.parse("/storage/emulated/0/Download/Star Wars_ A New Hope.m4b")
 mmr = FFmpegMediaMetadataRetriever()
@@ -147,16 +152,19 @@ can look cool with the `play-pause` button
 
 ### RoadMap
 - use Media3 stuff!! MediaSessionService + MediaSession.Callback
-	- https://developer.android.com/media/implement/playback-app#playing_media_in_the_background
-	- https://developer.android.com/media/implement/surfaces/mobile
-	- exo chapter metadata??
-	- https://www.b4x.com/android/forum/threads/exoplayer-id3-metadata-how-to-get-data.112608/
+	- https://github.com/Javernaut/SimpleMediaPlayer
+
+	- a bunch of BS
+		- https://developer.android.com/media/implement/playback-app#playing_media_in_the_background
+		- https://developer.android.com/media/implement/surfaces/mobile
+		- exo chapter metadata??
+		- https://www.b4x.com/android/forum/threads/exoplayer-id3-metadata-how-to-get-data.112608/
 
 	- existing players
-	  https://github.com/timusus/Shuttle
-	  https://github.com/MuntashirAkon/Metro
-	  https://github.com/ologe/canaree-music-player
-	  https://github.com/enricocid/Music-Player-GO
+		- https://github.com/timusus/Shuttle
+		- https://github.com/MuntashirAkon/Metro
+		- https://github.com/ologe/canaree-music-player
+		- https://github.com/enricocid/Music-Player-GO
 
 - [dynamic colors](https://developer.android.com/develop/ui/views/theming/dynamic-colors)
 - equalizer

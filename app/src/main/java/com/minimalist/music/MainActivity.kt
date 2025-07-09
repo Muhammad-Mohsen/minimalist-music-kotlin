@@ -30,8 +30,8 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.minimalist.music.data.files.ExplorerFile
 import com.minimalist.music.data.files.serializeFiles
+import com.minimalist.music.foundation.Moirai
 import java.io.File
-
 
 class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 				val playerIntent = Intent(this, PlaybackManager::class.java)
 				startForegroundService(playerIntent)
 
-				// restore the state, now that everything is initialized (except the service...which is why restoreState is manually called over there)
+				// restore the state (the service manually calls its own updateState function because it isn't ready at this point)
 				if (State.track.exists) EventBus.dispatch(Event(Type.METADATA_UPDATE, Target.ACTIVITY))
 			}
 			else -> {
@@ -118,10 +118,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 			settings.apply {
 				javaScriptEnabled = true
-				domStorageEnabled = true
-				allowFileAccess = true
 				allowFileAccessFromFileURLs = true
-				allowUniversalAccessFromFileURLs = true
 			}
 
 			addJavascriptInterface(EventBus, "IPC")
@@ -203,12 +200,24 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			Type.PERMISSION_REQUEST -> requestPermission()
 			Type.EQ -> eq()
 			Type.PRIVACY_POLICY -> privacyPolicy()
+
 			Type.MODE_CHANGE -> State.mode = event.data["mode"].toString() // only used for system back navigation logic
 
 			Type.DIR_CHANGE -> {
 				State.currentDirectory = File(event.data["dir"].toString())
 				EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
 			}
+
+			Type.THEME_CHANGE -> State.settings.theme = event.data["value"].toString()
+			Type.SLEEP_TIMER_CHANGE -> State.settings.sleepTimer = event.data["value"].toString().toInt()
+			Type.SEEK_JUMP_CHANGE -> State.settings.seekJump = event.data["value"].toString().toInt()
+			Type.PLAYBACK_SPEED_CHANGE -> State.settings.playbackSpeed = event.data["value"].toString().toFloat()
+			Type.SORT_BY_CHANGE -> {
+				State.settings.sortBy = event.data["value"].toString()
+				EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
+			}
+			Type.TOGGLE_SHUFFLE -> State.settings.shuffle = event.data["value"].toString().toBoolean()
+			Type.TOGGLE_REPEAT -> State.settings.repeat = event.data["value"].toString().toInt()
 		}
 	}
 

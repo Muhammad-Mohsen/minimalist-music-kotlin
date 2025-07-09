@@ -107,7 +107,7 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 				EventBus.Type.PAUSE,
 				EventBus.Type.PLAY_TRACK,
 				EventBus.Type.PLAY_NEXT,
-				EventBus.Type.PLAY_PREVIOUS,
+				EventBus.Type.PLAY_PREV,
 				EventBus.Type.METADATA_UPDATE -> {
 					Moirai.BG.post {
 						createNotification() // simply recreating the notification updates it
@@ -124,7 +124,7 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 			val event = when (intent?.getIntExtra(EXTRA, Action.PLAY_PAUSE) ?: Action.PLAY_PAUSE) {
 				Action.NEXT -> EventBus.Type.PLAY_NEXT
 				Action.PLAY_PAUSE -> if (State.isPlaying) EventBus.Type.PAUSE else EventBus.Type.PLAY
-				else -> EventBus.Type.PLAY_PREVIOUS
+				else -> EventBus.Type.PLAY_PREV
 			}
 
 			EventBus.dispatch(Event(event, Target.NOTIFICATION))

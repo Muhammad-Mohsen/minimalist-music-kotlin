@@ -5,6 +5,7 @@
 	padding: 0;
 	box-sizing: border-box;
 	user-select: none;
+	interpolate-size: allow-keywords;
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
@@ -130,7 +131,7 @@ input, button, textarea, select { font: inherit; }
 	--background: #000;
 	--foreground: #FFF;
 	--foreground-secondary: #828282; /* gray3 */
-	--border-color: #4F4F4F; /* gray2 */
+	--border-color: #444; /* gray2: 4F4F4F */
 	--selection-background: #222;
 }
 
@@ -148,17 +149,22 @@ body {
 }
 body.ready { opacity: 1 !important; }
 
+.flex-row { display: flex; }
+
+separator {
+	display: block;
+	width: var(--separator-width, 1px);
+	height: var(--separator-height, 12px);
+	background: var(--separator-background, var(--border-color));
+}
+
 button {
 	border: none;
 	color: var(--foreground-secondary);
 	background: transparent;
-	transition: color .5s, background .5s;
+	transition: color .5s, background .5s, border-color .3s, opacity .2s, translate .2s;
 }
-button:active {
-	/* color: var(--foreground); */
-	background: var(--selection-background);
-	transition: background .3s;
-}
+button:active { background: var(--selection-background); }
 
 .ic-btn {
 	display: grid;

@@ -5,14 +5,22 @@ var EventBus = (() => {
 		PERMISSION_REQUEST: 'permissionRequest',
 		PERMISSION_RESPONSE: 'permissionResponse',
 
-		DIR_CHANGE: 'dirChange',
-		DIR_UPDATE: 'dirUpdate',
+		INSETS: 'insets',
+		RESTORE_STATE: 'restoreState',
 
 		MODE_CHANGE: 'modeChange',
 		MODE_NORMAL: 'modeNormal',
 
-		INSETS: 'insets',
-		RESTORE_STATE: 'restoreState',
+		SEARCH_MODE: 'search',
+
+		PLAYLIST_UPDATE: 'playlistUpdate',
+		QUEUE_PLAY_SELECTED: 'queuePlaySelected', // play the selected items (from breadcrumb bar)
+		QUEUE_ADD_SELECTED: 'queueAddSelected',
+		SELECT_MODE_COUNT: 'selectModeCount', // select mode count change
+		SELECT_MODE_CANCEL: 'selectModeCancel', // deactivate select mode (press cancel from the breadcrumb bar)
+
+		DIR_CHANGE: 'dirChange',
+		DIR_UPDATE: 'dirUpdate',
 
 		METADATA_UPDATE: 'metadataUpdate',
 		PLAY_TRACK: 'playTrack',
@@ -21,21 +29,22 @@ var EventBus = (() => {
 		PLAY: 'play',
 		PAUSE: 'pause',
 		PLAY_PAUSE: 'playPause',
-		SEEK_UPDATE: 'seekUpdate',
-		SEEK_TICK: 'seekTick',
 		FF: 'ff',
 		RW: 'rw',
+		SEEK_UPDATE: 'seekUpdate',
+		SEEK_TICK: 'seekTick',
 
+		SLEEP_TIMER_TOGGLE: 'sleepTimerToggle',
+		SLEEP_TIMER_CHANGE: 'sleepTimerChange',
+		SLEEP_TIMER_TICK: 'sleepTimerTick',
+		SLEEP_TIMER_FINISH: 'sleepTimerFinish',
+
+		THEME_CHANGE: 'themeChange',
+		PLAYBACK_SPEED_CHANGE: 'playbackSpeedChange',
+		SEEK_JUMP_CHANGE: 'seekJumpChange',
+		SORT_BY_CHANGE: 'sortByChange',
 		TOGGLE_SHUFFLE: 'toggleShuffle',
 		TOGGLE_REPEAT: 'toggleRepeat',
-
-		SEARCH: 'search',
-
-		PLAYLIST_UPDATE: 'playlistUpdate',
-		QUEUE_PLAY_SELECTED: 'queuePlaySelected', // play the selected items (from breadcrumb bar)
-		QUEUE_ADD_SELECTED: 'queueAddSelected',
-		SELECT_MODE_COUNT: 'selectModeCount', // select mode count change
-		SELECT_MODE_CANCEL: 'selectModeCancel', // deactivate select mode (press cancel from the breadcrumb bar)
 	}
 
 	// the event `target` (read: source)
@@ -47,6 +56,7 @@ var EventBus = (() => {
 		SESSION: 'session',
 		PERMISSION_UI: 'permission',
 		STATE: 'state',
+		SETTINGS: 'settings',
 	}
 
 	const subscribers = []; // a regular ol' array will do

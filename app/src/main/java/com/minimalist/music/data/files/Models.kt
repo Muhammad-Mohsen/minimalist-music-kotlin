@@ -169,3 +169,26 @@ class SerializableBitmap(val data: ByteArray?) {
 	val decoded: Bitmap? = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)
 	val encoded: String? = Base64.encodeToString(data, Base64.DEFAULT)
 }
+
+/**
+ * ENUMS
+ */
+object RepeatMode {
+	const val INACTIVE = 0 // inactive
+	const val ACTIVE = 1 // active
+	const val REPEAT_ONE = 2 // repeat-one
+
+	val list = arrayOf(INACTIVE, ACTIVE, REPEAT_ONE)
+}
+
+object Theme {
+	const val DARK = "dark"
+	const val LIGHT = "light"
+}
+
+object SortBy {
+	const val AZ = "az"
+	const val ZA = "za"
+	const val NEWEST = "newest"
+	const val OLDEST = "oldest"
+}

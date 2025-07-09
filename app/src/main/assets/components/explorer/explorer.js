@@ -32,7 +32,7 @@ class MusicExplorer extends HTMLElementBase {
 				const target = document.querySelectorAll('.explorer.current button').toArray().find(f => f.getAttribute('path') == path);
 				if (target) this.#select(target);
 			})
-			.is(EventBus.Type.SEARCH, () => this.search())
+			.is(EventBus.Type.SEARCH_MODE, () => this.search())
 			.is(EventBus.Type.MODE_CHANGE, () => {
 				this.search(); // clear the search!
 				if (![state.Mode.SELECT, state.Mode.SEARCH_SELECT].includes(state.mode)) this.#clearMarks(); // cancel selection if out of select mode

@@ -84,7 +84,7 @@ class PlaybackManager :
 		sessionManager = MediaSessionManager(applicationContext)
 		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
 
-		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched to which the response would be to call restoreState
+		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched (which calls updateState)
 		// so a manual call is necessary
 		updateState(isBootstrapping = true)
 	}
@@ -219,11 +219,11 @@ class PlaybackManager :
 	}
 
 	private fun fastForward() {
-		player.seekTo(player.currentPositionSafe + State.settings.seekJump * 1000)
+		player.seekTo(player.currentPositionSafe + State.settings.seekJump)
 		sendSingleSeekUpdate()
 	}
 	private fun rewind() {
-		player.seekTo(player.currentPositionSafe - State.settings.seekJump * 1000)
+		player.seekTo(player.currentPositionSafe - State.settings.seekJump)
 		sendSingleSeekUpdate()
 	}
 
@@ -308,12 +308,12 @@ class PlaybackManager :
 			Type.SEEK_UPDATE -> updateSeek(event.data["seek"].toString().toInt())
 			Type.FF -> fastForward()
 			Type.RW -> rewind()
-			Type.PLAYBACK_SPEED -> updatePlaybackSpeed(State.settings.playbackSpeed)
+			Type.PLAYBACK_SPEED_CHANGE -> updatePlaybackSpeed(State.settings.playbackSpeed)
 
 			// playlist stuff
-			Type.CYCLE_REPEAT -> { State.playlist.cycleRepeatMode() }
-			Type.CYCLE_SHUFFLE -> { State.playlist.toggleShuffle() }
-			Type.PLAY_PREVIOUS -> playPrev()
+			Type.TOGGLE_REPEAT -> { State.playlist.cycleRepeatMode() }
+			Type.TOGGLE_SHUFFLE -> { State.playlist.toggleShuffle() }
+			Type.PLAY_PREV -> playPrev()
 			Type.PLAY_NEXT -> playNext()
 
 			Type.QUEUE_PLAY_SELECTED -> {
@@ -324,6 +324,12 @@ class PlaybackManager :
 			Type.QUEUE_ADD_SELECTED -> {
 				State.playlist.update(event.data["tracks"] as ArrayList<String>, true)
 				EventBus.dispatch(Event(Type.PLAYLIST_UPDATE, Target.ACTIVITY, State.playlist.serialize()))
+			}
+
+			Type.SLEEP_TIMER_TOGGLE -> {
+				val active = event.data["value"].toString().toBoolean()
+				if (active) SleepTimer.start(State.settings.sleepTimer.toLong())
+				else SleepTimer.cancel()
 			}
 
 			Type.METADATA_UPDATE -> updateState()

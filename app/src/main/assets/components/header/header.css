@@ -6,7 +6,7 @@ music-header {
 	transition: .2s;
 	z-index: 1;
 }
-body[mode="normal"] music-header {
+music-header {
 	inset: calc(var(--inset-top, 4px) + 8px) 12px auto;
 	border: 1px solid var(--border-color);
 	border-radius: 12px;

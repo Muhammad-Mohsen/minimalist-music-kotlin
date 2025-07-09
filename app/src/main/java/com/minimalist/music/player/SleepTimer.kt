@@ -10,14 +10,14 @@ object SleepTimer {
 
 	private var timer: CountDownTimer? = null
 
-	fun start(delay: Int) {
-		timer = object : CountDownTimer(delay * 60 * 1000L, 1000) {
+	fun start(delay: Long) {
+		timer = object : CountDownTimer(delay, 1000) {
 			override fun onTick(millisUntilFinished: Long) {
-				EventBus.dispatch(Event(Type.SLEEP_TIMER_TICK, Target.SESSION, mapOf("tick" to millisUntilFinished / 1000)))
+				EventBus.dispatch(Event(Type.SLEEP_TIMER_TICK, Target.SERVICE, mapOf("tick" to millisUntilFinished)))
 			}
 
 			override fun onFinish() {
-				EventBus.dispatch(Event(Type.SLEEP_TIMER_FINISH, Target.SESSION))
+				EventBus.dispatch(Event(Type.SLEEP_TIMER_FINISH, Target.SERVICE))
 			}
 		}
 

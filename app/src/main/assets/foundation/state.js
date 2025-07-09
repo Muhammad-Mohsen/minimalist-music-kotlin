@@ -6,10 +6,19 @@ class State {
 		SELECT: 'select',
 		SEARCH: 'search',
 		SEARCH_SELECT: 'searchSelect',
+		SETTINGS: 'settings',
+	}
+
+	Theme = {
+		LIGHT: 'light',
+		DARK: 'dark'
 	}
 
 	get mode() { return document.body.getAttribute('mode') || this.Mode.NORMAL; }
 	set mode(val) { document.body.setAttribute('mode', val); }
+
+	get theme() { return document.body.getAttribute('theme') || this.Theme.DARK; }
+	set theme(val) { document.body.setAttribute('theme', val); }
 
 	currentDir = '';
 	files = []; // { type, path, name }
@@ -26,7 +35,7 @@ class State {
 
 		shuffle: false,
 		repeat: RepeatMode.NO_REPEAT,
-		sort: Sort.AZ,
+		sortBy: SortBy.AZ,
 
 		playbackSpeed: 1,
 		sleepTimer: '',
@@ -64,7 +73,7 @@ class State {
 
 		this.settings.shuffle = settings.shuffle;
 		this.settings.repeat = settings.repeat;
-		this.settings.sort = settings.sort;
+		this.settings.sortBy = settings.sort;
 
 		this.settings.playbackSpeed = settings.playbackSpeed;
 		this.settings.sleepTimer = settings.sleepTimer;

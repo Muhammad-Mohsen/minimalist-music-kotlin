@@ -57,7 +57,7 @@ class MockState {
 
 		shuffle: false,
 		repeat: RepeatMode.NO_REPEAT,
-		sort: Sort.AZ,
+		sort: SortBy.AZ,
 
 		playbackSpeed: 1,
 		sleepTimer: '',

@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="components/permissions/permissions.css">
 	<link rel="stylesheet" href="components/header/header.css">
 	<link rel="stylesheet" href="components/explorer/explorer.css">
-	<link rel="stylesheet" href="components/dialog/dialog.css">
+	<link rel="stylesheet" href="components/dialogs/dialog.css">
 	<link rel="stylesheet" href="components/controls/controls.css">
 
 </head>
@@ -20,7 +20,10 @@
 	<music-permissions></music-permissions>
 	<music-header></music-header>
 	<music-explorer></music-explorer>
-	<music-dialog></music-dialog>
+
+	<settings-dialog></settings-dialog>
+
+	<img alt="Album Art" id="album-art"> <!-- outside of music-controls because the dialog needs to be above it but below the controls! -->
 	<music-controls></music-controls>
 
 	<script src="foundation/util.js"></script>
@@ -34,7 +37,7 @@
 	<script src="components/permissions/permissions.js"></script>
 	<script src="components/header/header.js"></script>
 	<script src="components/explorer/explorer.js"></script>
-	<script src="components/dialog/dialog.js"></script>
+	<script src="components/dialogs/settings-dialog.js"></script>
 	<script src="components/controls/controls.js"></script>
 
 </body>

@@ -58,7 +58,7 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 	}
 	override fun onSkipToPrevious() {
 		super.onSkipToPrevious()
-		EventBus.dispatch(Event(Type.PLAY_PREVIOUS, Target.SESSION))
+		EventBus.dispatch(Event(Type.PLAY_PREV, Target.SESSION))
 	}
 
 	override fun onFastForward() {
@@ -79,10 +79,10 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 			Type.PLAY -> stateBuilder.setState(PLAYING, State.track.seek.toLong(), State.settings.playbackSpeed)
 			Type.PAUSE -> stateBuilder.setState(PAUSED, State.track.seek.toLong(), 0F)
 
-			Type.PLAY_NEXT, Type.PLAY_PREVIOUS, Type.QUEUE_PLAY_SELECTED, Type.PLAY_TRACK ->
+			Type.PLAY_NEXT, Type.PLAY_PREV, Type.QUEUE_PLAY_SELECTED, Type.PLAY_TRACK ->
 				stateBuilder.setState(PLAYING, 0, State.settings.playbackSpeed)
 
-			Type.SEEK_UPDATE, Type.PLAYBACK_SPEED ->
+			Type.SEEK_UPDATE, Type.PLAYBACK_SPEED_CHANGE ->
 				stateBuilder.setState(if (State.isPlaying) PLAYING else PAUSED, State.track.seek.toLong(), if (State.isPlaying) State.settings.playbackSpeed else 0F)
 		}
 		mediaSession.setPlaybackState(stateBuilder.build())

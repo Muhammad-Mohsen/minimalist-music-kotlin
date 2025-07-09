@@ -12,15 +12,15 @@
 - DONE - sort
 - DONE - instant scroll-to-selected
 - DONE - optimize renderItems on PLAYLIST_UPDATE
-- back button when settings is open
-- shuffle/repeat bug?
+- DONE - back button when settings is open
+- DONE - light theme
+- DONE - shuffle/repeat bug
 - player bug!!
 - chapters dialog
 - lyrics dialog
 - equalizer + dialog
 - customization
 - translations
-- DONE - light theme
 
 ## Technical
 - DONE - edge to edge

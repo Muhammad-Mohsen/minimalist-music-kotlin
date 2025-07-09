@@ -216,8 +216,6 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 				State.settings.sortBy = event.data["value"].toString()
 				EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
 			}
-			Type.TOGGLE_SHUFFLE -> State.settings.shuffle = event.data["value"].toString().toBoolean()
-			Type.TOGGLE_REPEAT -> State.settings.repeat = event.data["value"].toString().toInt()
 		}
 	}
 

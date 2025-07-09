@@ -302,17 +302,15 @@ class PlaybackManager :
 
 		when (event.type) {
 			Type.APP_FOREGROUNDED -> startForegroundSafe()
+
+			Type.METADATA_UPDATE -> updateState()
+
 			Type.PLAY_TRACK -> playTrack(event.data["path"].toString())
 			Type.PLAY -> playPause(true)
 			Type.PAUSE -> playPause(false)
 			Type.SEEK_UPDATE -> updateSeek(event.data["seek"].toString().toInt())
 			Type.FF -> fastForward()
 			Type.RW -> rewind()
-			Type.PLAYBACK_SPEED_CHANGE -> updatePlaybackSpeed(State.settings.playbackSpeed)
-
-			// playlist stuff
-			Type.TOGGLE_REPEAT -> { State.playlist.cycleRepeatMode() }
-			Type.TOGGLE_SHUFFLE -> { State.playlist.toggleShuffle() }
 			Type.PLAY_PREV -> playPrev()
 			Type.PLAY_NEXT -> playNext()
 
@@ -326,13 +324,15 @@ class PlaybackManager :
 				EventBus.dispatch(Event(Type.PLAYLIST_UPDATE, Target.ACTIVITY, State.playlist.serialize()))
 			}
 
+			Type.TOGGLE_SHUFFLE -> State.settings.shuffle = event.data["value"].toString().toBoolean()
+			Type.TOGGLE_REPEAT -> State.settings.repeat = event.data["value"].toString().toInt()
+			Type.PLAYBACK_SPEED_CHANGE -> updatePlaybackSpeed(State.settings.playbackSpeed)
+
 			Type.SLEEP_TIMER_TOGGLE -> {
 				val active = event.data["value"].toString().toBoolean()
 				if (active) SleepTimer.start(State.settings.sleepTimer.toLong())
 				else SleepTimer.cancel()
 			}
-
-			Type.METADATA_UPDATE -> updateState()
 		}
 	}
 

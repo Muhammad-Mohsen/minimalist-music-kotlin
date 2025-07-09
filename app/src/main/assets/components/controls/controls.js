@@ -13,9 +13,7 @@ class MusicControls extends HTMLElementBase {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is(EventBus.Type.MODE_CHANGE, () => {
-				this.querySelector('.secondary-controls [active]')?.removeAttribute('active');
-			})
+			.is(EventBus.Type.MODE_CHANGE, () => this.querySelector('.secondary-controls [checked]')?.removeAttribute('checked'))
 			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.METADATA_UPDATE], () => this.#updateMetadata())
 			.is([EventBus.Type.PLAY, EventBus.Type.PLAY_TRACK, EventBus.Type.QUEUE_PLAY_SELECTED], () => this.playPause(true, 'suppress'))
 			.is(EventBus.Type.PAUSE, () => this.playPause(false, 'suppress'))

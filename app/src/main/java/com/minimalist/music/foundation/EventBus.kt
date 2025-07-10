@@ -34,7 +34,10 @@ object EventBus {
 		)).toString()
 
 		Moirai.MAIN.post {
-			ipc?.get()?.evaluateJavascript("EventBus.dispatch($event, 'fromNative')", null)
+			ipc?.get()?.evaluateJavascript("""
+				try { EventBus.dispatch($event, 'fromNative') }
+				catch (e) { console.log(e, JSON.stringify($event)); }
+			""".trimIndent(), null)
 		}
 	}
 
@@ -95,6 +98,8 @@ object EventBus {
 		const val TOGGLE_REPEAT = "toggleRepeat"
 
 		const val EQUALIZER_INFO = "equalizerInfo"
+		const val EQUALIZER_PRESET_CHANGE = "equalizerPresetChange"
+		const val EQUALIZER_BAND_CHANGE = "equalizerBandChange"
 
 		const val PRIVACY_POLICY = "privacyPolicy"
 		const val APP_FOREGROUNDED = "appForegrounded" // used in foreground service

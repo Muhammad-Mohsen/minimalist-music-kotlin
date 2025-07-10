@@ -96,6 +96,10 @@ class SettingsDialog extends HTMLElementBase {
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: EventBus.Target.CONTROLS, data: { mode: state.mode } });
 	}
 
+	showPrivacyPolicy() {
+		EventBus.dispatch({ type: EventBus.Type.PRIVACY_POLICY, target: EventBus.Target.CONTROLS });
+	}
+
 	#restore() {
 		this.darkThemeButton.classList.toggle('selected', state.settings.theme != state.Theme.LIGHT);
 		this.lightThemeButton.classList.toggle('selected', state.settings.theme == state.Theme.LIGHT);
@@ -201,7 +205,7 @@ class SettingsDialog extends HTMLElementBase {
 
 			<!-- TODO customization row -->
 
-			<button class="pp-button" l10n>Privacy Policy</button>
+			<button class="pp" l10n onclick="${this.handle}.showPrivacyPolicy()">Privacy Policy</button>
 		`);
 	}
 }

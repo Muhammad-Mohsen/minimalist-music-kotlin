@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.collection.intListOf
 import androidx.core.content.edit
 import org.json.JSONArray
 import org.json.JSONObject
@@ -44,6 +45,7 @@ fun SharedPreferences.put(key: String, value: Any) {
 			is Long -> putLong(key, value)
 			is Float -> putFloat(key, value)
 			is Boolean -> putBoolean(key, value)
+			is List<*> -> putString(key, value.joinToString(";"))
 		}
 	}
 }

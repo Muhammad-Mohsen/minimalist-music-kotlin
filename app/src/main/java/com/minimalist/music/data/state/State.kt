@@ -73,7 +73,7 @@ object State {
 
 			"track" to track.serialize(),
 			"playlist" to playlist.serialize(),
-			"settings" to settings.serialize()
+			"settings" to settings.serialize(),
 		)
 	}
 
@@ -90,5 +90,8 @@ object State {
 		const val SORT = "Sort"
 		const val REPEAT = "Repeat"
 		const val SHUFFLE = "Shuffle"
+		const val EQUALIZER_PRESET = "equalizerPreset"
+		const val EQUALIZER_BANDS = "equalizerBands"
+
 	}
 }

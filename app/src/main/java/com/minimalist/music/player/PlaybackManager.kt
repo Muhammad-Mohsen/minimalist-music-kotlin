@@ -27,6 +27,7 @@ import com.minimalist.music.data.files.getPrevChapter
 import com.minimalist.music.foundation.EventBus.Event
 import com.minimalist.music.foundation.EventBus.Type
 import com.minimalist.music.foundation.EventBus.Target
+import com.minimalist.music.foundation.Moirai
 import com.minimalist.music.foundation.ext.getInfo
 import java.util.Timer
 import java.util.TimerTask
@@ -93,7 +94,8 @@ class PlaybackManager :
 		// so a manual call is necessary
 		updateState(isBootstrapping = true)
 
-		sendEqualizerInfo()
+		updateEqualizer() // restore its state
+		sendEqualizerInfo(isBootstrapping = true)
 	}
 
 	override fun onDestroy() {
@@ -253,8 +255,30 @@ class PlaybackManager :
 		EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET, State.track.serialize()))
 	}
 
-	private fun sendEqualizerInfo() {
-		EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer.getInfo()))
+	// equalizer
+	private fun updateEqualizer() {
+		updateEqualizerPreset(State.settings.equalizerPreset)
+		State.settings.equalizerBands.withIndex().forEach {
+			updateEqualizerBand(it.index.toShort(), it.value)
+		}
+	}
+	private fun updateEqualizerPreset(preset: Short) {
+		State.settings.equalizerPreset = preset
+		equalizer.usePreset(preset)
+		sendEqualizerInfo()
+	}
+	private fun updateEqualizerBand(band: Short, level: Short) {
+		State.settings.equalizerBands[band.toInt()] = level
+		equalizer.setBandLevel(band, level)
+	}
+	private fun sendEqualizerInfo(isBootstrapping: Boolean = false) {
+		if (isBootstrapping) {
+			Moirai.BG.postDelayed({
+				EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer.getInfo()))
+
+			}, 1000)
+		}
+		else EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer.getInfo()))
 	}
 
 	// pause playback on audio focus loss
@@ -332,6 +356,9 @@ class PlaybackManager :
 				if (active) SleepTimer.start(State.settings.sleepTimer.toLong())
 				else SleepTimer.cancel()
 			}
+
+			Type.EQUALIZER_PRESET_CHANGE -> updateEqualizerPreset(event.data["value"].toString().toShort()) // TODO need to send equalizer info again??
+			Type.EQUALIZER_BAND_CHANGE -> updateEqualizerBand(event.data["band"].toString().toShort(), event.data["value"].toString().toShort())
 		}
 	}
 

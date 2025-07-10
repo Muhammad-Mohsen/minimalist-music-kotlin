@@ -49,6 +49,8 @@ var EventBus = (() => {
 		EQUALIZER_INFO: 'equalizerInfo',
 		EQUALIZER_PRESET_CHANGE: 'equalizerPresetChange',
 		EQUALIZER_BAND_CHANGE: 'equalizerBandChange',
+
+		PRIVACY_POLICY: 'privacyPolicy',
 	}
 
 	// the event `target` (read: source)

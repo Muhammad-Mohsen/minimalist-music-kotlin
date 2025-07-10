@@ -85,6 +85,30 @@ class Settings(private val preferences: SharedPreferences) {
 			preferences.put(Key.SHUFFLE, value)
 		}
 
+	private var _equalizerPreset: Short? = null
+	var equalizerPreset: Short
+		get() {
+			if (_equalizerPreset == null) _equalizerPreset = preferences.getInt(Key.EQUALIZER_PRESET, 0).toShort()
+			return _equalizerPreset!!
+		}
+		set(value) {
+			_equalizerPreset = value
+			preferences.put(Key.EQUALIZER_PRESET, value.toInt())
+		}
+
+	private var _equalizerBands: ArrayList<Short>? = null
+	var equalizerBands: ArrayList<Short>
+		get() {
+			if (_equalizerBands == null) _equalizerBands = ArrayList(preferences.getString(Key.EQUALIZER_BANDS, null)?.split(";")
+				?.map { it.toShort() } ?: ArrayList())
+
+			return _equalizerBands!!
+		}
+		set(value) {
+			_equalizerBands = value
+			preferences.put(Key.EQUALIZER_BANDS, value)
+		}
+
 	fun serialize(): Map<String, Any> {
 		return mapOf(
 			"seekJump" to seekJump,
@@ -94,6 +118,8 @@ class Settings(private val preferences: SharedPreferences) {
 			"sortBy" to sortBy,
 			"repeat" to repeat,
 			"shuffle" to shuffle,
+			"equalizerPreset" to equalizerPreset,
+			"equalizerBands" to equalizerBands
 		)
 	}
 }

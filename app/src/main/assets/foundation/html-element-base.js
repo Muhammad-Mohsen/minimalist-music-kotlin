@@ -35,11 +35,4 @@ class HTMLElementBase extends HTMLElement {
 	l10n() {
 
 	}
-
-	postMessage(msg) {
-		vsc.postMessage(msg);
-	}
-	onMessage(event) {
-		console.log(event);
-	}
 }

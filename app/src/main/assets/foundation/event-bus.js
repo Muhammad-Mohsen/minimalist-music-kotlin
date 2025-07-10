@@ -75,8 +75,6 @@ var EventBus = (() => {
 	 * @param {{ type: EventBus.type, target: EventBus.target, data?: any }} event - The event object.
 	 */
 	function dispatch(event, native) {
-		if (native) console.log(JSON.stringify(event));
-
 		subscribers.forEach(callback => callback(event, native));
 		if (!native) window.IPC?.dispatch(JSON.stringify(event));
 	}

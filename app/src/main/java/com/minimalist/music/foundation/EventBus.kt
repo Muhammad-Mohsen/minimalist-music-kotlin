@@ -1,5 +1,6 @@
 package com.minimalist.music.foundation
 
+import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.minimalist.music.foundation.ext.toMap
@@ -32,6 +33,8 @@ object EventBus {
 			"target" to event.target,
 			"data" to event.data
 		)).toString()
+
+		Log.d("EventBus", "dispatch: $event")
 
 		Moirai.MAIN.post {
 			ipc?.get()?.evaluateJavascript("""

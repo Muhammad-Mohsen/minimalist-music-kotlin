@@ -76,9 +76,9 @@ class MusicControls extends HTMLElementBase {
 	}
 
 	toggleSettings() {
-		this.moreButton.toggleAttribute('checked');
-
 		state.mode = state.mode == state.Mode.SETTINGS ? state.Mode.NORMAL : state.Mode.SETTINGS;
+
+		this.moreButton.toggleAttribute('checked', state.mode == state.Mode.SETTINGS);
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 	}
 

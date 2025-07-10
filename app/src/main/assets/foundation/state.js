@@ -7,6 +7,7 @@ class State {
 		SEARCH: 'search',
 		SEARCH_SELECT: 'searchSelect',
 		SETTINGS: 'settings',
+		EQUALIZER: 'equalizer',
 	}
 
 	Theme = {

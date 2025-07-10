@@ -86,7 +86,7 @@ body[theme="light"] {
 	--foreground: #111;
 	--foreground-secondary: #444;
 	--border-color: #AAA;
-	--selection-background: #999;
+	--selection-background: #BBB;
 }
 
 body {
@@ -126,7 +126,7 @@ input[type="range"] {
 	width: 100%;
 	height: var(--range-height, 80px);
 	border: var(--range-border-width, 2px) solid var(--range-border-color, var(--border-color));
-	border-radius: 12px;
+	border-radius: var(--range-border-radius, 12px);
 	background: var(--range-background, transparent);
 	overflow: hidden;
 }

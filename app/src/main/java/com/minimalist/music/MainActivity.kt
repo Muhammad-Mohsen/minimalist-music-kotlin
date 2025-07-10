@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -15,22 +14,20 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.graphics.Insets
-import com.minimalist.music.player.PlaybackManager
+import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.minimalist.music.data.Const
+import com.minimalist.music.data.files.ExplorerFile
+import com.minimalist.music.data.files.serializeFiles
 import com.minimalist.music.data.state.State
 import com.minimalist.music.foundation.EventBus
 import com.minimalist.music.foundation.EventBus.Event
 import com.minimalist.music.foundation.EventBus.Target
 import com.minimalist.music.foundation.EventBus.Type
-import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import com.minimalist.music.data.files.ExplorerFile
-import com.minimalist.music.data.files.serializeFiles
-import com.minimalist.music.foundation.Moirai
+import com.minimalist.music.player.PlaybackManager
 import java.io.File
 
 class MainActivity : AppCompatActivity(), EventBus.Subscriber {
@@ -149,16 +146,6 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 	}
 
 	@SuppressLint("QueryPermissionsNeeded")
-	private fun eq() {
-		val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-			putExtra(AudioEffect.EXTRA_AUDIO_SESSION, State.audioSessionId)
-			putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)
-		}
-
-		if (intent.resolveActivity(packageManager) != null) ActivityCompat.startActivityForResult(this, intent, 0, null)
-		else Toast.makeText(this,resources.getString(R.string.noEqualizer),Toast.LENGTH_SHORT).show()
-	}
-	@SuppressLint("QueryPermissionsNeeded")
 	private fun privacyPolicy() {
 		val browserIntent = Intent(Intent.ACTION_VIEW, Const.PRIVACY_POLICY_URL.toUri())
 		if (intent.resolveActivity(packageManager) != null) startActivity(browserIntent, null)
@@ -198,7 +185,6 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 		when (event.type) {
 			Type.PERMISSION_REQUEST -> requestPermission()
-			Type.EQ -> eq()
 			Type.PRIVACY_POLICY -> privacyPolicy()
 
 			Type.MODE_CHANGE -> State.mode = event.data["mode"].toString() // only used for system back navigation logic

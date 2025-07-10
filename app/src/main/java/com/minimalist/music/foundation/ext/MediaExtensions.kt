@@ -1,6 +1,7 @@
 package com.minimalist.music.foundation.ext
 
 import android.media.MediaPlayer
+import android.media.audiofx.Equalizer
 
 /**
  * Created by muhammad.mohsen on 2/17/2019.
@@ -50,3 +51,32 @@ val MediaPlayer.currentPositionSafe: Int
 			0
 		}
 	}
+
+val Equalizer.currentPresetSafe: Short
+	get() = try { currentPreset } catch (_: Exception) { -1 }
+
+fun Equalizer.getInfo(): Map<String, Any> {
+	val bands = (0 until numberOfBands).map {
+		return@map mapOf(
+			"id" to it,
+			"low" to bandLevelRange[0],
+			"high" to bandLevelRange[1],
+			"centerFrequency" to getCenterFreq(it.toShort()),
+			"level" to getBandLevel(it.toShort())
+		)
+	}
+
+	val presets = (0 until numberOfPresets).map {
+		return@map mapOf(
+			"id" to it,
+			"name" to getPresetName(it.toShort())
+		)
+	}
+
+	return mapOf(
+		"bands" to bands,
+
+		"presets" to presets,
+		"currentPreset" to currentPresetSafe
+	)
+}

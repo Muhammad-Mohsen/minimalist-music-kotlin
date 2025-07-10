@@ -11,6 +11,8 @@
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<!-- no need for POST_NOTIFICATIONS...we're exempt -->
 
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- equalizer -->
+
 	<application
 		android:allowBackup="true"
 		android:dataExtractionRules="@xml/data_extraction_rules"

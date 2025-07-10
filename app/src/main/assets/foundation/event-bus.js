@@ -45,6 +45,10 @@ var EventBus = (() => {
 		SORT_BY_CHANGE: 'sortByChange',
 		TOGGLE_SHUFFLE: 'toggleShuffle',
 		TOGGLE_REPEAT: 'toggleRepeat',
+
+		EQUALIZER_INFO: 'equalizerInfo',
+		EQUALIZER_PRESET_CHANGE: 'equalizerPresetChange',
+		EQUALIZER_BAND_CHANGE: 'equalizerBandChange',
 	}
 
 	// the event `target` (read: source)
@@ -57,6 +61,7 @@ var EventBus = (() => {
 		PERMISSION_UI: 'permission',
 		STATE: 'state',
 		SETTINGS: 'settings',
+		EQUALIZER: 'equalizer',
 	}
 
 	const subscribers = []; // a regular ol' array will do

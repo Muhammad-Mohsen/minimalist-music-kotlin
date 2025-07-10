@@ -91,7 +91,9 @@ class SettingsDialog extends HTMLElementBase {
 		this.repeatButton.classList.toggle('selected', state.settings.repeat > 0);
 	}
 	showEqualizer() {
-
+		state.mode = state.Mode.EQUALIZER;
+		// note the target value, which "cheats" which components are notified!
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: EventBus.Target.CONTROLS, data: { mode: state.mode } });
 	}
 
 	#restore() {
@@ -201,9 +203,6 @@ class SettingsDialog extends HTMLElementBase {
 
 			<button class="pp-button" l10n>Privacy Policy</button>
 		`);
-	}
-	#renderEqualizer() {
-
 	}
 }
 

@@ -94,8 +94,9 @@ object EventBus {
 		const val TOGGLE_SHUFFLE = "toggleShuffle"
 		const val TOGGLE_REPEAT = "toggleRepeat"
 
+		const val EQUALIZER_INFO = "equalizerInfo"
+
 		const val PRIVACY_POLICY = "privacyPolicy"
-		const val EQ = "eq"
 		const val APP_FOREGROUNDED = "appForegrounded" // used in foreground service
 	}
 

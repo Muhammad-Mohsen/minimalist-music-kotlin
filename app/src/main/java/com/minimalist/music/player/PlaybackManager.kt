@@ -9,7 +9,7 @@ import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.media.audiofx.AudioEffect
+import android.media.audiofx.Equalizer
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
@@ -27,6 +27,7 @@ import com.minimalist.music.data.files.getPrevChapter
 import com.minimalist.music.foundation.EventBus.Event
 import com.minimalist.music.foundation.EventBus.Type
 import com.minimalist.music.foundation.EventBus.Target
+import com.minimalist.music.foundation.ext.getInfo
 import java.util.Timer
 import java.util.TimerTask
 
@@ -43,6 +44,8 @@ class PlaybackManager :
 	AudioManager.OnAudioFocusChangeListener // audio focus loss
 {
 	private val player = MediaPlayer()
+	private val equalizer = Equalizer(0, player.audioSessionId)
+
 	private lateinit var audioFocusHandler: AudioFocusHandler
 	private lateinit var notificationManager: MediaNotificationManager
 	private lateinit var sessionManager: MediaSessionManager
@@ -80,6 +83,8 @@ class PlaybackManager :
 			setOnCompletionListener(this@PlaybackManager) // set up MediaPlayer event listeners
 		}
 
+		equalizer.enabled = true
+
 		audioFocusHandler = AudioFocusHandler(this, this) // audio focus loss
 		sessionManager = MediaSessionManager(applicationContext)
 		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
@@ -87,6 +92,8 @@ class PlaybackManager :
 		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched (which calls updateState)
 		// so a manual call is necessary
 		updateState(isBootstrapping = true)
+
+		sendEqualizerInfo()
 	}
 
 	override fun onDestroy() {
@@ -149,7 +156,6 @@ class PlaybackManager :
 		registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
 
 		player.playPause(true)
-		sendAudioEffectControl(true)
 		sendMetadataUpdate(path)
 		sendPeriodicSeekUpdates()
 	}
@@ -166,7 +172,6 @@ class PlaybackManager :
 		}
 
 		player.playPause(play)
-		sendAudioEffectControl(play)
 		sendPeriodicSeekUpdates(play)
 	}
 	private fun playNext() {
@@ -248,14 +253,8 @@ class PlaybackManager :
 		EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET, State.track.serialize()))
 	}
 
-	// equalizer
-	private fun sendAudioEffectControl(play: Boolean = false) {
-		val action = if (play) AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION else AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION
-
-		val intent = Intent(action)
-		intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
-		intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)
-		sendBroadcast(intent)
+	private fun sendEqualizerInfo() {
+		EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer.getInfo()))
 	}
 
 	// pause playback on audio focus loss
@@ -347,9 +346,6 @@ class PlaybackManager :
 
 		val isPlaying: Boolean
 			get() = instance?.player.isPlayingSafe
-
-		val audioSessionId: Int
-			get() = instance?.player?.audioSessionId ?: 0
 
 		private fun registerSelf(i: PlaybackManager) {
 			instance = i

@@ -42,9 +42,6 @@ object State {
 	val isPlaying: Boolean
 		get() = PlaybackManager.isPlaying
 
-	val audioSessionId: Int
-		get() = PlaybackManager.audioSessionId
-
 	val selectedTracks = ArrayList<String>()
 
 	var isSleepTimerActive = false

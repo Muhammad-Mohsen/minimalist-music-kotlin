@@ -36,13 +36,6 @@ fun Timer?.cancelSafe() {
 	}
 }
 
-fun Int.toReadableTime(withSeconds: Boolean = false): String {
-	fun pad(num: Int) = num.toString().padStart(2, '0')
-
-	return if (withSeconds) "${pad(this / 60 / 60)}:${pad(this / 60 % 60)}:${pad(this % 60)}"
-	else "${pad(this / 60 / 60)}:${pad((this / 60 % 60))}"
-}
-
 fun SharedPreferences.put(key: String, value: Any) {
 	this.edit {
 		when (value) {

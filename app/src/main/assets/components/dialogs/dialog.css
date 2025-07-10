@@ -1,7 +1,8 @@
-settings-dialog { background: #00000020; }
-body[theme="light"] settings-dialog { background: #FFFFFF20; }
+/* GENERAL */
+settings-dialog, equalizer-dialog { background: #00000020; }
+body[theme="light"] settings-dialog, body[theme="light"] equalizer-dialog { background: #FFFFFF20; }
 
-settings-dialog {
+settings-dialog, equalizer-dialog {
 	position: fixed;
 	inset: 0 0 calc(var(--inset-bottom, 0px) + 64px);
 	flex-direction: column;
@@ -43,7 +44,17 @@ settings-dialog {
 	}
 
 	separator { --separator-height: 16px; }
+}
 
+@starting-style {
+	settings-dialog, equalizer-dialog {
+		opacity: 0;
+		translate: 0 30vh;
+	}
+}
+
+/* SETTINGS */
+settings-dialog {
 	.settings-btn {
 		flex: 1 0 10%;
 		display: flex;
@@ -165,11 +176,78 @@ settings-dialog {
 		opacity: 1;
 		translate: 0;
 	}
+
+	.pp {
+		width: fit-content;
+		margin: 0 auto;
+		padding: 4px 12px;
+		font-size: .9rem;
+		border-radius: 6px;
+	}
 }
 
-@starting-style {
-	settings-dialog {
-		opacity: 0;
-		translate: 0 30vh;
+/* EQUALIZER */
+equalizer-dialog {
+	#presets {
+		margin-block: auto;
+		overflow: auto;
+
+		label {
+			position: relative;
+			padding: 12px 16px;
+			border-radius: 12px;
+			border: 1px solid transparent;
+			color: var(--foreground-secondary);
+			transition: color .5s, background .5s, border-color .3s, opacity .2s, translate .2s;
+		}
+		label:has(:active) { background: var(--selection-background); }
+		label:has(:checked) { border-color: var(--border-color); color: var(--foreground); }
+
+		label input {
+			appearance: none;
+			opacity: 0;
+		}
+	}
+	#presets::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+	}
+
+	#bands {
+		display: flex;
+		height: calc(100vw - 24px);
+		border-radius: 12px;
+		overflow: clip;
+
+		.eq-band {
+			flex: 1;
+			display: grid;
+		}
+
+		label {
+            grid-area: 1 / 1;
+			height: fit-content;
+			margin-block: auto 12px;
+			color: var(--foreground-secondary);
+			text-align: center;
+		}
+		input {
+			--range-height: 100%;
+			--range-border-width: 1px;
+			--range-border-radius: 0;
+			--range-border-color: transparent;
+			--range-progress-background: #74747433;
+
+			grid-area: 1 / 1;
+			writing-mode: vertical-lr;
+			direction: rtl;
+		}
+		input::-webkit-slider-thumb {
+			appearance: none;
+			height: 1px;
+			width: 200px;
+			background: var(--border-color);
+			box-shadow: 0 100vh 0 100vh var(--range-progress-background, var(--border-color));
+		}
 	}
 }

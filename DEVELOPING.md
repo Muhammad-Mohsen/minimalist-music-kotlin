@@ -15,10 +15,11 @@
 - DONE - back button when settings is open
 - DONE - light theme
 - DONE - shuffle/repeat bug
+- DONE - equalizer + dialog
 - player bug!!
+	- exo??
 - chapters dialog
 - lyrics dialog
-- equalizer + dialog
 - customization
 - translations
 

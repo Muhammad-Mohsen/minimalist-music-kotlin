@@ -45,12 +45,12 @@ class MusicControls extends HTMLElementBase {
 		EventBus.dispatch({ type: EventBus.Type.PLAY_PREV, target: this.#TARGET });
 	}
 	rewind() {
-		state.track.seek -= state.settings.seekJump;
+		state.track.seek = Math.max(0, state.track.seek - state.settings.seekJump);
 		this.#updateSeekUI();
 		EventBus.dispatch({ type: EventBus.Type.SEEK_UPDATE, target: this.#TARGET, data: { seek: state.track.seek } });
 	}
 	fastForward() {
-		state.track.seek += state.settings.seekJump;
+		state.track.seek = Math.min(state.track.duration, state.track.seek + state.settings.seekJump);
 		this.#updateSeekUI();
 		EventBus.dispatch({ type: EventBus.Type.SEEK_UPDATE, target: this.#TARGET, data: { seek: state.track.seek } });
 	}

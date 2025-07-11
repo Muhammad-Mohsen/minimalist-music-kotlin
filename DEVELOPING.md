@@ -16,8 +16,12 @@
 - DONE - light theme
 - DONE - shuffle/repeat bug
 - DONE - equalizer + dialog
-- player bug!!
+- DONE - player bug!!
 	- exo??
+- DONE - permission issues
+	- DONE - permission UI
+	- after granting the permission, it doesn't work!!
+		- I guess it's because the service doesn't get initialized! - that was true
 - chapters dialog
 - lyrics dialog
 - customization
@@ -128,7 +132,7 @@ for (i in 0 until chapterCount) {
 ```
 - lyrics
 ```kotlin
-retriever.Metadata().all // look for UNSYNCEDLYRICS ??
+retriever.metadata.all // look for UNSYNCEDLYRICS ?? lyrics-eng!
 ```
 
 ## Chromatic Aberration

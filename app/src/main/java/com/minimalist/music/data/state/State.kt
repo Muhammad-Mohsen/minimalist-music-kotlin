@@ -2,6 +2,7 @@ package com.minimalist.music.data.state
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.graphics.Insets
 import com.minimalist.music.data.Const
 import com.minimalist.music.data.files.ExplorerFile
 import com.minimalist.music.data.files.FileCache
@@ -22,6 +23,11 @@ object State {
 
 	private lateinit var sharedPreferences: SharedPreferences
 	lateinit var applicationContext: Context
+
+	var playbackServiceReady = false
+
+	var webviewReady = false
+	var windowInsets: Insets? = null
 
 	private val initialized: Boolean
 		get() = ::sharedPreferences.isInitialized

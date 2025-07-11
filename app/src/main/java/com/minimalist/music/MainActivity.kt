@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -14,7 +15,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.Insets
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -34,9 +34,6 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 	private lateinit var permissionRequest: ActivityResultLauncher<String>
 	private lateinit var webView: WebView
-
-	private var windowInsets: Insets? = null
-	private var isWebViewReady = false
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		setTheme(R.style.AppTheme) // change from splash screen (android 11-)
@@ -61,7 +58,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 		// insets (edge to edge)
 		ViewCompat.setOnApplyWindowInsetsListener(webView) { v, insets ->
-			windowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+			State.windowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 			sendInsetsToWebView()
 
 			insets
@@ -74,18 +71,22 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 	override fun onResume() {
 		super.onResume()
 		EventBus.dispatch(Event(Type.PERMISSION_RESPONSE, Target.ACTIVITY, mapOf("mode" to
-				if (checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED) "normal" else "permission"
-		)))
+				if (checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED) "normal" else "permission")))
+		initNative()
 	}
 
 	private fun initNative() {
+		Log.d("MainActivity", "initNative: CALLED!!!")
 		when {
+			State.playbackServiceReady -> return // this actually fixes the MediaPlayer IllegalStateException on startup!!
+
 			checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED -> {
 				State.initialize(applicationContext)
 
 				// service
 				val playerIntent = Intent(this, PlaybackManager::class.java)
 				startForegroundService(playerIntent)
+				State.playbackServiceReady = true
 
 				// restore the state (the service manually calls its own updateState function because it isn't ready at this point)
 				if (State.track.exists) EventBus.dispatch(Event(Type.METADATA_UPDATE, Target.ACTIVITY))
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			webViewClient = object : WebViewClient() {
 				override fun onPageFinished(view: WebView?, url: String?) {
 					super.onPageFinished(view, url)
-					isWebViewReady = true
+					State.webviewReady = true
 					sendInsetsToWebView()
 					EventBus.dispatch(Event(Type.RESTORE_STATE, Target.ACTIVITY, State.serialize()))
 				}
@@ -172,11 +173,10 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 	}
 
 	private fun sendInsetsToWebView() {
-		if (windowInsets != null && isWebViewReady) {
-			val top = windowInsets!!.top
-			val bottom = windowInsets!!.bottom
-
-			EventBus.dispatch(Event(Type.INSETS, Target.ACTIVITY, mapOf("top" to top, "bottom" to bottom)))
+		if (State.windowInsets != null && State.webviewReady) {
+			EventBus.dispatch(Event(Type.INSETS, Target.ACTIVITY, mapOf(
+				"top" to State.windowInsets!!.top,
+				"bottom" to State.windowInsets!!.bottom)))
 		}
 	}
 

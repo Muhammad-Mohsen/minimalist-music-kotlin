@@ -67,7 +67,7 @@ class SettingsDialog extends HTMLElementBase {
 	}
 
 	onSeekJumpChange() {
-		state.settings.seekJump = this.seekJump.value;
+		state.settings.seekJump = parseInt(this.seekJump.value);
 		this.seekJumpValue.innerHTML = (this.seekJump.value / 1000) + ' seconds';
 		EventBus.dispatch({ type: EventBus.Type.SEEK_JUMP_CHANGE, target: this.#TARGET, data: { value: state.settings.seekJump } });
 	}

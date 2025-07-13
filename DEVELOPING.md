@@ -25,11 +25,12 @@
 - DONE - chapters dialog
 - DONE - lyrics dialog
 - DONE - customization
-- translations
-- player bug!!
+- DONE - player bug!!
 	- part deux :D :D
 - DONE - shuffle/repeat state in controls
 	- also, responding to their changes in settings/controls respectively
+- translations
+- ffmpeg metadata retreiver 16kb alignment update
 
 ## Technical
 - DONE - edge to edge

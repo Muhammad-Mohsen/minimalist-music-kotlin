@@ -99,8 +99,8 @@ class PlaybackManager :
 	}
 
 	override fun onDestroy() {
-		player.release() // destroy the Player instance
 		equalizer.release()
+		player.release() // destroy the Player instance
 		sessionManager.release() // and the media session
 		audioFocusHandler.abandon() // ...and the audio focus
 
@@ -108,6 +108,10 @@ class PlaybackManager :
 		timer = null
 
 		unregisterReceiverSafe(noisyReceiver)
+
+		State.playbackServiceReady = false // clear the static...extremely important
+
+		super.onDestroy()
 	}
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

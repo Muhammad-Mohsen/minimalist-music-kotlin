@@ -100,6 +100,7 @@ class PlaybackManager :
 
 	override fun onDestroy() {
 		player.release() // destroy the Player instance
+		equalizer.release()
 		sessionManager.release() // and the media session
 		audioFocusHandler.abandon() // ...and the audio focus
 

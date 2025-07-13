@@ -104,6 +104,8 @@ object EventBus {
 		const val EQUALIZER_PRESET_CHANGE = "equalizerPresetChange"
 		const val EQUALIZER_BAND_CHANGE = "equalizerBandChange"
 
+		const val SECONDARY_CONTROLS_CHANGE = "secondaryControlsChange"
+
 		const val PRIVACY_POLICY = "privacyPolicy"
 		const val APP_FOREGROUNDED = "appForegrounded" // used in foreground service
 	}

@@ -65,6 +65,7 @@ class Track(private val preferences: SharedPreferences) {
 			artist = metadata.artist
 			duration = metadata.duration
 			chapters = metadata.chapters
+			lyrics = metadata.lyrics
 			albumArt = metadata.albumArtBitmap
 
 		} catch (ex: Exception) { Log.e("State", "State.Track.update", ex) }

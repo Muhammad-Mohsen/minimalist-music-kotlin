@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -21,12 +20,14 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.minimalist.music.data.Const
 import com.minimalist.music.data.files.ExplorerFile
+import com.minimalist.music.data.files.Theme
 import com.minimalist.music.data.files.serializeFiles
 import com.minimalist.music.data.state.State
 import com.minimalist.music.foundation.EventBus
 import com.minimalist.music.foundation.EventBus.Event
 import com.minimalist.music.foundation.EventBus.Target
 import com.minimalist.music.foundation.EventBus.Type
+import com.minimalist.music.foundation.Moirai
 import com.minimalist.music.player.PlaybackManager
 import java.io.File
 
@@ -76,7 +77,6 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 	}
 
 	private fun initNative() {
-		Log.d("MainActivity", "initNative: CALLED!!!")
 		when {
 			State.playbackServiceReady -> return // this actually fixes the MediaPlayer IllegalStateException on startup!!
 
@@ -126,6 +126,8 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 			EventBus.subscribe(this) // this is the webview (IPC) subscription
 		}
+
+		handleThemeChange()
 	}
 
 	private fun onBackPress() {
@@ -180,6 +182,13 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		}
 	}
 
+	private fun handleThemeChange() {
+		val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+		Moirai.MAIN.post {
+			windowInsetsController.isAppearanceLightStatusBars = State.settings.theme == Theme.LIGHT
+		}
+	}
+
 	override fun handle(event: Event) {
 		if (event.target == Target.ACTIVITY) return
 
@@ -194,7 +203,11 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 				EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
 			}
 
-			Type.THEME_CHANGE -> State.settings.theme = event.data["value"].toString()
+			Type.THEME_CHANGE -> {
+				State.settings.theme = event.data["value"].toString()
+				handleThemeChange()
+			}
+
 			Type.SLEEP_TIMER_CHANGE -> State.settings.sleepTimer = event.data["value"].toString().toInt()
 			Type.SEEK_JUMP_CHANGE -> State.settings.seekJump = event.data["value"].toString().toInt()
 			Type.PLAYBACK_SPEED_CHANGE -> State.settings.playbackSpeed = event.data["value"].toString().toFloat()
@@ -202,6 +215,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 				State.settings.sortBy = event.data["value"].toString()
 				EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
 			}
+			Type.SECONDARY_CONTROLS_CHANGE -> State.settings.secondaryControls = event.data["value"].toString()
 		}
 	}
 

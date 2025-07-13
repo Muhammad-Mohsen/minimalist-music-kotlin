@@ -8,6 +8,8 @@ class State {
 		SEARCH_SELECT: 'searchSelect',
 		SETTINGS: 'settings',
 		EQUALIZER: 'equalizer',
+		CHAPTERS: 'chapters',
+		LYRICS: 'lyrics',
 	}
 
 	Theme = {
@@ -38,7 +40,9 @@ class State {
 
 		playbackSpeed: 1,
 		sleepTimer: '',
-		seekJump: 30,
+		seekJump: 60000,
+
+		secondaryControls: ['SEARCH', 'RW', 'PREV', 'NEXT', 'FF']
 	}
 
 	playlist = {
@@ -77,6 +81,8 @@ class State {
 		this.settings.playbackSpeed = settings.playbackSpeed;
 		this.settings.sleepTimer = settings.sleepTimer;
 		this.settings.seekJump = settings.seekJump;
+
+		this.settings.secondaryControls = settings.secondaryControls.split(';');
 	}
 	updateTrack(track) {
 		this.track.path = track.path;
@@ -87,6 +93,7 @@ class State {
 		this.track.artist = track.artist;
 		this.track.albumArt = track.albumArt;
 		this.track.chapters = track.chapters;
+		this.track.lyrics = track.lyrics;
 
 		if (!track.name) {
 			this.track.name = 'Hi,',

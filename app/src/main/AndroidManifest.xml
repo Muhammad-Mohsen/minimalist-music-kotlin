@@ -31,6 +31,7 @@
 			android:launchMode="singleInstance"
 			android:theme="@style/SplashTheme"
 			android:screenOrientation="portrait"
+			android:configChanges="uiMode"
 			tools:ignore="DiscouragedApi,LockedOrientationActivity"
 			>
 

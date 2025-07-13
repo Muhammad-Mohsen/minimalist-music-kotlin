@@ -80,13 +80,6 @@ class Playlist(private val preferences: SharedPreferences) {
 		return tracks.getOrNull(index)
 	}
 
-	fun toggleShuffle() {
-		State.settings.shuffle = !State.settings.shuffle
-	}
-	fun cycleRepeatMode() {
-		State.settings.repeat = RepeatMode.list[(State.settings.repeat + 1) % RepeatMode.list.size]
-	}
-
 	fun isEmpty() = tracks.isEmpty()
 
 	fun serialize(): Map<String, Any> {

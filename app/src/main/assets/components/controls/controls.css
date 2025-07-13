@@ -1,7 +1,7 @@
 music-controls {
 	--range-height: auto;
 	--range-border-width: 0;
-	--range-background: #33333380;
+	--range-background: #44444460;
 	--range-progress-background: #74747433;
 }
 
@@ -116,6 +116,8 @@ body[is-playing="true"] #album-art { filter: none; }
 	justify-content: space-between;
 	margin: 4px 12px;
 
+	#customizable-controls { display: contents; }
+
 	button {
 		display: grid;
 		align-content: center;
@@ -143,6 +145,7 @@ body[is-playing="true"] #album-art { filter: none; }
 		translate: 0;
 	}
 
+	button.selected { color: var(--foreground); }
 }
 .secondary-controls:has([checked]) button:not([checked]) {
 	opacity: .5;

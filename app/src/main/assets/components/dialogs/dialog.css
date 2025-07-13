@@ -1,13 +1,13 @@
 /* GENERAL */
-settings-dialog, equalizer-dialog { background: #00000020; }
-body[theme="light"] settings-dialog, body[theme="light"] equalizer-dialog { background: #FFFFFF20; }
+settings-dialog, equalizer-dialog, chapters-dialog, lyrics-dialog { background: #00000020; }
+body[theme="light"] { settings-dialog, equalizer-dialog, chapters-dialog, lyrics-dialog { background: #FFFFFF20; } }
 
-settings-dialog, equalizer-dialog {
+settings-dialog, equalizer-dialog, chapters-dialog, lyrics-dialog {
 	position: fixed;
 	inset: 0 0 calc(var(--inset-bottom, 0px) + 64px);
 	flex-direction: column;
 	gap: 12px;
-	padding: 12px 12px 124px;
+	padding: 0 12px 148px;
 	backdrop-filter: blur(12px);
 	overflow: auto;
 	z-index: 2;
@@ -31,11 +31,27 @@ settings-dialog, equalizer-dialog {
 	* { flex-shrink: 0; } /* no shrinkage! */
 
 	.ic-header {
+		position: sticky;
+		top: 0;
 		display: block;
-		margin-block: calc(var(--inset-top, 4px) + 16px) 24px;
+		padding-block: calc(var(--inset-top, 4px) + 28px) 52px;
+		margin-block-end: -28px;
 		color: var(--foreground-secondary);
 		text-align: center;
 		font-size: 28px;
+	}
+
+	.ic-header::after {
+		content: '';
+		position: absolute;
+		inset: 0 -12px;
+		background: var(--background);
+		mask-image:
+			radial-gradient(circle at 50% -40%, #FFF 40%, transparent 60%),
+			linear-gradient(0, transparent 40%, #FFF 80%);
+		z-index: -1;
+
+		transition: .3s ease-out;
 	}
 
 	.flex-row {
@@ -55,6 +71,8 @@ settings-dialog, equalizer-dialog {
 
 /* SETTINGS */
 settings-dialog {
+	--subscript: .8rem;
+
 	.settings-btn {
 		flex: 1 0 10%;
 		display: flex;
@@ -74,8 +92,6 @@ settings-dialog {
 	}
 
 	.range-row {
-		--subscript: .8rem;
-
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -138,7 +154,6 @@ settings-dialog {
 			color: var(--foreground-secondary);
 			background: transparent;
 			font-size: var(--subscript);
-			outline: none;
 		}
 		&.select i { translate: 0 calc(var(--subscript) - 4px); }
 
@@ -177,6 +192,48 @@ settings-dialog {
 		translate: 0;
 	}
 
+	/* secondary controls customization */
+	#secondary-controls-customization {
+		overflow: hidden;
+		padding: 8px 12px;
+		border: 1px solid var(--border-color);
+		border-radius: 12px;
+		color: var(--foreground);
+
+		select {
+			appearance: base-select;
+
+			position: relative;
+			flex: 1  0 10%;
+			border: none;
+			background: transparent;
+
+			selectedcontent, option {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: 100%;
+				padding: 12px 8px 8px;
+				border-radius: 10px;
+				color: var(--foreground-secondary);
+				font-size: var(--subscript);
+
+				i { font-size: 24px; }
+			}
+
+			&::picker-icon {
+				position: absolute;
+				inset: auto auto 1px 50%;
+				width: 4px;
+				height: 4px;
+				border: 0 solid var(--border-color);
+				border-width: 0 0 2px 2px;
+				transform: translateX(-50%) rotate(-45deg);
+				color: transparent;
+			}
+		}
+	}
+
 	.pp {
 		width: fit-content;
 		margin: 0 auto;
@@ -189,7 +246,8 @@ settings-dialog {
 /* EQUALIZER */
 equalizer-dialog {
 	#presets {
-		margin-block: auto;
+		margin: auto -12px;
+		padding-inline: 12px;
 		overflow: auto;
 
 		label {
@@ -250,4 +308,22 @@ equalizer-dialog {
 			box-shadow: 0 100vh 0 100vh var(--range-progress-background, var(--border-color));
 		}
 	}
+}
+
+/* CHAPTERS */
+chapters-dialog {
+	button {
+		display: block;
+		width: 100%;
+		padding: 12px;
+		text-align: start;
+		border-radius: 12px;
+
+		.title { color: var(--foreground); }
+		.timestamp { font-size: .8rem; }
+	}
+}
+
+lyrics-dialog {
+	color: var(--foreground-secondary);
 }

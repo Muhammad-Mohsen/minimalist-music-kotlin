@@ -1,7 +1,6 @@
 class SettingsDialog extends HTMLElementBase {
 
 	#TARGET = EventBus.Target.SETTINGS;
-	#repeatIcons = ['ic-repeat', 'ic-repeat', 'ic-repeat-1'];
 
 	connectedCallback() {
 		this.#render();
@@ -29,6 +28,13 @@ class SettingsDialog extends HTMLElementBase {
 				this.sleepTimerToggle.removeAttribute('checked');
 				this.countdown.value = 0;
 				this.countdownValue.innerHTML = '';
+			})
+			.is(EventBus.Type.TOGGLE_SHUFFLE, () => {
+				this.shuffleButton.classList.toggle('selected', state.settings.shuffle);
+			})
+			.is(EventBus.Type.TOGGLE_REPEAT, () => {
+				this.repeatIcon.className = RepeatIcons[state.settings.repeat];
+				this.repeatButton.classList.toggle('selected', state.settings.repeat > 0);
 			})
 	}
 
@@ -87,13 +93,18 @@ class SettingsDialog extends HTMLElementBase {
 		state.settings.repeat = (state.settings.repeat + 1) % 3;
 		EventBus.dispatch({ type: EventBus.Type.TOGGLE_REPEAT, target: this.#TARGET, data: { value: state.settings.repeat } });
 
-		this.repeatIcon.className = this.#repeatIcons[state.settings.repeat];
+		this.repeatIcon.className = RepeatIcons[state.settings.repeat];
 		this.repeatButton.classList.toggle('selected', state.settings.repeat > 0);
 	}
 	showEqualizer() {
 		state.mode = state.Mode.EQUALIZER;
 		// note the target value, which "cheats" which components are notified!
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: EventBus.Target.CONTROLS, data: { mode: state.mode } });
+	}
+
+	onSecondaryControlsChange(target, index) {
+		state.settings.secondaryControls[index] = target.value;
+		EventBus.dispatch({ type: EventBus.Type.SECONDARY_CONTROLS_CHANGE, target: this.#TARGET, data: { value: state.settings.secondaryControls.join(';') } });
 	}
 
 	showPrivacyPolicy() {
@@ -117,8 +128,10 @@ class SettingsDialog extends HTMLElementBase {
 
 		this.shuffleButton.classList.toggle('selected', state.settings.shuffle);
 
-		this.repeatIcon.className = this.#repeatIcons[state.settings.repeat];
+		this.repeatIcon.className = RepeatIcons[state.settings.repeat];
 		this.repeatButton.classList.toggle('selected', state.settings.repeat > 0);
+
+		this.#renderSecondaryControlsCustomization();
 	}
 
 	// RENDERING
@@ -137,6 +150,8 @@ class SettingsDialog extends HTMLElementBase {
 					<span l10n>Dark</span>
 				</button>
 			</div>
+
+			<div id="secondary-controls-customization"></div>
 
 			<div class="range-row">
 				<!-- min: 10m - max: 3h - step: 5m converted to millis -->
@@ -188,25 +203,50 @@ class SettingsDialog extends HTMLElementBase {
 				<i class="ic-sort"></i>
 			</div>
 
-			<div class="flex-row" style="gap: 12px;">
-				<button id="shuffle-button" class="settings-btn outlined" onclick="${this.handle}.toggleShuffle()">
+			<div class="flex-row">
+				<button id="shuffle-button" class="settings-btn" onclick="${this.handle}.toggleShuffle()">
 					<i class="ic-shuffle"></i>
 					<span l10n>Shuffle</span>
 				</button>
-				<button id="repeat-button" class="settings-btn outlined" onclick="${this.handle}.toggleRepeat()">
+				<separator></separator>
+				<button id="repeat-button" class="settings-btn" onclick="${this.handle}.toggleRepeat()">
 					<i id="repeat-icon" class="ic-repeat"></i>
 					<span l10n>Repeat</span>
 				</button>
-				<button class="settings-btn outlined" onclick="${this.handle}.showEqualizer()">
+				<separator></separator>
+				<button class="settings-btn" onclick="${this.handle}.showEqualizer()">
 					<i class="ic-equalizer"></i>
 					<span l10n>Equalizer</span>
 				</button>
 			</div>
 
-			<!-- TODO customization row -->
-
 			<button class="pp" l10n onclick="${this.handle}.showPrivacyPolicy()">Privacy Policy</button>
 		`);
+	}
+
+	#renderSecondaryControlsCustomization() {
+		this.secondaryControlsCustomization.innerHTML = `
+			<label l10n>UI Customization</label>
+			<div class="flex-row" style="margin-inline: -6px;">
+				${state.settings.secondaryControls.map((val, i) => {
+					return `
+						<select id="ui-custom-${i}" onchange="${this.handle}.onSecondaryControlsChange(this, ${i})">
+							<button><selectedcontent></selectedcontent></button>
+
+							${Object.keys(SecondaryControlOptions).map(key => {
+								return `
+								<option value="${key}" ${val == key ? 'selected' : ''}>
+									<i class="${SecondaryControlOptions[key].icon}"></i>
+									<span l10n>${SecondaryControlOptions[key].label}</span>
+								</option>
+							`;
+							}).join('')}
+
+						</select>
+					`;
+				}).join('<separator></separator>')}
+			</div>
+		`;
 	}
 }
 

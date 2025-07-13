@@ -11,7 +11,7 @@ class Settings(private val preferences: SharedPreferences) {
 	private var _seekJump: Int? = null
 	var seekJump: Int
 		get() {
-			if (_seekJump == null) _seekJump = preferences.getInt(Key.SEEK_JUMP, 60) // 1 minute default
+			if (_seekJump == null) _seekJump = preferences.getInt(Key.SEEK_JUMP, 60 * 1000) // 1 minute default
 			return _seekJump!!
 		}
 		set(value) {
@@ -109,6 +109,17 @@ class Settings(private val preferences: SharedPreferences) {
 			preferences.put(Key.EQUALIZER_BANDS, value)
 		}
 
+	private var _secondaryControls: String? = null
+	var secondaryControls: String
+		get() {
+			if (_secondaryControls == null) _secondaryControls = preferences.getString(Key.SECONDARY_CONTROLS, "SEARCH;RW;PREV;NEXT;FF")
+			return _secondaryControls!!
+		}
+		set(value) {
+			_secondaryControls = value
+			preferences.put(Key.SECONDARY_CONTROLS, value)
+		}
+
 	fun serialize(): Map<String, Any> {
 		return mapOf(
 			"seekJump" to seekJump,
@@ -119,7 +130,8 @@ class Settings(private val preferences: SharedPreferences) {
 			"repeat" to repeat,
 			"shuffle" to shuffle,
 			"equalizerPreset" to equalizerPreset,
-			"equalizerBands" to equalizerBands
+			"equalizerBands" to equalizerBands,
+			"secondaryControls" to secondaryControls
 		)
 	}
 }

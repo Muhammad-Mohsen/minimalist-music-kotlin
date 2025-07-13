@@ -74,7 +74,6 @@ object State {
 			"currentDir" to currentDirectory,
 			"files" to files.serializeFiles(),
 			"selection" to selectedTracks,
-			"isPlaying" to isPlaying,
 			"isSleepTimerActive" to isSleepTimerActive,
 
 			"track" to track.serialize(),
@@ -98,6 +97,7 @@ object State {
 		const val SHUFFLE = "Shuffle"
 		const val EQUALIZER_PRESET = "equalizerPreset"
 		const val EQUALIZER_BANDS = "equalizerBands"
+		const val SECONDARY_CONTROLS = "secondaryControls"
 
 	}
 }

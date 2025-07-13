@@ -139,6 +139,8 @@ class FileMetadata(file: File) {
 	val duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
 	val albumArtBitmap = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
 
+	val lyrics = retriever.extractMetadata("UNSYNCEDLYRICS") ?: retriever.extractMetadata("lyrics-eng") ?: String.EMPTY
+
 	private val chapterCount = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
 	val chapters = ArrayList((0 until chapterCount).map {
 		Chapter(it,

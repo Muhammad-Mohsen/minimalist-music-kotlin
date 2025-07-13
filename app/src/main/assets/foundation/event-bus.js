@@ -50,6 +50,8 @@ var EventBus = (() => {
 		EQUALIZER_PRESET_CHANGE: 'equalizerPresetChange',
 		EQUALIZER_BAND_CHANGE: 'equalizerBandChange',
 
+		SECONDARY_CONTROLS_CHANGE: 'secondaryControlsChange',
+
 		PRIVACY_POLICY: 'privacyPolicy',
 	}
 
@@ -64,6 +66,8 @@ var EventBus = (() => {
 		STATE: 'state',
 		SETTINGS: 'settings',
 		EQUALIZER: 'equalizer',
+		CHAPTERS: 'chapters',
+		LYRICS: 'lyrics',
 	}
 
 	const subscribers = []; // a regular ol' array will do

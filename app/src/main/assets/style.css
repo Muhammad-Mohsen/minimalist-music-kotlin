@@ -73,6 +73,12 @@ input, button, textarea, select { font: inherit; }
 }
 
 /* THEMES */
+/* @property --background {
+	syntax: '<color>';
+	inherits: false;
+	initial-value: #000;
+} */
+
 body {
 	--background: #000;
 	--foreground: #FFF;
@@ -91,7 +97,7 @@ body[theme="light"] {
 
 body {
 	background: var(--background);
-	transition: .5s ease-out;
+	transition: .3s ease-out;
 }
 body.ready { opacity: 1 !important; }
 
@@ -136,6 +142,9 @@ input[type="range"]::-webkit-slider-thumb {
 	width: 0;
 	box-shadow: -100vw 0 0 100vw var(--range-progress-background, var(--border-color));
 }
+
+button, select, input { outline: none; }
+:is(button, select, input):focus-visible { outline: 2px solid var(--foreground) !important; }
 
 .main-character {
 	position: absolute;

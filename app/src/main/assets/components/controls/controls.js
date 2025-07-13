@@ -2,6 +2,19 @@ class MusicControls extends HTMLElementBase {
 
 	#TARGET = EventBus.Target.CONTROLS;
 
+	customizableButtons = {
+		SEARCH: `<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch(this);" aria-label="search"></button>`,
+		CHAPTERS: `<button id="chapters-button" class="ic-btn ic-chapters" aria-label="chapters" onclick="${this.handle}.toggleChapters(this)"></button>`,
+		RW: `<button id="rw-button" class="ic-btn ic-rw" aria-label="Rewind" onclick="${this.handle}.rewind()"></button>`,
+		PREV: `<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="previous"></button>`,
+		NEXT: `<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="next"></button>`,
+		FF: `<button id="ff-button" class="ic-btn ic-ff" aria-label="Fast Forward" onclick="${this.handle}.fastForward()"></button>`,
+		LYRICS: `<button id="lyrics-button" class="ic-btn ic-lyrics" aria-label="lyrics" onclick="${this.handle}.toggleLyrics(this)"></button>`,
+		EQUALIZER: `<button id="equalizer-button" class="ic-btn ic-equalizer" aria-label="lyrics" onclick="${this.handle}.toggleEqualizer(this)"></button>`,
+		SHUFFLE: `<button id="shuffle-button" class="ic-btn ic-shuffle" aria-label="shuffle" onclick="${this.handle}.toggleShuffle(this)"></button>`,
+		REPEAT: `<button id="repeat-button" class="ic-btn ic-repeat" aria-label="repeat" onclick="${this.handle}.toggleRepeat(this)"></button>`,
+	}
+
 	connectedCallback() {
 		this.#render();
 		this.albumArt = document.querySelector('#album-art'); // outside of the component so it can appear below the dialogs
@@ -14,7 +27,13 @@ class MusicControls extends HTMLElementBase {
 
 		when(event.type)
 			.is(EventBus.Type.MODE_CHANGE, () => this.querySelector('.secondary-controls [checked]')?.removeAttribute('checked'))
-			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.METADATA_UPDATE], () => this.#updateMetadata())
+			.is(EventBus.Type.RESTORE_STATE, () => {
+				this.#updateMetadata();
+				this.#renderSecondaryControls();
+				this.#restoreShuffle();
+				this.#restoreRepeat();
+			})
+			.is(EventBus.Type.METADATA_UPDATE, () => this.#updateMetadata())
 			.is([EventBus.Type.PLAY, EventBus.Type.PLAY_TRACK, EventBus.Type.QUEUE_PLAY_SELECTED], () => this.playPause(true, 'suppress'))
 			.is(EventBus.Type.PAUSE, () => this.playPause(false, 'suppress'))
 			.is(EventBus.Type.PLAY_PAUSE, () => this.playPause())
@@ -23,6 +42,9 @@ class MusicControls extends HTMLElementBase {
 				this.#updateSeekUI();
 			})
 			.is(EventBus.Type.SLEEP_TIMER_FINISH, () => this.playPause(false))
+			.is(EventBus.Type.SECONDARY_CONTROLS_CHANGE, () => this.#renderSecondaryControls())
+			.is(EventBus.Type.TOGGLE_SHUFFLE, () => this.#restoreShuffle())
+			.is(EventBus.Type.TOGGLE_REPEAT, () => this.#restoreRepeat())
 	}
 
 	// UI HANDLERS
@@ -61,8 +83,8 @@ class MusicControls extends HTMLElementBase {
 		EventBus.dispatch({ type: EventBus.Type.SEEK_UPDATE, target: this.#TARGET, data: { seek: state.track.seek } });
 	}
 
-	toggleSearch() {
-		this.searchButton.toggleAttribute('checked');
+	toggleSearch(target) {
+		target.toggleAttribute('checked');
 
 		state.mode = when(state.mode)
 			.is(state.Mode.NORMAL, () => state.Mode.SEARCH)
@@ -80,6 +102,47 @@ class MusicControls extends HTMLElementBase {
 
 		this.moreButton.toggleAttribute('checked', state.mode == state.Mode.SETTINGS);
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
+	}
+	toggleChapters(target) {
+		state.mode = state.mode == state.Mode.CHAPTERS ? state.Mode.NORMAL : state.Mode.CHAPTERS;
+
+		target.toggleAttribute('checked', state.mode == state.Mode.CHAPTERS);
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
+	}
+	toggleLyrics(target) {
+		state.mode = state.mode == state.Mode.LYRICS ? state.Mode.NORMAL : state.Mode.LYRICS;
+
+		target.toggleAttribute('checked', state.mode == state.Mode.LYRICS);
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
+	}
+	toggleEqualizer(target) {
+		state.mode = state.mode == state.Mode.EQUALIZER ? state.Mode.NORMAL : state.Mode.EQUALIZER;
+
+		target.toggleAttribute('checked', state.mode == state.Mode.EQUALIZER);
+		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
+	}
+	toggleShuffle(target) {
+		state.settings.shuffle = !state.settings.shuffle;
+		EventBus.dispatch({ type: EventBus.Type.TOGGLE_SHUFFLE, target: this.#TARGET, data: { value: state.settings.shuffle } });
+
+		target.classList.toggle('selected', state.settings.shuffle);
+	}
+	toggleRepeat(target) {
+		state.settings.repeat = (state.settings.repeat + 1) % 3;
+		EventBus.dispatch({ type: EventBus.Type.TOGGLE_REPEAT, target: this.#TARGET, data: { value: state.settings.repeat } });
+
+		target.className = RepeatIcons[state.settings.repeat] + ' ic-btn';
+		target.classList.toggle('selected', state.settings.repeat > 0);
+	}
+
+	#restoreShuffle() {
+		this.querySelector('#shuffle-button')?.classList?.toggle('selected', state.settings.shuffle);
+	}
+	#restoreRepeat() {
+		const repeat = this.querySelector('#repeat-button');
+		if (!repeat) return;
+		repeat.className = RepeatIcons[state.settings.repeat] + ' ic-btn';
+		repeat.classList.toggle('selected', state.settings.repeat > 0);
 	}
 
 	// RENDERING
@@ -106,17 +169,13 @@ class MusicControls extends HTMLElementBase {
 			</div>
 
 			<div class="secondary-controls">
-				<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch();" aria-label="search"></button>
-
-				<!-- <button id="chapters-button" class="ic-btn ic-chapters" aria-label="chapters"></button> -->
-				<button id="rw-button" class="ic-btn ic-rw" aria-label="Rewind" onclick="${this.handle}.rewind()"></button>
-
-				<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="previous"></button>
-				<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="next"></button>
-
-				<!-- <button id="lyrics-button" class="ic-btn ic-lyrics" aria-label="lyrics"></button> -->
-				<button id="ff-button" class="ic-btn ic-ff" aria-label="Fast Forward" onclick="${this.handle}.fastForward()"></button>
-
+				<div id="customizable-controls">
+					<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch();" aria-label="search"></button>
+					<button id="rw-button" class="ic-btn ic-rw" aria-label="Rewind" onclick="${this.handle}.rewind()"></button>
+					<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="previous"></button>
+					<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="next"></button>
+					<button id="ff-button" class="ic-btn ic-ff" aria-label="Fast Forward" onclick="${this.handle}.fastForward()"></button>
+				</div>
 				<button id="more-button" class="ic-btn ic-more" aria-label="more" onclick="${this.handle}.toggleSettings()"></button>
 			</div>
 		`);
@@ -161,6 +220,10 @@ class MusicControls extends HTMLElementBase {
 			?.slice(1) // drop the first chapter rendering
 			?.map(c => `<li style="inset-inline-start:${c.startTime / state.track.duration * this.chapters.clientWidth}px"></li>`)
 			?.join('') || '';
+	}
+
+	#renderSecondaryControls() {
+		this.customizableControls.innerHTML = state.settings.secondaryControls.map(key => this.customizableButtons[key]).join('');
 	}
 }
 

@@ -22,10 +22,14 @@
 	- DONE - permission UI
 	- after granting the permission, it doesn't work!!
 		- I guess it's because the service doesn't get initialized! - that was true
-- chapters dialog
-- lyrics dialog
-- customization
+- DONE - chapters dialog
+- DONE - lyrics dialog
+- DONE - customization
 - translations
+- player bug!!
+	- part deux :D :D
+- DONE - shuffle/repeat state in controls
+	- also, responding to their changes in settings/controls respectively
 
 ## Technical
 - DONE - edge to edge

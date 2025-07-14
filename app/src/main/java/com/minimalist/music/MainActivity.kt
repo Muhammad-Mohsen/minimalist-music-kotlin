@@ -87,9 +87,6 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 				val playerIntent = Intent(this, PlaybackManager::class.java)
 				startForegroundService(playerIntent)
 				State.playbackServiceReady = true
-
-				// restore the state (the service manually calls its own updateState function because it isn't ready at this point)
-				if (State.track.exists) EventBus.dispatch(Event(Type.METADATA_UPDATE, Target.ACTIVITY))
 			}
 			else -> {
 				EventBus.dispatch(Event(Type.MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "permission")))

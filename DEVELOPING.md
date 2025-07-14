@@ -29,6 +29,12 @@
 	- part deux :D :D
 - DONE - shuffle/repeat state in controls
 	- also, responding to their changes in settings/controls respectively
+- DONE - player bug!!!
+	- part trois :D :D :D
+	- good fucking lord!!
+	- log the first event (in webview pageFinished)
+	- in the service eventbus handler, make sure service is foregrounded?
+
 - translations
 - ffmpeg metadata retreiver 16kb alignment update
 

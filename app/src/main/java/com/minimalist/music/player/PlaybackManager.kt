@@ -68,7 +68,7 @@ class PlaybackManager :
 	override fun onCreate() {
 		super.onCreate()
 
-		registerSelf(this)
+		instance = this
 		EventBus.subscribe(this)
 		State.initialize(applicationContext) // the initialization call in MainActivity.onCreate is not enough...Store was still showing exceptions
 
@@ -99,6 +99,10 @@ class PlaybackManager :
 	}
 
 	override fun onDestroy() {
+		// reset the statics
+		instance = null
+		State.playbackServiceReady = false
+
 		equalizer.release()
 		player.release() // destroy the Player instance
 		sessionManager.release() // and the media session
@@ -108,8 +112,6 @@ class PlaybackManager :
 		timer = null
 
 		unregisterReceiverSafe(noisyReceiver)
-
-		State.playbackServiceReady = false // clear the static...extremely important
 
 		super.onDestroy()
 	}
@@ -378,9 +380,5 @@ class PlaybackManager :
 
 		val isPlaying: Boolean
 			get() = instance?.player.isPlayingSafe
-
-		private fun registerSelf(i: PlaybackManager) {
-			instance = i
-		}
 	}
 }

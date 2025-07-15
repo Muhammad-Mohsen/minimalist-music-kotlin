@@ -1,4 +1,5 @@
 class HTMLElementBase extends HTMLElement {
+	static lang = new URLSearchParams(location.search).get('lang');
 	static salt = 0;
 	handle;
 
@@ -20,19 +21,36 @@ class HTMLElementBase extends HTMLElement {
 			this[camel] = elem;
 		});
 
-		this.querySelectorAll('[l10n]').forEach(elem => {
-			const ariaLabel = elem.getAttribute('aria-label');
-			const innerHTML = !elem.childElementCount && elem.innerHTML;
-
-			// set keys
-			if (ariaLabel) {
-
-			}
-
-		});
+		this.translate(this);
 	}
 
-	l10n() {
+	// translations
+	translate(keyOrComponent) {
+		if (typeof keyOrComponent == 'string') return this.#translateString(keyOrComponent);
+		else return this.#translateComponent(keyOrComponent);
+	}
+	#translateString(key) {
+		return translations[key][HTMLElementBase.lang] || key;
+	}
+	#translateComponent(component) {
+		component.querySelectorAll('[l10n]').forEach(elem => {
+			try {
+				const key = elem.innerHTML;
+				elem.innerHTML = translations[key][HTMLElementBase.lang] || key;
 
+			} catch {
+				console.log(elem.innerHTML || elem);
+			}
+		});
+
+		component.querySelectorAll('[aria-label]').forEach(elem => {
+			try {
+				const key = elem.getAttribute('aria-label');
+				elem.setAttribute('aria-label', translations[key][HTMLElementBase.lang] || key);
+
+			} catch {
+				console.log(elem.getAttribute('aria-label') || elem);
+			}
+		});
 	}
 }

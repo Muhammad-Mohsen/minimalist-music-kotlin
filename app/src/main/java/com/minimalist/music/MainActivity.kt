@@ -30,6 +30,7 @@ import com.minimalist.music.foundation.EventBus.Type
 import com.minimalist.music.foundation.Moirai
 import com.minimalist.music.player.PlaybackManager
 import java.io.File
+import java.util.Locale
 
 class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
@@ -119,7 +120,8 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			addJavascriptInterface(EventBus, "IPC")
 
 			val mode = if (checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED) "normal" else "permission"
-			loadUrl("file:///android_asset/index.html?mode=$mode") // here we go!
+			val lang = Locale.getDefault().language // en, pt, etc
+			loadUrl("file:///android_asset/index.html?mode=$mode&lang=$lang") // here we go!
 
 			EventBus.subscribe(this) // this is the webview (IPC) subscription
 		}

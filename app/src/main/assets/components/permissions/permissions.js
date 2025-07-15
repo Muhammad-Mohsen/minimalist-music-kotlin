@@ -12,8 +12,8 @@ class MusicPermissions extends HTMLElementBase {
 
 	#render() {
 		super.render(`
-			<p l1n0>Allow <strong>Music and audio</strong> access</p>
-			<button class="ic-btn ic-unlock main-character" onclick="${this.handle}.request()" aria-label="grant music and audio permission" l10n></button>
+			<p l10n>Allow <strong>Music and audio</strong> access</p>
+			<button class="ic-btn ic-unlock main-character" onclick="${this.handle}.request()" aria-label="grant music and audio permission"></button>
 		`);
 	}
 }

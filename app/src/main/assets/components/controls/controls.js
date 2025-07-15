@@ -3,16 +3,16 @@ class MusicControls extends HTMLElementBase {
 	#TARGET = EventBus.Target.CONTROLS;
 
 	customizableButtons = {
-		SEARCH: `<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch(this);" aria-label="search"></button>`,
-		CHAPTERS: `<button id="chapters-button" class="ic-btn ic-chapters" aria-label="chapters" onclick="${this.handle}.toggleChapters(this)"></button>`,
-		RW: `<button id="rw-button" class="ic-btn ic-rw" aria-label="Rewind" onclick="${this.handle}.rewind()"></button>`,
-		PREV: `<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="previous"></button>`,
-		NEXT: `<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="next"></button>`,
-		FF: `<button id="ff-button" class="ic-btn ic-ff" aria-label="Fast Forward" onclick="${this.handle}.fastForward()"></button>`,
-		LYRICS: `<button id="lyrics-button" class="ic-btn ic-lyrics" aria-label="lyrics" onclick="${this.handle}.toggleLyrics(this)"></button>`,
-		EQUALIZER: `<button id="equalizer-button" class="ic-btn ic-equalizer" aria-label="lyrics" onclick="${this.handle}.toggleEqualizer(this)"></button>`,
-		SHUFFLE: `<button id="shuffle-button" class="ic-btn ic-shuffle" aria-label="shuffle" onclick="${this.handle}.toggleShuffle(this)"></button>`,
-		REPEAT: `<button id="repeat-button" class="ic-btn ic-repeat" aria-label="repeat" onclick="${this.handle}.toggleRepeat(this)"></button>`,
+		SEARCH: `<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch(this);" aria-label="Search"></button>`,
+		CHAPTERS: `<button id="chapters-button" class="ic-btn ic-chapters" onclick="${this.handle}.toggleChapters(this)" aria-label="Chapters"></button>`,
+		RW: `<button id="rw-button" class="ic-btn ic-rw" onclick="${this.handle}.rewind()" aria-label="Rewind"></button>`,
+		PREV: `<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="Previous"></button>`,
+		NEXT: `<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="Next"></button>`,
+		FF: `<button id="ff-button" class="ic-btn ic-ff" onclick="${this.handle}.fastForward()" aria-label="Fast Forward"></button>`,
+		LYRICS: `<button id="lyrics-button" class="ic-btn ic-lyrics" onclick="${this.handle}.toggleLyrics(this)" aria-label="Lyrics"></button>`,
+		EQUALIZER: `<button id="equalizer-button" class="ic-btn ic-equalizer" onclick="${this.handle}.toggleEqualizer(this)" aria-label="Equalizer"></button>`,
+		SHUFFLE: `<button id="shuffle-button" class="ic-btn ic-shuffle" onclick="${this.handle}.toggleShuffle(this)" aria-label="Toggle Shuffle"></button>`,
+		REPEAT: `<button id="repeat-button" class="ic-btn ic-repeat" onclick="${this.handle}.toggleRepeat(this)" aria-label="Repeat Mode"></button>`,
 	}
 
 	connectedCallback() {
@@ -151,7 +151,7 @@ class MusicControls extends HTMLElementBase {
 			<div class="main-controls">
 				<input type="range" id="seek-range" value="0" oninput="${this.handle}.onSeekChange(this)">
 
-				<button id="play-pause-button" class="ic-btn main-character" aria-label="play/pause" onclick="${this.handle}.playPause()">
+				<button id="play-pause-button" class="ic-btn main-character" onclick="${this.handle}.playPause()" aria-label="Play/Pause">
 					<svg  width="180" height="15" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path id="pause-path" style="stroke-dashoffset: 75;" d="M94 15V7.5H180M85 0V7.5H0" stroke="var(--foreground)"/>
 						<path id="play-path" style="stroke-dashoffset: 0;" d="M83.0469 1L95.9531 7.5H180M83.0469 15V7.5H0" stroke="var(--foreground)"/>
@@ -164,19 +164,19 @@ class MusicControls extends HTMLElementBase {
 				</div>
 
 				<ul id="chapters"></ul>
-				<h1 id="track-name">Hi,</h1>
-				<h2 id="track-album-artist">Welcome to Minimalist Music</h2>
+				<h1 id="track-name">${this.translate('Hi')},</h1>
+				<h2 id="track-album-artist">${this.translate('Welcome to Minimalist Music Player')}</h2>
 			</div>
 
 			<div class="secondary-controls">
 				<div id="customizable-controls">
-					<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch();" aria-label="search"></button>
-					<button id="rw-button" class="ic-btn ic-rw" aria-label="Rewind" onclick="${this.handle}.rewind()"></button>
-					<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="previous"></button>
-					<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="next"></button>
-					<button id="ff-button" class="ic-btn ic-ff" aria-label="Fast Forward" onclick="${this.handle}.fastForward()"></button>
+					<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch();" aria-label="Search"></button>
+					<button id="rw-button" class="ic-btn ic-rw" onclick="${this.handle}.rewind()" aria-label="Rewind"></button>
+					<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="Previous"></button>
+					<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="Next"></button>
+					<button id="ff-button" class="ic-btn ic-ff" onclick="${this.handle}.fastForward()" aria-label="Fast Forward"></button>
 				</div>
-				<button id="more-button" class="ic-btn ic-more" aria-label="more" onclick="${this.handle}.toggleSettings()"></button>
+				<button id="more-button" class="ic-btn ic-more" onclick="${this.handle}.toggleSettings()" aria-label="More"></button>
 			</div>
 		`);
 	}

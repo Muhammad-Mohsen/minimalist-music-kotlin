@@ -1,10 +1,9 @@
 [versions]
 agp = "8.10.1"
 ffmpegmediametadataretrieverCore = "1.0.19"
-kotlin = "2.1.21"
+kotlin = "2.2.0"
 coreKtx = "1.16.0"
 appcompat = "1.7.1"
-kotlinxSerializationJson = "1.4.0"
 media = "1.7.0"
 
 [libraries]
@@ -13,7 +12,6 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-media = { module = "androidx.media:media", version.ref = "media" }
 ffmpegmediametadataretriever-core = { module = "com.github.wseemann:FFmpegMediaMetadataRetriever-core", version.ref = "ffmpegmediametadataretrieverCore" }
 ffmpegmediametadataretriever-native = { module = "com.github.wseemann:FFmpegMediaMetadataRetriever-native", version.ref = "ffmpegmediametadataretrieverCore" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

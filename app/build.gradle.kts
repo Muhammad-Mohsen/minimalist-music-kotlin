@@ -61,8 +61,6 @@ dependencies {
 
 	implementation(libs.androidx.media)
 
-	implementation(libs.kotlinx.serialization.json) // IPC communication
-
 	// metadata
 	implementation(libs.ffmpegmediametadataretriever.core)
 	implementation(libs.ffmpegmediametadataretriever.native)

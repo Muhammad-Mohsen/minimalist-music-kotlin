@@ -122,7 +122,7 @@ class SettingsDialog extends HTMLElementBase {
 		this.playbackSpeedValue.innerHTML = state.settings.playbackSpeed + 'x';
 
 		this.seekJump.value = state.settings.seekJump;
-		this.seekJumpValue.innerHTML = (state.settings.seekJump / 1000) + ' seconds';
+		this.seekJumpValue.innerHTML = `${state.settings.seekJump / 1000} ${this.translate('Seconds') }`;
 
 		this.sortBy.value = state.settings.sortBy;
 
@@ -226,7 +226,7 @@ class SettingsDialog extends HTMLElementBase {
 
 	#renderSecondaryControlsCustomization() {
 		this.secondaryControlsCustomization.innerHTML = `
-			<label l10n>UI Customization</label>
+			<label>${this.translate('UI Customization')}</label>
 			<div class="flex-row" style="margin-inline: -6px;">
 				${state.settings.secondaryControls.map((val, i) => {
 					return `
@@ -237,7 +237,7 @@ class SettingsDialog extends HTMLElementBase {
 								return `
 								<option value="${key}" ${val == key ? 'selected' : ''}>
 									<i class="${SecondaryControlOptions[key].icon}"></i>
-									<span l10n>${SecondaryControlOptions[key].label}</span>
+									<span l10n>${this.translate(SecondaryControlOptions[key].label)}</span>
 								</option>
 							`;
 							}).join('')}

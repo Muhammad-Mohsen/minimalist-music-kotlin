@@ -204,7 +204,8 @@ settings-dialog {
 			appearance: base-select;
 
 			position: relative;
-			flex: 1  0 10%;
+			flex: 1 0 0;
+			max-width: calc(20% - 8px);
 			border: none;
 			background: transparent;
 
@@ -219,6 +220,12 @@ settings-dialog {
 				font-size: var(--subscript);
 
 				i { font-size: 24px; }
+				span {
+					max-width: 100%;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
+				}
 			}
 
 			&::picker-icon {

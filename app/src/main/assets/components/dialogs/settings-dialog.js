@@ -204,17 +204,17 @@ class SettingsDialog extends HTMLElementBase {
 			</div>
 
 			<div class="flex-row">
-				<button id="shuffle-button" class="settings-btn" onclick="${this.handle}.toggleShuffle()">
+				<button id="shuffle-button" class="settings-btn" style="max-width: calc(33% - 8px)" onclick="${this.handle}.toggleShuffle()">
 					<i class="ic-shuffle"></i>
 					<span l10n>Shuffle</span>
 				</button>
 				<separator></separator>
-				<button id="repeat-button" class="settings-btn" onclick="${this.handle}.toggleRepeat()">
+				<button id="repeat-button" class="settings-btn" style="max-width: calc(33% - 8px)" onclick="${this.handle}.toggleRepeat()">
 					<i id="repeat-icon" class="ic-repeat"></i>
 					<span l10n>Repeat</span>
 				</button>
 				<separator></separator>
-				<button class="settings-btn" onclick="${this.handle}.showEqualizer()">
+				<button class="settings-btn" style="max-width: calc(33% - 8px)" onclick="${this.handle}.showEqualizer()">
 					<i class="ic-equalizer"></i>
 					<span l10n>Equalizer</span>
 				</button>

@@ -37,11 +37,11 @@
 	- in the service eventbus handler, make sure service is foregrounded?
 	- migrate to media3/exo
 
-- ALMOST - translations
+- DONE - translations
 	- DONE - permission text
 	- DONE - hi, welcome...
 	- DONE - dynamically-loaded settings/buttons
-	- handle long-text in buttons (e.g. Fast Forward, shuffle in portuguese, etc)
+	- DONE - handle long-text in buttons (e.g. Fast Forward, shuffle in portuguese, etc)
 
 - ffmpeg metadata retreiver 16kb alignment update
 - fade-in/out permission UI

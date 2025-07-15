@@ -33,6 +33,8 @@ class HTMLElementBase extends HTMLElement {
 		return translations[key][HTMLElementBase.lang] || key;
 	}
 	#translateComponent(component) {
+		if (!HTMLElementBase.lang) return; // use default
+
 		component.querySelectorAll('[l10n]').forEach(elem => {
 			try {
 				const key = elem.innerHTML;

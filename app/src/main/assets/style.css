@@ -143,8 +143,8 @@ input[type="range"]::-webkit-slider-thumb {
 	box-shadow: -100vw 0 0 100vw var(--range-progress-background, var(--border-color));
 }
 
-button, select, input { outline: none; }
-:is(button, select, input):focus-visible { outline: 2px solid var(--foreground) !important; }
+:is(button, select, input) { outline: none; }
+:is(button, input):focus-visible { outline: 2px solid var(--foreground) !important; }
 
 .main-character {
 	position: absolute;
@@ -154,7 +154,7 @@ button, select, input { outline: none; }
 	translate: 50% -50%;
 
 	svg {
-		translate: calc(-50% + 28px) 0;
+		translate: calc(-50% + 28px) -1px;
 		mask-image: linear-gradient(90deg, transparent 10%, var(--background) 40%, var(--background) 60%, transparent 90%);
 		pointer-events: none;
 	}

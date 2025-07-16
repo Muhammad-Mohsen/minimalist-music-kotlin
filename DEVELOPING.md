@@ -30,19 +30,19 @@
 - DONE - shuffle/repeat state in controls
 	- also, responding to their changes in settings/controls respectively
 
-- player bug!!!
-	- part trois :D :D :D
-	- good fucking lord!!
-	- log the first event (in webview pageFinished)
-	- in the service eventbus handler, make sure service is foregrounded?
-	- migrate to media3/exo
-
 - DONE - translations
 	- DONE - permission text
 	- DONE - hi, welcome...
 	- DONE - dynamically-loaded settings/buttons
 	- DONE - handle long-text in buttons (e.g. Fast Forward, shuffle in portuguese, etc)
 
+- player bug!!!
+	- part trois :D :D :D
+	- good fucking lord!!
+	- log the first event (in webview pageFinished)
+	- in the service eventbus handler, make sure service is foregrounded?
+	- migrate to media3/exo
+- DONE - release metadata retreiver
 - ffmpeg metadata retreiver 16kb alignment update
 - fade-in/out permission UI
 

@@ -151,6 +151,10 @@ class FileMetadata(file: File) {
 
 	companion object {
 		private val retriever = FFmpegMediaMetadataRetriever()
+
+		fun releaseRetriever() {
+			retriever.release()
+		}
 	}
 }
 

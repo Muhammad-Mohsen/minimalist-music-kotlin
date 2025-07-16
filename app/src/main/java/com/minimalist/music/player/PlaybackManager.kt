@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
+import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.foundation.EventBus
 import com.minimalist.music.foundation.ext.cancelSafe
 import com.minimalist.music.foundation.ext.currentPositionSafe
@@ -105,6 +106,7 @@ class PlaybackManager :
 
 		equalizer.release()
 		player.release() // destroy the Player instance
+		FileMetadata.releaseRetriever()
 		sessionManager.release() // and the media session
 		audioFocusHandler.abandon() // ...and the audio focus
 

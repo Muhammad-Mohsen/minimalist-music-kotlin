@@ -8,7 +8,6 @@ import com.minimalist.music.data.files.ExplorerFile
 import com.minimalist.music.data.files.FileCache
 import com.minimalist.music.data.files.serializeFiles
 import com.minimalist.music.foundation.ext.put
-import com.minimalist.music.player.PlaybackManager
 import java.io.File
 
 
@@ -24,7 +23,7 @@ object State {
 	private lateinit var sharedPreferences: SharedPreferences
 	lateinit var applicationContext: Context
 
-	var playbackServiceReady = false
+	var playbackManagerReady = false
 
 	var webviewReady = false
 	var windowInsets: Insets? = null
@@ -45,8 +44,7 @@ object State {
 
 	var mode = "normal"
 
-	val isPlaying: Boolean
-		get() = PlaybackManager.isPlaying
+	var isPlaying = false
 
 	val selectedTracks = ArrayList<String>()
 

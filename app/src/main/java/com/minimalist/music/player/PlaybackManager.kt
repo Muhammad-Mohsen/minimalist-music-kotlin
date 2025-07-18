@@ -18,7 +18,6 @@ import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.foundation.EventBus
 import com.minimalist.music.foundation.ext.cancelSafe
 import com.minimalist.music.foundation.ext.currentPositionSafe
-import com.minimalist.music.foundation.ext.isPlayingSafe
 import com.minimalist.music.foundation.ext.playPause
 import com.minimalist.music.foundation.ext.prepareSource
 import com.minimalist.music.foundation.ext.unregisterReceiverSafe
@@ -69,7 +68,6 @@ class PlaybackManager :
 	override fun onCreate() {
 		super.onCreate()
 
-		instance = this
 		EventBus.subscribe(this)
 		State.initialize(applicationContext) // the initialization call in MainActivity.onCreate is not enough...Store was still showing exceptions
 
@@ -87,7 +85,7 @@ class PlaybackManager :
 
 		equalizer.enabled = true
 
-		audioFocusHandler = AudioFocusHandler(this, this) // audio focus loss
+		audioFocusHandler = AudioFocusHandler(applicationContext, this) // audio focus loss
 		sessionManager = MediaSessionManager(applicationContext)
 		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
 
@@ -100,9 +98,10 @@ class PlaybackManager :
 	}
 
 	override fun onDestroy() {
-		// reset the statics
-		instance = null
-		State.playbackServiceReady = false
+		super.onDestroy()
+
+		EventBus.unsubscribe(this)
+		State.playbackManagerReady = false
 
 		equalizer.release()
 		player.release() // destroy the Player instance
@@ -114,8 +113,6 @@ class PlaybackManager :
 		timer = null
 
 		unregisterReceiverSafe(noisyReceiver)
-
-		super.onDestroy()
 	}
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -165,6 +162,7 @@ class PlaybackManager :
 		if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
 
 		registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
+		State.isPlaying = true
 
 		player.playPause(true)
 		sendMetadataUpdate(path)
@@ -182,6 +180,7 @@ class PlaybackManager :
 			unregisterReceiverSafe(noisyReceiver)
 		}
 
+		State.isPlaying = play
 		player.playPause(play)
 		sendPeriodicSeekUpdates(play)
 	}
@@ -377,10 +376,5 @@ class PlaybackManager :
 		private const val TARGET = Target.SERVICE
 		private const val SEEK_UPDATE_PERIOD = 1000L
 		private const val ON_COMPLETION_THRESHOLD = 1000L
-
-		private var instance: PlaybackManager? = null
-
-		val isPlaying: Boolean
-			get() = instance?.player.isPlayingSafe
 	}
 }

@@ -29,19 +29,6 @@ fun MediaPlayer.prepareSource(path: String) {
 	}
 }
 
-val MediaPlayer?.isPlayingSafe: Boolean
-	get() {
-		if (this == null) return false
-
-		return try {
-			isPlaying
-
-		} catch (e: Exception) {
-			e.printStackTrace()
-			false
-		}
-	}
-
 val MediaPlayer.currentPositionSafe: Int
 	get() {
 		return try {

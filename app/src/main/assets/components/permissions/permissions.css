@@ -5,9 +5,12 @@ music-permissions {
 	align-items: center;
 	justify-content: center;
 	background: var(--background);
+	opacity: 0;
 	z-index: 3;
 
 	display: none;
+
+	transition: opacity .3s, display .2s allow-discrete;
 
 	p {
 		color: var(--foreground-secondary);
@@ -29,4 +32,9 @@ music-permissions {
 	}
 }
 
-[mode="permission"] music-permissions { display: flex; }
+[mode="permission"] music-permissions {
+	display: flex;
+	opacity: 1;
+
+	@starting-style { opacity: 0; }
+}

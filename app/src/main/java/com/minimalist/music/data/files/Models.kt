@@ -150,10 +150,17 @@ class FileMetadata(file: File) {
 	})
 
 	companion object {
-		private val retriever = FFmpegMediaMetadataRetriever()
+		private var _retriever: FFmpegMediaMetadataRetriever? = null
+		private val retriever: FFmpegMediaMetadataRetriever
+			get() {
+				if (_retriever != null) return _retriever!!
+				_retriever = FFmpegMediaMetadataRetriever()
+				return _retriever!!
+			}
 
 		fun releaseRetriever() {
-			retriever.release()
+			_retriever?.release()
+			_retriever = null
 		}
 	}
 }
@@ -208,8 +215,6 @@ object RepeatMode {
 	const val INACTIVE = 0 // inactive
 	const val ACTIVE = 1 // active
 	const val REPEAT_ONE = 2 // repeat-one
-
-	val list = arrayOf(INACTIVE, ACTIVE, REPEAT_ONE)
 }
 
 object Theme {

@@ -143,8 +143,7 @@ input[type="range"]::-webkit-slider-thumb {
 	box-shadow: -100vw 0 0 100vw var(--range-progress-background, var(--border-color));
 }
 
-:is(button, select, input) { outline: none; }
-:is(button, input):focus-visible { outline: 2px solid var(--foreground) !important; }
+button, select, input { outline: none; }
 
 .main-character {
 	position: absolute;

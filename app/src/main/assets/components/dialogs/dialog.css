@@ -12,7 +12,7 @@ settings-dialog, equalizer-dialog, chapters-dialog, lyrics-dialog {
 	overflow: auto;
 	z-index: 2;
 
-	transition: translate .2s ease-out, opacity .4s, display .2s allow-discrete, background .2s;
+	transition: translate .2s ease-out, opacity .3s, display .2s allow-discrete, background .2s;
 
 	display: none;
 	opacity: 0;
@@ -60,13 +60,6 @@ settings-dialog, equalizer-dialog, chapters-dialog, lyrics-dialog {
 	}
 
 	separator { --separator-height: 16px; }
-}
-
-@starting-style {
-	settings-dialog, equalizer-dialog {
-		opacity: 0;
-		translate: 0 30vh;
-	}
 }
 
 /* SETTINGS */
@@ -329,8 +322,29 @@ chapters-dialog {
 		.title { color: var(--foreground); }
 		.timestamp { font-size: .8rem; }
 	}
+
+	#chapters:empty::before {
+		content: '¯\\_(ツ)_/¯';
+		position: absolute;
+		inset: 0;
+		padding-block-start: 50%;
+		color: var(--foreground-secondary);
+		font-size: 32px;
+		text-align: center;
+		opacity: .7;
+	}
 }
 
 lyrics-dialog {
 	color: var(--foreground-secondary);
+
+	#lyrics:empty::before {
+		content: '¯\\_(ツ)_/¯';
+		position: absolute;
+		inset: 0;
+		padding-block-start: 50%;
+		font-size: 32px;
+		text-align: center;
+		opacity: .7;
+	}
 }

@@ -36,15 +36,15 @@
 	- DONE - dynamically-loaded settings/buttons
 	- DONE - handle long-text in buttons (e.g. Fast Forward, shuffle in portuguese, etc)
 
-- player bug!!!
+- DUCKING DONE - player bug!!!
 	- part trois :D :D :D
 	- good fucking lord!!
 	- log the first event (in webview pageFinished)
 	- in the service eventbus handler, make sure service is foregrounded?
 	- migrate to media3/exo
-- DONE - release metadata retreiver
-- ffmpeg metadata retreiver 16kb alignment update
-- fade-in/out permission UI
+- DONE - release metadata retriever
+- DONE - fade-in/out permission UI
+- ffmpeg metadata retriever 16kb alignment update
 
 ## Technical
 - DONE - edge to edge

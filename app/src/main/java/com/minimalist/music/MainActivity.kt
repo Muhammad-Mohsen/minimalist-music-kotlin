@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 	private fun initNative() {
 		when {
-			State.playbackServiceReady -> return // this actually fixes the MediaPlayer IllegalStateException on startup!!
+			State.playbackManagerReady -> return
 
 			checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED -> {
 				State.initialize(applicationContext)
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 				// service
 				val playerIntent = Intent(this, PlaybackManager::class.java)
 				startForegroundService(playerIntent)
-				State.playbackServiceReady = true
+				State.playbackManagerReady = true
 			}
 			else -> {
 				EventBus.dispatch(Event(Type.MODE_CHANGE, Target.ACTIVITY, mapOf("mode" to "permission")))

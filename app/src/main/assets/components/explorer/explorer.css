@@ -1,3 +1,12 @@
+.explorer-container::after {
+	content: '';
+	position: absolute;
+	inset: 0 0 auto;
+	height: calc(var(--inset-top, 0px) + 24px);
+	background: var(--background);
+	pointer-events: none;
+}
+
 .explorer {
 	position: fixed;
 	inset: calc(var(--inset-top, 0px) + 24px) 0 calc(var(--inset-bottom, 0px) + 64px);

@@ -1,8 +1,9 @@
 # Minimalist Music
+[![License](support-files/badges/license.svg)](LICENSE.md)
+![Min SDK](support-files/badges/min-sdk.svg)
+[![Download](support-files/badges/download.svg)](https://play.google.com/store/apps/details?id=mohsen.muhammad.minimalist)
 
 A light weight, folder-based clean music player built with a combination of Kotlin for the Android native backend and Vanilla JavaScript/HTML/CSS for the frontend. It integrates native Android features with a web-based UI rendered in a WebView.
-
-- TODO badges
 
 ## Features
 - Supports `mp3`, `wav`, `m4b`, `m4a`, `flac`, `midi`, `ogg`, `opus`, `aac` files
@@ -10,13 +11,18 @@ A light weight, folder-based clean music player built with a combination of Kotl
 - Dynamic queues (long-press a track item)
 - Audiobook chapters
 - Metadata lyrics (`UNSYNCEDLYRICS` tag)
+- Maintains playback position, speed, shuffle, and repeat states, etc.
 - Lock screen + Bluetooth controls
-- Light + Dark modes
+- Light + Dark themes
 - Change playback speed
 - Sleep timer
-- Persists playback position, speed, shuffle, and repeat states, etc.
+- Customizable UI
 
 ## Screenshots
-TODO
+|Now Playing|Now Playing|Select Mode|
+|:-:|:-:|:-:|
+|![Now Playing 1](support-files/screenshots/now-playing-1.jpg)|![Now Playing 2](support-files/screenshots/now-playing-2.jpg)|![Select Mode](support-files/screenshots/select-mode.jpg)|
 
-[![Play Store Badge](other/play-store-badge.png)](https://play.google.com/store/apps/details?id=mohsen.muhammad.minimalist)
+|Settings|Chapters|Light Theme|
+|:-:|:-:|:-:|
+|![Settings](support-files/screenshots/settings.jpg)|![Chapters](support-files/screenshots/chapters.jpg)|![Light Theme](support-files/screenshots/now-playing-light.jpg)|

@@ -28,7 +28,7 @@ music-controls {
 	transition: opacity .3s, filter .3s;
 	z-index: 1;
 }
-#album-art.hidden { opacity: 0; }
+#album-art.hidden, #album-art:not([src]) { opacity: 0; }
 body[is-playing="true"] #album-art { filter: none; }
 
 .main-controls {

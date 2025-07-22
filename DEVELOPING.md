@@ -111,13 +111,13 @@
 
 - DONE - hide header in permission ui
 
-- update eventbus events in native
-- implement sort comparer
+- DONE - update eventbus events in native
+- DONE - implement sort comparer
 - DONE - implement dialog UI
 	- chapters -> needs a seek to event (already exists)
 	- lyrics
 	- settings -> a lot of events :D
-- implement equalizer
+- DONE - implement equalizer
 	- https://stackoverflow.com/questions/41196054/how-to-implement-the-equalizer-with-my-mediaplayer-activity
 
 - DONE - BIG MILESTONE - test-run the communication...directory change

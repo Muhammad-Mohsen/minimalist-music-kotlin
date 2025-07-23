@@ -16,6 +16,7 @@ import wseemann.media.FFmpegMediaMetadataRetriever
 import java.io.File
 import java.io.FileFilter
 import java.util.Arrays
+import java.util.regex.Pattern
 
 
 /**
@@ -128,7 +129,7 @@ class ExplorerFile(pathname: String)
 /**
  * uses ffmpeg metadata retriever because it can list chapters
  */
-class FileMetadata(file: File) {
+class FileMetadata(private val file: File) {
 	init {
 		retriever.setDataSource(file.path)
 	}
@@ -139,7 +140,35 @@ class FileMetadata(file: File) {
 	val duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
 	val albumArtBitmap = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
 
-	val lyrics = retriever.extractMetadata("UNSYNCEDLYRICS") ?: retriever.extractMetadata("lyrics-eng") ?: String.EMPTY
+	val unsyncedLyrics = retriever.extractMetadata("UNSYNCEDLYRICS") ?: retriever.extractMetadata("lyrics-eng") ?: String.EMPTY
+
+	val syncedLyrics: ArrayList<Verse>
+		get() {
+			val lyricsFile = File(file.parent, "${file.nameWithoutExtension}.lrc")
+			if (!lyricsFile.exists()) return ArrayList()
+
+			val verses = ArrayList<Verse>()
+			val timeTagPattern = Pattern.compile("\\[(\\d{2}):(\\d{2})\\.(\\d{2,3})](.*)")
+
+			lyricsFile.forEachLine { line ->
+				val matcher = timeTagPattern.matcher(line)
+				if (matcher.matches()) {
+					val minutes = matcher.group(1)?.toLong() ?: 0
+					val seconds = matcher.group(2)?.toLong() ?: 0
+					val milliseconds = matcher.group(3)?.toLong() ?: 0 // Handle both 2 and 3 digit milliseconds
+					val text = matcher.group(4)?.trim() ?: ""
+
+					val startTime = (minutes * 60 + seconds) * 1000 + milliseconds
+					verses.add(Verse(verses.size, startTime, 0, text))
+				}
+			}
+
+			// add endTimes
+			for (i in 0 until verses.size - 1) verses[i].endTime = verses[i + 1].startTime
+			verses[verses.size - 1].endTime = Long.MAX_VALUE
+
+			return verses
+		}
 
 	private val chapterCount = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
 	val chapters = ArrayList((0 until chapterCount).map {
@@ -170,6 +199,8 @@ class FileMetadata(file: File) {
  */
 data class Chapter(val index: Int, val startTime: Long, val title: String)
 
+data class Verse(val index: Int, val startTime: Long, var endTime: Long, val text: String)
+
 // the ArrayList is guaranteed to be sorted
 fun ArrayList<Chapter>.getNextChapter(currentSeek: Long): Chapter? {
 	return this.firstOrNull {
@@ -187,6 +218,18 @@ fun ArrayList<Chapter>.serializeChapters(): List<JSONObject> {
 		obj.put("index", it.index)
 		obj.put("startTime", it.startTime)
 		obj.put("title", it.title)
+
+		obj
+	}
+}
+
+fun ArrayList<Verse>.serializeLyrics(): List<JSONObject> {
+	return this.map {
+		val obj = JSONObject()
+		obj.put("index", it.index)
+		obj.put("startTime", it.startTime)
+		obj.put("endTime", it.endTime)
+		obj.put("text", it.text)
 
 		obj
 	}

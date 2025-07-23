@@ -338,6 +338,8 @@ chapters-dialog {
 lyrics-dialog {
 	color: var(--foreground-secondary);
 
+	#lyrics { overflow: hidden; }
+
 	#lyrics:empty::before {
 		content: '¯\\_(ツ)_/¯';
 		position: absolute;
@@ -346,5 +348,16 @@ lyrics-dialog {
 		font-size: 32px;
 		text-align: center;
 		opacity: .7;
+	}
+
+	verse {
+		display: block;
+		padding: 12px 16px;
+		text-align: center;
+		transition: scale .4s, color .4s;
+	}
+	verse.active {
+		scale: 1.1;
+		color: var(--foreground);
 	}
 }

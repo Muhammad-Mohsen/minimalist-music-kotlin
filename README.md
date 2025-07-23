@@ -16,6 +16,7 @@ A light weight, folder-based clean music player built with a combination of Kotl
 - Light + Dark themes
 - Change playback speed
 - Sleep timer
+- Search functionality
 - Customizable UI
 
 ## Screenshots

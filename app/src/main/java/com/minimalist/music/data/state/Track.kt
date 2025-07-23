@@ -6,7 +6,9 @@ import com.minimalist.music.data.files.Chapter
 import com.minimalist.music.data.files.ExplorerFile
 import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.data.files.SerializableBitmap
+import com.minimalist.music.data.files.Verse
 import com.minimalist.music.data.files.serializeChapters
+import com.minimalist.music.data.files.serializeLyrics
 import com.minimalist.music.data.state.State.Key
 import com.minimalist.music.foundation.ext.EMPTY
 import com.minimalist.music.foundation.ext.put
@@ -48,7 +50,8 @@ class Track(private val preferences: SharedPreferences) {
 	val hasChapters: Boolean
 		get() = chapters.size > 1
 
-	var lyrics = String.EMPTY
+	var unsyncedLyrics = String.EMPTY
+	var syncedLyrics: ArrayList<Verse> = ArrayList()
 
 	fun update(filePath: String = String.EMPTY) {
 		path = filePath.ifBlank { path }
@@ -65,7 +68,8 @@ class Track(private val preferences: SharedPreferences) {
 			artist = metadata.artist
 			duration = metadata.duration
 			chapters = metadata.chapters
-			lyrics = metadata.lyrics
+			unsyncedLyrics = metadata.unsyncedLyrics
+			syncedLyrics = metadata.syncedLyrics
 			albumArt = metadata.albumArtBitmap
 
 		} catch (ex: Exception) { Log.e("State", "State.Track.update", ex) }
@@ -81,7 +85,8 @@ class Track(private val preferences: SharedPreferences) {
 			"duration" to duration,
 			"albumArt" to (albumArt?.encoded ?: ""),
 			"chapters" to chapters.serializeChapters(),
-			"lyrics" to lyrics
+			"unsyncedLyrics" to unsyncedLyrics,
+			"syncedLyrics" to syncedLyrics.serializeLyrics()
 		)
 	}
 }

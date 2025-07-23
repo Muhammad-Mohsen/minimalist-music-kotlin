@@ -93,7 +93,7 @@ class State {
 		this.track.artist = track.artist;
 		this.track.albumArt = track.albumArt;
 		this.track.chapters = track.chapters;
-		this.track.lyrics = track.lyrics;
+		this.track.lyrics = track.syncedLyrics ? track.syncedLyrics : track.unsyncedLyrics; // use synced if available
 
 		if (!track.name) {
 			this.track.name = 'Hi,',

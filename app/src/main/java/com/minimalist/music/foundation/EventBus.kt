@@ -42,7 +42,7 @@ object EventBus {
 		Moirai.MAIN.post {
 			ipc?.get()?.evaluateJavascript("""
 				try { EventBus.dispatch($event, 'fromNative') }
-				catch (e) { console.log(e, JSON.stringify($event)); }
+				catch (e) { console.log(e.stack, JSON.stringify($event)); }
 			""".trimIndent(), null)
 		}
 	}

@@ -63,6 +63,8 @@ class EqualizerDialog extends HTMLElementBase {
 	#renderPresets(presets, currentPreset) {
 		if (this.presets.childElementCount) return this.#updatePresets(currentPreset);
 
+		presets.unshift({ id: -1, name: 'Off' });
+
 		this.presets.innerHTML = presets.map(p => `
 			<label>${p.name}<input type="radio" name="presets" value="${p.id}" ${p.id == currentPreset ? 'checked' : ''} oninput="${this.handle}.onPresetChange(${p.id})">
 			</label>

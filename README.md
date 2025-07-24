@@ -10,13 +10,13 @@ A light weight, folder-based clean music player built with a combination of Kotl
 - Built-in folder explorer
 - Dynamic queues (long-press a track item)
 - Audiobook chapters
-- Metadata lyrics (`UNSYNCEDLYRICS` tag)
+- Metadata lyrics unsynced (`UNSYNCEDLYRICS` tag) + synced (local lrc files)
 - Maintains playback position, speed, shuffle, and repeat states, etc.
 - Lock screen + Bluetooth controls
 - Light + Dark themes
 - Change playback speed
 - Sleep timer
-- Search functionality
+- Search
 - Customizable UI
 
 ## Screenshots

@@ -95,11 +95,7 @@ body[theme="light"] {
 	--selection-background: #BBB;
 }
 
-body {
-	background: var(--background);
-	transition: .3s ease-out;
-}
-body.ready { opacity: 1 !important; }
+body { background: var(--background); }
 
 .flex-row { display: flex; }
 

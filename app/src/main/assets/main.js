@@ -1,5 +1,4 @@
 if (location.href.includes('mode=permission')) document.body.setAttribute('mode', 'permission'); // permission layout
-setTimeout(() => document.body.classList.add('ready')); // reveal animation
 
 const state = new State();
 

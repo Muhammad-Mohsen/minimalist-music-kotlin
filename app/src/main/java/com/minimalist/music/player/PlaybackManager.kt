@@ -69,7 +69,6 @@ class PlaybackManager :
 		super.onCreate()
 
 		EventBus.subscribe(this)
-		State.initialize(applicationContext) // the initialization call in MainActivity.onCreate is not enough...Store was still showing exceptions
 
 		player.apply {// initialize the media player
 			setAudioAttributes(
@@ -83,18 +82,21 @@ class PlaybackManager :
 			setOnCompletionListener(this@PlaybackManager) // set up MediaPlayer event listeners
 		}
 
-		equalizer.enabled = true
-
 		audioFocusHandler = AudioFocusHandler(applicationContext, this) // audio focus loss
 		sessionManager = MediaSessionManager(applicationContext)
 		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
 
-		// onStartCommand wouldn't have been called at the point when the METADATA_UPDATE event is dispatched (which calls updateState)
-		// so a manual call is necessary
-		updateState(isBootstrapping = true)
+		// move the whole initialization to another thread
+		Moirai.BG.post {
+			State.initialize(applicationContext) // the initialization call in MainActivity.onCreate is not enough...Store was still showing exceptions
 
-		updateEqualizer() // restore its state
-		sendEqualizerInfo(isBootstrapping = true)
+			// onCreate isn't guaranteed to be called before the METADATA_UPDATE event is dispatched (which calls updateState)
+			// so a manual call is necessary
+			updateState(isBootstrapping = true)
+
+			updateEqualizer() // restore its state
+			sendEqualizerInfo(isBootstrapping = true)
+		}
 	}
 
 	override fun onDestroy() {
@@ -259,8 +261,10 @@ class PlaybackManager :
 
 	// metadata
 	private fun sendMetadataUpdate(path: String) {
-		State.track.update(path)
-		EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET, State.track.serialize()))
+		Moirai.BG.post {
+			State.track.update(path)
+			EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET, State.track.serialize()))
+		}
 	}
 
 	// equalizer
@@ -272,8 +276,12 @@ class PlaybackManager :
 	}
 	private fun updateEqualizerPreset(preset: Short) {
 		State.settings.equalizerPreset = preset
-		equalizer.usePreset(preset)
-		sendEqualizerInfo()
+
+		equalizer.enabled = preset >= 0
+		if (preset >= 0) {
+			equalizer.usePreset(preset)
+			sendEqualizerInfo()
+		}
 	}
 	private fun updateEqualizerBand(band: Short, level: Short) {
 		State.settings.equalizerBands[band.toInt()] = level

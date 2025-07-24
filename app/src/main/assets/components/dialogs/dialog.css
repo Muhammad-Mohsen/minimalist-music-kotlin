@@ -130,6 +130,8 @@ settings-dialog {
 			margin-inline-end: 6px;
 			color: var(--foreground-secondary);
 			font-size: 24px;
+
+			&.ic-ff { font-size: 22px; } /* keeps a visually-consistent sizing */
 		}
 		.ic-btn {
 			position: relative;
@@ -335,6 +337,7 @@ chapters-dialog {
 	}
 }
 
+/* LYRICS */
 lyrics-dialog {
 	color: var(--foreground-secondary);
 

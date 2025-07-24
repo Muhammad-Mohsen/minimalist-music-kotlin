@@ -187,7 +187,7 @@ class SettingsDialog extends HTMLElementBase {
 					<label for="seek-jump" l10n>Seek Jump</label>
 					<output class="subscript" for="seek-jump" id="seek-jump-value"></output>
 				</div>
-				<i class="ic-seek-jump"></i>
+				<i class="ic-ff"></i>
 			</div>
 
 			<div class="range-row select">

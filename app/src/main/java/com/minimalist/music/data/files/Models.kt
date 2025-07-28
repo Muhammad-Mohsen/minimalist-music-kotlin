@@ -271,3 +271,9 @@ object SortBy {
 	const val NEWEST = "newest"
 	const val OLDEST = "oldest"
 }
+
+object EqualizerChangeSource {
+	const val USER = 0
+	const val RESTORE_STATE = 1
+	const val PRESET = 2
+}

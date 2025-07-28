@@ -29,20 +29,17 @@ fun MediaPlayer.prepareSource(path: String) {
 	}
 }
 
-val MediaPlayer.currentPositionSafe: Int
+val MediaPlayer?.currentPositionSafe: Int
 	get() {
 		return try {
-			currentPosition
+			this?.currentPosition ?: 0
 		} catch (e: Exception) {
 			e.printStackTrace()
 			0
 		}
 	}
 
-val Equalizer.currentPresetSafe: Short
-	get() = try { currentPreset } catch (_: Exception) { -1 }
-
-fun Equalizer.getInfo(): Map<String, Any> {
+fun Equalizer.getInfo(preset: Short): Map<String, Any> {
 	val bands = (0 until numberOfBands).map {
 		return@map mapOf(
 			"id" to it,
@@ -64,6 +61,6 @@ fun Equalizer.getInfo(): Map<String, Any> {
 		"bands" to bands,
 
 		"presets" to presets,
-		"currentPreset" to currentPresetSafe
+		"currentPreset" to preset
 	)
 }

@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
+import com.minimalist.music.data.files.EqualizerChangeSource
 import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.foundation.EventBus
 import com.minimalist.music.foundation.ext.cancelSafe
@@ -44,8 +45,8 @@ class PlaybackManager :
 	MediaPlayer.OnCompletionListener,
 	AudioManager.OnAudioFocusChangeListener // audio focus loss
 {
-	private val player = MediaPlayer()
-	private val equalizer = Equalizer(0, player.audioSessionId)
+	private var player: MediaPlayer? = MediaPlayer()
+	private var equalizer: Equalizer? = Equalizer(0, player!!.audioSessionId)
 
 	private lateinit var audioFocusHandler: AudioFocusHandler
 	private lateinit var notificationManager: MediaNotificationManager
@@ -55,7 +56,7 @@ class PlaybackManager :
 	private val noisyReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context?, intent: Intent?) {
 			if (intent?.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
-				player.pause()
+				player?.pause()
 				EventBus.dispatch(Event(Type.PAUSE, TARGET))
 			}
 		}
@@ -70,7 +71,7 @@ class PlaybackManager :
 
 		EventBus.subscribe(this)
 
-		player.apply {// initialize the media player
+		player?.apply {// initialize the media player
 			setAudioAttributes(
 				AudioAttributes.Builder()
 					.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -92,10 +93,8 @@ class PlaybackManager :
 
 			// onCreate isn't guaranteed to be called before the METADATA_UPDATE event is dispatched (which calls updateState)
 			// so a manual call is necessary
-			updateState(isBootstrapping = true)
-
-			updateEqualizer() // restore its state
-			sendEqualizerInfo(isBootstrapping = true)
+			updatePlaybackState(isOnRestoreState = true)
+			updateEqualizerState()
 		}
 	}
 
@@ -105,8 +104,13 @@ class PlaybackManager :
 		EventBus.unsubscribe(this)
 		State.playbackManagerReady = false
 
-		equalizer.release()
-		player.release() // destroy the Player instance
+		equalizer?.release()
+		equalizer = null
+
+		player?.reset()
+		player?.release()
+		player = null
+
 		FileMetadata.releaseRetriever()
 		sessionManager.release() // and the media session
 		audioFocusHandler.abandon() // ...and the audio focus
@@ -115,6 +119,8 @@ class PlaybackManager :
 		timer = null
 
 		unregisterReceiverSafe(noisyReceiver)
+
+		Runtime.getRuntime().gc()
 	}
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -138,15 +144,15 @@ class PlaybackManager :
 	}
 
 	// restores state (from the State object) from a previous session
-	private fun updateState(isBootstrapping: Boolean = false) {
+	private fun updatePlaybackState(isOnRestoreState: Boolean = false) {
 		if (!State.track.exists) return
 
 		sendTrackUpdate(State.track.path, false)
 		updateSeek(State.track.seek)
-		if (isBootstrapping) EventBus.dispatch(Event(Type.SEEK_UPDATE, TARGET)) // notify the session
+		if (isOnRestoreState) EventBus.dispatch(Event(Type.SEEK_UPDATE, TARGET)) // notify the session
 	}
 	private fun sendTrackUpdate(path: String, updatePlaylist: Boolean = true) {
-		player.prepareSource(path)
+		player?.prepareSource(path)
 
 		// update playlist
 		if (updatePlaylist || State.playlist.isEmpty()) State.playlist.update(path)
@@ -166,7 +172,7 @@ class PlaybackManager :
 		registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
 		State.isPlaying = true
 
-		player.playPause(true)
+		player?.playPause(true)
 		sendMetadataUpdate(path)
 		sendPeriodicSeekUpdates()
 	}
@@ -183,28 +189,30 @@ class PlaybackManager :
 		}
 
 		State.isPlaying = play
-		player.playPause(play)
+		player?.playPause(play)
 		sendPeriodicSeekUpdates(play)
 	}
 	private fun playNext() {
+		val p = player ?: return
 		if (State.track.hasChapters) {
-			val nextChapter = State.track.chapters.getNextChapter(player.currentPositionSafe.toLong())
+			val nextChapter = State.track.chapters.getNextChapter(p.currentPositionSafe.toLong())
 			if (nextChapter == null) { // already past the last chapter
 				playTrack(State.playlist.getNextTrack(false), false) // so get the next track as normal
 				return
 			}
 			updateSeek(nextChapter.startTime.toInt())
-			if (!player.isPlaying) playPause(true)
+			if (!p.isPlaying) playPause(true)
 
 		} else {
 			playTrack(State.playlist.getNextTrack(false), false)
 		}
 	}
 	private fun playPrev() {
+		val p = player ?: return
 		if (State.track.hasChapters) {
-			val prevChapter = State.track.chapters.getPrevChapter(player.currentPositionSafe.toLong())
+			val prevChapter = State.track.chapters.getPrevChapter(p.currentPositionSafe.toLong())
 			updateSeek(prevChapter.startTime.toInt())
-			if (!player.isPlaying) playPause(true)
+			if (!p.isPlaying) playPause(true)
 
 		} else {
 			playTrack(State.playlist.getPreviousTrack(), false)
@@ -213,7 +221,7 @@ class PlaybackManager :
 
 	// seek
 	private fun updateSeek(mils: Int) {
-		player.seekTo(mils)
+		player?.seekTo(mils)
 		sendSingleSeekUpdate()
 	}
 	private fun sendPeriodicSeekUpdates(toggle: Boolean = true) {
@@ -236,26 +244,26 @@ class PlaybackManager :
 	}
 
 	private fun fastForward() {
-		player.seekTo(player.currentPositionSafe + State.settings.seekJump)
+		player?.seekTo(player.currentPositionSafe + State.settings.seekJump)
 		sendSingleSeekUpdate()
 	}
 	private fun rewind() {
-		player.seekTo(player.currentPositionSafe - State.settings.seekJump)
+		player?.seekTo(player.currentPositionSafe - State.settings.seekJump)
 		sendSingleSeekUpdate()
 	}
 
 	private fun updatePlaybackSpeed(speed: Float = 1F) {
 		// the store reports an IllegalStateException crashes over here, so try/catch that sumbitch!
 		try {
-			val wasPaused = !player.isPlaying
-			player.playbackParams = player.playbackParams.setSpeed(speed)
+			val wasPaused = !player!!.isPlaying
+			player?.playbackParams = player!!.playbackParams.setSpeed(speed)
 
 			// apparently, setting the playback speed while paused, resumes playback, so force it here.
 			// no need to send any further notifications/events, so directly call the player's pause function
-			if (wasPaused) player.playPause(false)
+			if (wasPaused) player?.playPause(false)
 		}
 		catch (e: Exception) {
-			Log.d(PlaybackManager::class.simpleName, "updatePlaybackSpeed: ${e.message}")
+			Log.d("PlaybackManager", "updatePlaybackSpeed: ${e.message}")
 		}
 	}
 
@@ -268,40 +276,43 @@ class PlaybackManager :
 	}
 
 	// equalizer
-	private fun updateEqualizer() {
-		updateEqualizerPreset(State.settings.equalizerPreset)
-		State.settings.equalizerBands.withIndex().forEach {
-			updateEqualizerBand(it.index.toShort(), it.value)
+	private fun updateEqualizerState() {
+		// equalizer?.enabled = true
+		val success = equalizer?.setEnabled(true)
+		Log.d("PlaybackManager", "updateEqualizerState: $success")
+
+		// update the bands
+		State.settings.equalizerBands.forEach {
+			updateEqualizerBand(it.key, it.value, EqualizerChangeSource.RESTORE_STATE)
 		}
+
+		// delay by a second because the webview ain't ready
+		Moirai.BG.postDelayed({ sendEqualizerInfo() }, 1000)
 	}
 	private fun updateEqualizerPreset(preset: Short) {
 		State.settings.equalizerPreset = preset
+		equalizer?.usePreset(preset)
 
-		equalizer.enabled = preset >= 0
-		if (preset >= 0) {
-			equalizer.usePreset(preset)
-			sendEqualizerInfo()
+		// update bands
+		(equalizer?.getInfo(preset)["bands"] as List<*>).filterIsInstance<Map<String, Any>>().forEach {
+			updateEqualizerBand(it["id"].toString().toInt(), it["level"].toString().toInt(), EqualizerChangeSource.PRESET)
 		}
-	}
-	private fun updateEqualizerBand(band: Short, level: Short) {
-		State.settings.equalizerBands[band.toInt()] = level
-		equalizer.setBandLevel(band, level)
-	}
-	private fun sendEqualizerInfo(isBootstrapping: Boolean = false) {
-		if (isBootstrapping) {
-			Moirai.BG.postDelayed({
-				EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer.getInfo()))
 
-			}, 1000)
-		}
-		else EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer.getInfo()))
+		sendEqualizerInfo()
+	}
+	private fun updateEqualizerBand(band: Int, level: Int, source: Int = EqualizerChangeSource.USER) {
+		if (source != EqualizerChangeSource.RESTORE_STATE) State.settings.equalizerBands[band] = level
+		if (source != EqualizerChangeSource.PRESET) equalizer?.setBandLevel(band.toShort(), level.toShort())
+	}
+	private fun sendEqualizerInfo() {
+		EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer!!.getInfo(State.settings.equalizerPreset)))
 	}
 
 	// pause playback on audio focus loss
 	override fun onAudioFocusChange(focusChange: Int) {
 		if (focusChange != AudioManager.AUDIOFOCUS_GAIN) {
 			try {
-				player.pause() // throws if app is playing, gets killed, and another app acquires focus (however, shouldn't occur anymore since the focus listener is abandoned in onDestroy)
+				player?.pause() // throws if app is playing, gets killed, and another app acquires focus (however, shouldn't occur anymore since the focus listener is abandoned in onDestroy)
 				EventBus.dispatch(Event(Type.PAUSE, TARGET))
 
 			} catch (e: IllegalStateException) {
@@ -312,8 +323,8 @@ class PlaybackManager :
 
 	// on playback completion
 	override fun onCompletion(mp: MediaPlayer) {
-		// sometimes onComplete is called when it's not actually on complete!!
-		// I imagine that this happens due to some race condition where the next track is already loaded, then this hits!!
+		// sometimes onComplete is called when it's not actually on complete!
+		// I imagine that this happens due to some race condition where the next track is already loaded, then this hits!
 		if (mp.currentPositionSafe <= ON_COMPLETION_THRESHOLD) return
 
 		var nextTrack = State.playlist.getNextTrack(true)
@@ -342,7 +353,7 @@ class PlaybackManager :
 		when (event.type) {
 			Type.APP_FOREGROUNDED -> startForegroundSafe()
 
-			Type.METADATA_UPDATE -> updateState()
+			Type.METADATA_UPDATE -> updatePlaybackState()
 
 			Type.PLAY_TRACK -> playTrack(event.data["path"].toString())
 			Type.PLAY -> playPause(true)
@@ -374,7 +385,7 @@ class PlaybackManager :
 			}
 
 			Type.EQUALIZER_PRESET_CHANGE -> updateEqualizerPreset(event.data["value"].toString().toShort()) // TODO need to send equalizer info again??
-			Type.EQUALIZER_BAND_CHANGE -> updateEqualizerBand(event.data["band"].toString().toShort(), event.data["value"].toString().toShort())
+			Type.EQUALIZER_BAND_CHANGE -> updateEqualizerBand(event.data["band"].toString().toInt(), event.data["value"].toString().toInt())
 		}
 	}
 

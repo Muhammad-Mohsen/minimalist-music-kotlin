@@ -63,10 +63,12 @@ class MediaSessionManager(context: Context): MediaSessionCompat.Callback(), Even
 
 	override fun onFastForward() {
 		super.onFastForward()
+		EventBus.dispatch(Event(Type.FF, Target.SESSION))
 	}
 
 	override fun onRewind() {
 		super.onRewind()
+		EventBus.dispatch(Event(Type.RW, Target.SESSION))
 	}
 
 	override fun onSeekTo(pos: Long) {

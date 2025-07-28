@@ -96,11 +96,13 @@ class Settings(private val preferences: SharedPreferences) {
 			preferences.put(Key.EQUALIZER_PRESET, value.toInt())
 		}
 
-	private var _equalizerBands: ArrayList<Short>? = null
-	var equalizerBands: ArrayList<Short>
+	private var _equalizerBands: MutableMap<Int, Int>? = null
+	var equalizerBands: MutableMap<Int, Int>
 		get() {
-			if (_equalizerBands == null) _equalizerBands = ArrayList(preferences.getString(Key.EQUALIZER_BANDS, null)?.split(";")
-				?.map { it.toShort() } ?: ArrayList())
+			if (_equalizerBands == null) {
+				val bands = preferences.getString(Key.EQUALIZER_BANDS, null)?.split(";")?.map { it.toInt() }
+				_equalizerBands = if (bands == null) mutableMapOf() else (bands.indices zip bands).toMap().toMutableMap()
+			}
 
 			return _equalizerBands!!
 		}

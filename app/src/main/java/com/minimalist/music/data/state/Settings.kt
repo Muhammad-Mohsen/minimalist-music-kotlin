@@ -107,8 +107,7 @@ class Settings(private val preferences: SharedPreferences) {
 			return _equalizerBands!!
 		}
 		set(value) {
-			_equalizerBands = value
-			preferences.put(Key.EQUALIZER_BANDS, value)
+			preferences.put(Key.EQUALIZER_BANDS, value.values.joinToString(";"))
 		}
 
 	private var _secondaryControls: String? = null

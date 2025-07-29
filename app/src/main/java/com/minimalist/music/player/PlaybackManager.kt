@@ -297,12 +297,16 @@ class PlaybackManager :
 		(equalizer?.getInfo(preset)["bands"] as List<*>).filterIsInstance<Map<String, Any>>().forEach {
 			updateEqualizerBand(it["id"].toString().toInt(), it["level"].toString().toInt(), EqualizerChangeSource.PRESET)
 		}
+		State.settings.equalizerBands = State.settings.equalizerBands // persist the band values...looks weird, I know
 
 		sendEqualizerInfo()
 	}
 	private fun updateEqualizerBand(band: Int, level: Int, source: Int = EqualizerChangeSource.USER) {
 		if (source != EqualizerChangeSource.RESTORE_STATE) State.settings.equalizerBands[band] = level
 		if (source != EqualizerChangeSource.PRESET) equalizer?.setBandLevel(band.toShort(), level.toShort())
+
+		// in the case of PRESET, this is done in `updateEqualizerPreset`
+		if (source == EqualizerChangeSource.USER) State.settings.equalizerBands = State.settings.equalizerBands
 	}
 	private fun sendEqualizerInfo() {
 		EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer!!.getInfo(State.settings.equalizerPreset)))

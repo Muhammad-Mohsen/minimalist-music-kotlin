@@ -16,11 +16,14 @@ class MusicExplorer extends HTMLElementBase {
 		EventBus.subscribe((event) => this.#handler(event));
 	}
 
+	// EVENT BUS
 	#handler(event) {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
 			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => {
+				this.style.opacity = 1;
+
 				this.#renderExplorer();
 				this.#scrollToSelected();
 			})

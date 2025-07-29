@@ -1,3 +1,9 @@
+music-explorer {
+	opacity: 0;
+	transition: opacity .4s;
+}
+
+/* curtain */
 .explorer-container::after {
 	content: '';
 	position: absolute;
@@ -17,14 +23,14 @@
 	transition: scale .3s, opacity .2s;
 	overflow: auto;
 	pointer-events: none;
-}
 
-.explorer.out { scale: 1.1; }
-.explorer.in { scale: .9; }
-.explorer.current {
-	opacity: 1;
-	scale: 1;
-	pointer-events: all; /* only the active is clickable (others can be in front but transparent) */
+	&.out { scale: 1.1; }
+	&.in { scale: .9; }
+	&.current {
+		opacity: 1;
+		scale: 1;
+		pointer-events: all; /* only the active is clickable (others can be in front but transparent) */
+	}
 }
 
 .explorer button {

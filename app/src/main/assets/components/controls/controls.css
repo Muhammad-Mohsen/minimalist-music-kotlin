@@ -3,6 +3,9 @@ music-controls {
 	--range-border-width: 0;
 	--range-background: #44444460;
 	--range-progress-background: #74747433;
+
+	opacity: 0;
+	transition: opacity .4s;
 }
 
 body[theme="light"] music-controls {

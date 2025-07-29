@@ -7,15 +7,20 @@ class MusicHeader extends HTMLElementBase {
 		EventBus.subscribe((event) => this.handler(event));
 	}
 
+	// EVENT BUS
 	handler(event) {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => this.#renderCrumbs())
-			.is(EventBus.Type.SELECT_MODE_COUNT, () => {
-				this.selectCount.innerHTML = `${state.selection.length} selected`;
+			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => {
+				this.style.opacity = 1;
+				this.#renderCrumbs();
 			})
+			.is(EventBus.Type.SELECT_MODE_COUNT, () => this.selectCount.innerHTML = `${state.selection.length} selected`)
 			.is(EventBus.Type.MODE_NORMAL, () => this.onCancelClick())
+			.is(EventBus.Type.MODE_CHANGE, () => {
+				if (state.mode == state.Mode.SEARCH) this.searchInput.focus();
+			})
 	}
 
 	// UI HANDLERS

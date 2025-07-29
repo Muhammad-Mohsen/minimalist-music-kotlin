@@ -5,11 +5,10 @@ music-permissions {
 	align-items: center;
 	justify-content: center;
 	background: var(--background);
-	opacity: 0;
 	z-index: 3;
 
+	opacity: 0;
 	display: none;
-
 	transition: opacity .3s, display .2s allow-discrete;
 
 	p {

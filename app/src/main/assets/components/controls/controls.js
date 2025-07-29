@@ -28,6 +28,8 @@ class MusicControls extends HTMLElementBase {
 		when(event.type)
 			.is(EventBus.Type.MODE_CHANGE, () => this.querySelector('.secondary-controls [checked]')?.removeAttribute('checked'))
 			.is(EventBus.Type.RESTORE_STATE, () => {
+				this.style.opacity = 1;
+
 				this.#updateMetadata();
 				this.#renderSecondaryControls();
 				this.#restoreShuffle();

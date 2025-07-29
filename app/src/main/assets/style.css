@@ -33,9 +33,7 @@ input, button, textarea, select { font: inherit; }
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
-	html:focus-within {
-		scroll-behavior: auto;
-	}
+	html:focus-within { scroll-behavior: auto; }
 
 	*, *::before, *::after {
 		animation-duration: 0.01ms !important;
@@ -45,40 +43,7 @@ input, button, textarea, select { font: inherit; }
 	}
 }
 
-/* FONTS */
-@font-face {
-	font-family: "Prompt";
-	font-display: swap;
-	src: url(../assets/fonts/Prompt-ExtraLight.ttf) format("truetype");
-	font-weight: 200;
-}
-@font-face {
-	font-family: "Prompt";
-	font-display: swap;
-	src: url(../assets/fonts/Prompt-Regular.ttf) format("truetype");
-	font-weight: 400;
-}
-@font-face {
-	font-family: "Prompt";
-	font-display: swap;
-	src: url(../assets/fonts/Prompt-SemiBold.ttf) format("truetype");
-	font-weight: 600;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	font-display: swap;
-	src: url(../assets/fonts/JetBrainsMono-VariableFont_wght.ttf) format('woff2');
-	/* unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; */
-}
-
 /* THEMES */
-/* @property --background {
-	syntax: '<color>';
-	inherits: false;
-	initial-value: #000;
-} */
-
 body {
 	--background: #000;
 	--foreground: #FFF;

@@ -3,13 +3,14 @@ music-header {
 	position: fixed;
 	display: grid;
 	background: var(--background);
-	transition: .2s;
+	transition: .2s, opacity .4s;
 	z-index: 1;
-}
-music-header {
+
 	inset: calc(var(--inset-top, 4px) + 8px) 12px auto;
 	border: 1px solid var(--border-color);
 	border-radius: 12px;
+
+	opacity: 0;
 }
 body:is([mode="select"], [mode="search"], [mode="searchSelect"]) music-header {
 	inset: calc(var(--inset-top, 4px) + 8px) 0 auto;

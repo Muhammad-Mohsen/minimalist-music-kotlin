@@ -38,10 +38,14 @@ music-explorer {
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
-	padding: 14px 20px;
+	margin: 4px 12px;
+	padding: 10px 8px;
+	border-radius: 12px;
 	text-align: start;
 	transition: .2s, color .5s, background .8s;
-	overflow: hidden;
+
+	/* SELECTION */
+	&.selected { background: var(--selection-background); }
 
 	&[type="dir"], &.playlist, .ic-mark { color: var(--foreground); }
 
@@ -54,17 +58,18 @@ music-explorer {
 	.ic-dir, .ic-music-note { margin-inline: 8px 16px; }
 	.ic-mark { margin-inline-end: 8px; }
 
-	/* SELECTION */
-	.selection {
+	/* ACTIVE */
+	.active {
 		position: absolute;
-		inset: 4px 12px;
-		border-radius: 12px;
-		background: var(--selection-background);
-		opacity: 0;
-		transition: opacity .5s;
+		inset: -4px -12px;
+		background: var(--background);
+		transition: background .8s;
 		z-index: -1;
 	}
-	&.selected .selection { opacity: 1; }
+	&:active {
+		background: transparent;
+		.active { background: var(--selection-background); }
+	}
 
 	.ic-mark {
 		opacity: 0;
@@ -77,5 +82,36 @@ music-explorer {
 		height: 0;
 		padding: 0 20px;
 		opacity: 0;
+	}
+}
+
+.explorer-container .scrollbar-track {
+	position: fixed;
+	inset: calc(var(--inset-top, 0px) + 24px) 0 calc(var(--inset-bottom, 0px) + 64px) auto;
+	width: 24px;
+
+	scale: 0 1;
+	transform-origin: right;
+	transition: scale .3s;
+	&.show { scale: 1; }
+
+	.scrollbar-thumb {
+		position: absolute;
+		height: 80px;
+		width: 100%;
+
+		&::before {
+			content: '';
+			display: block;
+			height: 100%;
+			width: 4px;
+			margin-inline-start: auto;
+			border-radius: 4px 0 0 4px;
+			background: var(--selection-background);
+			transition: background .2s;
+		}
+
+		&:active { background: transparent; }
+		&.dragging::before { background: var(--foreground-secondary); }
 	}
 }

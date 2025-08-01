@@ -150,6 +150,7 @@ class MusicExplorer extends HTMLElementBase {
 				<ul class="explorer current" dir=""></ul>
 				<ul class="explorer out" dir=""></ul>
 				<ul class="explorer in" dir=""></ul>
+				<div class="scrollbar-track"><button class="scrollbar-thumb" ontouchstart></button></div>
 			</div>
 		`);
 	}
@@ -173,6 +174,8 @@ class MusicExplorer extends HTMLElementBase {
 		current.className = 'explorer ' + (toInward ? 'out' : 'in');
 		other.className = 'explorer current';
 		otherOther.className = 'explorer ' + (toInward ? 'in' : 'out');
+
+		this.#scrollbar(other);
 	}
 	#renderItems(explorer) {
 		explorer ||= this.querySelector('.explorer.current');
@@ -184,7 +187,7 @@ class MusicExplorer extends HTMLElementBase {
 					ontouchstart="${this.handle}.onItemTouchStart(event)" ontouchmove="${this.handle}.onItemTouchMove(event)" ontouchend="${this.handle}.onItemTouchEnd(event);" ontouchcanceled="${this.handle}.onItemTouchCancel(event);"
 					class="${state.playlist.tracks.includes(file.path) ? 'playlist' : ''} ${Path.eq(state.track.path, file.path) ? 'selected' : ''}">
 
-				<i class="selection"></i>
+				<i class="active"></i>
 				<i class="${file.type == 'dir' ? 'ic-dir' : 'ic-music-note'}"></i>
 				<span>${file.name}</span>
 				<i class="ic-mark"></i>
@@ -217,6 +220,67 @@ class MusicExplorer extends HTMLElementBase {
 
 	#scrollToSelected() {
 		this.querySelector('.current .selected')?.scrollIntoView({ block: 'center' });
+	}
+
+	// vertical scrollbar (the webview hides all non-body scrollbars :D :D https://issues.chromium.org/issues/40226034)
+	#scrollbar(element) {
+		const HIDE_DELAY = 2000;
+		let hideTimeout;
+
+		let ticking = false;
+
+		let dragging = false;
+		let startTouch = 0;
+		let startScroll = 0;
+
+		const contentHeight = element.scrollHeight;
+		const viewportHeight = element.clientHeight;
+
+		const thumb = this.querySelector('.scrollbar-thumb');
+		const track = thumb.parentElement;
+
+		const updateThumbPosition = () => {
+			const scrollTop = element.scrollTop;
+
+			// Calculate the thumb's vertical position
+			const r = scrollTop / (contentHeight - viewportHeight);
+			const thumbPosition = r * (viewportHeight - 80);
+			thumb.style.transform = `translateY(${thumbPosition}px)`;
+		}
+
+		// touch handlers
+		thumb.ontouchstart = (event) => {
+			startTouch = event.touches[0].clientY;
+			startScroll = element.scrollTop;
+			dragging = true;
+			thumb.className = 'scrollbar-thumb dragging';
+		}
+		thumb.ontouchmove = (event) => {
+			if (!dragging) return;
+
+			const r = (event.touches[0].clientY - startTouch) / (viewportHeight - 80);
+			element.scrollTop = startScroll + r * (contentHeight - viewportHeight);
+		}
+		thumb.ontouchend = () => {
+			dragging = false;
+			thumb.className = 'scrollbar-thumb';
+		}
+
+		// scroll handlers
+		element.onscroll = () => {
+			if (ticking) return;
+
+			ticking = true;
+			requestAnimationFrame(() => {
+				track.classList.add('show');
+				updateThumbPosition();
+				ticking = false;
+			});
+		}
+		element.onscrollend = () => {
+			clearTimeout(hideTimeout);
+			hideTimeout = setTimeout(() => track.classList.remove('show'), HIDE_DELAY)
+		};
 	}
 }
 

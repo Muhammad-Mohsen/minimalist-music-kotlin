@@ -29,6 +29,7 @@ import com.minimalist.music.foundation.EventBus.Event
 import com.minimalist.music.foundation.EventBus.Type
 import com.minimalist.music.foundation.EventBus.Target
 import com.minimalist.music.foundation.Moirai
+import com.minimalist.music.foundation.ext.ensureEnabled
 import com.minimalist.music.foundation.ext.getInfo
 import java.util.Timer
 import java.util.TimerTask
@@ -277,8 +278,7 @@ class PlaybackManager :
 
 	// equalizer
 	private fun updateEqualizerState() {
-		// equalizer?.enabled = true
-		val success = equalizer?.setEnabled(true)
+		val success = equalizer.ensureEnabled()
 		Log.d("PlaybackManager", "updateEqualizerState: $success")
 
 		// update the bands
@@ -290,6 +290,9 @@ class PlaybackManager :
 		Moirai.BG.postDelayed({ sendEqualizerInfo() }, 1000)
 	}
 	private fun updateEqualizerPreset(preset: Short) {
+		val success = equalizer.ensureEnabled()
+		Log.d("PlaybackManager", "updateEqualizerPreset: $success")
+
 		State.settings.equalizerPreset = preset
 		equalizer?.usePreset(preset)
 
@@ -303,7 +306,12 @@ class PlaybackManager :
 	}
 	private fun updateEqualizerBand(band: Int, level: Int, source: Int = EqualizerChangeSource.USER) {
 		if (source != EqualizerChangeSource.RESTORE_STATE) State.settings.equalizerBands[band] = level
-		if (source != EqualizerChangeSource.PRESET) equalizer?.setBandLevel(band.toShort(), level.toShort())
+		if (source != EqualizerChangeSource.PRESET) {
+			val success = equalizer.ensureEnabled()
+			Log.d("PlaybackManager", "updateEqualizerBand: $success")
+
+			equalizer?.setBandLevel(band.toShort(), level.toShort())
+		}
 
 		// in the case of PRESET, this is done in `updateEqualizerPreset`
 		if (source == EqualizerChangeSource.USER) State.settings.equalizerBands = State.settings.equalizerBands

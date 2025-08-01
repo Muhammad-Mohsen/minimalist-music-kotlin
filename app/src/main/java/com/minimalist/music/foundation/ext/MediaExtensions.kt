@@ -39,6 +39,10 @@ val MediaPlayer?.currentPositionSafe: Int
 		}
 	}
 
+fun Equalizer?.ensureEnabled(): Int? {
+	return if (this?.enabled == false) this.setEnabled(true)
+	else 0
+}
 fun Equalizer.getInfo(preset: Short): Map<String, Any> {
 	val bands = (0 until numberOfBands).map {
 		return@map mapOf(

@@ -102,7 +102,6 @@ class PlaybackManager :
 	override fun onDestroy() {
 		super.onDestroy()
 
-		EventBus.unsubscribe(this)
 		State.playbackManagerReady = false
 
 		equalizer?.release()
@@ -120,6 +119,8 @@ class PlaybackManager :
 		timer = null
 
 		unregisterReceiverSafe(noisyReceiver)
+
+		EventBus.release()
 
 		Runtime.getRuntime().gc()
 	}

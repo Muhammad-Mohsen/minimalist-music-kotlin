@@ -24,8 +24,9 @@ object EventBus {
 	fun subscribe(subscriber: WebView) {
 		ipc = WeakReference(subscriber)
 	}
-	fun unsubscribe(subscriber: Subscriber) {
-		subscribers.removeIf { it.get() == null || it.get() == subscriber }
+	fun release() {
+		subscribers.clear()
+		ipc = null
 	}
 
 	fun dispatch(event: Event) {

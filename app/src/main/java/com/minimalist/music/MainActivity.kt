@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -35,7 +36,7 @@ import java.util.Locale
 class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 	private lateinit var permissionRequest: ActivityResultLauncher<String>
-	private lateinit var webView: WebView
+	private var webView: WebView? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		setTheme(R.style.AppTheme) // change from splash screen (android 11-)
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		})
 
 		// insets (edge to edge)
-		ViewCompat.setOnApplyWindowInsetsListener(webView) { v, insets ->
+		ViewCompat.setOnApplyWindowInsetsListener(webView!!) { v, insets ->
 			State.windowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 			sendInsetsToWebView()
 
@@ -75,6 +76,19 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		EventBus.dispatch(Event(Type.PERMISSION_RESPONSE, Target.ACTIVITY, mapOf("mode" to
 				if (checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED) "normal" else "permission")))
 		initNative()
+	}
+
+	// release the webview
+	override fun onDestroy() {
+		super.onDestroy()
+
+		webView?.apply {
+			val parent = this.parent
+			(parent as FrameLayout).removeView(this)
+			this.clearCache(true)
+			this.destroy()
+		}
+		webView = null
 	}
 
 	private fun initNative() {
@@ -101,8 +115,9 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		State.initialize(applicationContext)
 
 		WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
+		// WebView.setWebContentsDebuggingEnabled(false)
 
-		webView.apply {
+		webView?.apply {
 			webViewClient = object : WebViewClient() {
 				override fun onPageFinished(view: WebView?, url: String?) {
 					super.onPageFinished(view, url)

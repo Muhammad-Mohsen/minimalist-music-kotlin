@@ -1,6 +1,9 @@
 music-explorer {
 	opacity: 0;
 	transition: opacity .4s;
+
+	--total-inset-top: calc(var(--inset-top, 0px) + 16px);
+	--total-inset-bottom: calc(var(--inset-bottom, 0px) + 64px);
 }
 
 /* curtain */
@@ -8,15 +11,15 @@ music-explorer {
 	content: '';
 	position: absolute;
 	inset: 0 0 auto;
-	height: calc(var(--inset-top, 0px) + 24px);
+	height: var(--total-inset-top);
 	background: var(--background);
 	pointer-events: none;
 }
 
 .explorer {
 	position: fixed;
-	inset: calc(var(--inset-top, 0px) + 24px) 0 calc(var(--inset-bottom, 0px) + 64px);
-	padding: 56px 0 112px;
+	inset: var(--total-inset-top) 0 var(--total-inset-bottom);
+	padding: 64px 0 112px;
 	display: flex;
 	flex-direction: column;
 	opacity: 0;
@@ -87,7 +90,7 @@ music-explorer {
 
 .explorer-container .scrollbar-track {
 	position: fixed;
-	inset: calc(var(--inset-top, 0px) + 24px) 0 calc(var(--inset-bottom, 0px) + 64px) auto;
+	inset: var(--total-inset-top) 0 var(--total-inset-bottom) auto;
 	width: 24px;
 
 	scale: 0 1;

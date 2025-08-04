@@ -52,6 +52,10 @@
 		<!-- For the life of me I can't know why registering this receiver dynamically doesn't work!!! -->
 		<receiver android:name="com.minimalist.music.player.MediaNotificationManager$NotificationActionHandler" />
 
+		<!-- opt out of sending diagnostics to google...they say the user must consent, but who would trust that!! -->
+		<!-- honestly, I don't trust that adding this really does anything, but it's all one can do -->
+		<meta-data android:name="android.webkit.WebView.MetricsOptOut" android:value="true" />
+
 	</application>
 
 </manifest>

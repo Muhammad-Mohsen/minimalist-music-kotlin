@@ -1,6 +1,10 @@
-# Dev Guide | Minimalist Music Kotling - Hybrid
+# Dev Guide | Minimalist Music Kotlin - Hybrid
 
 ## General
+- update to targetSdk 36
+- ffmpegMetadataRetriever 16kb alignment update
+- fix any exceptions that come up in 5.0
+
 - DONE - chapters
 - DONE - play selected
 - DONE - add to selection
@@ -21,7 +25,7 @@
 - DONE - permission issues
 	- DONE - permission UI
 	- after granting the permission, it doesn't work!!
-		- I guess it's because the service doesn't get initialized! - that was true
+		- I guess it's because the service does not get initialized! - that was true
 - DONE - chapters dialog
 - DONE - lyrics dialog
 - DONE - customization
@@ -44,7 +48,6 @@
 	- migrate to media3/exo
 - DONE - release metadata retriever
 - DONE - fade-in/out permission UI
-- ffmpeg metadata retriever 16kb alignment update
 
 ## Technical
 - DONE - edge to edge

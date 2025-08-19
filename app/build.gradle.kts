@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.kotlin.android)
@@ -5,14 +8,14 @@ plugins {
 
 android {
 	namespace = "com.minimalist.music"
-	compileSdk = 35
+	compileSdk = 36
 
 	defaultConfig {
 		applicationId = "mohsen.muhammad.minimalist"
 		minSdk = 27
-		targetSdk = 35
-		versionCode = 28
-		versionName = "5.0"
+		targetSdk = 36
+		versionCode = 29
+		versionName = "5.1"
 	}
 
 	compileOptions {
@@ -20,8 +23,11 @@ android {
 		targetCompatibility(JavaVersion.VERSION_21)
 	}
 
-	kotlinOptions {
-		jvmTarget = JavaVersion.VERSION_21.toString()
+	tasks.withType<KotlinJvmCompile>().configureEach {
+		compilerOptions {
+			jvmTarget.set(JvmTarget.JVM_21)
+			freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+		}
 	}
 
 	kotlin {

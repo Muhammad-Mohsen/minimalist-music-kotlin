@@ -5,6 +5,7 @@ import com.minimalist.music.data.files.RepeatMode
 import com.minimalist.music.data.files.SortBy
 import com.minimalist.music.data.files.Theme
 import com.minimalist.music.data.state.State.Key
+import com.minimalist.music.foundation.ext.getStringSafe
 import com.minimalist.music.foundation.ext.put
 
 class Settings(private val preferences: SharedPreferences) {
@@ -33,7 +34,7 @@ class Settings(private val preferences: SharedPreferences) {
 	private var _theme: String? = null
 	var theme: String
 		get() {
-			if (_theme == null) _theme = preferences.getString(Key.THEME, Theme.DARK)
+			if (_theme == null) _theme = preferences.getStringSafe(Key.THEME, Theme.DARK)
 			return _theme!!
 		}
 		set(value) {

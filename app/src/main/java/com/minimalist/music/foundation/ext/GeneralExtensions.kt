@@ -49,6 +49,10 @@ fun SharedPreferences.put(key: String, value: Any) {
 		}
 	}
 }
+fun SharedPreferences.getStringSafe(key: String, default: String): String {
+	return try { this.getString(key, default) ?: default }
+	catch (_: Exception) { default }
+}
 
 fun JSONObject.toMap(): Map<String, Any> {
 	val map = mutableMapOf<String, Any>()

@@ -140,7 +140,10 @@ class FileMetadata(private val file: File) {
 	val duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
 	val albumArtBitmap = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
 
-	val unsyncedLyrics = retriever.extractMetadata("UNSYNCEDLYRICS") ?: retriever.extractMetadata("lyrics-eng") ?: String.EMPTY
+	val unsyncedLyrics = retriever.extractMetadata("UNSYNCEDLYRICS")
+		?: retriever.extractMetadata("USLT")
+		?: retriever.extractMetadata("lyrics-eng")
+		?: String.EMPTY
 
 	val syncedLyrics: ArrayList<Verse>
 		get() {

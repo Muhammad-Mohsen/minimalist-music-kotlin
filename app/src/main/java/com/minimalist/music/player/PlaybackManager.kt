@@ -46,6 +46,8 @@ class PlaybackManager :
 	MediaPlayer.OnCompletionListener,
 	AudioManager.OnAudioFocusChangeListener // audio focus loss
 {
+	private var promoted = false
+
 	private var player: MediaPlayer? = MediaPlayer()
 	private var equalizer: Equalizer? = Equalizer(0, player!!.audioSessionId)
 
@@ -65,7 +67,6 @@ class PlaybackManager :
 	private val noisyIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
 
 	private var timer: Timer? = null // a timer to update the seek
-	private var foregrounded = false
 
 	override fun onCreate() {
 		super.onCreate()
@@ -84,12 +85,12 @@ class PlaybackManager :
 			setOnCompletionListener(this@PlaybackManager) // set up MediaPlayer event listeners
 		}
 
-		audioFocusHandler = AudioFocusHandler(applicationContext, this) // audio focus loss
-		sessionManager = MediaSessionManager(applicationContext)
-		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
-
 		// move the whole initialization to another thread
 		Moirai.BG.post {
+			audioFocusHandler = AudioFocusHandler(applicationContext, this) // audio focus loss
+			sessionManager = MediaSessionManager(applicationContext)
+			notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
+
 			State.initialize(applicationContext) // the initialization call in MainActivity.onCreate is not enough...Store was still showing exceptions
 
 			// onCreate isn't guaranteed to be called before the METADATA_UPDATE event is dispatched (which calls updateState)
@@ -132,16 +133,16 @@ class PlaybackManager :
 
 	// will be called from the fragment onStart to ensure that it's always started
 	private fun startForegroundSafe() {
-		if (foregrounded) return
+		if (promoted) return
 
 		// try/catch because the store reports a ForegroundServiceStartNotAllowedException!
 		try {
-			foregrounded = true
+			promoted = true
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
 			else startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 
 		} catch (_: Exception) {
-			foregrounded = false
+			promoted = false
 		}
 	}
 
@@ -318,7 +319,9 @@ class PlaybackManager :
 		if (source == EqualizerChangeSource.USER) State.settings.equalizerBands = State.settings.equalizerBands
 	}
 	private fun sendEqualizerInfo() {
-		EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer!!.getInfo(State.settings.equalizerPreset)))
+		equalizer?.let {
+			EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, it.getInfo(State.settings.equalizerPreset)))
+		}
 	}
 
 	// pause playback on audio focus loss

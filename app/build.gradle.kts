@@ -14,8 +14,8 @@ android {
 		applicationId = "mohsen.muhammad.minimalist"
 		minSdk = 27
 		targetSdk = 36
-		versionCode = 29
-		versionName = "5.1"
+		versionCode = 30
+		versionName = "5.2"
 	}
 
 	compileOptions {
@@ -66,6 +66,7 @@ dependencies {
 	implementation(libs.androidx.appcompat)
 
 	implementation(libs.androidx.media)
+	implementation(libs.androidx.media3.exoplayer)
 
 	// metadata
 	implementation(libs.ffmpegmediametadataretriever.core)

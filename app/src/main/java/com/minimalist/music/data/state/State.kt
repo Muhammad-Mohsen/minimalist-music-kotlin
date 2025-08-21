@@ -63,7 +63,7 @@ object State {
 		playlist = Playlist(sharedPreferences)
 		track = Track(sharedPreferences)
 		settings = Settings(sharedPreferences)
-		
+
 		track.update()
 	}
 

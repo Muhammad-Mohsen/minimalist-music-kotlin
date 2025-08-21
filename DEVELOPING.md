@@ -1,9 +1,13 @@
 # Dev Guide | Minimalist Music Kotlin - Hybrid
 
 ## General
-- update to targetSdk 36
-- ffmpegMetadataRetriever 16kb alignment update
-- fix any exceptions that come up in 5.0
+- migrate to exo
+- investigate possible ffmpegMetadataRetriever replacement
+- only call initNative from onResume
+
+- DONE - update to targetSdk 36
+- DONE - ffmpegMetadataRetriever 16kb alignment update
+- DONE - fix any exceptions that come up in 5.0
 
 - DONE - chapters
 - DONE - play selected

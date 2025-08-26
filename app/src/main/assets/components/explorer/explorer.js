@@ -21,12 +21,8 @@ class MusicExplorer extends HTMLElementBase {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => {
-				this.style.opacity = 1;
-
-				this.#renderExplorer();
-				this.#scrollToSelected();
-			})
+			.is(EventBus.Type.RESTORE_STATE, () => setTimeout(() => this.onDirUpdate(), 250))
+			.is(EventBus.Type.DIR_UPDATE, () => this.onDirUpdate())
 			.is([EventBus.Type.PLAYLIST_UPDATE, EventBus.Type.QUEUE_ADD_SELECTED, EventBus.Type.QUEUE_PLAY_SELECTED], () => {
 				this.#updateItems();
 			})
@@ -43,6 +39,12 @@ class MusicExplorer extends HTMLElementBase {
 	}
 
 	// HANDLERS
+	onDirUpdate() {
+		this.style.opacity = 1;
+		this.#renderExplorer();
+		this.#scrollToSelected();
+	}
+
 	onItemTouchStart(event) {
 		const target = event.currentTarget;
 

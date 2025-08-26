@@ -6,13 +6,17 @@ music-explorer {
 	--total-inset-bottom: calc(var(--inset-bottom, 0px) + 64px);
 }
 
-/* curtain */
+/* curtains */
 .explorer-container::after {
 	content: '';
 	position: absolute;
-	inset: 0 0 auto;
-	height: var(--total-inset-top);
-	background: var(--background);
+	inset: 0;
+	background: linear-gradient(
+		var(--background) var(--total-inset-top),
+		transparent var(--total-inset-top),
+		transparent calc(100vh - var(--total-inset-bottom)),
+		var(--background) calc(100vh - var(--total-inset-bottom))
+	);
 	pointer-events: none;
 }
 

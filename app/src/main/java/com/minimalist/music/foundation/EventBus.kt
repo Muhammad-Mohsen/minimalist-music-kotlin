@@ -1,6 +1,5 @@
 package com.minimalist.music.foundation
 
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.minimalist.music.foundation.ext.toMap
@@ -32,19 +31,18 @@ object EventBus {
 	fun dispatch(event: Event) {
 		subscribers.forEach { sub -> sub.get()?.handle(event) }
 
-		val event = JSONObject(mapOf(
+		val eventJSON = JSONObject(mapOf(
 			"type" to event.type,
 			"target" to event.target,
 			"data" to event.data
-		)).toString()
-
-		Log.d("EventBus", "dispatch: $event")
+		))
 
 		Moirai.MAIN.post {
 			ipc?.get()?.evaluateJavascript("""
-				try { EventBus.dispatch($event, 'fromNative') }
-				catch (e) { console.log(e.stack, JSON.stringify($event)); }
-			""".trimIndent(), null)
+				window.evt = $eventJSON;
+				try { EventBus.dispatch(evt, 'fromNative') }
+				catch (e) { console.log(e.stack, JSON.stringify(evt)); }
+			""", null)
 		}
 	}
 

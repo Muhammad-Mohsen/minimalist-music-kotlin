@@ -20,8 +20,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.minimalist.music.data.Const
-import com.minimalist.music.data.files.ExplorerFile
 import com.minimalist.music.data.files.Theme
+import com.minimalist.music.data.files.isRoot
 import com.minimalist.music.data.files.serializeFiles
 import com.minimalist.music.data.state.State
 import com.minimalist.music.foundation.EventBus
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			State.mode != "normal" -> {
 				EventBus.dispatch(Event(Type.MODE_NORMAL, Target.ACTIVITY)) // simulates "cancel" click from the header
 			}
-			ExplorerFile.isAtRoot(State.currentDirectory.absolutePath) -> {
+			State.currentDirectory.isRoot() -> {
 				this.moveTaskToBack(true)
 			}
 			else -> {

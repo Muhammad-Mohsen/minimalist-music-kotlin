@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.minimalist.music.data.files.EqualizerChangeSource
 import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.foundation.EventBus
@@ -46,8 +47,6 @@ class PlaybackManager :
 	MediaPlayer.OnCompletionListener,
 	AudioManager.OnAudioFocusChangeListener // audio focus loss
 {
-	private var promoted = false
-
 	private var player: MediaPlayer? = MediaPlayer()
 	private var equalizer: Equalizer? = Equalizer(0, player!!.audioSessionId)
 
@@ -85,13 +84,15 @@ class PlaybackManager :
 			setOnCompletionListener(this@PlaybackManager) // set up MediaPlayer event listeners
 		}
 
-		// move the whole initialization to another thread
-		Moirai.BG.post {
-			audioFocusHandler = AudioFocusHandler(applicationContext, this) // audio focus loss
-			sessionManager = MediaSessionManager(applicationContext)
-			notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
+		// can't move these guys to the background thread because they won't be ready in time when the startForeground gets called
+		// notificationManager is needed for the foreground service notification
+		audioFocusHandler = AudioFocusHandler(applicationContext, this) // audio focus loss
+		sessionManager = MediaSessionManager(applicationContext)
+		notificationManager = MediaNotificationManager(applicationContext, sessionManager.token)
 
-			State.initialize(applicationContext) // the initialization call in MainActivity.onCreate is not enough...Store was still showing exceptions
+		// move the rest of the initialization to another thread
+		Moirai.BG.post {
+			State.initialize(applicationContext) // from the field: not initialized exceptions...the initialization call in MainActivity.onCreate is not enough
 
 			// onCreate isn't guaranteed to be called before the METADATA_UPDATE event is dispatched (which calls updateState)
 			// so a manual call is necessary
@@ -133,16 +134,15 @@ class PlaybackManager :
 
 	// will be called from the fragment onStart to ensure that it's always started
 	private fun startForegroundSafe() {
-		if (promoted) return
-
-		// try/catch because the store reports a ForegroundServiceStartNotAllowedException!
+		// from the field: ForegroundServiceStartNotAllowedException!
 		try {
-			promoted = true
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
 			else startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 
 		} catch (_: Exception) {
-			promoted = false
+			// the hope is, MainActivity.onResume will start the service again
+			State.playbackManagerReady = false
+			stopSelf()
 		}
 	}
 
@@ -172,7 +172,7 @@ class PlaybackManager :
 		val focusResult = audioFocusHandler.request()
 		if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
 
-		registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
+		ContextCompat.registerReceiver(this, noisyReceiver, noisyIntentFilter, ContextCompat.RECEIVER_EXPORTED) // headphone removal
 		State.isPlaying = true
 
 		player?.playPause(true)
@@ -184,7 +184,7 @@ class PlaybackManager :
 			val focusResult = audioFocusHandler.request()
 			if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
 
-			registerReceiver(noisyReceiver, noisyIntentFilter) // headphone removal
+			ContextCompat.registerReceiver(this, noisyReceiver, noisyIntentFilter, ContextCompat.RECEIVER_EXPORTED) // headphone removal
 
 		} else {
 			audioFocusHandler.abandon()
@@ -214,6 +214,10 @@ class PlaybackManager :
 		val p = player ?: return
 		if (State.track.hasChapters) {
 			val prevChapter = State.track.chapters.getPrevChapter(p.currentPositionSafe.toLong())
+			if (prevChapter == null) {
+				playTrack(State.playlist.getPreviousTrack(), false)
+				return
+			}
 			updateSeek(prevChapter.startTime.toInt())
 			if (!p.isPlaying) playPause(true)
 
@@ -256,7 +260,7 @@ class PlaybackManager :
 	}
 
 	private fun updatePlaybackSpeed(speed: Float = 1F) {
-		// the store reports an IllegalStateException crashes over here, so try/catch that sumbitch!
+		// from the field: IllegalStateException crashes over here, so try/catch that sumbitch!
 		try {
 			val wasPaused = !player!!.isPlaying
 			player?.playbackParams = player!!.playbackParams.setSpeed(speed)

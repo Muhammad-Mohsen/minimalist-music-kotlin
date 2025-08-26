@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.graphics.Insets
 import com.minimalist.music.data.Const
-import com.minimalist.music.data.files.ExplorerFile
 import com.minimalist.music.data.files.FileCache
+import com.minimalist.music.data.files.ROOT
 import com.minimalist.music.data.files.serializeFiles
 import com.minimalist.music.foundation.ext.put
 import java.io.File
@@ -33,13 +33,13 @@ object State {
 
 	var currentDirectory: File
 		get() {
-			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: ExplorerFile.ROOT
+			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: ROOT
 			val savedFile = File(savedPath)
-			return if (savedFile.exists()) savedFile else File(ExplorerFile.ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
+			return if (savedFile.exists()) savedFile else File(ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
 		}
 		set(value) = sharedPreferences.put(Key.DIRECTORY, value.absolutePath)
 
-	val files: ArrayList<ExplorerFile>
+	val files: ArrayList<File>
 		get() = FileCache.listFiles(currentDirectory, settings.sortBy)
 
 	var mode = "normal"

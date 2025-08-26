@@ -7,19 +7,17 @@ import java.io.File
  * The file explorer cache
  */
 object FileCache {
-
-	// cache
-	private val fileCache = HashMap<String, ArrayList<ExplorerFile>>()
+	private val fileCache = HashMap<String, ArrayList<File>>()
 	private val lastModifiedCache = HashMap<String, Long>()
 
-	// cache API
-	fun listFiles(dir: File, sortBy: String = SortBy.AZ): ArrayList<ExplorerFile> {
+	// API
+	fun listFiles(dir: File, sortBy: String = SortBy.AZ): ArrayList<File> {
 		val path = dir.absolutePath
 		var files = fileCache["$sortBy/$path"]
 
 		// if not cached, or directory was modified more recently than the cache
 		if (files == null || dir.lastModified() > (lastModifiedCache["$sortBy/$path"] ?: 0L)) {
-			files = ExplorerFile.listFiles(path, sortBy)
+			files = dir.listFiles(sortBy)
 			fileCache["$sortBy/$path"] = files
 
 			lastModifiedCache["$sortBy/$path"] = dir.lastModified()
@@ -28,6 +26,7 @@ object FileCache {
 		return files
 	}
 
+	// for the playlist
 	fun listTracks(path: String, sortBy: String = SortBy.AZ): List<String> {
 		val parentDir = File(path).parentFile ?: return emptyList()
 		val parentDirPath = parentDir.absolutePath
@@ -36,7 +35,7 @@ object FileCache {
 
 		// if not cached, or directory was modified more recently than the cache
 		if (files == null || parentDir.lastModified() > (lastModifiedCache["$sortBy/$parentDirPath"] ?: 0L)) {
-			files = ExplorerFile.listFiles(parentDirPath, sortBy)
+			files = parentDir.listFiles(sortBy)
 			fileCache["$sortBy/$parentDirPath"] = files
 
 			lastModifiedCache["$sortBy/$parentDirPath"] = parentDir.lastModified()

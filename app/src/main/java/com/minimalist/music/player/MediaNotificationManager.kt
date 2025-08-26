@@ -138,10 +138,10 @@ class MediaNotificationManager(private val context: Context, sessionToken: Media
 		const val INTENT_FLAGS = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
 
 		object Action {
-			const val PREV = 0
-			const val PLAY_PAUSE = 1
-			const val NEXT = 2
-			const val RW = 3
+			const val RW = 0
+			const val PREV = 1
+			const val PLAY_PAUSE = 2
+			const val NEXT = 3
 			const val FF = 4
 		}
 	}

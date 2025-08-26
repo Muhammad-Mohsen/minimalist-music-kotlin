@@ -3,10 +3,10 @@ package com.minimalist.music.data.state
 import android.content.SharedPreferences
 import android.util.Log
 import com.minimalist.music.data.files.Chapter
-import com.minimalist.music.data.files.ExplorerFile
 import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.data.files.SerializableBitmap
 import com.minimalist.music.data.files.Verse
+import com.minimalist.music.data.files.isTrack
 import com.minimalist.music.data.files.serializeChapters
 import com.minimalist.music.data.files.serializeLyrics
 import com.minimalist.music.data.state.State.Key
@@ -57,9 +57,9 @@ class Track(private val preferences: SharedPreferences) {
 		path = filePath.ifBlank { path }
 
 		val f = File(path)
-		if (!ExplorerFile.isTrack(f)) return
+		if (!f.isTrack()) return
 
-		// Play Store keeps saying that the ffmpeg.setDataSource throws an illegalArgumentException...to me the above check should fix that, but it didn't
+		// from the field: ffmpeg.setDataSource throws an illegalArgumentException...to me the above check should fix that, but it didn't
 		// so I just try/catch the fucker
 		try {
 			val metadata = FileMetadata(f)

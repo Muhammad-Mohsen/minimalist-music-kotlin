@@ -20,7 +20,7 @@ A light weight, folder-based clean music player built with a combination of Kotl
 - Customizable UI
 
 ## Special Thanks
-- @wseemann for the awesome `ffmpegmediametadataretriever` library. The only metadata library that could retrieve embedded chapter metadata
+- @wseemann for the awesome `ffmpegmediametadataretriever` library. The only metadata library that could retrieve embedded chapter metadata.
 - [Angular Icons](https://angularicons.com/) for the awesome icons.
 
 ## Screenshots

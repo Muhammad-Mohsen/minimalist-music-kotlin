@@ -1,10 +1,14 @@
 # Dev Guide | Minimalist Music Kotlin - Hybrid
 
 ## General
-- migrate to exo
+- refactoring
+  - DONE - remove `ExplorerFile` class!
+  - migrate to exo
 - investigate possible ffmpegMetadataRetriever replacement
-- only call initNative from onResume
-
+- DONE - bottom curtain
+- NOPE - fade list after some inactivity (if album art is shown)
+- profile the app
+- 
 - DONE - update to targetSdk 36
 - DONE - ffmpegMetadataRetriever 16kb alignment update
 - DONE - fix any exceptions that come up in 5.0

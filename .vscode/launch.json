@@ -5,7 +5,7 @@
 			"type": "android-webview",
 			"request": "attach",
 			"name": "Attach to Android WebView",
-			"application": "mohsen.muhammad.minimalist.debug",
+			"application": "mohsen.muhammad.minimalist.debug"
 		}
 	]
 }

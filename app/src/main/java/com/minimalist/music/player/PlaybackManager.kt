@@ -16,7 +16,6 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.minimalist.music.data.files.EqualizerChangeSource
-import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.foundation.EventBus
 import com.minimalist.music.foundation.ext.cancelSafe
 import com.minimalist.music.foundation.ext.currentPositionSafe
@@ -113,7 +112,6 @@ class PlaybackManager :
 		player?.release()
 		player = null
 
-		FileMetadata.releaseRetriever()
 		sessionManager.release() // and the media session
 		audioFocusHandler.abandon() // ...and the audio focus
 

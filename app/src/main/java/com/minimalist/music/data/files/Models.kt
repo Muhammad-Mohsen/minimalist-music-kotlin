@@ -93,79 +93,6 @@ private fun listVolumes(): Array<File> {
 	}).toTypedArray()
 }
 
-
-/**
- * uses ffmpeg metadata retriever because it can list chapters
- */
-class FileMetadata(private val file: File) {
-	init {
-		retriever.setDataSource(file.path)
-	}
-
-	val title: String = file.name
-	val artist = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST) ?: String.EMPTY
-	val album = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM) ?: file.parentFile?.name ?: String.EMPTY
-	val duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
-	val albumArtBitmap = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
-
-	val unsyncedLyrics = retriever.extractMetadata("UNSYNCEDLYRICS")
-		?: retriever.extractMetadata("USLT")
-		?: retriever.extractMetadata("lyrics-eng")
-		?: String.EMPTY
-
-	val syncedLyrics: ArrayList<Verse>
-		get() {
-			val lyricsFile = File(file.parent, "${file.nameWithoutExtension}.lrc")
-			if (!lyricsFile.exists()) return ArrayList()
-
-			val verses = ArrayList<Verse>()
-			val timeTagPattern = Pattern.compile("\\[(\\d{2}):(\\d{2})\\.(\\d{2,3})](.*)")
-
-			lyricsFile.forEachLine { line ->
-				val matcher = timeTagPattern.matcher(line)
-				if (matcher.matches()) {
-					val minutes = matcher.group(1)?.toLong() ?: 0
-					val seconds = matcher.group(2)?.toLong() ?: 0
-					val milliseconds = matcher.group(3)?.toLong() ?: 0 // Handle both 2 and 3 digit milliseconds
-					val text = matcher.group(4)?.trim() ?: ""
-
-					val startTime = (minutes * 60 + seconds) * 1000 + milliseconds
-					verses.add(Verse(verses.size, startTime, 0, text))
-				}
-			}
-
-			// add endTimes
-			for (i in 0 until verses.size - 1) verses[i].endTime = verses[i + 1].startTime
-			verses[verses.size - 1].endTime = Long.MAX_VALUE
-
-			return verses
-		}
-
-	private val chapterCount = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
-	val chapters = ArrayList((0 until chapterCount).map {
-		Chapter(
-			it,
-			retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_CHAPTER_START_TIME, it)?.toLong() ?: 0,
-			retriever.extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_TITLE, it),
-		)
-	})
-
-	companion object {
-		private var _retriever: FFmpegMediaMetadataRetriever? = null
-		private val retriever: FFmpegMediaMetadataRetriever
-			get() {
-				if (_retriever != null) return _retriever!!
-				_retriever = FFmpegMediaMetadataRetriever()
-				return _retriever!!
-			}
-
-		fun releaseRetriever() {
-			_retriever?.release()
-			_retriever = null
-		}
-	}
-}
-
 /**
  * Holds a track's chapter info
  */
@@ -217,6 +144,51 @@ fun ArrayList<File>.serializeFiles(): List<JSONObject> {
 		obj
 	}
 }
+
+fun FFmpegMediaMetadataRetriever.extractChapters(): ArrayList<Chapter> {
+	val chapterCount = extractMetadata(FFmpegMediaMetadataRetriever.METADATA_CHAPTER_COUNT)?.toInt() ?: 0
+	return ArrayList((0 until chapterCount).map {
+		Chapter(
+			it,
+			extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_CHAPTER_START_TIME, it)?.toLong() ?: 0,
+			extractMetadataFromChapter(FFmpegMediaMetadataRetriever.METADATA_KEY_TITLE, it),
+		)
+	})
+}
+fun FFmpegMediaMetadataRetriever.extractUnsyncedLyrics(): String {
+	return extractMetadata("UNSYNCEDLYRICS")
+		?: extractMetadata("USLT")
+		?: extractMetadata("lyrics-eng")
+		?: String.EMPTY
+}
+fun FFmpegMediaMetadataRetriever.extractSyncedLyrics(f: File): ArrayList<Verse> {
+	val lyricsFile = File(f.parent, "${f.nameWithoutExtension}.lrc")
+	return if (!lyricsFile.exists()) ArrayList()
+	else {
+		val verses = ArrayList<Verse>()
+		val timeTagPattern = Pattern.compile("\\[(\\d{2}):(\\d{2})\\.(\\d{2,3})](.*)")
+
+		lyricsFile.forEachLine { line ->
+			val matcher = timeTagPattern.matcher(line)
+			if (matcher.matches()) {
+				val minutes = matcher.group(1)?.toLong() ?: 0
+				val seconds = matcher.group(2)?.toLong() ?: 0
+				val milliseconds = matcher.group(3)?.toLong() ?: 0 // Handle both 2 and 3 digit milliseconds
+				val text = matcher.group(4)?.trim() ?: ""
+
+				val startTime = (minutes * 60 + seconds) * 1000 + milliseconds
+				verses.add(Verse(verses.size, startTime, 0, text))
+			}
+		}
+
+		// add endTimes
+		for (i in 0 until verses.size - 1) verses[i].endTime = verses[i + 1].startTime
+		verses[verses.size - 1].endTime = Long.MAX_VALUE
+
+		verses
+	}
+}
+
 
 class SerializableBitmap(val data: ByteArray?) {
 	val decoded: Bitmap? = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)

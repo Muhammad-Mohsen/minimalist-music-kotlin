@@ -3,7 +3,6 @@ package com.minimalist.music.data.state
 import android.content.SharedPreferences
 import android.util.Log
 import com.minimalist.music.data.files.Chapter
-import com.minimalist.music.data.files.FileMetadata
 import com.minimalist.music.data.files.SerializableBitmap
 import com.minimalist.music.data.files.Verse
 import com.minimalist.music.data.files.isTrack
@@ -11,7 +10,11 @@ import com.minimalist.music.data.files.serializeChapters
 import com.minimalist.music.data.files.serializeLyrics
 import com.minimalist.music.data.state.State.Key
 import com.minimalist.music.foundation.ext.EMPTY
+import com.minimalist.music.data.files.extractChapters
+import com.minimalist.music.data.files.extractSyncedLyrics
+import com.minimalist.music.data.files.extractUnsyncedLyrics
 import com.minimalist.music.foundation.ext.put
+import wseemann.media.FFmpegMediaMetadataRetriever
 import java.io.File
 
 class Track(private val preferences: SharedPreferences) {
@@ -62,15 +65,18 @@ class Track(private val preferences: SharedPreferences) {
 		// from the field: ffmpeg.setDataSource throws an illegalArgumentException...to me the above check should fix that, but it didn't
 		// so I just try/catch the fucker
 		try {
-			val metadata = FileMetadata(f)
-			name = metadata.title
-			album = metadata.album
-			artist = metadata.artist
-			duration = metadata.duration
-			chapters = metadata.chapters
-			unsyncedLyrics = metadata.unsyncedLyrics
-			syncedLyrics = metadata.syncedLyrics
-			albumArt = metadata.albumArtBitmap
+			val retriever = FFmpegMediaMetadataRetriever().apply { setDataSource(path) }
+
+			name = f.nameWithoutExtension
+			album = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM) ?: f.parentFile?.name ?: String.EMPTY
+			artist = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST) ?: String.EMPTY
+			duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+			unsyncedLyrics = retriever.extractUnsyncedLyrics()
+			syncedLyrics = retriever.extractSyncedLyrics(f)
+			chapters = retriever.extractChapters()
+			albumArt = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
+
+			retriever.release()
 
 		} catch (ex: Exception) { Log.e("State", "State.Track.update", ex) }
 	}

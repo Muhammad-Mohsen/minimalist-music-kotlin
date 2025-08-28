@@ -2,6 +2,8 @@ class MusicControls extends HTMLElementBase {
 
 	#TARGET = EventBus.Target.CONTROLS;
 
+	#albumArt;
+
 	customizableButtons = {
 		SEARCH: `<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch(this);" aria-label="Search"></button>`,
 		CHAPTERS: `<button id="chapters-button" class="ic-btn ic-chapters" onclick="${this.handle}.toggleChapters(this)" aria-label="Chapters"></button>`,
@@ -29,6 +31,7 @@ class MusicControls extends HTMLElementBase {
 			.is(EventBus.Type.MODE_CHANGE, () => this.querySelector('.secondary-controls [checked]')?.removeAttribute('checked'))
 			.is(EventBus.Type.RESTORE_STATE, () => {
 				this.style.opacity = 1;
+				setTimeout(() => this.seekRange.classList.add('blur'), 800);
 
 				this.#updateMetadata();
 				this.#renderSecondaryControls();
@@ -214,8 +217,16 @@ class MusicControls extends HTMLElementBase {
 		setTimeout(() => elem.innerHTML = val, delay);
 	}
 	#updateAlbumArt() {
-		if (state.track.albumArt) this.albumArt.setAttribute('src', 'data:image/png;base64, ' + state.track.albumArt.replace('file:///android_asset/', ''));
-		this.albumArt.classList.toggle('hidden', !state.track.albumArt);
+		if (this.#albumArt == state.track.albumArt) return;
+		this.#albumArt = state.track.albumArt;
+
+		this.albumArt.classList.add('hidden');
+		if (!state.track.albumArt) return;
+
+		setTimeout(() => {
+			this.albumArt.setAttribute('src', 'data:image/png;base64, ' + state.track.albumArt.replace('file:///android_asset/', ''));
+			this.albumArt.classList.remove('hidden');
+		}, 300);
 	}
 	#updateChapters() {
 		this.chapters.innerHTML = state.track.chapters

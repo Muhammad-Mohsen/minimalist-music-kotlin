@@ -29,7 +29,7 @@ music-controls {
 	filter: grayscale();
 	opacity: .3;
 	pointer-events: none;
-	transition: opacity .3s, filter .3s;
+	transition: opacity .3s, filter .5s;
 	z-index: 1;
 }
 #album-art.hidden, #album-art:not([src]) { opacity: 0; }
@@ -43,7 +43,11 @@ body[is-playing="true"] #album-art { filter: none; }
 		position: absolute;
 		inset: 0;
 
+		background: #222; /* explict color because I need to transition it */
 		backdrop-filter: blur(16px);
+		transition: background .5s;
+
+		&.blur { background: #44444450; }
 	}
 
 	#play-pause-button, #seek-current, #seek-duration, #track-name, #track-album-artist { color: var(--foreground); }

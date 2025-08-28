@@ -14,7 +14,7 @@ android {
 		applicationId = "mohsen.muhammad.minimalist"
 		minSdk = 27
 		targetSdk = 36
-		versionCode = 30
+		versionCode = 31
 		versionName = "5.2"
 	}
 

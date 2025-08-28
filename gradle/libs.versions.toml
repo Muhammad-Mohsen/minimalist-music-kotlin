@@ -1,19 +1,17 @@
 [versions]
 agp = "8.11.1"
-ffmpegmediametadataretrieverCore = "1.0.20"
+ffmpegmediametadataretriever = "1.0.19"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"
 appcompat = "1.7.1"
 media = "1.7.1"
-media3Exoplayer = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-media = { module = "androidx.media:media", version.ref = "media" }
-androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
-ffmpegmediametadataretriever-core = { module = "com.github.wseemann:FFmpegMediaMetadataRetriever-core", version.ref = "ffmpegmediametadataretrieverCore" }
-ffmpegmediametadataretriever-native = { module = "com.github.wseemann:FFmpegMediaMetadataRetriever-native", version.ref = "ffmpegmediametadataretrieverCore" }
+ffmpegmediametadataretriever-core = { module = "com.github.wseemann:FFmpegMediaMetadataRetriever-core", version.ref = "ffmpegmediametadataretriever" }
+ffmpegmediametadataretriever-native = { module = "com.github.wseemann:FFmpegMediaMetadataRetriever-native", version.ref = "ffmpegmediametadataretriever" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -66,7 +66,6 @@ dependencies {
 	implementation(libs.androidx.appcompat)
 
 	implementation(libs.androidx.media)
-	implementation(libs.androidx.media3.exoplayer)
 
 	// metadata
 	implementation(libs.ffmpegmediametadataretriever.core)

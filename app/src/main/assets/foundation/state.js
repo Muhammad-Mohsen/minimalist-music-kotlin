@@ -31,8 +31,12 @@ class State {
 	query = '';
 
 	settings = {
-		get theme() { return document.body.getAttribute('theme') || this.Theme.DARK; },
-		set theme(val) { document.body.setAttribute('theme', val); },
+		get theme() { return document.body.getAttribute('theme') || state.Theme.DARK; },
+		set theme(val) {
+			document.body.classList.add('theme-changing');
+			document.body.setAttribute('theme', val);
+			setTimeout(() => document.body.classList.remove('theme-changing'), 300);
+		},
 
 		shuffle: false,
 		repeat: RepeatMode.NO_REPEAT,

@@ -50,6 +50,8 @@ body {
 	--foreground-secondary: #828282; /* gray3 */
 	--border-color: #444; /* gray2: 4F4F4F */
 	--selection-background: #222;
+
+	background: var(--background);
 }
 
 body[theme="light"] {
@@ -59,8 +61,7 @@ body[theme="light"] {
 	--border-color: #AAA;
 	--selection-background: #BBB;
 }
-
-body { background: var(--background); }
+body.theme-changing * { transition: .3s ease-in-out !important; }
 
 .flex-row { display: flex; }
 
@@ -75,9 +76,12 @@ button {
 	border: none;
 	color: var(--foreground-secondary);
 	background: transparent;
-	transition: color .5s, background .5s, border-color .3s, opacity .2s, translate .2s;
+	transition: color .5s, background .8s ease-in, border-color .3s, opacity .2s, translate .2s;
 }
-button:active { background: var(--selection-background); }
+button:active {
+	background: var(--selection-background);
+	transition: color .5s, background .3s, border-color .3s, opacity .2s, translate .2s;
+}
 
 .ic-btn {
 	display: grid;

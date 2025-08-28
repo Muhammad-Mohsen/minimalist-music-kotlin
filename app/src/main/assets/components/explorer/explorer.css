@@ -70,12 +70,12 @@ music-explorer {
 		position: absolute;
 		inset: -4px -12px;
 		background: var(--background);
-		transition: background .8s;
+		transition: background .8s ease-in;
 		z-index: -1;
 	}
-	&:active {
-		background: transparent;
-		.active { background: var(--selection-background); }
+	&:active .active {
+		transition: background .3s;
+		background: var(--selection-background);
 	}
 
 	.ic-mark {

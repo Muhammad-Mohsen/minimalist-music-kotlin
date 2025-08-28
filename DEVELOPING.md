@@ -1,14 +1,16 @@
 # Dev Guide | Minimalist Music Kotlin - Hybrid
 
 ## General
-- refactoring
-  - DONE - remove `ExplorerFile` class!
-  - migrate to exo
+- migrate to exo
 - investigate possible ffmpegMetadataRetriever replacement
+	- https://github.com/dotslashlabs/media3-extractor-m4b
+	- general: https://www.google.com/search?q=Media3+Extractor+M4b&ie=UTF-8
+
+- DONE - refactoring
 - DONE - bottom curtain
 - NOPE - fade list after some inactivity (if album art is shown)
 - profile the app
-- 
+
 - DONE - update to targetSdk 36
 - DONE - ffmpegMetadataRetriever 16kb alignment update
 - DONE - fix any exceptions that come up in 5.0

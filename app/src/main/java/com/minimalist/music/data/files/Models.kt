@@ -61,8 +61,8 @@ fun File.listFiles(sortBy: String): ArrayList<File> {
 			Arrays.sort(files) { o1, o2 ->
 				if (o1.isDirectory && !o2.isDirectory) -1
 				else if (o2.isDirectory && !o1.isDirectory) 1
-				else if (sortBy == SortBy.AZ) o1.name.compareTo(o2.name) // both are the same thing, AZ
-				else o2.name.compareTo(o1.name) // both are the same, ZA
+				else if (sortBy == SortBy.AZ) o1.name.compareTo(o2.name, ignoreCase = true) // both are the same thing, AZ
+				else o2.name.compareTo(o1.name, ignoreCase = true) // both are the same, ZA
 			}
 		}
 		SortBy.OLDEST, SortBy.NEWEST -> {
@@ -188,7 +188,6 @@ fun FFmpegMediaMetadataRetriever.extractSyncedLyrics(f: File): ArrayList<Verse> 
 		verses
 	}
 }
-
 
 class SerializableBitmap(val data: ByteArray?) {
 	val decoded: Bitmap? = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)

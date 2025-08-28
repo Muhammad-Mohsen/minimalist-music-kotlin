@@ -66,7 +66,7 @@ music-header {
 			flex-shrink: 0;
 			overflow: hidden;
 			white-space: nowrap;
-			transition: color .5s, background .8s ease-in, border-color .3s, opacity .4s, padding .6s, width .6s;
+			transition: color .5s, background .8s ease-in, border-color .3s, opacity .4s, padding .4s, width .4s;
 		}
 
 		button:first-child { padding-left: 4px; }

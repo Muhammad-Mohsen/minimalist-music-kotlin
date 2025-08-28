@@ -76,7 +76,7 @@ button {
 	border: none;
 	color: var(--foreground-secondary);
 	background: transparent;
-	transition: color .5s, background .8s ease-in, border-color .3s, opacity .2s, translate .2s;
+	transition: color .5s, background .6s ease-in, border-color .3s, opacity .2s, translate .2s;
 }
 button:active {
 	background: var(--selection-background);

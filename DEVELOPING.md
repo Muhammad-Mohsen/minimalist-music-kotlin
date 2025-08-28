@@ -2,9 +2,10 @@
 
 ## General
 - migrate to exo
-- investigate possible ffmpegMetadataRetriever replacement
+- investigate possible FFmpegMetadataRetriever replacement
 	- https://github.com/dotslashlabs/media3-extractor-m4b
 	- general: https://www.google.com/search?q=Media3+Extractor+M4b&ie=UTF-8
+    - test new versions of FFmpegMetadataRetriever using "storage/t/__32______40______48______56______64______72______80ch.mp3"
 
 - DONE - refactoring
 - DONE - bottom curtain

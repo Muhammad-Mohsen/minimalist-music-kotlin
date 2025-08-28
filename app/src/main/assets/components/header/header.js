@@ -80,7 +80,9 @@ class MusicHeader extends HTMLElementBase {
 	}
 
 	#renderCrumbs() {
-		// crumbs need to be removed
+		if (!state.currentDir.match(/^[\\\/]/)) state.currentDir = '/' + state.currentDir; // make sure to include the leading slash
+
+		// crumbs to be removed
 		if (this.#currentDir?.length > state.currentDir?.length) {
 			const indexToRemove = state.currentDir.split(Path.SEPARATOR).length - 1;
 
@@ -109,15 +111,6 @@ class MusicHeader extends HTMLElementBase {
 		}, '');
 
 		this.crumbs.scrollTo(this.crumbs.scrollWidth, 0);
-	}
-
-	#removeCrumb(crumb) {
-		const toRemove = [crumb];
-		while(crumb = crumb.nextElementSibling) toRemove.push(crumb);
-
-		toRemove[0].classList.add('slide-out');
-		toRemove.forEach(c => c.classList.add('remove'));
-		setTimeout(() => toRemove.forEach(c => c.remove()), 400);
 	}
 }
 

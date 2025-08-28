@@ -8,6 +8,8 @@
 	<item
 		android:gravity="center"
 		android:drawable="@drawable/ic_launcher_foreground"
+		android:width="196dp"
+		android:height="196dp"
 		/>
 
 </layer-list>

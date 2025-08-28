@@ -2,6 +2,8 @@ class MusicHeader extends HTMLElementBase {
 
 	#TARGET = EventBus.Target.HEADER;
 
+	#currentDir;
+
 	connectedCallback() {
 		this.#render();
 		EventBus.subscribe((event) => this.handler(event));
@@ -26,12 +28,10 @@ class MusicHeader extends HTMLElementBase {
 	// UI HANDLERS
 	onCrumbClick(crumb) {
 		state.currentDir = crumb.getAttribute('path');
-		this.#renderCrumbs();
 		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { dir: state.currentDir } });
 	}
 	onBackClick() {
 		state.currentDir = Path.join(state.currentDir.split(Path.SEPARATOR).slice(0, -1));
-		this.#renderCrumbs();
 		EventBus.dispatch({ type: EventBus.Type.DIR_CHANGE, target: this.#TARGET, data: { dir: state.currentDir } });
 	}
 
@@ -80,16 +80,27 @@ class MusicHeader extends HTMLElementBase {
 	}
 
 	#renderCrumbs() {
-		const dir = state.currentDir;
+		// crumbs need to be removed
+		if (this.#currentDir?.length > state.currentDir?.length) {
+			const indexToRemove = state.currentDir.split(Path.SEPARATOR).length - 1;
 
-		// this.backButton.toggleAttribute('disabled', Path.eq(state.rootDir, dir));
+			for (let i = this.crumbs.children.length - 1; i >= indexToRemove; i--) {
+				this.crumbs.children[i].classList.add('collapse');
+			}
+			setTimeout(() => {
+				for (let i = this.crumbs.children.length - 1; i >= indexToRemove; i--) this.crumbs.children[i].remove();
+			}, 400);
+
+			return this.#currentDir = state.currentDir;
+		}
+
+		this.#currentDir = state.currentDir;
 
 		this.crumbs.innerHTML = '';
-		dir.split(Path.SEPARATOR).reduce((path, seg) => {
+		this.#currentDir.split(Path.SEPARATOR).reduce((path, seg) => {
 			if (!seg) return path;
 
 			path = path ? Path.join([path, seg]) : seg;
-
 			this.crumbs.insertAdjacentHTML('beforeend',
 				`<button path="${path}" onclick="${this.handle}.onCrumbClick(this)">${seg}</button>`);
 
@@ -98,6 +109,15 @@ class MusicHeader extends HTMLElementBase {
 		}, '');
 
 		this.crumbs.scrollTo(this.crumbs.scrollWidth, 0);
+	}
+
+	#removeCrumb(crumb) {
+		const toRemove = [crumb];
+		while(crumb = crumb.nextElementSibling) toRemove.push(crumb);
+
+		toRemove[0].classList.add('slide-out');
+		toRemove.forEach(c => c.classList.add('remove'));
+		setTimeout(() => toRemove.forEach(c => c.remove()), 400);
 	}
 }
 

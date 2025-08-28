@@ -64,12 +64,12 @@ music-header {
 			border-radius: 6px;
 			font-size: 14px;
 			flex-shrink: 0;
+			overflow: hidden;
+			white-space: nowrap;
+			transition: color .5s, background .8s ease-in, border-color .3s, opacity .4s, padding .6s, width .6s;
 		}
 
-		button:first-child {
-			padding-left: 4px;
-			pointer-events: none;
-		}
+		button:first-child { padding-left: 4px; }
 		button:last-child {
 			color: var(--foreground);
 			font-weight: bold;
@@ -81,6 +81,8 @@ music-header {
 			margin-left: 12px;
 			font-weight: 400;
 		}
+
+		button.collapse { width: 0; padding-inline: 0; opacity: 0; }
 	}
 	#crumbs::-webkit-scrollbar {
 		width: 0;

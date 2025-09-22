@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="appName">Minimalist</string>
+	<string name="hi">¡Hola!</string>
+	<string name="welcomeMessage">Bienvenido al reproductor de música minimalista</string>
+	<string name="notificationChannelName">Notificación de reproducción</string>
+	<string name="notificationChannelDescription">Muestra la notificación de reproducción de la aplicación</string>
+	<string name="noEqualizer">No se encontró un ecualizador</string>
+	<string name="noBrowser">No se encontró un navegador</string>
+</resources>

@@ -35,14 +35,17 @@ object EventBus {
 			"type" to event.type,
 			"target" to event.target,
 			"data" to event.data
-		))
+		)).toString()
+
+		// hopefully this avoids buffer reallocations
+		val script = StringBuilder(eventJSON.length + 152)
+			.append("window.evt = ")
+			.append(eventJSON)
+			.append("; try { EventBus.dispatch(evt, 'fromNative') } catch (e) { console.log(e.stack, JSON.stringify(evt)); }")
+			.toString()
 
 		Moirai.MAIN.post {
-			ipc?.get()?.evaluateJavascript("""
-				window.evt = $eventJSON;
-				try { EventBus.dispatch(evt, 'fromNative') }
-				catch (e) { console.log(e.stack, JSON.stringify(evt)); }
-			""", null)
+			ipc?.get()?.evaluateJavascript(script, null)
 		}
 	}
 

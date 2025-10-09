@@ -1,7 +1,7 @@
 [versions]
 agp = "8.11.1"
-ffmpegmediametadataretriever = "1.0.19"
-kotlin = "2.2.10"
+ffmpegmediametadataretriever = "1.0.21"
+kotlin = "2.2.20"
 coreKtx = "1.17.0"
 appcompat = "1.7.1"
 media = "1.7.1"

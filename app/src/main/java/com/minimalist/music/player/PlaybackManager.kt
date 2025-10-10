@@ -150,7 +150,11 @@ class PlaybackManager :
 
 		sendTrackUpdate(State.track.path, false)
 		updateSeek(State.track.seek)
-		if (isOnRestoreState) EventBus.dispatch(Event(Type.SEEK_UPDATE, TARGET)) // notify the session
+		if (isOnRestoreState) {
+			EventBus.dispatch(Event(Type.SEEK_UPDATE, TARGET)) // notify the session
+			State.track.duration = player?.duration?.toLong() ?: 0
+			EventBus.dispatch(Event(Type.DURATION_UPDATE, TARGET, mapOf("duration" to State.track.duration)))
+		}
 	}
 	private fun sendTrackUpdate(path: String, updatePlaylist: Boolean = true) {
 		player?.prepareSource(path)
@@ -277,6 +281,8 @@ class PlaybackManager :
 		Moirai.BG.post {
 			State.track.update(path)
 			EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET, State.track.serialize()))
+			State.track.duration = player?.duration?.toLong() ?: 0
+			EventBus.dispatch(Event(Type.DURATION_UPDATE, TARGET, mapOf("duration" to State.track.duration)))
 		}
 	}
 

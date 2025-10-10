@@ -1,7 +1,6 @@
 package com.minimalist.music.data.state
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.minimalist.music.data.files.Chapter
 import com.minimalist.music.data.files.SerializableBitmap
 import com.minimalist.music.data.files.Verse
@@ -62,23 +61,22 @@ class Track(private val preferences: SharedPreferences) {
 		val f = File(path)
 		if (!f.isTrack()) return
 
-		// from the field: ffmpeg.setDataSource throws an illegalArgumentException...to me the above check should fix that, but it didn't
-		// so I just try/catch the fucker
-		try {
-			val retriever = FFmpegMediaMetadataRetriever().apply { setDataSource(path) }
+		val retriever = FFmpegMediaMetadataRetriever()
+		java.io.FileInputStream(f).use { retriever.setDataSource(it.fd) }
 
-			name = f.nameWithoutExtension
-			album = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM) ?: f.parentFile?.name ?: String.EMPTY
-			artist = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST) ?: String.EMPTY
-			duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
-			unsyncedLyrics = retriever.extractUnsyncedLyrics()
-			syncedLyrics = retriever.extractSyncedLyrics(f)
-			chapters = retriever.extractChapters()
-			albumArt = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
+		name = f.nameWithoutExtension
+		album = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM) ?: f.parentFile?.name ?: String.EMPTY
+		artist = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST) ?: String.EMPTY
 
-			retriever.release()
+		// using the FileDescriptor fixes the setDataSource error, but breaks the duration!
+		// duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
 
-		} catch (ex: Exception) { Log.e("State", "State.Track.update", ex) }
+		unsyncedLyrics = retriever.extractUnsyncedLyrics()
+		syncedLyrics = retriever.extractSyncedLyrics(f)
+		chapters = retriever.extractChapters()
+		albumArt = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
+
+		retriever.release()
 	}
 
 	fun serialize(): Map<String, Any> {

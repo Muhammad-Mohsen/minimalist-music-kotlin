@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		State.initialize(applicationContext)
 
 		WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-		// WebView.setWebContentsDebuggingEnabled(false)
 
 		webView?.apply {
 			webViewClient = object : WebViewClient() {

@@ -32,6 +32,7 @@ var EventBus = (() => {
 		FF: 'ff',
 		RW: 'rw',
 		SEEK_UPDATE: 'seekUpdate',
+		DURATION_UPDATE: 'durationUpdate',
 		SEEK_TICK: 'seekTick',
 
 		SLEEP_TIMER_TOGGLE: 'sleepTimerToggle',

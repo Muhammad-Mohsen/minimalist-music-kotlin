@@ -92,6 +92,7 @@ object EventBus {
 		const val RW = "rw"
 		const val SEEK_TICK = "seekTick"
 		const val SEEK_UPDATE = "seekUpdate"
+		const val DURATION_UPDATE = "durationUpdate"
 
 		const val SLEEP_TIMER_TOGGLE = "sleepTimerToggle"
 		const val SLEEP_TIMER_CHANGE = "sleepTimerChange"

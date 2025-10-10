@@ -42,6 +42,10 @@ class MusicControls extends HTMLElementBase {
 			.is([EventBus.Type.PLAY, EventBus.Type.PLAY_TRACK, EventBus.Type.QUEUE_PLAY_SELECTED], () => this.playPause(true, 'suppress'))
 			.is(EventBus.Type.PAUSE, () => this.playPause(false, 'suppress'))
 			.is(EventBus.Type.PLAY_PAUSE, () => this.playPause())
+			.is(EventBus.Type.DURATION_UPDATE, () => {
+				state.track.duration = event.data.duration;
+				this.#updateSeekUI();
+			})
 			.is(EventBus.Type.SEEK_TICK, () => {
 				state.track.seek = event.data.seek;
 				this.#updateSeekUI();

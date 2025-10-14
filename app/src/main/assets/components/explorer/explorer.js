@@ -137,9 +137,11 @@ class MusicExplorer extends HTMLElementBase {
 
 		var items = explorer.querySelectorAll('button > span').toArray();
 		items.forEach(i => {
-			const matches = i.textContent.fuzzyCompare(val);
-			i.parentElement.classList.toggle('hidden', !matches);
-			if (matches) i.innerHTML = this.#highlightSearchMatches(i, matches);
+			setTimeout(() => {
+				const matches = i.textContent.fuzzyCompare(val);
+				i.parentElement.classList.toggle('hidden', !matches);
+				if (matches) i.innerHTML = this.#highlightSearchMatches(i, matches);
+			});
 		});
 	}
 

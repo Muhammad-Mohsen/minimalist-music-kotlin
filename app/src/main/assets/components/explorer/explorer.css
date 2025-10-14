@@ -49,6 +49,7 @@ music-explorer {
 	padding: 10px 8px;
 	border-radius: 12px;
 	text-align: start;
+	overflow: hidden;
 	transition: .2s, color .5s, background .8s;
 
 	/* SELECTION */
@@ -87,7 +88,8 @@ music-explorer {
 	/* SEARCH */
 	&.hidden {
 		height: 0;
-		padding: 0 20px;
+		padding: 0 8px;
+		margin: 0 12px;
 		opacity: 0;
 	}
 }

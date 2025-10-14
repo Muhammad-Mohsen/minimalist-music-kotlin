@@ -22,6 +22,7 @@ class MusicHeader extends HTMLElementBase {
 			.is(EventBus.Type.MODE_NORMAL, () => this.onCancelClick())
 			.is(EventBus.Type.MODE_CHANGE, () => {
 				if (state.mode == state.Mode.SEARCH) this.searchInput.focus();
+				else if (![state.Mode.SEARCH, state.Mode.SEARCH_SELECT].includes(state.mode)) this.searchInput.value = '';
 			})
 	}
 

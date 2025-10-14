@@ -102,7 +102,7 @@ class MusicControls extends HTMLElementBase {
 			.is(state.Mode.SEARCH_SELECT, () => state.Mode.SELECT)
 			.val();
 
-		// mode needs to be transfered to native for back navigation (to figure out if the mode should be changed to normal vs actually back up the currentDir)
+		if (![state.Mode.SEARCH, state.Mode.SEARCH_SELECT].includes(state.mode)) state.query = '';
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 	}
 

@@ -35,8 +35,8 @@ class LyricsDialog extends HTMLElementBase {
 	// RENDERING
 	#render() {
 		super.render(`
-			<i class="ic-header ic-lyrics"></i>
-			<p id="lyrics"></p>
+			<i class="dialog-header ic-lyrics"></i>
+			<p id="lyrics" class="dialog-content"></p>
 		`);
 	}
 	#renderLyrics() {

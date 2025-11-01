@@ -38,14 +38,20 @@ class EqualizerDialog extends HTMLElementBase {
 	// RENDERING
 	#render() {
 		super.render(`
-			<i class="ic-header ic-equalizer"></i>
+			<i class="dialog-header ic-equalizer"></i>
+			<div class="dialog-content">
+				<p id="broken" l10n>The system was unable to create an equalizer for the app.<br>Restarting the device usually fixes the issue.</p>
 
-			<ul id="bands"></ul>
-			<ul id="presets" class="flex-row"></ul>
+				<ul id="bands"></ul>
+				<ul id="presets" class="flex-row"></ul>
+			</div>
 		`);
 	}
 	#renderBands(bands) {
 		if (this.bands.childElementCount) return this.#updateBands(bands);
+
+		// if we get bands (equalizer was successfully initialized), hide the broken text
+		if (bands.length) this.broken.style.display = 'none';
 
 		this.bands.innerHTML = bands.map(b => {
 			return `

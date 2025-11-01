@@ -2,13 +2,17 @@ package com.minimalist.music.data.state
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager.PERMISSION_DENIED
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.Insets
+import com.minimalist.music.MainActivity
 import com.minimalist.music.data.Const
 import com.minimalist.music.data.files.FileCache
 import com.minimalist.music.data.files.ROOT
 import com.minimalist.music.data.files.serializeFiles
 import com.minimalist.music.foundation.ext.put
 import java.io.File
+import androidx.core.content.edit
 
 
 /**
@@ -35,7 +39,8 @@ object State {
 		get() {
 			val savedPath = sharedPreferences.getString(Key.DIRECTORY, null) ?: ROOT
 			val savedFile = File(savedPath)
-			return if (savedFile.exists()) savedFile else File(ROOT) // only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
+			// only return the saved file if it exists (it could've been removed, or that the SD card is unmounted!)
+			return if (savedFile.exists()) savedFile else File(ROOT)
 		}
 		set(value) = sharedPreferences.put(Key.DIRECTORY, value.absolutePath)
 
@@ -56,9 +61,11 @@ object State {
 
 	fun initialize(context: Context) {
 		if (initialized) return
-
 		applicationContext = context
 		sharedPreferences = context.getSharedPreferences(Const.MINIMALIST_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+
+		// if the permission is revoked at some point, clear the prefs...thanks, g!
+		if (ContextCompat.checkSelfPermission(context, MainActivity.DISK_PERMISSION) == PERMISSION_DENIED) sharedPreferences.edit { clear() }
 
 		playlist = Playlist(sharedPreferences)
 		track = Track(sharedPreferences)
@@ -96,6 +103,5 @@ object State {
 		const val EQUALIZER_PRESET = "equalizerPreset"
 		const val EQUALIZER_BANDS = "equalizerBands"
 		const val SECONDARY_CONTROLS = "secondaryControls"
-
 	}
 }

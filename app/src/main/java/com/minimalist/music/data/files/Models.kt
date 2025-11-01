@@ -8,6 +8,7 @@ import android.os.Environment
 import android.os.storage.StorageManager
 import android.util.Base64
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.minimalist.music.data.Const
 import com.minimalist.music.data.state.State
 import com.minimalist.music.foundation.ext.EMPTY
@@ -27,11 +28,6 @@ import java.util.regex.Pattern
  */
 val ROOT: String = Environment.getExternalStorageDirectory().path // root directory (actually the internal storage directory!)
 
-// these const's help work around the nuisances of Android storage APIs
-const val ACTUAL_ROOT = "/storage"
-private const val EMULATED = "/storage/emulated"
-private const val EMULATED_ZERO = "/storage/emulated/0"
-
 val MEDIA_EXTENSIONS = listOf("mp3", "wav", "m4b", "m4a", "flac", "midi", "ogg", "opus", "aac") // supported media extensions
 
 fun File?.isRoot(): Boolean {
@@ -47,11 +43,13 @@ fun File.listFiles(sortBy: String): ArrayList<File> {
 		file.isDirectory || MEDIA_EXTENSIONS.contains(file.extension)
 	}
 
-	// just to make sure that we aren't trapped at the basement
-	if (absolutePath == EMULATED && files == null) files = arrayOf(File(EMULATED_ZERO))
-	else if (absolutePath == ACTUAL_ROOT && files == null) {
-		files = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) listVolumes()
-		else arrayOf(File(EMULATED))
+	// just to make sure that we aren't trapped in the basement
+	if (files == null) {
+		when (absolutePath) {
+			"/" -> files = arrayOf(File("/storage"))
+			"/storage" -> files = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) listVolumes() else arrayOf(File("/storage/emulated"))
+			"/storage/emulated" -> files = arrayOf(File("/storage/emulated/0"))
+		}
 	}
 
 	if (files == null) return ArrayList()
@@ -87,7 +85,8 @@ private fun listVolumes(): Array<File> {
 
 	val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
 	return ArrayList(storageManager.storageVolumes.mapNotNull {
-		if (it.directory?.absolutePath == EMULATED_ZERO) File(EMULATED) // leaving this as is, causes a minor navigation problem...we end up with the breadcrumbs looking like storage/0/0 when navigating
+		// leaving this as is, causes a minor navigation problem...we end up with the breadcrumbs looking like storage/0/0 when navigating
+		if (it.directory?.absolutePath == "/storage/emulated/0") File("/storage/emulated")
 		else it.directory
 
 	}).toTypedArray()

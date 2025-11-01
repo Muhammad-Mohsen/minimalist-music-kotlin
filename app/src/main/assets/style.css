@@ -46,6 +46,7 @@ input, button, textarea, select { font: inherit; }
 /* THEMES */
 body {
 	--background: #000;
+	--background-transparent: #00000020;
 	--foreground: #FFF;
 	--foreground-secondary: #828282; /* gray3 */
 	--border-color: #444; /* gray2: 4F4F4F */
@@ -56,6 +57,7 @@ body {
 
 body[theme="light"] {
 	--background: #FFF;
+	--background-transparent: #FFFFFF20;
 	--foreground: #111;
 	--foreground-secondary: #444;
 	--border-color: #AAA;

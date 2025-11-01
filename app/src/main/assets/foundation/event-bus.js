@@ -46,6 +46,7 @@ var EventBus = (() => {
 		SORT_BY_CHANGE: 'sortByChange',
 		TOGGLE_SHUFFLE: 'toggleShuffle',
 		TOGGLE_REPEAT: 'toggleRepeat',
+		TOGGLE_ALBUM_ART: 'toggleAlbumArt',
 
 		EQUALIZER_INFO: 'equalizerInfo',
 		EQUALIZER_PRESET_CHANGE: 'equalizerPresetChange',

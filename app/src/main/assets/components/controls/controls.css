@@ -44,13 +44,22 @@ body[is-playing="true"] #album-art { filter: none; }
 		inset: 0;
 
 		background: #222; /* explict color because I need to transition it */
-		backdrop-filter: blur(16px);
+		backdrop-filter: blur(12px);
 		transition: background .5s;
 
 		&.blur { background: #44444450; }
 	}
 
 	#play-pause-button, #seek-current, #seek-duration, #track-name, #track-album-artist { color: var(--foreground); }
+	#play-pause-button::before {
+		content: '';
+        position: absolute;
+        inset: 0 0 50%;
+		background: var(--background-transparent);
+        backdrop-filter: blur(8px);
+		border-radius: 50px 50px 0 0;
+		mask-image: radial-gradient(circle at 50% 100%, black 62%, transparent 80%);
+	}
 
 	.seek-text-container {
 		position: relative;
@@ -142,20 +151,22 @@ body[is-playing="true"] #album-art { filter: none; }
 		opacity: 0;
 		translate: 0 10px;
 	}
-
 	[checked]::before {
 		opacity: 0;
 		translate: 0 -10px;
 	}
-
 	[checked]::after {
 		opacity: 1;
 		translate: 0;
 	}
 
+	#album-art-button::after { content: '\e01b'; color: inherit; }
+
 	button.selected { color: var(--foreground); }
 }
-.secondary-controls:has([checked]) button:not([checked]) {
-	opacity: .5;
-	pointer-events: none;
+.secondary-controls:has([checked]:not(.passive-toggle)) {
+	button:not([checked]), button.passive-toggle {
+		opacity: .5;
+		pointer-events: none;
+	}
 }

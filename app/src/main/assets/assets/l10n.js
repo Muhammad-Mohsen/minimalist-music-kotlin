@@ -218,5 +218,15 @@ const translations = {
 		"pt": "Política de Privacidade",
 		"ru": "Политика конфиденциальности",
 		"es": "Política de privacidad"
+	},
+	"Art": {
+		"pt": "Arte do Álbum",
+		"ru": "Обложка альбома",
+		"es": "Carátula del álbum"
+	},
+	"The system was unable to create an equalizer for the app.<br>Restarting the device usually fixes the issue.": {
+		"pt": "O sistema não conseguiu criar um equalizador para o aplicativo.<br>Reiniciar o dispositivo geralmente resolve o problema.",
+		"ru": "Система не смогла создать эквалайзер для приложения.<br>Перезапуск устройства обычно устраняет эту проблему.",
+		"es": "El sistema no pudo crear un ecualizador para la aplicación.<br>Reiniciar el dispositivo suele solucionar el problema."
 	}
 }

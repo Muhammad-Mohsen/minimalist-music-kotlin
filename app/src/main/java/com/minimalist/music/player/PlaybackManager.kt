@@ -46,8 +46,9 @@ class PlaybackManager :
 	MediaPlayer.OnCompletionListener,
 	AudioManager.OnAudioFocusChangeListener // audio focus loss
 {
-	private var player: MediaPlayer? = MediaPlayer()
-	private var equalizer: Equalizer? = Equalizer(0, player!!.audioSessionId)
+	private var player: MediaPlayer? = null
+	private var equalizer: Equalizer? = null
+	private var timer: Timer? = null // a timer to update the seek
 
 	private lateinit var audioFocusHandler: AudioFocusHandler
 	private lateinit var notificationManager: MediaNotificationManager
@@ -64,10 +65,12 @@ class PlaybackManager :
 	}
 	private val noisyIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
 
-	private var timer: Timer? = null // a timer to update the seek
-
 	override fun onCreate() {
 		super.onCreate()
+
+		player = MediaPlayer()
+		try { equalizer = Equalizer(0, player!!.audioSessionId); }
+		catch (_: Exception) {}
 
 		EventBus.subscribe(this)
 
@@ -288,8 +291,8 @@ class PlaybackManager :
 
 	// equalizer
 	private fun updateEqualizerState() {
-		val success = equalizer.ensureEnabled()
-		Log.d("PlaybackManager", "updateEqualizerState: $success")
+		if (equalizer == null) return
+		equalizer.ensureEnabled()
 
 		// update the bands
 		State.settings.equalizerBands.forEach {
@@ -300,8 +303,8 @@ class PlaybackManager :
 		Moirai.BG.postDelayed({ sendEqualizerInfo() }, 1000)
 	}
 	private fun updateEqualizerPreset(preset: Short) {
-		val success = equalizer.ensureEnabled()
-		Log.d("PlaybackManager", "updateEqualizerPreset: $success")
+		if (equalizer == null) return
+		equalizer.ensureEnabled()
 
 		State.settings.equalizerPreset = preset
 		equalizer?.usePreset(preset)
@@ -315,11 +318,10 @@ class PlaybackManager :
 		sendEqualizerInfo()
 	}
 	private fun updateEqualizerBand(band: Int, level: Int, source: Int = EqualizerChangeSource.USER) {
+		if (equalizer == null) return
 		if (source != EqualizerChangeSource.RESTORE_STATE) State.settings.equalizerBands[band] = level
 		if (source != EqualizerChangeSource.PRESET) {
-			val success = equalizer.ensureEnabled()
-			Log.d("PlaybackManager", "updateEqualizerBand: $success")
-
+			equalizer.ensureEnabled()
 			equalizer?.setBandLevel(band.toShort(), level.toShort())
 		}
 
@@ -327,9 +329,10 @@ class PlaybackManager :
 		if (source == EqualizerChangeSource.USER) State.settings.equalizerBands = State.settings.equalizerBands
 	}
 	private fun sendEqualizerInfo() {
-		equalizer?.let {
-			EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, it.getInfo(State.settings.equalizerPreset)))
-		}
+		EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET,
+			// send an empty map if the equalizer failed to initialize
+			equalizer?.getInfo(State.settings.equalizerPreset) ?: emptyMap()
+		))
 	}
 
 	// pause playback on audio focus loss

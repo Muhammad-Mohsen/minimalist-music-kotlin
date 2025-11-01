@@ -32,8 +32,8 @@ class ChaptersDialog extends HTMLElementBase {
 	// RENDERING
 	#render() {
 		super.render(`
-			<i class="ic-header ic-chapters"></i>
-			<ul id="chapters"></ul>
+			<i class="dialog-header ic-chapters"></i>
+			<ul id="chapters" class="dialog-content"></ul>
 		`);
 	}
 	#renderChapters() {

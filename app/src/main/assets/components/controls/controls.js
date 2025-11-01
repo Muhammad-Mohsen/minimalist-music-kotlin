@@ -5,16 +5,17 @@ class MusicControls extends HTMLElementBase {
 	#albumArt;
 
 	customizableButtons = {
-		SEARCH: `<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch(this);" aria-label="Search"></button>`,
-		CHAPTERS: `<button id="chapters-button" class="ic-btn ic-chapters" onclick="${this.handle}.toggleChapters(this)" aria-label="Chapters"></button>`,
 		RW: `<button id="rw-button" class="ic-btn ic-rw" onclick="${this.handle}.rewind()" aria-label="Rewind"></button>`,
 		PREV: `<button id="previous-button" class="ic-btn ic-prev" onclick="${this.handle}.playPrev();" aria-label="Previous"></button>`,
 		NEXT: `<button id="next-button" class="ic-btn ic-next" onclick="${this.handle}.playNext();" aria-label="Next"></button>`,
 		FF: `<button id="ff-button" class="ic-btn ic-ff" onclick="${this.handle}.fastForward()" aria-label="Fast Forward"></button>`,
-		LYRICS: `<button id="lyrics-button" class="ic-btn ic-lyrics" onclick="${this.handle}.toggleLyrics(this)" aria-label="Lyrics"></button>`,
-		EQUALIZER: `<button id="equalizer-button" class="ic-btn ic-equalizer" onclick="${this.handle}.toggleEqualizer(this)" aria-label="Equalizer"></button>`,
 		SHUFFLE: `<button id="shuffle-button" class="ic-btn ic-shuffle" onclick="${this.handle}.toggleShuffle(this)" aria-label="Toggle Shuffle"></button>`,
 		REPEAT: `<button id="repeat-button" class="ic-btn ic-repeat" onclick="${this.handle}.toggleRepeat(this)" aria-label="Repeat Mode"></button>`,
+		SEARCH: `<button id="search-button" class="ic-btn ic-search" onclick="${this.handle}.toggleSearch(this);" aria-label="Search"></button>`,
+		CHAPTERS: `<button id="chapters-button" class="ic-btn ic-chapters" onclick="${this.handle}.toggleChapters(this)" aria-label="Chapters"></button>`,
+		LYRICS: `<button id="lyrics-button" class="ic-btn ic-lyrics" onclick="${this.handle}.toggleLyrics(this)" aria-label="Lyrics"></button>`,
+		EQUALIZER: `<button id="equalizer-button" class="ic-btn ic-equalizer" onclick="${this.handle}.toggleEqualizer(this)" aria-label="Equalizer"></button>`,
+		ALBUM_ART: `<button id="album-art-button" class="ic-btn ic-album-art passive-toggle" onclick="${this.handle}.toggleAlbumArt(this)" aria-label="Art"></button>`,
 	}
 
 	connectedCallback() {
@@ -54,6 +55,7 @@ class MusicControls extends HTMLElementBase {
 			.is(EventBus.Type.SECONDARY_CONTROLS_CHANGE, () => this.#renderSecondaryControls())
 			.is(EventBus.Type.TOGGLE_SHUFFLE, () => this.#restoreShuffle())
 			.is(EventBus.Type.TOGGLE_REPEAT, () => this.#restoreRepeat())
+			.is(EventBus.Type.TOGGLE_ALBUM_ART, () => this.#restoreAlbumArt())
 	}
 
 	// UI HANDLERS
@@ -124,6 +126,13 @@ class MusicControls extends HTMLElementBase {
 		target.toggleAttribute('checked', state.mode == state.Mode.LYRICS);
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 	}
+	toggleAlbumArt(target) {
+		state.settings.albumArt = !state.settings.albumArt;
+
+		target.toggleAttribute('checked', !state.settings.albumArt);
+		this.#updateAlbumArt();
+		EventBus.dispatch({ type: EventBus.Type.TOGGLE_ALBUM_ART, target: this.#TARGET, data: { value: state.settings.albumArt } });
+	}
 	toggleEqualizer(target) {
 		state.mode = state.mode == state.Mode.EQUALIZER ? state.Mode.NORMAL : state.Mode.EQUALIZER;
 
@@ -152,6 +161,10 @@ class MusicControls extends HTMLElementBase {
 		if (!repeat) return;
 		repeat.className = RepeatIcons[state.settings.repeat] + ' ic-btn';
 		repeat.classList.toggle('selected', state.settings.repeat > 0);
+	}
+	#restoreAlbumArt() {
+		this.querySelector('#album-art-button')?.toggleAttribute('checked', !state.settings.albumArt);
+		this.#updateAlbumArt();
 	}
 
 	// RENDERING
@@ -221,6 +234,7 @@ class MusicControls extends HTMLElementBase {
 		setTimeout(() => elem.innerHTML = val, delay);
 	}
 	#updateAlbumArt() {
+		this.albumArt.style.opacity = state.settings.albumArt ? '' : 0;
 		if (this.#albumArt == state.track.albumArt) return;
 		this.#albumArt = state.track.albumArt;
 

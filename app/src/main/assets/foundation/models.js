@@ -57,6 +57,10 @@ const SecondaryControlOptions = {
 		icon: 'ic-equalizer',
 		label: 'Equalizer',
 	},
+	ALBUM_ART: {
+		icon: 'ic-album-art',
+		label: 'Art',
+	},
 }
 
 const RepeatIcons = ['ic-repeat', 'ic-repeat', 'ic-repeat-1'];

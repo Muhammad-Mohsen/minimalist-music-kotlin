@@ -41,6 +41,7 @@ class State {
 		shuffle: false,
 		repeat: RepeatMode.NO_REPEAT,
 		sortBy: SortBy.AZ,
+		albumArt: true,
 
 		playbackSpeed: 1,
 		sleepTimer: '',

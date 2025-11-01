@@ -1,19 +1,29 @@
 # Dev Guide | Minimalist Music Kotlin - Hybrid
 
 ## General
+- DONE - add toggleAlbumArt setting/button
+- DONE - add background to the play/pause button
+- DONE - fix `FileNotFoundException`
+- DONE - fix scrolling the settings changes the slider
+- DONE - fix the toggleAlbumArt button being active while settings dialog is visible
+- DONE - restyle the dialog header (basically need to add `div.dialog-content`)
+- handle equalizer bottoming-out!!
+	- DONE - exception
+	- redirect to native/external equalizer
+
 - migrate to exo
-- investigate possible FFmpegMetadataRetriever replacement
+- investigate possible `FFmpegMetadataRetriever` replacement
 	- https://github.com/dotslashlabs/media3-extractor-m4b
 	- general: https://www.google.com/search?q=Media3+Extractor+M4b&ie=UTF-8
-    - test new versions of FFmpegMetadataRetriever using "storage/t/__32______40______48______56______64______72______80ch.mp3"
+    - test new versions of `FFmpegMetadataRetriever` using "storage/t/__32______40______48______56______64______72______80ch.mp3"
 
 - DONE - refactoring
 - DONE - bottom curtain
 - NOPE - fade list after some inactivity (if album art is shown)
-- profile the app
+- DONE - profile the app
 
 - DONE - update to targetSdk 36
-- DONE - ffmpegMetadataRetriever 16kb alignment update
+- DONE - `ffmpegMetadataRetriever` 16kb alignment update
 - DONE - fix any exceptions that come up in 5.0
 
 - DONE - chapters

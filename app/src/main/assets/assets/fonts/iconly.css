@@ -131,3 +131,11 @@
 .ic-ff:before {
 	content: "\e019";
 }
+
+.ic-album-art:before {
+  content: "\e01a";
+}
+
+.ic-album-art-hide:before {
+  content: "\e01b";
+}

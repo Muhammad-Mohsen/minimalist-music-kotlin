@@ -49,18 +49,8 @@ Array.prototype.rotate = function (steps) {
 }
 
 String.prototype.fuzzyCompare = function (possible) {
-	const lower = this.toLowerCase();
-	possible = possible.toLowerCase();
-
-	let currentIndex = 0;
-	let matchedIndices = [];
-	for (let c of possible) {
-		currentIndex = lower.indexOf(c, currentIndex) + 1;
-		if (currentIndex == 0) return false;
-		else matchedIndices.push(currentIndex - 1);
-	}
-
-	return matchedIndices;
+	const match = this.match(new RegExp(possible, 'i'));
+	return match ? Array.from({ length: possible.length }, (_, i) => match.index + i) : null;
 }
 String.prototype.replaceAt = function (index, replacement) {
 	return this.substring(0, index) + replacement + this.substring(index + 1);

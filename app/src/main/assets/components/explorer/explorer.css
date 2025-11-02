@@ -61,6 +61,8 @@ music-explorer {
 		flex-grow: 1;
 		max-width: calc(100% - 56px);
 		overflow-wrap: break-word;
+
+		b { text-decoration: underline; }
 	}
 	i { font-size: 20px; }
 	.ic-dir, .ic-music-note { margin-inline: 8px 16px; }

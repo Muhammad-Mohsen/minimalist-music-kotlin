@@ -1,5 +1,5 @@
 <resources>
-	<string name="appName">Minimalist</string>
+	<string name="appName">Music</string>
 	<string name="hi">Hi!</string>
 	<string name="welcomeMessage">Welcome to Minimalist Music Player</string>
 	<string name="notificationChannelName">Playback Notification</string>

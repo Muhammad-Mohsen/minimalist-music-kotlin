@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="appName">Minimalista</string>
+	<string name="appName">Música</string>
 	<string name="hi">Olá!</string>
 	<string name="welcomeMessage">bem-vindo ao Player de Música Minimalista</string>
 	<string name="notificationChannelName">Notificação de reprodução</string>

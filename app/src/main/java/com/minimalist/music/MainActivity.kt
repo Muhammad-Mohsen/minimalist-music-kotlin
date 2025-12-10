@@ -7,9 +7,11 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -29,6 +31,7 @@ import com.minimalist.music.foundation.EventBus.Event
 import com.minimalist.music.foundation.EventBus.Target
 import com.minimalist.music.foundation.EventBus.Type
 import com.minimalist.music.foundation.Moirai
+import com.minimalist.music.foundation.ext.captureScreenshot
 import com.minimalist.music.player.PlaybackManager
 import java.io.File
 import java.util.Locale
@@ -36,6 +39,7 @@ import java.util.Locale
 class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 	private lateinit var permissionRequest: ActivityResultLauncher<String>
+	private lateinit var mask: ImageView
 	private var webView: WebView? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +50,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		setContentView(R.layout.main_activity)
 
 		webView = findViewById<WebView>(R.id.webview)
+		mask = findViewById<ImageView>(R.id.mask)
 
 		// storage permission...must be in onCreate
 		permissionRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -76,6 +81,18 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		EventBus.dispatch(Event(Type.PERMISSION_RESPONSE, Target.ACTIVITY, mapOf("mode" to
 				if (checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED) "normal" else "permission")))
 		initNative()
+
+		Moirai.MAIN.postDelayed({
+			mask.visibility = View.GONE
+		}, 200)
+	}
+
+	override fun onPause() {
+		super.onPause()
+		webView?.captureScreenshot(this.window) {
+			mask.setImageBitmap(it)
+			mask.visibility = View.VISIBLE
+		}
 	}
 
 	// release the webview

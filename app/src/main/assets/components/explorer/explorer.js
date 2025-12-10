@@ -11,6 +11,8 @@ class MusicExplorer extends HTMLElementBase {
 
 	#TARGET = EventBus.Target.EXPLORER;
 
+	#markIndex = 0;
+
 	connectedCallback() {
 		this.#render();
 		EventBus.subscribe((event) => this.#handler(event));
@@ -104,7 +106,9 @@ class MusicExplorer extends HTMLElementBase {
 	onItemLongTouch(target) {
 		this.#mark(target);
 
-		state.selection = this.querySelectorAll('.explorer.current .marked').toArray().map(i => i.getAttribute('path'));
+		state.selection = this.querySelectorAll('.explorer.current [marked]').toArray()
+			.sort((a, b) => parseInt(a.getAttribute('marked')) - parseInt(b.getAttribute('marked')))
+			.map(i => i.getAttribute('path'));
 
 		const toSelect = state.selection.length;
 		if (toSelect) {
@@ -125,7 +129,7 @@ class MusicExplorer extends HTMLElementBase {
 	}
 
 	cancelSelectMode() {
-		this.querySelectorAll('.explorer.current .marked').forEach(i => i.classList.remove('marked'));
+		this.querySelectorAll('.explorer.current [marked]').forEach(i => i.removeAttribute('marked'));
 		state.mode = state.Mode.NORMAL;
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: this.#TARGET, data: { mode: state.mode } });
 	}
@@ -208,10 +212,11 @@ class MusicExplorer extends HTMLElementBase {
 		target.classList.add('selected');
 	}
 	#mark(target) {
-		target.classList.toggle('marked');
+		target.hasAttribute('marked') ? target.removeAttribute('marked') : target.setAttribute('marked', this.#markIndex++);
 	}
 	#clearMarks() {
-		this.querySelectorAll('.marked').forEach(i => i.classList.remove('marked'));
+		this.#markIndex = 0;
+		this.querySelectorAll('[marked]').forEach(i => i.removeAttribute('marked'));
 	}
 
 	#highlightSearchMatches(element, matches) {

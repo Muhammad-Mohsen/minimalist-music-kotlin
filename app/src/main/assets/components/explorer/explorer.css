@@ -85,7 +85,7 @@ music-explorer {
 		opacity: 0;
 		transition: .2s;
 	}
-	&.marked .ic-mark { opacity: 1; }
+	&[marked] .ic-mark { opacity: 1; }
 
 	/* SEARCH */
 	&.hidden {

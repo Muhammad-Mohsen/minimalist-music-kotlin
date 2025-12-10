@@ -61,11 +61,13 @@ class Playlist(private val preferences: SharedPreferences) {
 		if (tracks.isEmpty()) return null
 
 		when {
-			// first, check the shuffle state
+			// repeat-one has highest precedence (thanks, Cranky Monkey)
+			State.settings.repeat == RepeatMode.REPEAT_ONE -> return tracks.getOrNull(index) // if the index was out-of-bounds, return null
+
+			// then, the shuffle state
 			State.settings.shuffle -> index = ThreadLocalRandom.current().nextInt(0, tracks.size) // nextInt is exclusive.
 
-			// then the repeat stuff
-			State.settings.repeat == RepeatMode.REPEAT_ONE -> return tracks.getOrNull(index) // if the index was out-of-bounds, return null
+			// and after that, the other repeat stuff
 			State.settings.repeat == RepeatMode.ACTIVE -> index = (index + 1) % tracks.size
 			State.settings.repeat == RepeatMode.INACTIVE -> {
 				index = (index + 1) % tracks.size

@@ -62,19 +62,32 @@ class Track(private val preferences: SharedPreferences) {
 		if (!f.isTrack()) return
 
 		val retriever = FFmpegMediaMetadataRetriever()
-		java.io.FileInputStream(f).use { retriever.setDataSource(it.fd) }
 
-		name = f.nameWithoutExtension
-		album = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM) ?: f.parentFile?.name ?: String.EMPTY
-		artist = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST) ?: String.EMPTY
+		// not sure if try/catching this will make a difference, but it can't hurt
+		try {
+			java.io.FileInputStream(f).use { retriever.setDataSource(it.fd) }
 
-		// using the FileDescriptor fixes the setDataSource error, but breaks the duration!
-		// duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
+			name = f.nameWithoutExtension
+			album = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM) ?: f.parentFile?.name ?: String.EMPTY
+			artist = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST) ?: String.EMPTY
 
-		unsyncedLyrics = retriever.extractUnsyncedLyrics()
-		syncedLyrics = retriever.extractSyncedLyrics(f)
-		chapters = retriever.extractChapters()
-		albumArt = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
+			// using the FileDescriptor fixes the setDataSource error, but breaks the duration!
+			// duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
+
+			unsyncedLyrics = retriever.extractUnsyncedLyrics()
+			syncedLyrics = retriever.extractSyncedLyrics(f)
+			chapters = retriever.extractChapters()
+			albumArt = SerializableBitmap(retriever.embeddedPicture ?: ByteArray(0))
+		}
+		catch (_: Exception) {
+			name = f.nameWithoutExtension
+			album = f.parentFile?.name ?: String.EMPTY
+			artist = String.EMPTY
+			unsyncedLyrics = String.EMPTY
+			syncedLyrics = ArrayList()
+			chapters = ArrayList()
+			albumArt = SerializableBitmap(null)
+		}
 
 		retriever.release()
 	}

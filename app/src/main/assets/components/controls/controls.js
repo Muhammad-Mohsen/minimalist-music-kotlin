@@ -226,7 +226,8 @@ class MusicControls extends HTMLElementBase {
 			this.seekDuration.innerHTML = readableTime(state.track.duration);
 			this.seekRange.max = state.track.duration;
 		}
-		this.seekCurrent.innerHTML = readableTime(state.track.seek);
+		// only show the seek if duration is set
+		this.seekCurrent.innerHTML = state.track.duration ? readableTime(state.track.seek) : '';
 		this.seekRange.value = state.track.seek;
 	}
 	#updateTrackText(elem, delay, val) {

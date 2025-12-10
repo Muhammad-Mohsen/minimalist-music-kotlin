@@ -329,10 +329,7 @@ class PlaybackManager :
 		if (source == EqualizerChangeSource.USER) State.settings.equalizerBands = State.settings.equalizerBands
 	}
 	private fun sendEqualizerInfo() {
-		EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET,
-			// send an empty map if the equalizer failed to initialize
-			equalizer?.getInfo(State.settings.equalizerPreset) ?: emptyMap()
-		))
+		EventBus.dispatch(Event(Type.EQUALIZER_INFO, TARGET, equalizer.getInfo(State.settings.equalizerPreset)))
 	}
 
 	// pause playback on audio focus loss
@@ -393,7 +390,7 @@ class PlaybackManager :
 
 			Type.QUEUE_PLAY_SELECTED -> {
 				State.playlist.update(event.data["tracks"] as ArrayList<String>)
-				EventBus.dispatch(Event(Type.PLAYLIST_UPDATE, Target.ACTIVITY, mapOf("files" to State.playlist.serialize())))
+				EventBus.dispatch(Event(Type.PLAYLIST_UPDATE, Target.ACTIVITY, State.playlist.serialize()))
 				playTrack(State.playlist.getTrackByIndex(0), false)
 			}
 			Type.QUEUE_ADD_SELECTED -> {

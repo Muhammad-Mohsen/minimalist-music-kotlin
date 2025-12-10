@@ -43,28 +43,36 @@ fun Equalizer?.ensureEnabled(): Int? {
 	return if (this?.enabled == false) this.setEnabled(true)
 	else 0
 }
-fun Equalizer.getInfo(preset: Short): Map<String, Any> {
-	val bands = (0 until numberOfBands).map {
-		return@map mapOf(
-			"id" to it,
-			"low" to bandLevelRange[0],
-			"high" to bandLevelRange[1],
-			"centerFrequency" to getCenterFreq(it.toShort()),
-			"level" to getBandLevel(it.toShort())
+// returns an empty map if the equalizer failed to initialize or is null
+fun Equalizer?.getInfo(preset: Short): Map<String, Any> {
+	this ?: return emptyMap()
+
+	try {
+		val bands = (0 until numberOfBands).map {
+			return@map mapOf(
+				"id" to it,
+				"low" to bandLevelRange[0],
+				"high" to bandLevelRange[1],
+				"centerFrequency" to getCenterFreq(it.toShort()),
+				"level" to getBandLevel(it.toShort())
+			)
+		}
+
+		val presets = (0 until numberOfPresets).map {
+			return@map mapOf(
+				"id" to it,
+				"name" to getPresetName(it.toShort())
+			)
+		}
+
+		return mapOf(
+			"bands" to bands,
+
+			"presets" to presets,
+			"currentPreset" to preset
 		)
 	}
-
-	val presets = (0 until numberOfPresets).map {
-		return@map mapOf(
-			"id" to it,
-			"name" to getPresetName(it.toShort())
-		)
+	catch (_: Exception) {
+		return emptyMap()
 	}
-
-	return mapOf(
-		"bands" to bands,
-
-		"presets" to presets,
-		"currentPreset" to preset
-	)
 }

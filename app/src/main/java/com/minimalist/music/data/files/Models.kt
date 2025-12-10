@@ -8,7 +8,6 @@ import android.os.Environment
 import android.os.storage.StorageManager
 import android.util.Base64
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import com.minimalist.music.data.Const
 import com.minimalist.music.data.state.State
 import com.minimalist.music.foundation.ext.EMPTY
@@ -181,8 +180,10 @@ fun FFmpegMediaMetadataRetriever.extractSyncedLyrics(f: File): ArrayList<Verse> 
 		}
 
 		// add endTimes
-		for (i in 0 until verses.size - 1) verses[i].endTime = verses[i + 1].startTime
-		verses[verses.size - 1].endTime = Long.MAX_VALUE
+		if (verses.isNotEmpty()) {
+			for (i in 0 until verses.size - 1) verses[i].endTime = verses[i + 1].startTime
+			verses.last().endTime = Long.MAX_VALUE
+		}
 
 		verses
 	}

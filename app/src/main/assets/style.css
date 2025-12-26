@@ -53,6 +53,7 @@ body {
 	--selection-background: #222;
 
 	background: var(--background);
+	transition: opacity .75s;
 }
 
 body[theme="light"] {
@@ -64,6 +65,7 @@ body[theme="light"] {
 	--selection-background: #BBB;
 }
 body.theme-changing * { transition: .3s ease-in-out !important; }
+body[initializing] { opacity: 0; }
 
 .flex-row { display: flex; }
 

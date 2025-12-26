@@ -1,7 +1,4 @@
 music-explorer {
-	opacity: 0;
-	transition: opacity .4s;
-
 	--total-inset-top: calc(var(--inset-top, 0px) + 16px);
 	--total-inset-bottom: calc(var(--inset-bottom, 0px) + 64px);
 }
@@ -39,6 +36,8 @@ music-explorer {
 		pointer-events: all; /* only the active is clickable (others can be in front but transparent) */
 	}
 }
+
+body[initializing] .explorer { transition: none; }
 
 .explorer button {
 	position: relative;

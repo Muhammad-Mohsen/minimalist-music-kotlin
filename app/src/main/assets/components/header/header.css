@@ -3,15 +3,14 @@ music-header {
 	position: fixed;
 	display: grid;
 	background: var(--background);
-	transition: .2s, opacity .4s;
+	transition: .2s;
 	z-index: 1;
 
 	inset: calc(var(--inset-top, 4px) + 8px) 12px auto;
 	border: 1px solid var(--border-color);
 	border-radius: 12px;
-
-	opacity: 0;
 }
+
 body:is([mode="select"], [mode="search"], [mode="searchSelect"]) music-header {
 	inset: calc(var(--inset-top, 4px) + 8px) 0 auto;
 	border: 1px solid;
@@ -40,6 +39,8 @@ body:is([mode="select"], [mode="search"], [mode="searchSelect"]) #toolbar {
 	display: flex;
 	opacity: 1;
 }
+
+body[initializing] music-header #crumbs { scroll-behavior: instant !important; }
 
 body[mode="select"] #search-input { max-width: 0; }
 body:not(:is([mode="select"], [mode="searchSelect"])) {

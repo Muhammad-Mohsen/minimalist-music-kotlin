@@ -31,9 +31,6 @@ class MusicControls extends HTMLElementBase {
 		when(event.type)
 			.is(EventBus.Type.MODE_CHANGE, () => this.querySelector('.secondary-controls [checked]')?.removeAttribute('checked'))
 			.is(EventBus.Type.RESTORE_STATE, () => {
-				this.style.opacity = 1;
-				setTimeout(() => this.seekRange.classList.add('blur'), 800);
-
 				this.#updateMetadata();
 				this.#renderSecondaryControls();
 				this.#restoreShuffle();
@@ -231,6 +228,8 @@ class MusicControls extends HTMLElementBase {
 		this.seekRange.value = state.track.seek;
 	}
 	#updateTrackText(elem, delay, val) {
+		if (state.isInitializing) return elem.innerHTML = val;
+
 		elem.replayAnimations();
 		setTimeout(() => elem.innerHTML = val, delay);
 	}

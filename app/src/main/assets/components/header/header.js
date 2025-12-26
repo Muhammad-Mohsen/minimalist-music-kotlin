@@ -14,10 +14,7 @@ class MusicHeader extends HTMLElementBase {
 		if (event.target == this.#TARGET) return;
 
 		when(event.type)
-			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => {
-				this.style.opacity = 1;
-				this.#renderCrumbs();
-			})
+			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => this.#renderCrumbs())
 			.is(EventBus.Type.SELECT_MODE_COUNT, () => this.selectCount.innerHTML = `${state.selection.length} selected`)
 			.is(EventBus.Type.MODE_NORMAL, () => this.onCancelClick())
 			.is(EventBus.Type.MODE_CHANGE, () => {

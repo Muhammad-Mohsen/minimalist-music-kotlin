@@ -24,8 +24,6 @@ class MusicExplorer extends HTMLElementBase {
 
 		when(event.type)
 			.is([EventBus.Type.RESTORE_STATE, EventBus.Type.DIR_UPDATE], () => {
-				this.style.opacity = 1;
-
 				this.#renderExplorer();
 				this.#scrollToSelected();
 			})

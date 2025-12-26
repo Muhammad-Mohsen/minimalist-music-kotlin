@@ -15,7 +15,10 @@ EventBus.subscribe((event, native) => {
 			// current state isn't PERMISSION && response is REVOKED =>
 			else if (event.data.mode == state.Mode.PERMISSION && state.mode != state.Mode.PERMISSION) state.mode = state.Mode.PERMISSION;
 		})
-		.is(EventBus.Type.RESTORE_STATE, () => state.restore(event.data))
+		.is(EventBus.Type.RESTORE_STATE, () => {
+			state.restore(event.data);
+			setTimeout(() => state.isInitializing = false, 100);
+		})
 		.is(EventBus.Type.DIR_UPDATE, () => {
 			if (event.data.currentDir) state.currentDir = event.data.currentDir;
 			state.files = event.data.files;

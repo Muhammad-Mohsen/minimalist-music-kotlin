@@ -17,6 +17,9 @@ class State {
 		DARK: 'dark'
 	}
 
+	get isInitializing() { return document.body.hasAttribute('initializing'); }
+	set isInitializing(val) { document.body.toggleAttribute('initializing', val); }
+
 	get mode() { return document.body.getAttribute('mode') || this.Mode.NORMAL; }
 	set mode(val) { document.body.setAttribute('mode', val); }
 

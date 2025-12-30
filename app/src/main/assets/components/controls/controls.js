@@ -15,7 +15,7 @@ class MusicControls extends HTMLElementBase {
 		CHAPTERS: `<button id="chapters-button" class="ic-btn ic-chapters" onclick="${this.handle}.toggleChapters(this)" aria-label="Chapters"></button>`,
 		LYRICS: `<button id="lyrics-button" class="ic-btn ic-lyrics" onclick="${this.handle}.toggleLyrics(this)" aria-label="Lyrics"></button>`,
 		EQUALIZER: `<button id="equalizer-button" class="ic-btn ic-equalizer" onclick="${this.handle}.toggleEqualizer(this)" aria-label="Equalizer"></button>`,
-		ALBUM_ART: `<button id="album-art-button" class="ic-btn ic-album-art passive-toggle" onclick="${this.handle}.toggleAlbumArt(this)" aria-label="Art"></button>`,
+		ALBUM_ART: `<button id="album-art-button" class="ic-btn ic-album-art passive-toggle" onclick="${this.handle}.toggleAlbumArt(this)" aria-label="Album Art"></button>`,
 	}
 
 	connectedCallback() {
@@ -43,6 +43,7 @@ class MusicControls extends HTMLElementBase {
 			.is(EventBus.Type.DURATION_UPDATE, () => {
 				state.track.duration = event.data.duration;
 				this.#updateSeekUI();
+				this.#updateChapters();
 			})
 			.is(EventBus.Type.SEEK_TICK, () => {
 				state.track.seek = event.data.seek;
@@ -52,7 +53,6 @@ class MusicControls extends HTMLElementBase {
 			.is(EventBus.Type.SECONDARY_CONTROLS_CHANGE, () => this.#renderSecondaryControls())
 			.is(EventBus.Type.TOGGLE_SHUFFLE, () => this.#restoreShuffle())
 			.is(EventBus.Type.TOGGLE_REPEAT, () => this.#restoreRepeat())
-			.is(EventBus.Type.TOGGLE_ALBUM_ART, () => this.#restoreAlbumArt())
 	}
 
 	// UI HANDLERS
@@ -159,10 +159,6 @@ class MusicControls extends HTMLElementBase {
 		repeat.className = RepeatIcons[state.settings.repeat] + ' ic-btn';
 		repeat.classList.toggle('selected', state.settings.repeat > 0);
 	}
-	#restoreAlbumArt() {
-		this.querySelector('#album-art-button')?.toggleAttribute('checked', !state.settings.albumArt);
-		this.#updateAlbumArt();
-	}
 
 	// RENDERING
 	#render() {
@@ -216,6 +212,8 @@ class MusicControls extends HTMLElementBase {
 
 		this.#updateChapters();
 		this.#updateAlbumArt();
+
+		state.notifyReady();
 	}
 	#updateSeekUI() {
 		// max needs to be set before the value
@@ -228,7 +226,10 @@ class MusicControls extends HTMLElementBase {
 		this.seekRange.value = state.track.seek;
 	}
 	#updateTrackText(elem, delay, val) {
-		if (state.isInitializing) return elem.innerHTML = val;
+		if (!state.isReady) {
+			elem.finishAnimations(); // don't run the initial animation
+			return elem.innerHTML = val;
+		}
 
 		elem.replayAnimations();
 		setTimeout(() => elem.innerHTML = val, delay);
@@ -248,7 +249,7 @@ class MusicControls extends HTMLElementBase {
 	}
 	#updateChapters() {
 		this.chapters.innerHTML = state.track.chapters
-			?.slice(1) // drop the first chapter rendering
+			?.slice(1) // drop the first chapter (we don't care about 00:00)
 			?.map(c => `<li style="inset-inline-start:${c.startTime / state.track.duration * this.chapters.clientWidth}px"></li>`)
 			?.join('') || '';
 	}

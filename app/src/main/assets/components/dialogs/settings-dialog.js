@@ -89,6 +89,12 @@ class SettingsDialog extends HTMLElementBase {
 		EventBus.dispatch({ type: EventBus.Type.SORT_BY_CHANGE, target: this.#TARGET, data: { value: state.settings.sortBy } });
 	}
 
+	onFontSizeChange() {
+		state.settings.fontSize = parseInt(this.fontSize.value);
+		this.fontSizeValue.innerHTML = state.settings.fontSize + 'px';
+		EventBus.dispatch({ type: EventBus.Type.FONT_SIZE_CHANGE, target: this.#TARGET, data: { value: state.settings.fontSize } });
+	}
+
 	toggleShuffle() {
 		state.settings.shuffle = !state.settings.shuffle;
 		EventBus.dispatch({ type: EventBus.Type.TOGGLE_SHUFFLE, target: this.#TARGET, data: { value: state.settings.shuffle } });
@@ -102,16 +108,24 @@ class SettingsDialog extends HTMLElementBase {
 		this.repeatIcon.className = RepeatIcons[state.settings.repeat];
 		this.repeatButton.classList.toggle('selected', state.settings.repeat > 0);
 	}
+
 	showEqualizer() {
 		state.mode = state.Mode.EQUALIZER;
 		// note the target value, which "cheats" which components are notified!
 		EventBus.dispatch({ type: EventBus.Type.MODE_CHANGE, target: EventBus.Target.CONTROLS, data: { mode: state.mode } });
 	}
+
 	toggleAlbumArt() {
 		state.settings.albumArt = !state.settings.albumArt;
 		EventBus.dispatch({ type: EventBus.Type.TOGGLE_ALBUM_ART, target: this.#TARGET, data: { value: state.settings.albumArt } });
 
-		this.albumArtButton.classList.toggle('selected', !state.settings.albumArt);
+		this.albumArtButton.classList.toggle('selected', state.settings.albumArt);
+	}
+	toggleTextWrap() {
+		state.settings.textWrap = !state.settings.textWrap;
+		EventBus.dispatch({ type: EventBus.Type.TOGGLE_TEXT_WRAP, target: this.#TARGET, data: { value: state.settings.textWrap } });
+
+		this.textWrapButton.classList.toggle('selected', state.settings.textWrap);
 	}
 
 	onSecondaryControlsChange(target, index) {
@@ -164,6 +178,12 @@ class SettingsDialog extends HTMLElementBase {
 		this.repeatIcon.className = RepeatIcons[state.settings.repeat];
 		this.repeatButton.classList.toggle('selected', state.settings.repeat > 0);
 
+		this.fontSize.value = state.settings.fontSize;
+		this.fontSizeValue.innerHTML = state.settings.fontSize + 'px';
+
+		this.albumArtButton.classList.toggle('selected', state.settings.albumArt);
+		this.textWrapButton.classList.toggle('selected', state.settings.textWrap);
+
 		this.#renderSecondaryControlsCustomization();
 	}
 
@@ -173,37 +193,22 @@ class SettingsDialog extends HTMLElementBase {
 			<i class="dialog-header ic-more"></i>
 
 			<div class="dialog-content">
-				<div class="flex-row">
-					<button id="light-theme-button" class="settings-btn" onclick="${this.handle}.toggleTheme(this, 'light')">
-						<i class="ic-sun"></i>
-						<span l10n>Light</span>
-					</button>
-					<separator></separator>
-					<button id="dark-theme-button" class="settings-btn selected" onclick="${this.handle}.toggleTheme(this, 'dark')">
-						<i class="ic-moon"></i>
-						<span l10n>Dark</span>
-					</button>
-				</div>
+				<details>
+					<summary l10n>Display Settings</summary>
+					${this.#renderDisplaySettings()}
+				</details>
+				<details open>
+					<summary l10n>Playback Settings</summary>
+					${this.#renderPlaybackSettings()}
+				</details>
 
-				<div id="secondary-controls-customization"></div>
-
-				<div class="range-row">
-					<!-- min: 10m - max: 3h - step: 5m converted to millis -->
-					<input type="range" id="countdown" min="600000" max="10800000" value="0">
-					<input type="range" id="sleep-timer" min="600000" max="10800000" step="300000" oninput="${this.handle}.onSleepTimerChange()">
-
-					<div class="label">
-						<label for="sleep-timer" l10n>Sleep Timer</label>
-						<span class="subscript">
-							<strong id="countdown-value"></strong>
-							<output for="sleep-timer" id="sleep-timer-value"></output>
-						</span>
-					</div>
-
-					<separator></separator>
-					<button id="sleep-timer-toggle" class="ic-btn toggle-btn ic-sleep-timer" onclick="${this.handle}.toggleSleepTimer()"></button>
-				</div>
-
+				<button class="pp" l10n onclick="${this.handle}.showPrivacyPolicy()">Privacy Policy</button>
+			</div>
+		`);
+	}
+	#renderPlaybackSettings() {
+		return `
+			<div class="details-content">
 				<div class="range-row">
 					<input type="range" id="playback-speed" min=".25" max="2.5" step=".25" oninput="${this.handle}.onPlaybackSpeedChange()">
 
@@ -224,6 +229,70 @@ class SettingsDialog extends HTMLElementBase {
 					<i class="ic-ff"></i>
 				</div>
 
+				<div class="range-row">
+					<!-- min: 10m - max: 3h - step: 5m converted to millis -->
+					<input type="range" id="countdown" min="600000" max="10800000" value="0">
+					<input type="range" id="sleep-timer" min="600000" max="10800000" step="300000" oninput="${this.handle}.onSleepTimerChange()">
+
+					<div class="label">
+						<label for="sleep-timer" l10n>Sleep Timer</label>
+						<span class="subscript">
+							<strong id="countdown-value"></strong>
+							<output for="sleep-timer" id="sleep-timer-value"></output>
+						</span>
+					</div>
+
+					<separator></separator>
+					<button id="sleep-timer-toggle" class="ic-btn toggle-btn ic-sleep-timer" onclick="${this.handle}.toggleSleepTimer()"></button>
+				</div>
+
+				<div class="flex-row">
+					<button id="shuffle-button" class="settings-btn" onclick="${this.handle}.toggleShuffle()">
+						<i class="ic-shuffle"></i>
+						<span l10n>Shuffle</span>
+					</button>
+					<separator></separator>
+					<button id="repeat-button" class="settings-btn" onclick="${this.handle}.toggleRepeat()">
+						<i id="repeat-icon" class="ic-repeat"></i>
+						<span l10n>Repeat</span>
+					</button>
+					<separator></separator>
+					<button id="equalizer-button" class="settings-btn" onclick="${this.handle}.showEqualizer()">
+						<i class="ic-equalizer"></i>
+						<span l10n>Equalizer</span>
+					</button>
+				</div>
+
+			</div>
+		`;
+	}
+	#renderDisplaySettings() {
+		return `
+			<div class="details-content">
+				<div class="flex-row">
+					<button id="light-theme-button" class="settings-btn" onclick="${this.handle}.toggleTheme(this, 'light')">
+						<i class="ic-sun"></i>
+						<span l10n>Light</span>
+					</button>
+					<separator></separator>
+					<button id="dark-theme-button" class="settings-btn selected" onclick="${this.handle}.toggleTheme(this, 'dark')">
+						<i class="ic-moon"></i>
+						<span l10n>Dark</span>
+					</button>
+				</div>
+
+				<div id="secondary-controls-customization"></div>
+
+				<div class="range-row">
+					<input type="range" id="font-size" min="10" max="20" step="1" oninput="${this.handle}.onFontSizeChange()">
+
+					<div class="label">
+						<label for="font-size" l10n>Font Size</label>
+						<output class="subscript" for="font-size" id="font-size-value"></output>
+					</div>
+					<i class="ic-font-size"></i>
+				</div>
+
 				<div class="range-row select">
 					<select id="sort-by" onchange="${this.handle}.onSortByChange()">
 						<option value="az" l10n>Name (A to Z)</option>
@@ -238,30 +307,18 @@ class SettingsDialog extends HTMLElementBase {
 				</div>
 
 				<div class="flex-row">
-					<button id="shuffle-button" class="settings-btn" style="max-width: calc(25% - 8px)" onclick="${this.handle}.toggleShuffle()">
-						<i class="ic-shuffle"></i>
-						<span l10n>Shuffle</span>
+					<button id="album-art-button" class="settings-btn" onclick="${this.handle}.toggleAlbumArt()">
+						<i class="ic-album-art"></i>
+						<span l10n>Album Art</span>
 					</button>
 					<separator></separator>
-					<button id="repeat-button" class="settings-btn" style="max-width: calc(25% - 8px)" onclick="${this.handle}.toggleRepeat()">
-						<i id="repeat-icon" class="ic-repeat"></i>
-						<span l10n>Repeat</span>
-					</button>
-					<separator></separator>
-					<button id="album-art-button" class="settings-btn" style="max-width: calc(25% - 8px)" onclick="${this.handle}.toggleAlbumArt()">
-						<i class="ic-album-art-hide"></i>
-						<span l10n>Art</span>
-					</button>
-					<separator></separator>
-					<button id="equalizer-button" class="settings-btn" style="max-width: calc(25% - 8px)" onclick="${this.handle}.showEqualizer()">
-						<i class="ic-equalizer"></i>
-						<span l10n>Equalizer</span>
+					<button id="text-wrap-button" class="settings-btn" onclick="${this.handle}.toggleTextWrap()">
+						<i class="ic-wrap"></i>
+						<span l10n>Text Wrap</span>
 					</button>
 				</div>
-
-				<button class="pp" l10n onclick="${this.handle}.showPrivacyPolicy()">Privacy Policy</button>
 			</div>
-		`);
+		`;
 	}
 
 	#renderSecondaryControlsCustomization() {

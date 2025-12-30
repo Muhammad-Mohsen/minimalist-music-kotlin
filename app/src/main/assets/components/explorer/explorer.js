@@ -180,6 +180,7 @@ class MusicExplorer extends HTMLElementBase {
 		otherOther.className = 'explorer ' + (toInward ? 'in' : 'out');
 
 		this.#scrollbar(other);
+		state.notifyReady();
 	}
 	#renderItems(explorer) {
 		explorer ||= this.querySelector('.explorer.current');
@@ -238,18 +239,17 @@ class MusicExplorer extends HTMLElementBase {
 		let startTouch = 0;
 		let startScroll = 0;
 
-		const contentHeight = element.scrollHeight;
-		const viewportHeight = element.clientHeight;
-
 		const thumb = this.querySelector('.scrollbar-thumb');
 		const track = thumb.parentElement;
+
+		const scrollableHeight = element.scrollHeight - element.clientHeight;
+		const trackHeight = track.clientHeight - 80; // 80 is the thumb height
 
 		const updateThumbPosition = () => {
 			const scrollTop = element.scrollTop;
 
 			// Calculate the thumb's vertical position
-			const r = scrollTop / (contentHeight - viewportHeight);
-			const thumbPosition = r * (viewportHeight - 80);
+			const thumbPosition = scrollTop / scrollableHeight * trackHeight;
 			thumb.style.transform = `translateY(${thumbPosition}px)`;
 		}
 
@@ -263,8 +263,8 @@ class MusicExplorer extends HTMLElementBase {
 		thumb.ontouchmove = (event) => {
 			if (!dragging) return;
 
-			const r = (event.touches[0].clientY - startTouch) / (viewportHeight - 80);
-			element.scrollTop = startScroll + r * (contentHeight - viewportHeight);
+			const delta = event.touches[0].clientY - startTouch;
+			element.scrollTop = startScroll + delta / trackHeight * scrollableHeight;
 		}
 		thumb.ontouchend = () => {
 			dragging = false;

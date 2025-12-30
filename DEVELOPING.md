@@ -1,6 +1,17 @@
 # Dev Guide | Minimalist Music Kotlin - Hybrid
 
 ## General
+- R6.0
+	- DONE - exceptions
+	- DONE - reduce motion on startup
+		- notify ready:
+			- header
+			- explorer
+			- controls
+			- permission
+	- DONE - change scroll thumb bounds
+	- DONE - add settings (list font size + wrap)
+
 - DONE - add toggleAlbumArt setting/button
 - DONE - add background to the play/pause button
 - DONE - fix `FileNotFoundException`

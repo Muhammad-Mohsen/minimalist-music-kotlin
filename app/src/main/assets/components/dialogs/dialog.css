@@ -34,7 +34,7 @@ settings-dialog, equalizer-dialog, chapters-dialog, lyrics-dialog {
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		height: calc(100% - var(--inset-bottom, 0px) - 128px);
+		height: calc(100vh - var(--inset-bottom, 0px) - var(--inset-top, 0px) - 128px);
 		padding: 32px 12px 152px;
 		overflow: auto;
 		mask-image: linear-gradient(180deg, transparent, #FFF 32px);
@@ -53,8 +53,54 @@ settings-dialog, equalizer-dialog, chapters-dialog, lyrics-dialog {
 settings-dialog {
 	--subscript: .8rem;
 
+	details {
+		summary {
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			padding: 17px 22px 17px 12px;
+			border-radius: 12px;
+			color: var(--foreground-secondary);
+			background: #74747433;
+			outline: none;
+			transition: .3s, background .6s ease-in;
+
+			i { font-size: 20px; }
+
+			&::marker { content: ''; }
+			&::after {
+				content: '\e021';
+				font: 400 20px / 1 iconly;
+				transition: rotate .3s;
+			}
+
+			&:active {
+				background: var(--selection-background);
+				transition: .3s, background .3s;
+			}
+		}
+		&[open] summary { margin-bottom: 12px; }
+		&[open] summary::after { rotate: 180deg; }
+
+		&::details-content {
+			height: 0;
+			opacity: 0;
+			transition: height .3s ease, content-visibility .3s ease allow-discrete, opacity .3s;
+			overflow: clip;
+		}
+		&[open]::details-content { height: auto; opacity: 1; }
+
+		.details-content {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+	}
+
 	.settings-btn {
-		flex: 1 0 10%;
+		flex: 1 0 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -130,7 +176,7 @@ settings-dialog {
 		}
 		.ic-btn {
 			position: relative;
-			height: calc(100% + 16px);
+			height: 59px; /* originally was calc(100% + 16px) but for some reason, it stopped working */
 			margin: -8px -12px -8px -8px;
 			border-radius: 0 11px 11px 0;
 		}

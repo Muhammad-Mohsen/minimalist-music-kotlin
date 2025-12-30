@@ -4,6 +4,7 @@ class MusicPermissions extends HTMLElementBase {
 
 	connectedCallback() {
 		this.#render();
+		state.notifyReady();
 	}
 
 	request() {

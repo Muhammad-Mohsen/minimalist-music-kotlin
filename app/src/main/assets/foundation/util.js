@@ -27,8 +27,8 @@ HTMLCollection.prototype.toArray = function () {
 HTMLElement.prototype.replayAnimations = function () {
 	this.getAnimations().forEach(anim => anim.play());
 }
-HTMLElement.prototype.cancelAnimations = function () {
-	this.getAnimations().forEach(anim => anim.cancel());
+HTMLElement.prototype.finishAnimations = function () {
+	this.getAnimations().forEach(anim => anim.finish());
 }
 
 /**

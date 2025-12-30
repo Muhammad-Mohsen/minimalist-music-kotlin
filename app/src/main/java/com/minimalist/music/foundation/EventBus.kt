@@ -105,6 +105,9 @@ object EventBus {
 		const val SORT_BY_CHANGE = "sortByChange"
 		const val TOGGLE_SHUFFLE = "toggleShuffle"
 		const val TOGGLE_REPEAT = "toggleRepeat"
+		const val TOGGLE_ALBUM_ART = "toggleAlbumArt"
+		const val TOGGLE_TEXT_WRAP = "toggleTextWrap"
+		const val FONT_SIZE_CHANGE = "fontSizeChange"
 
 		const val EQUALIZER_INFO = "equalizerInfo"
 		const val EQUALIZER_PRESET_CHANGE = "equalizerPresetChange"

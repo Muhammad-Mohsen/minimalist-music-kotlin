@@ -219,10 +219,30 @@ const translations = {
 		"ru": "Политика конфиденциальности",
 		"es": "Política de privacidad"
 	},
-	"Art": {
+	"Album Art": {
 		"pt": "Arte do Álbum",
 		"ru": "Обложка альбома",
 		"es": "Carátula del álbum"
+	},
+	"Text Wrap": {
+		"pt": "Quebra de Linha",
+		"ru": "Перенос текста",
+		"es": "Quebrar linhas"
+	},
+	"Font Size": {
+		"pt": "Tamanho da Fonte",
+		"ru": "Размер шрифта",
+		"es": "Tamaño de fuente"
+	},
+	"Display Settings": {
+		"pt": "Configurações de Exibição",
+		"ru": "Настройки отображения",
+		"es": "Ajustes de visualización"
+	},
+	"Playback Settings": {
+		"pt": "Configurações de Reprodução",
+		"ru": "Настройки воспроизведения",
+		"es": "Ajustes de reproducción"
 	},
 	"The system was unable to create an equalizer for the app.<br>Restarting the device usually fixes the issue.": {
 		"pt": "O sistema não conseguiu criar um equalizador para o aplicativo.<br>Reiniciar o dispositivo geralmente resolve o problema.",

@@ -79,8 +79,8 @@
 	content: "\e00d";
 }
 .ic-next:before {
-	display: block;
 	content: "\e00d";
+	display: block;
 	rotate: 180deg;
 }
 
@@ -129,13 +129,36 @@
 }
 
 .ic-ff:before {
-	content: "\e019";
+	content: "\e018";
+	/* content: "\e019"; */
+	display: block;
+	rotate: 180deg;
 }
 
 .ic-album-art:before {
-  content: "\e01a";
+	content: "\e01a";
 }
 
 .ic-album-art-hide:before {
-  content: "\e01b";
+	content: "\e01b";
+}
+
+.ic-wrap:before {
+	content: "\e01c";
+}
+
+.ic-no-wrap:before {
+	content: "\e01d";
+}
+
+.ic-mobile:before {
+	content: "\e01e";
+}
+
+.ic-font-size:before {
+	content: "\e01f";
+}
+
+.ic-play:before {
+	content: "\e020";
 }

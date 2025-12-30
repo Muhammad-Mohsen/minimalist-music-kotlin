@@ -190,7 +190,8 @@ fun FFmpegMediaMetadataRetriever.extractSyncedLyrics(f: File): ArrayList<Verse> 
 }
 
 class SerializableBitmap(val data: ByteArray?) {
-	val decoded: Bitmap? = BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0)
+	val decoded: Bitmap? = try { BitmapFactory.decodeByteArray(data, 0, data?.size ?: 0) }
+	catch (_: Exception) { null }
 	val encoded: String? = try { Base64.encodeToString(data, Base64.DEFAULT) } // from the field: threw an OutOfMemory exception
 	catch (_: Exception) { null }
 }

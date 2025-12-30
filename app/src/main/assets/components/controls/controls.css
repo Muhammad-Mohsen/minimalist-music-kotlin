@@ -29,7 +29,7 @@ music-controls {
 	transition: opacity .3s, filter .5s;
 	z-index: 1;
 }
-#album-art.hidden, #album-art:not([src]) { opacity: 0; }
+body:not([album-art]) #album-art, #album-art.hidden, #album-art:not([src]) { opacity: 0; }
 body[is-playing="true"] #album-art { filter: none; }
 
 .main-controls {
@@ -69,7 +69,7 @@ body[is-playing="true"] #album-art { filter: none; }
 	#chapters {
 		position: relative;
         height: 5px;
-        transition: .2s;
+        transition: none;
         pointer-events: none;
         margin-block: 4px 8px;
         opacity: .5;
@@ -114,6 +114,8 @@ body[is-playing="true"] #album-art { filter: none; }
 		pointer-events: none;
 	}
 }
+
+body[ready="true"] .main-controls #chapters { transition: .2s; }
 
 @keyframes switch {
 	35% { translate: 15% 0; opacity: 0; }

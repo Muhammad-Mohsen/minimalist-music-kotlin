@@ -17,9 +17,6 @@ class State {
 		DARK: 'dark'
 	}
 
-	get isInitializing() { return document.body.hasAttribute('initializing'); }
-	set isInitializing(val) { document.body.toggleAttribute('initializing', val); }
-
 	get mode() { return document.body.getAttribute('mode') || this.Mode.NORMAL; }
 	set mode(val) { document.body.setAttribute('mode', val); }
 
@@ -34,6 +31,7 @@ class State {
 	query = '';
 
 	settings = {
+		// UI-only, so apply it directly
 		get theme() { return document.body.getAttribute('theme') || state.Theme.DARK; },
 		set theme(val) {
 			document.body.classList.add('theme-changing');
@@ -41,10 +39,22 @@ class State {
 			setTimeout(() => document.body.classList.remove('theme-changing'), 300);
 		},
 
+		// handled in native
 		shuffle: false,
 		repeat: RepeatMode.NO_REPEAT,
 		sortBy: SortBy.AZ,
-		albumArt: true,
+
+		// UI-only (explorer)
+		get fontSize() { return parseInt(document.body.style.getPropertyValue('--font-size').replace('px', '')) || 16; },
+		set fontSize(val) { document.body.style.setProperty('--font-size', val + 'px'); },
+
+		// UI-only (explorer)
+		get textWrap() { return document.body.hasAttribute('text-wrap'); },
+		set textWrap(val) { document.body.toggleAttribute('text-wrap', val); },
+
+		// UI-only (controls)
+		get albumArt() { return document.body.hasAttribute('album-art') },
+		set albumArt(val) { document.body.toggleAttribute('album-art', val); },
 
 		playbackSpeed: 1,
 		sleepTimer: '',
@@ -70,6 +80,21 @@ class State {
 		lyrics: '',
 	}
 
+	// this is used to reduce the animations on start up
+	get isReady() { return document.body.getAttribute('ready') == 'true'; }
+	notifyReady() {
+		if (this.isReady) return;
+
+		const ready = (parseInt(document.body.getAttribute('ready')) || 0) + 1;
+		document.body.setAttribute('ready', ready);
+
+		// in PERMISSION mode, we're always ready
+		// in NORMAL mode, permission (screen) + header + explorer + controls must notify their readiness
+		if (this.mode == this.Mode.PERMISSION || ready >= 4) {
+			setTimeout(() => document.body.setAttribute('ready', 'true'), 100);
+		}
+	}
+
 	restore(serializedState) {
 		this.currentDir = serializedState.currentDir;
 		this.files = serializedState.files;
@@ -89,6 +114,10 @@ class State {
 		this.settings.playbackSpeed = settings.playbackSpeed;
 		this.settings.sleepTimer = settings.sleepTimer;
 		this.settings.seekJump = settings.seekJump;
+
+		this.settings.fontSize = settings.fontSize;
+		this.settings.textWrap = settings.textWrap;
+		this.settings.albumArt = settings.albumArt;
 
 		this.settings.secondaryControls = settings.secondaryControls.split(';');
 	}

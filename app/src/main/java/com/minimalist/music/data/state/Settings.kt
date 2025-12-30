@@ -86,6 +86,39 @@ class Settings(private val preferences: SharedPreferences) {
 			preferences.put(Key.SHUFFLE, value)
 		}
 
+	private var _albumArt: Boolean? = null
+	var albumArt: Boolean
+		get() {
+			if (_albumArt == null) _albumArt = preferences.getBoolean(Key.ALBUM_ART, true)
+			return _albumArt!!
+		}
+		set(value) {
+			_albumArt = value
+			preferences.put(Key.ALBUM_ART, value)
+		}
+
+	private var _textWrap: Boolean? = null
+	var textWrap: Boolean
+		get() {
+			if (_textWrap == null) _textWrap = preferences.getBoolean(Key.TEXT_WRAP, true)
+			return _textWrap!!
+		}
+		set(value) {
+			_textWrap = value
+			preferences.put(Key.TEXT_WRAP, value)
+		}
+
+	private var _fontSize: Int? = null
+	var fontSize: Int
+		get() {
+			if (_fontSize == null) _fontSize = preferences.getInt(Key.FONT_SIZE, 16)
+			return _fontSize!!
+		}
+		set(value) {
+			_fontSize = value
+			preferences.put(Key.FONT_SIZE, value)
+		}
+
 	private var _equalizerPreset: Short? = null
 	var equalizerPreset: Short
 		get() {
@@ -131,6 +164,9 @@ class Settings(private val preferences: SharedPreferences) {
 			"sortBy" to sortBy,
 			"repeat" to repeat,
 			"shuffle" to shuffle,
+			"albumArt" to albumArt,
+			"textWrap" to textWrap,
+			"fontSize" to fontSize,
 			"equalizerPreset" to equalizerPreset,
 			"equalizerBands" to equalizerBands,
 			"secondaryControls" to secondaryControls

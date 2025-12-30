@@ -40,8 +40,6 @@ body:is([mode="select"], [mode="search"], [mode="searchSelect"]) #toolbar {
 	opacity: 1;
 }
 
-body[initializing] music-header #crumbs { scroll-behavior: instant !important; }
-
 body[mode="select"] #search-input { max-width: 0; }
 body:not(:is([mode="select"], [mode="searchSelect"])) {
 	#select-count, #select-add-button, #select-play-button { display: none; opacity: 0; }
@@ -49,7 +47,6 @@ body:not(:is([mode="select"], [mode="searchSelect"])) {
 
 /* STYLES */
 music-header {
-
 	color: var(--foreground-secondary);
 
 	/* BREADCRUMBS */
@@ -58,12 +55,11 @@ music-header {
 		display: flex;
 		padding-right: 12px;
 		overflow-x: auto;
-		scroll-behavior: smooth;
 
 		button {
 			padding: 8px 4px 8px 10px;
 			border-radius: 6px;
-			font-size: 14px;
+			font-size: calc(var(--font-size, 16px) - 2px);
 			flex-shrink: 0;
 			overflow: hidden;
 			white-space: nowrap;
@@ -112,6 +108,7 @@ music-header {
 		flex-shrink: 0;
 	    margin-inline-end: 16px;
 	}
+	#select-play-button { font-size: 25px; }
 	#select-count, #select-add-button, #select-play-button { transition: display .2s allow-discrete, opacity .2s, background .8s; }
 	#select-add-button { margin-inline-start: auto; }
 }

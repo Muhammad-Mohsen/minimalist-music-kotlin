@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		})
 
 		// insets (edge to edge)
-		ViewCompat.setOnApplyWindowInsetsListener(webView!!) { v, insets ->
+		ViewCompat.setOnApplyWindowInsetsListener(webView!!) { _, insets ->
 			State.windowInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 			sendInsetsToWebView()
 
@@ -246,6 +246,9 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 				EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf("files" to State.files.serializeFiles())))
 			}
 			Type.SECONDARY_CONTROLS_CHANGE -> State.settings.secondaryControls = event.data["value"].toString()
+			Type.TOGGLE_TEXT_WRAP -> State.settings.textWrap = event.data["value"].toString().toBoolean()
+			Type.FONT_SIZE_CHANGE -> State.settings.fontSize = event.data["value"].toString().toInt()
+			Type.TOGGLE_ALBUM_ART -> State.settings.albumArt = event.data["value"].toString().toBoolean()
 		}
 	}
 

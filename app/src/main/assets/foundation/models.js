@@ -59,7 +59,7 @@ const SecondaryControlOptions = {
 	},
 	ALBUM_ART: {
 		icon: 'ic-album-art',
-		label: 'Art',
+		label: 'Album Art',
 	},
 }
 

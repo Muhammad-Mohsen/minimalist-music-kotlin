@@ -108,7 +108,12 @@ class MusicHeader extends HTMLElementBase {
 
 		}, '');
 
-		this.crumbs.scrollTo(this.crumbs.scrollWidth, 0);
+		this.crumbs.scrollTo({
+			left: this.crumbs.scrollWidth,
+			behavior: state.isReady ? 'smooth' : 'instant'
+		});
+
+		state.notifyReady();
 	}
 }
 

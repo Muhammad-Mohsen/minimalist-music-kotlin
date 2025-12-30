@@ -47,6 +47,8 @@ var EventBus = (() => {
 		TOGGLE_SHUFFLE: 'toggleShuffle',
 		TOGGLE_REPEAT: 'toggleRepeat',
 		TOGGLE_ALBUM_ART: 'toggleAlbumArt',
+		TOGGLE_TEXT_WRAP: 'toggleTextWrap',
+		FONT_SIZE_CHANGE: 'fontSizeChange',
 
 		EQUALIZER_INFO: 'equalizerInfo',
 		EQUALIZER_PRESET_CHANGE: 'equalizerPresetChange',

@@ -24,9 +24,10 @@ music-explorer {
 	display: flex;
 	flex-direction: column;
 	opacity: 0;
-	transition: scale .3s, opacity .2s;
+	transition: none;
 	overflow: auto;
 	pointer-events: none;
+	scrollbar-width: none;
 
 	&.out { scale: 1.1; }
 	&.in { scale: .9; }
@@ -36,8 +37,7 @@ music-explorer {
 		pointer-events: all; /* only the active is clickable (others can be in front but transparent) */
 	}
 }
-
-body[initializing] .explorer { transition: none; }
+body[ready="true"] .explorer { transition: scale .3s, opacity .2s; }
 
 .explorer button {
 	position: relative;
@@ -60,6 +60,7 @@ body[initializing] .explorer { transition: none; }
 		flex-grow: 1;
 		max-width: calc(100% - 56px);
 		overflow-wrap: break-word;
+		font-size: var(--font-size, 16px);
 
 		b { text-decoration: underline; }
 	}
@@ -95,9 +96,15 @@ body[initializing] .explorer { transition: none; }
 	}
 }
 
+body:not([text-wrap]) .explorer button span {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
 .explorer-container .scrollbar-track {
 	position: fixed;
-	inset: var(--total-inset-top) 0 var(--total-inset-bottom) auto;
+	inset: calc(var(--inset-top, 0px) + 76px) 0 calc(var(--inset-bottom, 0px) + 160px) auto;
 	width: 24px;
 
 	scale: 0 1;

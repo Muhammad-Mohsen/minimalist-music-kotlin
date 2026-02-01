@@ -5,8 +5,8 @@
 	box-sizing: border-box;
 	user-select: none;
 	interpolate-size: allow-keywords;
-	font-family: var(--font-family);
 }
+* { font-family: var(--font-family); }
 
 ul, ol { list-style: none; }
 

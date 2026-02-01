@@ -189,7 +189,7 @@ class MusicExplorer extends HTMLElementBase {
 		explorer.innerHTML = '';
 		files.forEach(file => explorer.insertAdjacentHTML('beforeend',
 			`<button type="${file.type}" path="${file.path}"
-					ontouchstart="${this.handle}.onItemTouchStart(event)" ontouchmove="${this.handle}.onItemTouchMove(event)" ontouchend="${this.handle}.onItemTouchEnd(event);" ontouchcanceled="${this.handle}.onItemTouchCancel(event);"
+					ontouchstart="${this}.onItemTouchStart(event)" ontouchmove="${this}.onItemTouchMove(event)" ontouchend="${this}.onItemTouchEnd(event);" ontouchcanceled="${this}.onItemTouchCancel(event);"
 					class="${state.playlist.tracks.includes(file.path) ? 'playlist' : ''} ${Path.eq(state.track.path, file.path) ? 'selected' : ''}">
 
 				<i class="active"></i>

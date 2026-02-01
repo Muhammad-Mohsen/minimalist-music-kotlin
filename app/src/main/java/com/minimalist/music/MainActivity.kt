@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Base64
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -14,7 +15,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
@@ -38,7 +38,6 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
-	private lateinit var permissionRequest: ActivityResultLauncher<String>
 	private lateinit var mask: ImageView
 	private var webView: WebView? = null
 
@@ -51,11 +50,6 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 
 		webView = findViewById<WebView>(R.id.webview)
 		mask = findViewById<ImageView>(R.id.mask)
-
-		// storage permission...must be in onCreate
-		permissionRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-			onPermissionResult(isGranted)
-		}
 
 		// back button
 		onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
@@ -185,6 +179,25 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		else Toast.makeText(this,resources.getString(R.string.noBrowser),Toast.LENGTH_SHORT).show()
 	}
 
+	private fun sendInsetsToWebView() {
+		if (State.windowInsets != null && State.webviewReady) {
+			EventBus.dispatch(Event(Type.INSETS, Target.ACTIVITY, mapOf(
+				"top" to State.windowInsets!!.top,
+				"bottom" to State.windowInsets!!.bottom)))
+		}
+	}
+
+	private fun handleThemeChange() {
+		val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+		Moirai.MAIN.post {
+			windowInsetsController.isAppearanceLightStatusBars = State.settings.theme == Theme.LIGHT
+		}
+	}
+
+	// PERMISSIONS
+	private val permissionRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+		onPermissionResult(isGranted)
+	}
 	private fun requestPermission() {
 		if (shouldShowRequestPermissionRationale(DISK_PERMISSION)) {
 			val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -204,19 +217,28 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		}
 	}
 
-	private fun sendInsetsToWebView() {
-		if (State.windowInsets != null && State.webviewReady) {
-			EventBus.dispatch(Event(Type.INSETS, Target.ACTIVITY, mapOf(
-				"top" to State.windowInsets!!.top,
-				"bottom" to State.windowInsets!!.bottom)))
+	// CUSTOM FONT
+	private fun handleCustomFont() {
+		val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+			addCategory(Intent.CATEGORY_OPENABLE)
+			type = "font/*"
 		}
-	}
 
-	private fun handleThemeChange() {
-		val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-		Moirai.MAIN.post {
-			windowInsetsController.isAppearanceLightStatusBars = State.settings.theme == Theme.LIGHT
+		customFontRequest.launch(intent)
+	}
+	private val customFontRequest = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+		if (result.resultCode != RESULT_OK) return@registerForActivityResult
+		val uri = result.data?.data ?: return@registerForActivityResult
+
+		try {
+			Moirai.BG.post {
+				contentResolver.openInputStream(uri)?.use { stream ->
+					State.settings.customFont = Base64.encodeToString(stream.readBytes(), Base64.NO_WRAP)
+					EventBus.dispatch(Event(Type.CUSTOM_FONT, Target.ACTIVITY, mapOf("font" to State.settings.customFont)))
+				}
+			}
 		}
+		catch (e: Exception) { e.printStackTrace() }
 	}
 
 	override fun handle(event: Event) {
@@ -249,6 +271,7 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			Type.TOGGLE_TEXT_WRAP -> State.settings.textWrap = event.data["value"].toString().toBoolean()
 			Type.FONT_SIZE_CHANGE -> State.settings.fontSize = event.data["value"].toString().toInt()
 			Type.TOGGLE_ALBUM_ART -> State.settings.albumArt = event.data["value"].toString().toBoolean()
+			Type.CUSTOM_FONT -> handleCustomFont()
 		}
 	}
 

@@ -119,6 +119,17 @@ class Settings(private val preferences: SharedPreferences) {
 			preferences.put(Key.FONT_SIZE, value)
 		}
 
+	private var _customFont: String? = null
+	var customFont: String
+		get() {
+			if (_customFont == null) _customFont = preferences.getString(Key.CUSTOM_FONT, "")
+			return _customFont!!
+		}
+		set(value) {
+			_customFont = value
+			preferences.put(Key.CUSTOM_FONT, value)
+		}
+
 	private var _equalizerPreset: Short? = null
 	var equalizerPreset: Short
 		get() {
@@ -167,6 +178,7 @@ class Settings(private val preferences: SharedPreferences) {
 			"albumArt" to albumArt,
 			"textWrap" to textWrap,
 			"fontSize" to fontSize,
+			"customFont" to customFont,
 			"equalizerPreset" to equalizerPreset,
 			"equalizerBands" to equalizerBands,
 			"secondaryControls" to secondaryControls

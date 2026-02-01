@@ -162,3 +162,11 @@
 .ic-play:before {
 	content: "\e020";
 }
+
+.ic-font-2:before {
+	content: "\e022";
+}
+
+.ic-font:before {
+	content: "\e023";
+}

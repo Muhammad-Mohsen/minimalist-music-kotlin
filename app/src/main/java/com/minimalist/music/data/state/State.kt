@@ -103,6 +103,7 @@ object State {
 		const val ALBUM_ART = "albumArt"
 		const val TEXT_WRAP = "textWrap"
 		const val FONT_SIZE = "fontSize"
+		const val CUSTOM_FONT = "customFont"
 		const val EQUALIZER_PRESET = "equalizerPreset"
 		const val EQUALIZER_BANDS = "equalizerBands"
 		const val SECONDARY_CONTROLS = "secondaryControls"

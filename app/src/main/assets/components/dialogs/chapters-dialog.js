@@ -38,7 +38,7 @@ class ChaptersDialog extends HTMLElementBase {
 	}
 	#renderChapters() {
 		this.chapters.innerHTML = state.track.chapters?.map(c => `
-			<button onclick="${this.handle}.onChapterClick(${c.startTime})">
+			<button onclick="${this}.onChapterClick(${c.startTime})">
 				<div class="title">${c.title}</div>
 				<div class="timestamp">${readableTime(c.startTime)}</div>
 			</button>

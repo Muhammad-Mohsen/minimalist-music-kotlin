@@ -24,3 +24,5 @@ EventBus.subscribe((event, native) => {
 		.is(EventBus.Type.PLAYLIST_UPDATE, () => state.updatePlaylist(event.data))
 		.is(EventBus.Type.METADATA_UPDATE, () => state.updateTrack(event.data))
 });
+
+console.log('JUST TO BE SPORTING')

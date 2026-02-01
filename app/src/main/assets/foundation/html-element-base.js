@@ -55,4 +55,8 @@ class HTMLElementBase extends HTMLElement {
 			}
 		});
 	}
+
+	toString() {
+		return this.handle;
+	}
 }

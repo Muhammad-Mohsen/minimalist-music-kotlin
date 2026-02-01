@@ -234,6 +234,11 @@ const translations = {
 		"ru": "Размер шрифта",
 		"es": "Tamaño de fuente"
 	},
+	"Custom Font": {
+		"pt": "Fonte Personalizada",
+		"ru": "Пользовательский шрифт",
+		"es": "Fuente personalizada"
+	},
 	"Display Settings": {
 		"pt": "Configurações de Exibição",
 		"ru": "Настройки отображения",

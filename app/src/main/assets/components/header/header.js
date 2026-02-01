@@ -63,16 +63,16 @@ class MusicHeader extends HTMLElementBase {
 	#render() {
 		super.render(`
 			<div id="breadcrumb-bar">
-				<button id="back-button" onclick="${this.handle}.onBackClick()" class="ic-btn ic-arrow-left" aria-label="Back"></button>
+				<button id="back-button" onclick="${this}.onBackClick()" class="ic-btn ic-arrow-left" aria-label="Back"></button>
 				<ul id="crumbs"></ul>
 			</div>
 
 			<div id="toolbar">
-				<button id="toolbar-cancel-button" class="ic-btn ic-arrow-left" onclick="${this.handle}.onCancelClick()" aria-label="Cancel"></button>
-				<input id="search-input" type="search" placeholder="Search" oninput="${this.handle}.onSearchInput(this);">
+				<button id="toolbar-cancel-button" class="ic-btn ic-arrow-left" onclick="${this}.onCancelClick()" aria-label="Cancel"></button>
+				<input id="search-input" type="search" placeholder="Search" oninput="${this}.onSearchInput(this);">
 				<span id="select-count"></span>
-				<button id="select-add-button" class="ic-btn ic-add" onclick="${this.handle}.onAddToQueueClick()" aria-label="Add to Queue"></button>
-				<button id="select-play-button" class="ic-btn ic-play-selected" onclick="${this.handle}.onPlaySelectedClick()" aria-label="Play Selection"></button>
+				<button id="select-add-button" class="ic-btn ic-add" onclick="${this}.onAddToQueueClick()" aria-label="Add to Queue"></button>
+				<button id="select-play-button" class="ic-btn ic-play-selected" onclick="${this}.onPlaySelectedClick()" aria-label="Play Selection"></button>
 			</div>
 		`);
 	}
@@ -102,7 +102,7 @@ class MusicHeader extends HTMLElementBase {
 
 			path = path ? Path.join([path, seg]) : seg;
 			this.crumbs.insertAdjacentHTML('beforeend',
-				`<button path="${path}" onclick="${this.handle}.onCrumbClick(this)">${seg}</button>`);
+				`<button path="${path}" onclick="${this}.onCrumbClick(this)">${seg}</button>`);
 
 			return path;
 

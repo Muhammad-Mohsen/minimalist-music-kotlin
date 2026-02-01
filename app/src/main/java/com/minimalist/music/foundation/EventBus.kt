@@ -108,6 +108,7 @@ object EventBus {
 		const val TOGGLE_ALBUM_ART = "toggleAlbumArt"
 		const val TOGGLE_TEXT_WRAP = "toggleTextWrap"
 		const val FONT_SIZE_CHANGE = "fontSizeChange"
+		const val CUSTOM_FONT = "customFont"
 
 		const val EQUALIZER_INFO = "equalizerInfo"
 		const val EQUALIZER_PRESET_CHANGE = "equalizerPresetChange"

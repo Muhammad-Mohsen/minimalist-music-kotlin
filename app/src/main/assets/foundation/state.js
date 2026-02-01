@@ -56,6 +56,14 @@ class State {
 		get albumArt() { return document.body.hasAttribute('album-art') },
 		set albumArt(val) { document.body.toggleAttribute('album-art', val); },
 
+		set customFont(val) {
+			if (!val) return;
+
+			const fontFace = new FontFace('custom-font', `url(data:font/ttf;base64,${val})`);
+			document.fonts.add(fontFace);
+			fontFace.load();
+		},
+
 		playbackSpeed: 1,
 		sleepTimer: '',
 		seekJump: 60000,
@@ -116,6 +124,7 @@ class State {
 		this.settings.seekJump = settings.seekJump;
 
 		this.settings.fontSize = settings.fontSize;
+		this.settings.customFont = settings.customFont;
 		this.settings.textWrap = settings.textWrap;
 		this.settings.albumArt = settings.albumArt;
 

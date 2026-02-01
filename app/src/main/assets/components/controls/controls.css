@@ -63,8 +63,8 @@ body[is-playing="true"] #album-art { filter: none; }
 		padding: 12px;
 		pointer-events: none;
 	}
-	#seek-current { font: 600 .8rem / .8rem system-ui; }
-	#seek-duration { font: 400 .8rem / .8rem system-ui; }
+	#seek-current { font: 600 .8rem / .8rem var(--font-family); }
+	#seek-duration { font: 400 .8rem / .8rem var(--font-family); }
 
 	#chapters {
 		position: relative;
@@ -94,7 +94,7 @@ body[is-playing="true"] #album-art { filter: none; }
 		position: relative;
 		padding: 4px 24px;
 		text-align: center;
-		font: 400 1rem / 1rem system-ui;
+		font: 400 1rem / 1rem var(--font-family);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
@@ -106,7 +106,7 @@ body[is-playing="true"] #album-art { filter: none; }
 		padding: 4px 24px 12px;
 		text-align: center;
 		color: var(--foreground-secondary);
-		font: 400 .65rem / .65rem system-ui;
+		font: 400 .65rem / .65rem var(--font-family);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;

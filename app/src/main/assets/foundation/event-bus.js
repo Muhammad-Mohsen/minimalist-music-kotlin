@@ -49,6 +49,7 @@ var EventBus = (() => {
 		TOGGLE_ALBUM_ART: 'toggleAlbumArt',
 		TOGGLE_TEXT_WRAP: 'toggleTextWrap',
 		FONT_SIZE_CHANGE: 'fontSizeChange',
+		CUSTOM_FONT: 'customFont',
 
 		EQUALIZER_INFO: 'equalizerInfo',
 		EQUALIZER_PRESET_CHANGE: 'equalizerPresetChange',

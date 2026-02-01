@@ -42,6 +42,9 @@ class SettingsDialog extends HTMLElementBase {
 				// disable the equalizer button if it failed to initialize
 				if (!Object.keys(event.data).length) this.equalizerButton.setAttribute('inert', '');
 			})
+			.is(EventBus.Type.CUSTOM_FONT, () => {
+				state.settings.customFont = event.data.font;
+			})
 	}
 
 	// HANDLERS
@@ -128,6 +131,10 @@ class SettingsDialog extends HTMLElementBase {
 		this.textWrapButton.classList.toggle('selected', state.settings.textWrap);
 	}
 
+	selectCustomFont() {
+		EventBus.dispatch({ type: EventBus.Type.CUSTOM_FONT, target: this.#TARGET });
+	}
+
 	onSecondaryControlsChange(target, index) {
 		state.settings.secondaryControls[index] = target.value;
 		EventBus.dispatch({ type: EventBus.Type.SECONDARY_CONTROLS_CHANGE, target: this.#TARGET, data: { value: state.settings.secondaryControls.join(';') } });
@@ -140,7 +147,7 @@ class SettingsDialog extends HTMLElementBase {
 	handleScrollGesture() {
 		const content = this.querySelector('.dialog-content');
 
-		[this.sleepTimer, this.playbackSpeed, this.seekJump].forEach(range => {
+		[this.sleepTimer, this.playbackSpeed, this.seekJump, this.fontSize].forEach(range => {
 			range.onpointerdown = () => range.setAttribute('start-value', range.value);
 			range.onpointerup = () => range.removeAttribute('start-value');
 		});
@@ -202,7 +209,7 @@ class SettingsDialog extends HTMLElementBase {
 					${this.#renderPlaybackSettings()}
 				</details>
 
-				<button class="pp" l10n onclick="${this.handle}.showPrivacyPolicy()">Privacy Policy</button>
+				<button class="pp" l10n onclick="${this}.showPrivacyPolicy()">Privacy Policy</button>
 			</div>
 		`);
 	}
@@ -210,7 +217,7 @@ class SettingsDialog extends HTMLElementBase {
 		return `
 			<div class="details-content">
 				<div class="range-row">
-					<input type="range" id="playback-speed" min=".25" max="2.5" step=".25" oninput="${this.handle}.onPlaybackSpeedChange()">
+					<input type="range" id="playback-speed" min=".25" max="2.5" step=".25" oninput="${this}.onPlaybackSpeedChange()">
 
 					<div class="label">
 						<label for="playback-speed" l10n>Playback Speed</label>
@@ -220,7 +227,7 @@ class SettingsDialog extends HTMLElementBase {
 				</div>
 
 				<div class="range-row">
-					<input type="range" id="seek-jump" min="10000" max="300000" step="5000" oninput="${this.handle}.onSeekJumpChange()">
+					<input type="range" id="seek-jump" min="10000" max="300000" step="5000" oninput="${this}.onSeekJumpChange()">
 
 					<div class="label">
 						<label for="seek-jump" l10n>Seek Jump</label>
@@ -232,7 +239,7 @@ class SettingsDialog extends HTMLElementBase {
 				<div class="range-row">
 					<!-- min: 10m - max: 3h - step: 5m converted to millis -->
 					<input type="range" id="countdown" min="600000" max="10800000" value="0">
-					<input type="range" id="sleep-timer" min="600000" max="10800000" step="300000" oninput="${this.handle}.onSleepTimerChange()">
+					<input type="range" id="sleep-timer" min="600000" max="10800000" step="300000" oninput="${this}.onSleepTimerChange()">
 
 					<div class="label">
 						<label for="sleep-timer" l10n>Sleep Timer</label>
@@ -243,21 +250,21 @@ class SettingsDialog extends HTMLElementBase {
 					</div>
 
 					<separator></separator>
-					<button id="sleep-timer-toggle" class="ic-btn toggle-btn ic-sleep-timer" onclick="${this.handle}.toggleSleepTimer()"></button>
+					<button id="sleep-timer-toggle" class="ic-btn toggle-btn ic-sleep-timer" onclick="${this}.toggleSleepTimer()"></button>
 				</div>
 
 				<div class="flex-row">
-					<button id="shuffle-button" class="settings-btn" onclick="${this.handle}.toggleShuffle()">
+					<button id="shuffle-button" class="settings-btn" onclick="${this}.toggleShuffle()">
 						<i class="ic-shuffle"></i>
 						<span l10n>Shuffle</span>
 					</button>
 					<separator></separator>
-					<button id="repeat-button" class="settings-btn" onclick="${this.handle}.toggleRepeat()">
+					<button id="repeat-button" class="settings-btn" onclick="${this}.toggleRepeat()">
 						<i id="repeat-icon" class="ic-repeat"></i>
 						<span l10n>Repeat</span>
 					</button>
 					<separator></separator>
-					<button id="equalizer-button" class="settings-btn" onclick="${this.handle}.showEqualizer()">
+					<button id="equalizer-button" class="settings-btn" onclick="${this}.showEqualizer()">
 						<i class="ic-equalizer"></i>
 						<span l10n>Equalizer</span>
 					</button>
@@ -270,12 +277,12 @@ class SettingsDialog extends HTMLElementBase {
 		return `
 			<div class="details-content">
 				<div class="flex-row">
-					<button id="light-theme-button" class="settings-btn" onclick="${this.handle}.toggleTheme(this, 'light')">
+					<button id="light-theme-button" class="settings-btn" onclick="${this}.toggleTheme(this, 'light')">
 						<i class="ic-sun"></i>
 						<span l10n>Light</span>
 					</button>
 					<separator></separator>
-					<button id="dark-theme-button" class="settings-btn selected" onclick="${this.handle}.toggleTheme(this, 'dark')">
+					<button id="dark-theme-button" class="settings-btn selected" onclick="${this}.toggleTheme(this, 'dark')">
 						<i class="ic-moon"></i>
 						<span l10n>Dark</span>
 					</button>
@@ -283,18 +290,8 @@ class SettingsDialog extends HTMLElementBase {
 
 				<div id="secondary-controls-customization"></div>
 
-				<div class="range-row">
-					<input type="range" id="font-size" min="10" max="20" step="1" oninput="${this.handle}.onFontSizeChange()">
-
-					<div class="label">
-						<label for="font-size" l10n>Font Size</label>
-						<output class="subscript" for="font-size" id="font-size-value"></output>
-					</div>
-					<i class="ic-font-size"></i>
-				</div>
-
 				<div class="range-row select">
-					<select id="sort-by" onchange="${this.handle}.onSortByChange()">
+					<select id="sort-by" onchange="${this}.onSortByChange()">
 						<option value="az" l10n>Name (A to Z)</option>
 						<option value="za" l10n>Name (Z to A)</option>
 						<option value="newest" l10n>Date (Newest First)</option>
@@ -306,13 +303,28 @@ class SettingsDialog extends HTMLElementBase {
 					<i class="ic-sort"></i>
 				</div>
 
+				<div class="range-row">
+					<input type="range" id="font-size" min="10" max="20" step="1" oninput="${this}.onFontSizeChange()">
+
+					<div class="label">
+						<label for="font-size" l10n>Font Size</label>
+						<output class="subscript" for="font-size" id="font-size-value"></output>
+					</div>
+					<i class="ic-font-size"></i>
+				</div>
+
 				<div class="flex-row">
-					<button id="album-art-button" class="settings-btn" onclick="${this.handle}.toggleAlbumArt()">
+					<button id="custom-font-button" class="settings-btn" onclick="${this}.selectCustomFont()">
+						<i class="ic-font"></i>
+						<span l10n>Custom Font</span>
+					</button>
+					<separator></separator>
+					<button id="album-art-button" class="settings-btn" onclick="${this}.toggleAlbumArt()">
 						<i class="ic-album-art"></i>
 						<span l10n>Album Art</span>
 					</button>
 					<separator></separator>
-					<button id="text-wrap-button" class="settings-btn" onclick="${this.handle}.toggleTextWrap()">
+					<button id="text-wrap-button" class="settings-btn" onclick="${this}.toggleTextWrap()">
 						<i class="ic-wrap"></i>
 						<span l10n>Text Wrap</span>
 					</button>
@@ -327,7 +339,7 @@ class SettingsDialog extends HTMLElementBase {
 			<div class="flex-row" style="margin-inline: -6px;">
 				${state.settings.secondaryControls.map((val, i) => {
 					return `
-						<select id="ui-custom-${i}" onchange="${this.handle}.onSecondaryControlsChange(this, ${i})">
+						<select id="ui-custom-${i}" onchange="${this}.onSecondaryControlsChange(this, ${i})">
 							<button><selectedcontent></selectedcontent></button>
 
 							${Object.keys(SecondaryControlOptions).map(key => {

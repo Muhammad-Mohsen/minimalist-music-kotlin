@@ -1,6 +1,35 @@
 # Dev Guide | Minimalist Music Kotlin - Hybrid
 
 ## General
+- R6.5
+	- custom fonts
+	```javascript
+	const myFont = new FontFace('MyCustomFont', 'url(./path/to/font.woff)');
+	document.fonts.add(myFont); // Add it to the document's FontFaceSet
+
+	// Load the font and wait for it to be ready
+	myFont.load().then(() => {
+		console.log('Font loaded in memory, ready to use in CSS/Canvas');
+		// Apply the font to elements using CSS
+		document.body.style.fontFamily = 'MyCustomFont, sans-serif';
+	}).catch(error => {
+		console.error('Font loading failed:', error);
+	});
+	```
+	```css
+	<style>
+		@font-face {
+			font-family: 'Merriweather';
+			src: url('data:@file/x-font-ttf;base64,AAEAAAARAQAABAAQR0RFRo9QjtMAAANAAAAB9Ed...')
+				format('ttf');
+			font-weight: 400;
+		}
+	</style>
+	```
+
+	- handle equalizer bottoming-out!!
+		- redirect to native/external equalizer
+
 - R6.0
 	- DONE - exceptions
 	- DONE - reduce motion on startup
@@ -18,7 +47,7 @@
 - DONE - fix scrolling the settings changes the slider
 - DONE - fix the toggleAlbumArt button being active while settings dialog is visible
 - DONE - restyle the dialog header (basically need to add `div.dialog-content`)
-- handle equalizer bottoming-out!!
+- DONE - handle equalizer bottoming-out!!
 	- DONE - exception
 	- redirect to native/external equalizer
 

@@ -167,9 +167,9 @@ class MusicControls extends HTMLElementBase {
 				<input type="range" id="seek-range" value="0" oninput="${this.handle}.onSeekChange(this)">
 
 				<button id="play-pause-button" class="ic-btn main-character" onclick="${this.handle}.playPause()" aria-label="Play/Pause">
-					<svg  width="180" height="15" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path id="pause-path" style="stroke-dashoffset: 75;" d="M94 15V7.5H180M85 0V7.5H0" stroke="var(--foreground)"/>
-						<path id="play-path" style="stroke-dashoffset: 0;" d="M83.0469 1L95.9531 7.5H180M83.0469 15V7.5H0" stroke="var(--foreground)"/>
+					<svg  width="180" height="16" viewBox="0 0 180 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M0 8H85V1H94V5.5M180 8H94V15H85V10.5" id="pause-path" style="stroke-dashoffset: 107;" stroke="var(--foreground)"/>
+						<path d="M0 8H82.9998V15L93.5 9.34614M180 8H96L82.9998 1V5.5" id="play-path" style="stroke-dashoffset: 0;" stroke="var(--foreground)"/>
 					</svg>
 				</button>
 
@@ -197,8 +197,8 @@ class MusicControls extends HTMLElementBase {
 	}
 
 	#togglePlayPauseUI(play) {
-		setTimeout(() => this.pausePath.style.strokeDashoffset = parseInt(this.pausePath.style.strokeDashoffset) + 75, play ? 200 : 0);
-		setTimeout(() => this.playPath.style.strokeDashoffset = parseInt(this.playPath.style.strokeDashoffset) + 80, play ? 0 : 200);
+		setTimeout(() => this.pausePath.style.strokeDashoffset = parseInt(this.pausePath.style.strokeDashoffset) + 107, play ? 300 : 0);
+		setTimeout(() => this.playPath.style.strokeDashoffset = parseInt(this.playPath.style.strokeDashoffset) + 104, play ? 0 : 300);
 	}
 
 	#updateMetadata() {

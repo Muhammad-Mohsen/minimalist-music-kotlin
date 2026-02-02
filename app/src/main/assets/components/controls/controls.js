@@ -197,8 +197,8 @@ class MusicControls extends HTMLElementBase {
 	}
 
 	#togglePlayPauseUI(play) {
-		setTimeout(() => this.pausePath.style.strokeDashoffset = parseInt(this.pausePath.style.strokeDashoffset) - 107, play ? 300 : 0);
-		setTimeout(() => this.playPath.style.strokeDashoffset = parseInt(this.playPath.style.strokeDashoffset) - 104, play ? 0 : 300);
+		setTimeout(() => this.pausePath.style.strokeDashoffset = parseInt(this.pausePath.style.strokeDashoffset) + 107, play ? 300 : 0);
+		setTimeout(() => this.playPath.style.strokeDashoffset = parseInt(this.playPath.style.strokeDashoffset) + 104, play ? 0 : 300);
 	}
 
 	#updateMetadata() {

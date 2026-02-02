@@ -126,7 +126,7 @@ button, select, input { outline: none; }
 	}
 
 	path {
-		transition: .3s ease-out;
+		transition: .4s ease-in;
 		&#pause-path { stroke-dasharray: 107; }
 		&#play-path { stroke-dasharray: 104; }
 	}

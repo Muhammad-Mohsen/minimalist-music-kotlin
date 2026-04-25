@@ -35,9 +35,23 @@
 			tools:ignore="DiscouragedApi,LockedOrientationActivity"
 			>
 
+			<!-- Standard Launcher Filter -->
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+
+			<!-- Default Music Player Filter -->
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="content" />
+				<data android:scheme="file" />
+				<data android:mimeType="audio/*" />
+				<data android:mimeType="application/ogg" />
+				<data android:mimeType="application/x-ogg" />
+				<data android:mimeType="application/itunes" />
 			</intent-filter>
 		</activity>
 
@@ -55,6 +69,10 @@
 		<!-- opt out of sending diagnostics to google...they say the user must consent, but who would trust that!! -->
 		<!-- honestly, I don't trust that adding this really does anything, but it's all one can do -->
 		<meta-data android:name="android.webkit.WebView.MetricsOptOut" android:value="true" />
+
+	</application>
+
+</manifest>
 
 	</application>
 

@@ -39,7 +39,7 @@ fun File.listFiles(sortBy: String): ArrayList<File> {
 	val fileModels = ArrayList<File>()
 
 	var files = listFiles { file ->
-		file.isDirectory || MEDIA_EXTENSIONS.contains(file.extension)
+		!file.isHidden && (file.isDirectory || MEDIA_EXTENSIONS.contains(file.extension))
 	}
 
 	// just to make sure that we aren't trapped in the basement

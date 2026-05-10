@@ -3,7 +3,7 @@ if (location.href.includes('mode=permission')) document.body.setAttribute('mode'
 const state = new State();
 
 EventBus.subscribe((event, native) => {
-	if (!native) return; // this should only handle native events basically to sync the state
+	if (!native) return; // this should only handle native events (to sync the state)
 
 	when(event.type)
 		.is(EventBus.Type.INSETS, () => {

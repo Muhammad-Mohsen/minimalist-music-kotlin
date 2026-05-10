@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Base64
 import android.view.View
@@ -24,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.minimalist.music.data.Const
 import com.minimalist.music.data.files.Theme
 import com.minimalist.music.data.files.isRoot
+import com.minimalist.music.data.files.isTrack
 import com.minimalist.music.data.files.serializeFiles
 import com.minimalist.music.data.state.State
 import com.minimalist.music.foundation.EventBus
@@ -48,8 +50,8 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		WindowCompat.setDecorFitsSystemWindows(window, false) // edge-to-edge (android 14-)
 		setContentView(R.layout.main_activity)
 
-		webView = findViewById<WebView>(R.id.webview)
-		mask = findViewById<ImageView>(R.id.mask)
+		webView = findViewById(R.id.webview)
+		mask = findViewById(R.id.mask)
 
 		// back button
 		onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
@@ -69,11 +71,14 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 		EventBus.subscribe(this)
 		initWebView()
 		initNative()
+
+		handleOpenWithIntent(intent)
 	}
 	override fun onResume() {
 		super.onResume()
 		EventBus.dispatch(Event(Type.PERMISSION_RESPONSE, Target.ACTIVITY, mapOf("mode" to
 				if (checkSelfPermission(DISK_PERMISSION) == PackageManager.PERMISSION_GRANTED) "normal" else "permission")))
+
 		initNative()
 
 		Moirai.MAIN.postDelayed({
@@ -239,6 +244,51 @@ class MainActivity : AppCompatActivity(), EventBus.Subscriber {
 			}
 		}
 		catch (e: Exception) { e.printStackTrace() }
+	}
+
+	// OPEN WITH
+	override fun onNewIntent(intent: Intent?) {
+		super.onNewIntent(intent)
+		handleOpenWithIntent(intent)
+	}
+	private fun handleOpenWithIntent(intent: Intent?) {
+		val action = intent?.action ?: return
+		val uri = intent.data ?: return
+		if (action != Intent.ACTION_VIEW) return
+
+		val path = when (uri.scheme) {
+			"file" -> uri.path
+			"content" -> getPathFromContentUri(uri)
+			else -> return
+		}
+
+		path ?: return
+		val file = File(path)
+
+		if (file.isTrack()) {
+			State.currentDirectory = file.parentFile ?: return
+			State.track.update(file.absolutePath)
+			State.autoplay = true
+
+			EventBus.dispatch(Event(Type.DIR_UPDATE, Target.ACTIVITY, mapOf(
+				"files" to State.files.serializeFiles(),
+				"currentDir" to State.currentDirectory.absolutePath
+			)))
+			EventBus.dispatch(Event(Type.PLAY_TRACK, Target.ACTIVITY, mapOf("path" to file.absolutePath)))
+		}
+	}
+	private fun getPathFromContentUri(contentUri: Uri): String? {
+		var path: String? = null
+		val projection = arrayOf(MediaStore.Audio.Media.DATA) // The absolute path column
+
+		val cursor = contentResolver.query(contentUri, projection, null, null, null)
+		cursor?.use {
+			if (it.moveToFirst()) {
+				val columnIndex = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+				path = it.getString(columnIndex)
+			}
+		}
+		return path
 	}
 
 	override fun handle(event: Event) {

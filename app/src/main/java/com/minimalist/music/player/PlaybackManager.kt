@@ -108,6 +108,9 @@ class PlaybackManager :
 
 		State.playbackManagerReady = false
 
+		timer.cancelSafe()
+		timer = null
+
 		equalizer?.release()
 		equalizer = null
 
@@ -117,9 +120,6 @@ class PlaybackManager :
 
 		sessionManager.release() // and the media session
 		audioFocusHandler.abandon() // ...and the audio focus
-
-		timer.cancelSafe()
-		timer = null
 
 		unregisterReceiverSafe(noisyReceiver)
 
@@ -132,31 +132,35 @@ class PlaybackManager :
 		startForegroundSafe()
 		return super.onStartCommand(intent, flags, startId)
 	}
-
-	// will be called from the fragment onStart to ensure that it's always started
 	private fun startForegroundSafe() {
 		// from the field: ForegroundServiceStartNotAllowedException!
 		try {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
 			else startForeground(MediaNotificationManager.NOTIFICATION_ID, notificationManager.createNotification())
 
-		} catch (_: Exception) {
+		}
+		catch (_: Exception) {
 			// the hope is, MainActivity.onResume will start the service again
 			State.playbackManagerReady = false
 			stopSelf()
 		}
 	}
 
-	// restores state (from the State object) from a previous session
 	private fun updatePlaybackState(isOnRestoreState: Boolean = false) {
 		if (!State.track.exists) return
 
 		sendTrackUpdate(State.track.path, false)
 		updateSeek(State.track.seek)
+
+		// restore state from a previous session
 		if (isOnRestoreState) {
-			EventBus.dispatch(Event(Type.SEEK_UPDATE, TARGET)) // notify the session
 			State.track.duration = player?.duration?.toLong() ?: 0
+			EventBus.dispatch(Event(Type.SEEK_UPDATE, TARGET)) // notify the session
 			EventBus.dispatch(Event(Type.DURATION_UPDATE, TARGET, mapOf("duration" to State.track.duration)))
+
+			if (!State.autoplay) return
+			EventBus.dispatch(Event(Type.PLAY, Target.NOTIFICATION)) // fake target
+			State.autoplay = false
 		}
 	}
 	private fun sendTrackUpdate(path: String, updatePlaylist: Boolean = true) {
@@ -166,6 +170,14 @@ class PlaybackManager :
 		if (updatePlaylist || State.playlist.isEmpty()) State.playlist.update(path)
 		State.playlist.updateIndex(path)
 		EventBus.dispatch(Event(Type.PLAYLIST_UPDATE, TARGET, State.playlist.serialize()))
+	}
+	private fun sendMetadataUpdate(path: String) {
+		Moirai.BG.post {
+			State.track.update(path)
+			EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET, State.track.serialize()))
+			State.track.duration = player?.duration?.toLong() ?: 0
+			EventBus.dispatch(Event(Type.DURATION_UPDATE, TARGET, mapOf("duration" to State.track.duration)))
+		}
 	}
 
 	// playback
@@ -276,16 +288,6 @@ class PlaybackManager :
 		}
 		catch (e: Exception) {
 			Log.d("PlaybackManager", "updatePlaybackSpeed: ${e.message}")
-		}
-	}
-
-	// metadata
-	private fun sendMetadataUpdate(path: String) {
-		Moirai.BG.post {
-			State.track.update(path)
-			EventBus.dispatch(Event(Type.METADATA_UPDATE, TARGET, State.track.serialize()))
-			State.track.duration = player?.duration?.toLong() ?: 0
-			EventBus.dispatch(Event(Type.DURATION_UPDATE, TARGET, mapOf("duration" to State.track.duration)))
 		}
 	}
 

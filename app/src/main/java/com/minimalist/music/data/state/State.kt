@@ -28,9 +28,10 @@ object State {
 	lateinit var applicationContext: Context
 
 	var playbackManagerReady = false
-
 	var webviewReady = false
+
 	var windowInsets: Insets? = null
+	var autoplay = false
 
 	private val initialized: Boolean
 		get() = ::sharedPreferences.isInitialized

@@ -184,13 +184,7 @@ class MusicControls extends HTMLElementBase {
 			</div>
 
 			<div class="secondary-controls">
-				<div id="customizable-controls">
-					<button id="search-button" class="ic-btn ic-search" onclick="${this}.toggleSearch();" aria-label="Search"></button>
-					<button id="rw-button" class="ic-btn ic-rw" onclick="${this}.rewind()" aria-label="Rewind"></button>
-					<button id="previous-button" class="ic-btn ic-prev" onclick="${this}.playPrev();" aria-label="Previous"></button>
-					<button id="next-button" class="ic-btn ic-next" onclick="${this}.playNext();" aria-label="Next"></button>
-					<button id="ff-button" class="ic-btn ic-ff" onclick="${this}.fastForward()" aria-label="Fast Forward"></button>
-				</div>
+				<div id="customizable-controls"></div>
 				<button id="more-button" class="ic-btn ic-more" onclick="${this}.toggleSettings()" aria-label="More"></button>
 			</div>
 		`);
@@ -230,6 +224,8 @@ class MusicControls extends HTMLElementBase {
 			elem.finishAnimations(); // don't run the initial animation
 			return elem.innerHTML = val;
 		}
+
+		if (elem.innerHTML == val) return; // don't run the animation if the value is the same
 
 		elem.replayAnimations();
 		setTimeout(() => elem.innerHTML = val, delay);

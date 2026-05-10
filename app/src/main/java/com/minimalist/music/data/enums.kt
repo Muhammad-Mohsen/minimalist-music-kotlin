@@ -29,7 +29,7 @@ object FabMenu {
 	val DELAY = ViewConfiguration.getTapTimeout().toLong() * 2
 	const val DURATION = 200L
 
-	const val ANGLE_BRACKET_ARC =35F
+	const val ANGLE_BRACKET_ARC = 35F
 	const val ANGLE_OFFSET = 5F
 	const val GESTURE_MIN_DISTANCE = 230
 

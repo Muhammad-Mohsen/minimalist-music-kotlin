@@ -137,7 +137,7 @@ class MusicExplorer extends HTMLElementBase {
 		var val = state.query;
 		var explorer = document.querySelector('.explorer.current');
 
-		var items = explorer.querySelectorAll('button > span').toArray();
+		var items = explorer.querySelectorAll('button > span');
 		items.forEach(i => {
 			setTimeout(() => {
 				const matches = i.textContent.fuzzyCompare(val);
@@ -185,10 +185,8 @@ class MusicExplorer extends HTMLElementBase {
 	#renderItems(explorer) {
 		explorer ||= this.querySelector('.explorer.current');
 
-		const files = state.files;
-		explorer.innerHTML = '';
-		files.forEach(file => explorer.insertAdjacentHTML('beforeend',
-			`<button type="${file.type}" path="${file.path}"
+		explorer.innerHTML = state.files.map(file => `
+			<button type="${file.type}" path="${file.path}"
 					ontouchstart="${this}.onItemTouchStart(event)" ontouchmove="${this}.onItemTouchMove(event)" ontouchend="${this}.onItemTouchEnd(event);" ontouchcanceled="${this}.onItemTouchCancel(event);"
 					class="${state.playlist.tracks.includes(file.path) ? 'playlist' : ''} ${Path.eq(state.track.path, file.path) ? 'selected' : ''}">
 
@@ -196,8 +194,8 @@ class MusicExplorer extends HTMLElementBase {
 				<i class="${file.type == 'dir' ? 'ic-dir' : 'ic-music-note'}"></i>
 				<span>${file.name}</span>
 				<i class="ic-mark"></i>
-			</button>`
-		));
+			</button>
+		`).join('');
 	}
 	#updateItems() {
 		this.querySelectorAll('.explorer.current [type="track"]').forEach(t => {
